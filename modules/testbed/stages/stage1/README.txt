@@ -1,1 +1,0 @@
-Checkout the build enviroment

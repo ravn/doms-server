@@ -6,23 +6,48 @@
 
 <property file="build.properties"/>
 
+    <target name="init">
+        <mkdir dir="build"/>
+    </target>
+
+    <target name="clean">
+        <delete dir="build"/>
+        <delete dir="dist"/>
+
+    </target>
+
+    <target name="getDomsServices" depends="init">
+    <!--Svn here to checkout the relevant services-->
+        <!--Call the jrg checkout script-->
+    </target>
+
+    <target name="buildDomsServices" depends="getDomsServices">
+    <!--Call the ant file in each of the checkouted services in the ${modules.checkoutdir}-->
+    </target>
 
 
 
-    <target name="dist" depends="">
+    <target name="dist" depends="buildDomsServices">
         <mkdir dir="dist"/>
 
         <zip destfile="dist/${release}.zip">
 
-            <zipfileset prefix="testbed" dir="${basedir}">
+            <zipfileset prefix="${release}" dir="${basedir}">
                 <include name="bin/**"/>
                 <include name="config/**"/>
                 <include name="docs/**"/>
                 <include name="fedora/**"/>
                 <include name="tomcat/**"/>
-                <include name="webservices/**"/>
-                <include name="objects/**"/>
+                <include name="data/objects/*.xml"/>
             </zipfileset>
+            <zipfileset prefix="testbed/services" dir="${modules.checkoutdir}/ecm">
+                <include name="dist/*.war"/>
+            </zipfileset>
+            <zipfileset prefix="testbed/services" dir="${modules.checkoutdir}/bitstorage">
+                <include name="dist/*.war"/>
+            </zipfileset>
+
+
 
         </zip>
     </target>

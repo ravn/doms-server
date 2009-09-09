@@ -88,6 +88,15 @@ popd
 
 
 #Patch the config scripts
+pushd $BASEDIR/tomcat
+sed \\
+-e s/\$TOMCATHTTP\$/$TOMCAT_HTTPPORT/g \\
+-e s/\$TOMCATSSL\$/$TOMCAT_SSLPORT/g \\
+-e s/\$TOMCATAJP\$/$TOMCAT_AJPPORT/g \\
+-e s/\$TOMCATSHUTDOWN\$/$TOMCAT_SHUTDOWNPORT/g \\
+< server.xml.patch.template > server.xml.patch
+
+
 #TODO
 #cp $SCRIPT_DIR/tomcat/config/*  $TESTBED_DIR/tomcat/conf
 #cp $SCRIPT_DIR/tomcat/bin/*  $TESTBED_DIR/tomcat/bin
