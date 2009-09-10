@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # $Id install.sh $
-# Author: jrg
+# Author:
 # Date:   2008-08-21
 #
 # Script for installing the testbed for use by the doms gui.

@@ -17,8 +17,10 @@
     </target>
 
     <target name="getDomsServices" depends="init">
-    <!--Svn here to checkout the relevant services-->
-        <!--Call the jrg checkout script-->
+        <!-- Checkout the SourceForge packages needed for building the testbed -->
+        <exec executable="bin/create_build_environment.sh">
+            <arg value="${modules.checkoutdir}"/>
+        </exec>
     </target>
 
     <target name="buildDomsServices" depends="getDomsServices">
