@@ -6,9 +6,15 @@
 
 <property file="build.properties"/>
 
-    <target name="init">
+
+    <target name="initGetDomsServices">
         <mkdir dir="build"/>
     </target>
+
+
+    <target name="initBuildDomsServices">
+    </target>
+
 
     <target name="clean">
         <delete dir="build"/>
@@ -16,15 +22,27 @@
 
     </target>
 
-    <target name="getDomsServices" depends="init">
+
+    <target name="getDomsServices" depends="initGetDomsServices">
         <!-- Checkout the SourceForge packages needed for building the testbed -->
+
         <exec executable="bin/create_build_environment.sh">
             <arg value="${modules.checkoutdir}"/>
         </exec>
+
     </target>
 
-    <target name="buildDomsServices" depends="getDomsServices">
-    <!--Call the ant file in each of the checkouted services in the ${modules.checkoutdir}-->
+
+    <target name="buildDomsServices" depends="initBuildDomsServices">
+        <!--Call the ant file in each of the checkouted services in the ${modules.checkoutdir}-->
+        
+        <subant target="dist">
+            <fileset dir="${modules.checkoutdir}/checkouts" includes="*/build.xml"/>
+        </subant>
+
+        <!-- TODO Something more needs to be done here.. prepare tomcat (unzip it
+             + define config) and sth with fedora.. -->
+
     </target>
 
 
