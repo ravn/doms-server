@@ -26,7 +26,7 @@
     <target name="getDomsServices" depends="initGetDomsServices">
         <!-- Checkout the SourceForge packages needed for building the testbed -->
 
-        <exec executable="bin/create_build_environment.sh">
+        <exec executable="bash bin/create_build_environment.sh">
             <arg value="${modules.checkoutdir}"/>
         </exec>
 
