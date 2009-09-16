@@ -26,7 +26,8 @@
     <target name="getDomsServices" depends="initGetDomsServices">
         <!-- Checkout the SourceForge packages needed for building the testbed -->
 
-        <exec executable="bash bin/create_build_environment.sh">
+        <exec executable="bash">
+            <arg value="bin/create_build_environment.sh"/>
             <arg value="${modules.checkoutdir}"/>
         </exec>
 
@@ -39,9 +40,6 @@
         <subant target="dist">
             <fileset dir="${modules.checkoutdir}/checkouts" includes="*/build.xml"/>
         </subant>
-
-        <!-- TODO Something more needs to be done here.. prepare tomcat (unzip it
-             + define config) and sth with fedora.. -->
 
     </target>
 

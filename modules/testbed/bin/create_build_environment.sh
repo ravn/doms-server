@@ -16,8 +16,13 @@ set -eu    # see http://ss64.com/bash/set.html
 
 BASEDIR=$1
 
+SCRIPT_DIR=$(dirname $0)
+pushd $SCRIPT_DIR > /dev/null
+SCRIPT_DIR=$(pwd)
+popd > /dev/null
+
 # Import settings (SOURCEFORGE_DOMS_SVN_URL, PACKAGES)
-source ../config/conf
+source $SCRIPT_DIR/../config/conf.sh
 
 CHECKOUTDIR=$BASEDIR/checkouts
 mkdir -p $CHECKOUTDIR
