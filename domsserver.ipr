@@ -231,7 +231,7 @@
   </component>
   <component name="ProjectFileVersion" converted="true" />
   <component name="ProjectKey">
-    <option name="state" value="http://doms.svn.sourceforge.net/svnroot/doms/domsserver/trunk/domsserver.ipr" />
+    <option name="state" value="https://doms.svn.sourceforge.net/svnroot/doms/domsserver/trunk/domsserver.ipr" />
   </component>
   <component name="ProjectModuleManager">
     <modules>
@@ -276,6 +276,7 @@
       </map>
     </option>
     <option name="myVersion" value="124" />
+    <option name="mySupportsUserInfoFilter" value="true" />
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="svn" />
