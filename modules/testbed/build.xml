@@ -38,7 +38,7 @@
         <!--Call the ant file in each of the checkouted services in the ${modules.checkoutdir}-->
         
         <subant target="dist">
-            <fileset dir="${modules.checkoutdir}/checkouts" includes="*/build.xml"/>
+            <fileset dir="${modules.checkoutdir}" includes="*/build.xml"/>
         </subant>
 
     </target>
@@ -58,11 +58,17 @@
                 <include name="tomcat/**"/>
                 <include name="data/objects/*.xml"/>
             </zipfileset>
-            <zipfileset prefix="testbed/services" dir="${modules.checkoutdir}/ecm">
-                <include name="dist/*.war"/>
+            <zipfileset prefix="${release}/webservices" dir="${modules.checkoutdir}/ecm/dist">
+                <include name="*.war"/>
             </zipfileset>
-            <zipfileset prefix="testbed/services" dir="${modules.checkoutdir}/bitstorage">
-                <include name="dist/*.war"/>
+            <zipfileset prefix="${release}/webservices" dir="${modules.checkoutdir}/bitstorage/dist">
+                <include name="*.war"/>
+            </zipfileset>
+            <zipfileset prefix="${release}/webservices" dir="${modules.checkoutdir}/domsclient/dist">
+                <include name="*.war"/>
+            </zipfileset>
+            <zipfileset prefix="${release}/webservices" dir="${modules.checkoutdir}/domsserver/dist">
+                <include name="*.war"/>
             </zipfileset>
 
 

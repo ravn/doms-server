@@ -24,7 +24,8 @@ popd > /dev/null
 # Import settings (SOURCEFORGE_DOMS_SVN_URL, PACKAGES)
 source $SCRIPT_DIR/../config/conf.sh
 
-CHECKOUTDIR=$BASEDIR/checkouts
+# CHECKOUTDIR=$BASEDIR/checkouts
+CHECKOUTDIR=$BASEDIR
 mkdir -p $CHECKOUTDIR
 cd $CHECKOUTDIR
 
