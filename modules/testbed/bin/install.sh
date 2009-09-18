@@ -94,7 +94,7 @@ sed \\
 -e s/\$TOMCATSSL\$/$TOMCAT_SSLPORT/g \\
 -e s/\$TOMCATAJP\$/$TOMCAT_AJPPORT/g \\
 -e s/\$TOMCATSHUTDOWN\$/$TOMCAT_SHUTDOWNPORT/g \\
-< server.xml.patch.template > server.xml.patch
+< server.xml.template > server.xml
 
 
 #TODO
