@@ -96,11 +96,11 @@ sed \\
 -e s/\$TOMCATSHUTDOWN\$/$TOMCAT_SHUTDOWNPORT/g \\
 < server.xml.template > server.xml
 
-
 #TODO
-#cp $SCRIPT_DIR/tomcat/config/*  $TESTBED_DIR/tomcat/conf
 #cp $SCRIPT_DIR/tomcat/bin/*  $TESTBED_DIR/tomcat/bin
 
+mv server.xml $TESTBED_DIR/tomcat/conf/
+popd
 
 # Install fedora including database 
 pushd $BASEDIR/fedora
@@ -120,6 +120,10 @@ popd
 
 # Install into tomcat: webservices
 cp $BASEDIR/webservices/*.war $TESTBED_DIR/tomcat/webapps
+
+#TODO: take care of Fedora validator hook..
+
+#TODO: config webservices (ecm, bitstorage,..)
 
 # Start the tomcat server
 $TESTBED_DIR/tomcat/bin/startup.sh
