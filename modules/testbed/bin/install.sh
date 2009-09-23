@@ -20,7 +20,7 @@ SCRIPT_DIR=$(pwd)
 popd > /dev/null
 
 # Import settings
-source $SCRIPT_DIR/config/conf
+source $SCRIPT_DIR/../config/conf.sh
 
 BASEDIR=$SCRIPT_DIR/..
 
@@ -89,12 +89,14 @@ popd
 
 #Patch the config scripts
 pushd $BASEDIR/tomcat
-sed \\
--e s/\$TOMCATHTTP\$/$TOMCAT_HTTPPORT/g \\
--e s/\$TOMCATSSL\$/$TOMCAT_SSLPORT/g \\
--e s/\$TOMCATAJP\$/$TOMCAT_AJPPORT/g \\
--e s/\$TOMCATSHUTDOWN\$/$TOMCAT_SHUTDOWNPORT/g \\
-< server.xml.template > server.xml
+# sed/shell magic below according to  http://www.grymoire.com/Unix/Sed.html
+# See section "Passing arguments into a sed script".
+sed \
+-e 's/\$TOMCATHTTP\$/'"$TOMCAT_HTTPPORT"'/g' \
+-e 's/\$TOMCATSSL\$/'"$TOMCAT_SSLPORT"'/g' \
+-e 's/\$TOMCATAJP\$/'"$TOMCAT_AJPPORT"'/g' \
+-e 's/\$TOMCATSHUTDOWN\$/'"$TOMCAT_SHUTDOWNPORT"'/g' \
+<server.xml.template >server.xml
 
 #TODO
 #cp $SCRIPT_DIR/tomcat/bin/*  $TESTBED_DIR/tomcat/bin
@@ -102,19 +104,21 @@ sed \\
 mv server.xml $TESTBED_DIR/tomcat/conf/
 popd
 
-# Install fedora including database 
+# Install fedora including database
 pushd $BASEDIR/fedora
-sed \\
--e s/\$FEDORAADMIN\$/$FEDORAADMIN/g \\
--e s/\$FEDORAADMINPASS\$/$FEDORAADMINPASS/g \\
--e s/\$INSTALLDIR\$/$TESTBED_DIR\/fedora/g \\
-< fedora.properties.template > fedora.properties 
-java -jar fedora*.jar fedora.properties 
+# sed/shell magic below according to  http://www.grymoire.com/Unix/Sed.html
+# See section "Passing arguments into a sed script".
+sed \
+-e 's|\$FEDORAADMIN\$|'"$FEDORAADMIN"'|g' \
+-e 's|\$FEDORAADMINPASS\$|'"$FEDORAADMINPASS"'|g' \
+-e 's|\$INSTALLDIR\$|'"$TESTBED_DIR"'/fedora|g' \
+<fedora.properties.template >fedora.properties
+java -jar fedora*.jar fedora.properties
 rm fedora.properties
 popd
 
 pushd $TESTBED_DIR
-cp fedora/install/fedora.war $TESTBED/tomcat/webapps
+cp fedora/install/fedora.war $TESTBED_DIR/tomcat/webapps
 popd
 
 
@@ -125,14 +129,16 @@ cp $BASEDIR/webservices/*.war $TESTBED_DIR/tomcat/webapps
 
 #TODO: config webservices (ecm, bitstorage,..)
 
+chmod +x $TESTBED_DIR/tomcat/bin/*.sh
 # Start the tomcat server
-$TESTBED_DIR/tomcat/bin/startup.sh
+bash $TESTBED_DIR/tomcat/bin/startup.sh
 
 sleep 30
 
 export FEDORA_HOME=$TESTBED_DIR/fedora
 
-sh $TESTBED_DIR/fedora/client/bin/fedora-ingest.sh dir $BASEDIR/objects 'info:fedora/fedora-system:FOXML-1.1' localhost:$TOMCAT_HTTPPORT $FEDORAADMIN $FEDORAADMINPASS http
+#TODO: provide initial objects to ingest
+#sh $TESTBED_DIR/fedora/client/bin/fedora-ingest.sh dir $TESTBED_DIR/objects 'info:fedora/fedora-system:FOXML-1.1' localhost:$TOMCAT_HTTPPORT $FEDORAADMIN $FEDORAADMINPASS http
 
 $TESTBED_DIR/tomcat/bin/shutdown.sh
 
