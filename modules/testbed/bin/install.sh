@@ -12,7 +12,6 @@
 
 #
 # Sets up basic variables
-# (SCRIPT_DIR becomes the bin-dir of the minidoms-dir)
 #
 SCRIPT_DIR=$(dirname $0)
 pushd $SCRIPT_DIR > /dev/null
@@ -75,7 +74,9 @@ echo "Full path destination: $TESTBED_DIR"
 # Setup a tomcat server (not starting it though)
 
 # kill any running tomcats
-#ps ax | grep org.apache.catalina.startup.Bootstrap | grep -v grep | awk '{print $1}' | xargs kill >/dev/null 2>&1
+#ps ax | grep org.apache.catalina.startup.Bootstrap | grep -v grep |\
+# awk '{print $1}' | xargs kill >/dev/null 2>&1
+
 
 cp $BASEDIR/tomcat/$TOMCATZIP $TESTBED_DIR/
 
@@ -117,6 +118,8 @@ java -jar fedora*.jar fedora.properties
 rm fedora.properties
 popd
 
+
+
 pushd $TESTBED_DIR
 cp fedora/install/fedora.war $TESTBED_DIR/tomcat/webapps
 popd
@@ -129,6 +132,7 @@ cp $BASEDIR/webservices/*.war $TESTBED_DIR/tomcat/webapps
 
 #TODO: config webservices (ecm, bitstorage,..)
 
+
 chmod +x $TESTBED_DIR/tomcat/bin/*.sh
 # Start the tomcat server
 bash $TESTBED_DIR/tomcat/bin/startup.sh
@@ -138,7 +142,9 @@ sleep 30
 export FEDORA_HOME=$TESTBED_DIR/fedora
 
 #TODO: provide initial objects to ingest
-#sh $TESTBED_DIR/fedora/client/bin/fedora-ingest.sh dir $TESTBED_DIR/objects 'info:fedora/fedora-system:FOXML-1.1' localhost:$TOMCAT_HTTPPORT $FEDORAADMIN $FEDORAADMINPASS http
+#sh $TESTBED_DIR/fedora/client/bin/fedora-ingest.sh dir $TESTBED_DIR/objects\
+# 'info:fedora/fedora-system:FOXML-1.1'\
+# localhost:$TOMCAT_HTTPPORT $FEDORAADMIN $FEDORAADMINPASS http
 
 $TESTBED_DIR/tomcat/bin/shutdown.sh
 
