@@ -105,15 +105,19 @@ sed \
 mv server.xml $TESTBED_DIR/tomcat/conf/
 popd
 
+
+
 # Install fedora including database
 pushd $BASEDIR/fedora
 # sed/shell magic below according to  http://www.grymoire.com/Unix/Sed.html
 # See section "Passing arguments into a sed script".
+
 sed \
 -e 's|\$FEDORAADMIN\$|'"$FEDORAADMIN"'|g' \
 -e 's|\$FEDORAADMINPASS\$|'"$FEDORAADMINPASS"'|g' \
 -e 's|\$INSTALLDIR\$|'"$TESTBED_DIR"'/fedora|g' \
 <fedora.properties.template >fedora.properties
+
 java -jar fedora*.jar fedora.properties
 rm fedora.properties
 popd
@@ -128,6 +132,20 @@ popd
 # Install into tomcat: webservices
 cp $BASEDIR/webservices/*.war $TESTBED_DIR/tomcat/webapps
 
+
+# Make it possible to log into the tomcat web manager-interface
+pushd $TESTBED_DIR/tomcat/conf
+cp tomcat-users.xml tomcat-users-backup.xml
+
+sed \
+-e 's|<tomcat-users>|<tomcat-users>\
+<role rolename="manager"/>\
+<user username="tomcat" password="tomcat" roles="manager"/>|g' \
+<tomcat-users-backup.xml >tomcat-users.xml
+
+popd
+
+
 #TODO: take care of Fedora validator hook..
 
 #TODO: config webservices (ecm, bitstorage,..)
@@ -135,7 +153,7 @@ cp $BASEDIR/webservices/*.war $TESTBED_DIR/tomcat/webapps
 
 chmod +x $TESTBED_DIR/tomcat/bin/*.sh
 # Start the tomcat server
-bash $TESTBED_DIR/tomcat/bin/startup.sh
+$TESTBED_DIR/tomcat/bin/startup.sh
 
 sleep 30
 
