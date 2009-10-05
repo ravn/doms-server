@@ -151,6 +151,25 @@ cp ../ecm.war $TESTBED_DIR/tomcat/webapps
 popd
 rm -rf $BASEDIR/temp
 
+#INSTALL LOWLEVELBITSTORAGE
+mkdir $BASEDIR/temp
+pushd $BASEDIR/temp
+cp ../webservices/lowlevelbitstorage.war .
+unzip lowlevelbitstorage.war -d lowlevelbitstorage
+rm lowlevelbitstorage.war
+cd lowlevelbitstorage/WEB-INF/classes
+sed \
+-e 's|<script>bin/server.sh</script>|'"<script>$BITSTORAGE_SCRIPT</script>"'|g' \
+-e 's|<server>domstest@halley</server>|'"<server>$BITSTORAGE_SERVER</server>"'|g' \
+-e 's|<bitfinder>http://bitfinder.statsbiblioteket.dk/</bitfinder>|'"<bitfinder>$BITFINDER</bitfinder>"'|g' \
+< bitstorageSshImpl.xml > bitstorageSshImpl.xml.new
+rm bitstorageSshImpl.xml
+mv bitstorageSshImpl.xml.new bitstorageSshImpl.xml
+cd ../..
+zip ../lowlevelbitstorage.war -r .
+cp ../lowlevelbitstorage.war $TESTBED_DIR/tomcat/webapps
+popd
+rm -rf $BASEDIR/temp
 
 
 # Make it possible to log into the tomcat web manager-interface
