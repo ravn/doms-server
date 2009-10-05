@@ -128,9 +128,29 @@ pushd $TESTBED_DIR
 cp fedora/install/fedora.war $TESTBED_DIR/tomcat/webapps
 popd
 
-
+# PLACEHOLDER UNTIL WE HAVE SPECIFIC INSTALL INSTRUCTIONS FOR EACH
 # Install into tomcat: webservices
 cp $BASEDIR/webservices/*.war $TESTBED_DIR/tomcat/webapps
+
+
+#INSTALL ECM
+mkdir $BASEDIR/temp
+pushd $BASEDIR/temp
+cp ../webservices/ecm.war .
+unzip ecm.war -d ecm
+rm ecm.war
+cd ecm/WEB-INF
+sed \
+-e 's|http://localhost:7910/fedora|'"http://localhost:$TOMCATHTTP/fedora"'|g' \
+<web.xml > web.xml.new
+rm web.xml
+mv web.xml.new web.xml
+cd ..
+zip ../ecm.war -r .
+cp ../ecm.war $TESTBED_DIR/tomcat/webapps
+popd
+rm -rf $BASEDIR/temp
+
 
 
 # Make it possible to log into the tomcat web manager-interface
