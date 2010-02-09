@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # $Id install.sh $
-# Author:
-# Date:   2008-08-21
+# $Author:$
+# $Date:   2008-08-21$
 #
-# Script for installing the testbed for use by the doms gui.
+# Script for installing the testbed
 #
 # USAGE: After unpacking, edit conf/config to suit your needs, and run this
 # script.
@@ -86,8 +86,6 @@ mv ${TOMCATZIP%.*} tomcat
 rm $TOMCATZIP
 popd
 
-
-
 #Patch the config scripts
 pushd $BASEDIR/tomcat
 # sed/shell magic below according to  http://www.grymoire.com/Unix/Sed.html
@@ -99,11 +97,28 @@ sed \
 -e 's/\$TOMCATSHUTDOWN\$/'"$TOMCAT_SHUTDOWNPORT"'/g' \
 <server.xml.template >server.xml
 
+mv server.xml $TESTBED_DIR/tomcat/conf/
+popd
+
+
+# Make it possible to log into the tomcat web manager-interface
+pushd $TESTBED_DIR/tomcat/conf
+cp tomcat-users.xml tomcat-users-backup.xml
+
+sed \
+-e 's|<tomcat-users>|<tomcat-users>\
+<role rolename="manager"/>\
+<user username="tomcat" password="tomcat" roles="manager"/>|g' \
+<tomcat-users-backup.xml >tomcat-users.xml
+
+popd
+
 #TODO
 #cp $SCRIPT_DIR/tomcat/bin/*  $TESTBED_DIR/tomcat/bin
 
-mv server.xml $TESTBED_DIR/tomcat/conf/
-popd
+#TODO Logging settings for tomcat
+
+chmod +x $TESTBED_DIR/tomcat/bin/*.sh
 
 
 
@@ -128,7 +143,7 @@ pushd $TESTBED_DIR
 cp fedora/install/fedora.war $TESTBED_DIR/tomcat/webapps
 popd
 
-# PLACEHOLDER UNTIL WE HAVE SPECIFIC INSTALL INSTRUCTIONS FOR EACH
+# TODO: PLACEHOLDER UNTIL WE HAVE SPECIFIC INSTALL INSTRUCTIONS FOR EACH
 # Install into tomcat: webservices
 cp $BASEDIR/webservices/*.war $TESTBED_DIR/tomcat/webapps
 
@@ -171,32 +186,15 @@ cp ../lowlevelbitstorage.war $TESTBED_DIR/tomcat/webapps
 popd
 rm -rf $BASEDIR/temp
 
-
-# Make it possible to log into the tomcat web manager-interface
-pushd $TESTBED_DIR/tomcat/conf
-cp tomcat-users.xml tomcat-users-backup.xml
-
-sed \
--e 's|<tomcat-users>|<tomcat-users>\
-<role rolename="manager"/>\
-<user username="tomcat" password="tomcat" roles="manager"/>|g' \
-<tomcat-users-backup.xml >tomcat-users.xml
-
-popd
-
-
 #TODO: take care of Fedora validator hook..
 
 #TODO: config webservices (ecm, bitstorage,..)
 
+export FEDORA_HOME=$TESTBED_DIR/fedora
 
-chmod +x $TESTBED_DIR/tomcat/bin/*.sh
 # Start the tomcat server
 $TESTBED_DIR/tomcat/bin/startup.sh
-
 sleep 30
-
-export FEDORA_HOME=$TESTBED_DIR/fedora
 
 #TODO: provide initial objects to ingest
 #sh $TESTBED_DIR/fedora/client/bin/fedora-ingest.sh dir $TESTBED_DIR/objects\
@@ -204,6 +202,3 @@ export FEDORA_HOME=$TESTBED_DIR/fedora
 # localhost:$TOMCAT_HTTPPORT $FEDORAADMIN $FEDORAADMINPASS http
 
 $TESTBED_DIR/tomcat/bin/shutdown.sh
-
-
-

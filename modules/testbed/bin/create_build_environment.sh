@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # $Id create_build_environment.sh $
-# Author: jrg
-# Date:   2009-09-09
+# $Author: jrg$
+# $Date:   2009-09-09$
 #
 # Script for producing the build environment for the DOMS testbed.
 #
