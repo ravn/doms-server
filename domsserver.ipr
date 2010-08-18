@@ -18,6 +18,22 @@
       <maximumStackSize value="32" />
       <properties />
     </buildFile>
+    <buildFile url="file://$PROJECT_DIR$/modules/centralWebservice/centralWebserviceInterface/build.xml">
+      <additionalClassPath />
+      <antReference projectDefault="true" />
+      <customJdkName value="" />
+      <maximumHeapSize value="128" />
+      <maximumStackSize value="32" />
+      <properties />
+    </buildFile>
+    <buildFile url="file://$PROJECT_DIR$/modules/centralWebservice/centralWebserviceImpl/build.xml">
+      <additionalClassPath />
+      <antReference projectDefault="true" />
+      <customJdkName value="" />
+      <maximumHeapSize value="128" />
+      <maximumStackSize value="32" />
+      <properties />
+    </buildFile>
   </component>
   <component name="BuildJarProjectSettings">
     <option name="BUILD_JARS_ON_MAKE" value="false" />
@@ -240,6 +256,8 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/modules/centralWebservice/centralWebserviceImpl/centralWebserviceImpl.iml" filepath="$PROJECT_DIR$/modules/centralWebservice/centralWebserviceImpl/centralWebserviceImpl.iml" group="centralWebservice" />
+      <module fileurl="file://$PROJECT_DIR$/modules/centralWebservice/centralWebserviceInterface/centralWebserviceInterface.iml" filepath="$PROJECT_DIR$/modules/centralWebservice/centralWebserviceInterface/centralWebserviceInterface.iml" group="centralWebservice" />
       <module fileurl="file://$PROJECT_DIR$/domsserver.iml" filepath="$PROJECT_DIR$/domsserver.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/domsutils/domsutils.iml" filepath="$PROJECT_DIR$/modules/domsutils/domsutils.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/testbed/testbed.iml" filepath="$PROJECT_DIR$/modules/testbed/testbed.iml" />
@@ -287,5 +305,62 @@
     <mapping directory="" vcs="svn" />
   </component>
   <component name="WebServicesPlugin" addRequiredLibraries="true" />
+  <component name="libraryTable">
+    <library name="jaxws">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/jaxws-ri-2.1.7/jars/jaxb-impl.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jaxws-ri-2.1.7/jars/activation.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jaxws-ri-2.1.7/jars/saaj-api.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jaxws-ri-2.1.7/jars/resolver.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jaxws-ri-2.1.7/jars/jaxb-xjc.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jaxws-ri-2.1.7/jars/stax-ex.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jaxws-ri-2.1.7/jars/saaj-impl.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jaxws-ri-2.1.7/jars/jsr250-api.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jaxws-ri-2.1.7/jars/jaxws-rt.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jaxws-ri-2.1.7/jars/jsr181-api.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jaxws-ri-2.1.7/jars/woodstox.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jaxws-ri-2.1.7/jars/jaxb-api.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jaxws-ri-2.1.7/jars/jsr173_api.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jaxws-ri-2.1.7/jars/http.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jaxws-ri-2.1.7/jars/FastInfoset.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jaxws-ri-2.1.7/jars/mimepull.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jaxws-ri-2.1.7/jars/jaxws-tools.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jaxws-ri-2.1.7/jars/streambuffer.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/jaxws-ri-2.1.7/jars/jaxws-api.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/lib/jaxws-ri-2.1.7/apidocs/jaxws-2.1.7-apidocs.zip!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/lib/jaxws-ri-2.1.7/src/jaxws-src.zip!/jaxws-ri-20090416/src" />
+      </SOURCES>
+    </library>
+    <library name="domsutils">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/domsutil-0.0.6/jars/surveyable_interface.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/domsutil-0.0.6/jars/webservice-common.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/domsutil-0.0.6/jars/surveyable_impl.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/lib/domsutil-0.0.6/apidocs/domsutil-0.0.6-doc.zip!/domsutil-0.0.6" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/lib/domsutil-0.0.6/src/domsutil-0.0.6-src.zip!/domsutil-0.0.6/modules/surveyable/surveyable_interface/src" />
+        <root url="jar://$PROJECT_DIR$/lib/domsutil-0.0.6/src/domsutil-0.0.6-src.zip!/domsutil-0.0.6/modules/webservice-common/src" />
+        <root url="jar://$PROJECT_DIR$/lib/domsutil-0.0.6/src/domsutil-0.0.6-src.zip!/domsutil-0.0.6/modules/surveyable/surveyable_impl/src" />
+      </SOURCES>
+    </library>
+    <library name="servlet-api">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/servlet-api-2.5-apache-tomcat-6.0.20/jars/servlet-api.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/lib/servlet-api-2.5-apache-tomcat-6.0.20/apidocs/servlet-api-2.5-apache-tomcat-6.0.20-apidocs.zip!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/lib/servlet-api-2.5-apache-tomcat-6.0.20/src/servlet-api-2.5-apache-tomcat-6.0.20-src.zip!/" />
+      </SOURCES>
+    </library>
+  </component>
 </project>
 

@@ -1,0 +1,639 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  ~ $Id: lowlevel.wsdl 507 2010-08-17 12:30:24Z blekinge $
+  ~ $Revision: 507 $
+  ~ $Date: 2010-08-17 14:30:24 +0200 (Tue, 17 Aug 2010) $
+  ~ $Author: blekinge $
+  ~
+  ~ The DOMS project.
+  ~ Copyright (C) 2007-2010  The State and University Library
+  ~
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://central.doms.statsbiblioteket.dk/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             targetNamespace="http://central.doms.statsbiblioteket.dk/"
+             name="CentralWebserviceService">
+    <types>
+        <xsd:schema>
+            <xsd:import
+                    namespace="http://central.doms.statsbiblioteket.dk/"
+                    schemaLocation="centralWebservice.xsd"/>
+        </xsd:schema>
+    </types>
+
+    <!--Object method messages-->
+    <message name="newObject">
+        <part name="parameters" element="tns:newObject"/>
+    </message>
+    <message name="newObjectResponse">
+        <part name="parameters" element="tns:newObjectResponse"/>
+    </message>
+    <message name="deleteObject">
+        <part name="parameters" element="tns:deleteObject"/>
+    </message>
+    <message name="deleteObjectResponse">
+        <part name="parameters" element="tns:deleteObjectResponse"/>
+    </message>
+    <message name="markPublishedObject">
+        <part name="parameters" element="tns:markPublishedObject"/>
+    </message>
+    <message name="markPublishedObjectResponse">
+        <part name="parameters" element="tns:markPublishedObjectResponse"/>
+    </message>
+    <message name="markInProgressObject">
+        <part name="parameters" element="tns:markInProgressObject"/>
+    </message>
+    <message name="markInProgressObjectResponse">
+        <part name="parameters" element="tns:markInProgressObjectResponse"/>
+    </message>
+    <message name="listDatastreamsObject">
+        <part name="parameters" element="tns:listDatastreamsObject"/>
+    </message>
+    <message name="listDatastreamsObjectResponse">
+        <part name="parameters" element="tns:listDatastreamsObjectResponse"/>
+    </message>
+    <message name="getTitleObject">
+        <part name="parameters" element="tns:getTitleObject"/>
+    </message>
+    <message name="getTitleObjectResponse">
+        <part name="parameters" element="tns:getTitleObjectResponse"/>
+    </message>
+
+    <!--Datastream method messages-->
+
+
+    <message name="newDatastream">
+        <part name="parameters" element="tns:newDatastream"/>
+    </message>
+    <message name="newDatastreamResponse">
+        <part name="parameters" element="tns:newDatastreamResponse"/>
+    </message>
+    <message name="deleteDatastream">
+        <part name="parameters" element="tns:deleteDatastream"/>
+    </message>
+    <message name="deleteDatastreamResponse">
+        <part name="parameters" element="tns:deleteDatastreamResponse"/>
+    </message>
+    <message name="modifyDatastream">
+        <part name="parameters" element="tns:modifyDatastream"/>
+    </message>
+    <message name="modifyDatastreamResponse">
+        <part name="parameters" element="tns:modifyDatastreamResponse"/>
+    </message>
+    <message name="getDatastreamContents">
+        <part name="parameters" element="tns:getDatastreamContents"/>
+    </message>
+    <message name="getDatastreamContentsResponse">
+        <part name="parameters" element="tns:getDatastreamContentsResponse"/>
+    </message>
+    <message name="getDatastreamProfile">
+        <part name="parameters" element="tns:getDatastreamProfile"/>
+    </message>
+    <message name="getDatastreamProfileResponse">
+        <part name="parameters" element="tns:getDatastreamProfileResponse"/>
+    </message>
+
+
+    <!--File method messages -->
+    <!--
+
+    <message name="addFile">
+        <part name="parameters" element="tns:addFile"/>
+    </message>
+    <message name="addFileResponse">
+        <part name="parameters" element="tns:addFileResponse"/>
+    </message>
+    <message name="deleteFile">
+        <part name="parameters" element="tns:deleteFile"/>
+    </message>
+    <message name="deleteFileResponse">
+        <part name="parameters" element="tns:deleteFileResponse"/>
+    </message>
+    <message name="getFileURL">
+        <part name="parameters" element="tns:getFileURL"/>
+    </message>
+    <message name="getFileURLResponse">
+        <part name="parameters" element="tns:getFileURLResponse"/>
+    </message>
+
+    -->
+    <!--Relationship method messages -->
+    <!--
+
+    <message name="addRelation">
+        <part name="parameters" element="tns:addRelationObjects"/>
+    </message>
+    <message name="addRelationResponse">
+        <part name="parameters" element="tns:addRelationResponse"/>
+    </message>
+    <message name="getRelations">
+        <part name="parameters" element="tns:getRelationsObject"/>
+    </message>
+    <message name="getRelationsResponse">
+        <part name="parameters" element="tns:getRelationsResponse"/>
+    </message>
+    <message name="getNamedRelations">
+        <part name="parameters" element="tns:getNamedRelations"/>
+    </message>
+    <message name="getNamedRelationsResponse">
+        <part name="parameters" element="tns:getNamedRelationsResponse"/>
+    </message>
+    <message name="deleteRelation">
+        <part name="parameters" element="tns:deleteRelation"/>
+    </message>
+    <message name="deleteRelationResponse">
+        <part name="parameters" element="tns:deleteRelationResponse"/>
+    </message>
+    <message name="modifyRelation">
+        <part name="parameters" element="tns:modifyRelation"/>
+    </message>
+    <message name="modifyRelationResponse">
+        <part name="parameters" element="tns:modifyRelationResponse"/>
+    </message>
+
+    -->
+    <!--Search operations-->
+    <!--
+
+    <message name="findObjects">
+        <part name="parameters" element="tns:findObjects"/>
+    </message>
+    <message name="findObjectsResponse">
+        <part name="parameters" element="tns:findObjectsResponse"/>
+    </message>
+    <message name="listObjects">
+        <part name="parameters" element="tns:listObjects"/>
+    </message>
+    <message name="listObjectsResponse">
+        <part name="parameters" element="tns:listObjectsResponse"/>
+    </message>
+    <message name="riQuery">
+        <part name="parameters" element="tns:riQuery"/>
+    </message>
+    <message name="riQueryResponse">
+        <part name="parameters" element="tns:riQueryResponse"/>
+    </message>
+
+    -->
+    <!--Structural method messages-->
+    <!--
+
+        <message name="getViewBundle">
+            <part name="parameters" element="tns:getViewBundle"/>
+        </message>
+        <message name="getViewBundleResponse">
+            <part name="parameters" element="tns:getViewBundleResponse"/>
+        </message>
+        <message name="getViewStructure">
+            <part name="parameters" element="tns:getViewStructure"/>
+        </message>
+        <message name="getViewStructureResponse">
+            <part name="parameters" element="tns:getViewStructureResponse"/>
+        </message>
+        <message name="listCollections">
+            <part name="parameters" element="tns:listCollections"/>
+        </message>
+        <message name="listCollectionsResponse">
+            <part name="parameters" element="tns:listCollectionsResponse"/>
+        </message>
+        <message name="getEntryTemplatesForCollection">
+            <part name="parameters" element="tns:getEntryTemplatesForCollection"/>
+        </message>
+        <message name="getEntryTemplatesForCollectionResponse">
+            <part name="parameters" element="tns:getEntryTemplatesForCollectionResponse"/>
+        </message>
+        <message name="getSubItemTemplates">
+            <part name="parameters" element="tns:getSubItemTemplates"/>
+        </message>
+        <message name="getSubItemTemplatesResponse">
+            <part name="parameters" element="tns:getSubItemTemplatesResponse"/>
+        </message>
+        <message name="addSubItem">
+            <part name="parameters" element="tns:addSubItem"/>
+        </message>
+        <message name="addSubItemResponse">
+            <part name="parameters" element="tns:addSubItemResponse"/>
+        </message>
+        <message name="getAllowedRelations">
+            <part name="parameters" element="tns:getAllowedRelations"/>
+        </message>
+        <message name="getAllowedRelationsResponse">
+            <part name="parameters" element="tns:getAllowedRelationsResponse"/>
+        </message>
+        <message name="listObjectsWithContentModel">
+            <part name="parameters" element="tns:listObjectsWithContentModel"/>
+        </message>
+        <message name="listObjectsWithContentModelResponse">
+            <part name="parameters" element="tns:listObjectsWithContentModelResponse"/>
+        </message>
+        <message name="getContentModel">
+            <part name="parameters" element="tns:getContentModel"/>
+        </message>
+        <message name="getContentModelResponse">
+            <part name="parameters" element="tns:getContentModelResponse"/>
+        </message>
+    -->
+
+    <portType name="CentralWebservice">
+        <documentation>Central interface to the DOMS system
+        </documentation>
+        <!--Object methods-->
+        <operation name="newObject">
+            <documentation>Given a template, create a new object, return the PID
+            </documentation>
+            <input message="tns:newObject"/>
+            <output message="tns:newObjectResponse"/>
+        </operation>
+        <operation name="deleteObject">
+            <documentation>Given a PID, mark the object as deleted (note: object
+                may only be undeleted by direct access to Fedora)
+            </documentation>
+            <input message="tns:deleteObject"/>
+            <output message="tns:deleteObjectResponse"/>
+        </operation>
+        <operation name="markPublishedObject">
+            <documentation>Given a PID, mark the object as published. Will fail if object does not validate.
+            </documentation>
+            <input message="tns:markPublishedObject"/>
+            <output message="tns:markPublishedObjectResponse"/>
+        </operation>
+        <operation name="markInProgressObject">
+            <documentation>Given a PID, mark the object as in progress.
+            </documentation>
+            <input message="tns:markInProgressObject"/>
+            <output message="tns:markInProgressObjectResponse"/>
+        </operation>
+        <operation name="listDatastreamsObject">
+            <documentation>Given a PID, list datastream names in object.
+            </documentation>
+            <input message="tns:listDatastreamsObject"/>
+            <output message="tns:listDatastreamsObjectResponse"/>
+        </operation>
+        <operation name="getTitleObject">
+            <documentation>Given a PID, return the title of the object.
+            </documentation>
+            <input message="tns:getTitleObject"/>
+            <output message="tns:getTitleObjectResponse"/>
+        </operation>
+
+        <!--Datastream methods-->
+
+
+        <operation name="newDatastream">
+            <documentation>Given a pid and a datastream name, add a datastream
+                with that name, and given content. Will fail if name already
+                exists with different content.
+            </documentation>
+            <input message="tns:newDatastream"/>
+            <output message="tns:newDatastreamResponse"/>
+        </operation>
+        <operation name="deleteDatastream">
+            <documentation>Given a pid and a datastream name, mark that datastream as deleted.
+            </documentation>
+            <input message="tns:deleteDatastream"/>
+            <output message="tns:deleteDatastreamResponse"/>
+        </operation>
+        <operation name="modifyDatastream">
+            <documentation>Given a pid and a datastream name, replace the contents of that datastream with the given content. Will fail of datastream does not exist.
+            </documentation>
+            <input message="tns:modifyDatastream"/>
+            <output message="tns:modifyDatastreamResponse"/>
+        </operation>
+        <operation name="getDatastreamContents">
+            <documentation>Given a pid and a datastream, return the datastream content. Will fail of datastream does not exist.
+            </documentation>
+            <input message="tns:getDatastreamContents"/>
+            <output message="tns:getDatastreamContentsResponse"/>
+        </operation>
+        <operation name="getDatastreamProfile">
+            <documentation>Given a pid and a datastream, return the datastream profile. Will fail of datastream does not exist.
+            </documentation>
+            <input message="tns:getDatastreamProfile"/>
+            <output message="tns:getDatastreamProfileResponse"/>
+        </operation>
+
+
+        <!--File methods        -->
+
+        <!--
+
+                <operation name="addFile">
+                    <documentation>Given a pid and a name, add a new file to the object with the given content. Will fail if pid does not describe a file object, if a file is already added to the object with different content, or if content does not match checksum.
+                    </documentation>
+                    <input message="tns:addFile"/>
+                    <output message="tns:addFileResponse"/>
+                </operation>
+                <operation name="deleteFile">
+                    <documentation>Given a pid, delete the file in this object. This will fail if this is not a file object, if no file is present in the object, or if the object has been published so the file is undeletable.
+
+                        /!\ TODO: Do we need/want this operation?
+                    </documentation>
+                    <input message="tns:deleteFile"/>
+                    <output message="tns:deleteFileResponse"/>
+                </operation>
+                <operation name="getFileURL">
+                    <documentation>Given a pid, return an externally resolvable URL that disseminates this file.
+                    </documentation>
+                    <input message="tns:getFileURL"/>
+                    <output message="tns:getFileURLResponse"/>
+                </operation>
+
+
+
+
+        -->
+        <!--Relationship operations-->
+        <!--
+
+
+                <operation name="addRelation">
+                    <documentation>Add a relation between two objects.
+                    </documentation>
+                    <input message="tns:addRelation"/>
+                    <output message="tns:addRelationResponse"/>
+                </operation>
+                <operation name="getRelations">
+                    <documentation>Given a pid, list relations out of this object
+                    </documentation>
+                    <input message="tns:getRelations"/>
+                    <output message="tns:getRelationsResponse"/>
+                </operation>
+                <operation name="getNamedRelations">
+                    <documentation>Given a pid, list relations out of this object of a specific type
+                    </documentation>
+                    <input message="tns:getNamedRelations"/>
+                    <output message="tns:getNamedRelationsResponse"/>
+                </operation>
+                <operation name="deleteRelation">
+                    <documentation>Given a specific relation, remove it.
+                    </documentation>
+                    <input message="tns:deleteRelation"/>
+                    <output message="tns:deleteRelationResponse"/>
+                </operation>
+                <operation name="modifyRelation">
+                    <documentation>Given an old relation, replace it with a new relation.
+
+                        /!\ TODO: Do we need this operation?
+                    </documentation>
+                    <input message="tns:modifyRelation"/>
+                    <output message="tns:modifyRelationResponse"/>
+                </operation>
+
+
+        -->
+        <!--Search Operations-->
+        <!--
+
+
+                <operation name="findObjects">
+                    <documentation>Given a query string, return list of objects matching
+                        /!\ TODO: Should we return more than pids?
+
+                        /!\ TODO: Paging
+                    </documentation>
+                    <input message="tns:findObjects"/>
+                    <output message="tns:findObjectsResponse"/>
+                </operation>
+                <operation name="listObjects">
+                    <documentation>Given a date, return a list of objects modified since then.
+
+                        /!\ TODO: Should we return more than pids?
+
+                        /!\ TODO: Paging
+                    </documentation>
+                    <input message="tns:listObjects"/>
+                    <output message="tns:listObjectsResponse"/>
+                </operation>
+                <operation name="riQuery">
+                    <documentation>Given a query string for the resource index, return result.
+
+                        /!\ TODO: Specify better
+
+                        /!\ TODO: Do we want direct access to the Resource Index?
+                    </documentation>
+                    <input message="tns:riQuery"/>
+                    <output message="tns:riQueryResponse"/>
+                </operation>
+
+        -->
+
+        <!--View operations-->
+        <!--
+
+        <operation name="getViewBundle">
+            <documentation>Given an entry PID and a view name, return a bundle
+            </documentation>
+            <input message="tns:getViewBundle"/>
+            <output message="tns:getViewBundleResponse"/>
+        </operation>
+        <operation name="getViewStructure">
+            <documentation>Given an entry PID and a view name, return a spanning tree over the view graph.
+
+                /!\ TODO: DFS or BFS? How does the data structure look?
+            </documentation>
+            <input message="tns:getViewStructure"/>
+            <output message="tns:getViewStructureResponse"/>
+        </operation>
+
+        -->
+        <!--Structural operations-->
+        <!--
+
+                <operation name="listCollections">
+                    <documentation>List all collection objects in DOMS.
+
+                        /!\ TODO: Should this just be an RI-query?
+                    </documentation>
+                    <input message="tns:listCollections"/>
+                    <output message="tns:listCollectionsResponse"/>
+                </operation>
+                <operation name="getEntryTemplatesForCollection">
+                    <documentation>Given the PID of a collection, return all templates for that collection, that are also entry objects for the given view name.
+
+                        /!\ TODO: Should this just be an RI-query?
+                    </documentation>
+                    <input message="tns:getEntryTemplatesForCollection"/>
+                    <output message="tns:getEntryTemplatesForCollectionResponse"/>
+                </operation>
+                <operation name="getSubItemTemplates">
+                    <documentation>Given an object and a named view, return templates that could be used to generate subobjects for that pid in that view.
+
+                        /!\ TODO: Should we also return the specific relation of the template?
+                        /!\ TODO: Should this just be an RI-query?
+                    </documentation>
+                    <input message="tns:getSubItemTemplates"/>
+                    <output message="tns:getSubItemTemplatesResponse"/>
+                </operation>
+                <operation name="addSubItem">
+                    <documentation>Given an object, a named view, and a template, create a new object for that template, then add relation between old and new object in the view. Will fail if there is no allwed relation in the view between the object and the template.
+
+                        /!\ TODO: Should we also get as paramter the specific relation of the template?
+                        /!\ TODO: Should this just be an RI-query?
+                    </documentation>
+                    <input message="tns:addSubItem"/>
+                    <output message="tns:addSubItemResponse"/>
+                </operation>
+                <operation name="getAllowedRelations">
+                    <documentation>Given a pid, return possible relations that could be added, and the content models allowed as object for those relations.
+                    </documentation>
+                    <input message="tns:getAllowedRelations"/>
+                    <output message="tns:getAllowedRelationsResponse"/>
+                </operation>
+                <operation name="listObjectsWithContentModel">
+                    <documentation>Given a content model pid, list all objects that subscribe to that content model.
+
+                        /!\ TODO: Should this just be an RI-query?
+                    </documentation>
+                    <input message="tns:listObjectsWithContentModel"/>
+                    <output message="tns:listObjectsWithContentModelResponse"/>
+                </operation>
+                <operation name="getContentModel">
+                    <documentation>?getContentModel(pid) => compoundContentModel
+
+                        /!\ TODO: ContentModels for views?
+
+                        /!\ TODO: Should this just be an RI-query?
+                    </documentation>
+                    <input message="tns:getContentModel"/>
+                    <output message="tns:getContentModelResponse"/>
+                </operation>
+        -->
+    </portType>
+    <binding name="CentralWebservicePortBinding"
+             type="tns:CentralWebservice">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"
+                      style="document"/>
+        <operation name="newObject">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="deleteObject">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+
+        <operation name="markPublishedObject">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+
+        <operation name="markInProgressObject">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+
+        <operation name="listDatastreamsObject">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+
+        <operation name="getTitleObject">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+
+        <!--Datastream methods-->
+        <operation name="newDatastream">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="deleteDatastream">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="modifyDatastream">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getDatastreamContents">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getDatastreamProfile">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="CentralWebserviceService">
+        <port name="CentralWebservicePort"
+              binding="tns:CentralWebservicePortBinding">
+
+            <soap:address
+                    location="http://localhost:7910/lowlevelbitstorage/lowlevel/"/>
+        </port>
+    </service>
+</definitions>

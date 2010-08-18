@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+  ~ $Id: lowlevel.xsd 507 2010-08-17 12:30:24Z blekinge $
+  ~ $Revision: 507 $
+  ~ $Date: 2010-08-17 14:30:24 +0200 (Tue, 17 Aug 2010) $
+  ~ $Author: blekinge $
+  ~
+  ~ The DOMS project.
+  ~ Copyright (C) 2007-2010  The State and University Library
+  ~
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<xs:schema xmlns:tns="http://central.doms.statsbiblioteket.dk/"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0"
+           targetNamespace="http://central.doms.statsbiblioteket.dk/">
+
+    <!--Object operations-->
+    <xs:element name="newObject" type="tns:singlePid"/>
+    <xs:element name="newObjectResponse" type="tns:string"/>
+
+    <xs:element name="deleteObject" type="tns:singlePid"/>
+    <xs:element name="deleteObjectResponse" type="tns:void"/>
+
+    <xs:element name="markPublishedObject" type="tns:singlePid"/>
+    <xs:element name="markPublishedObjectResponse" type="tns:void"/>
+
+    <xs:element name="markInProgressObject" type="tns:singlePid"/>
+    <xs:element name="markInProgressObjectResponse" type="tns:void"/>
+
+    <xs:element name="listDatastreamsObject" type="tns:singlePid"/>
+    <xs:element name="listDatastreamsObjectResponse" type="tns:Stringlist"/>
+
+    <xs:element name="getTitleObject" type="tns:singlePid"/>
+    <xs:element name="getTitleObjectResponse" type="tns:string"/>
+
+
+    <!--Datastream operations-->
+    <xs:element name="newDatastream" type="tns:pidAndDSIDandContents"/>
+    <xs:element name="newDatastreamResponse" type="tns:void"/>
+
+    <xs:element name="deleteDatastream" type="tns:pidAndDSID"/>
+    <xs:element name="deleteDatastreamResponse" type="tns:void"/>
+
+    <xs:element name="modifyDatastream" type="tns:pidAndDSIDandContents"/>
+    <xs:element name="modifyDatastreamResponse" type="tns:void"/>
+
+    <xs:element name="getDatastreamContents" type="tns:pidAndDSID"/>
+    <xs:element name="getDatastreamContentsResponse" type="tns:string"/>
+
+    <xs:element name="getDatastreamProfile" type="tns:pidAndDSID"/>
+    <xs:element name="getDatastreamProfileResponse" type="tns:DatastreamProfile"/>
+
+
+    <!--Simple types-->
+    <xs:complexType name="singlePid">
+        <xs:sequence>
+            <xs:element name="pid" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="void">
+        <xs:sequence>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Stringlist">
+        <xs:sequence>
+            <xs:element name="string" type="xs:string" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="string">
+        <xs:sequence>
+            <xs:element name="string" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="pidAndDSID">
+        <xs:sequence>
+            <xs:element name="pid" type="xs:string"/>
+            <xs:element name="datastream" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="pidAndDSIDandContents">
+        <xs:sequence>
+            <xs:element name="pid" type="xs:string"/>
+            <xs:element name="datastream" type="xs:string"/>
+            <xs:element name="contents" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <!--Complex types-->
+    <xs:complexType name="DatastreamProfile"></xs:complexType>
+</xs:schema>

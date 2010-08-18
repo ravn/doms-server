@@ -1,0 +1,31 @@
+<project name="centralWebserviceImpl" basedir=".">
+
+
+    <property name="global.dir" value="${basedir}/../../.."/>
+
+    <property file="${global.dir}/build.properties"/>
+
+    <property name="warfilename" value="centralDomsWebservice.war"/>
+    <property name="wsdl.dir"
+              value="${global.dir}/modules/centralWebservice/centralWebserviceInterface/data/wsdl"/>
+
+
+    <!--Contain the normal build tasks, including war-->
+    <import file="${global.dir}/build/build-webservice-module.xml"/>
+
+
+    <dirset id="module.dependencies" dir="${global.dir}/modules/">
+        <include name="centralWebservice/centralWebserviceInterface"/>
+    </dirset>
+
+
+    <!--Project libs used by this module-->
+    <dirset id="project.libs" dir="${global.dir}/lib/">
+        <include name="${domsutil.lib}"/>
+        <include name="${sbutils.lib}"/>
+        <include name="${jaxws-ri.lib}"/>
+        <include name="${commons-logging.lib}"/>
+    </dirset>
+
+
+</project>
