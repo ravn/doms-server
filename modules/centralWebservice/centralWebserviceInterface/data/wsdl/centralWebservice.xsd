@@ -66,7 +66,32 @@
     <xs:element name="getDatastreamProfile" type="tns:pidAndDSID"/>
     <xs:element name="getDatastreamProfileResponse" type="tns:DatastreamProfile"/>
 
+    <!--File methods-->
+    <xs:element name="addFile" type="tns:pidAndFileNameAndChecksumAndContents"/>
+    <xs:element name="addFileResponse" type="tns:void"/>
 
+    <xs:element name="deleteFile" type="tns:singlePid"/>
+    <xs:element name="deleteFileResponse" type="tns:void"/>
+
+    <xs:element name="getFileURL" type="tns:singlePid"/>
+    <xs:element name="getFileURLResponse" type="tns:URL"/>
+
+    <!--Relation methods-->
+
+    <xs:element name="addRelation" type="tns:relation"/>
+    <xs:element name="addRelationResponse" type="tns:void"/>
+
+    <xs:element name="getRelations" type="tns:singlePid"/>
+    <xs:element name="getRelationsResponse" type="tns:ListOfRelations"/>
+    
+    <xs:element name="getNamedRelations" type="tns:singlePid"/>
+    <xs:element name="getNamedRelationsResponse" type="tns:ListOfRelations"/>
+    
+    <xs:element name="deleteRelation" type="tns:relation"/>
+    <xs:element name="deleteRelationResponse" type="tns:void"/>
+
+
+    
     <!--Simple types-->
     <xs:complexType name="singlePid">
         <xs:sequence>
@@ -103,6 +128,40 @@
             <xs:element name="pid" type="xs:string"/>
             <xs:element name="datastream" type="xs:string"/>
             <xs:element name="contents" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="URL">
+        <xs:sequence>
+            <xs:element name="URL" type="xs:anyURI"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="pidAndFileNameAndChecksumAndContents">
+        <xs:sequence>
+            <xs:element name="pid" type="xs:string"/>
+            <xs:element name="filename" type="xs:string"/>
+            <xs:element name="md5sum" type="xs:string"/>
+            <xs:element xmlns:ns1="http://www.w3.org/2005/05/xmlmime"
+                        name="contents"
+                        ns1:expectedContentTypes="application/octet-stream"
+                        type="xs:base64Binary"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="relation">
+        <xs:sequence>
+            <xs:element name="subject" type="xs:string"/>
+            <xs:element name="property" type="xs:string"/>
+            <xs:element name="object" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ListOfRelations">
+        <xs:sequence>
+            <xs:element name="relation" type="tns:relation"
+                        minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 

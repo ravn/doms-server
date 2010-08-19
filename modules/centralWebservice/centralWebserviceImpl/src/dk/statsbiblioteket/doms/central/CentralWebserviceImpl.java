@@ -100,4 +100,53 @@ public class CentralWebserviceImpl implements CentralWebservice {
                               "") String datastream) {
         //To change body of implemented methods use File | Settings | File Templates.
     }
+
+    public void addFile(
+            @WebParam(name = "pid", targetNamespace = "") String pid,
+            @WebParam(name = "filename", targetNamespace = "")
+            String filename,
+            @WebParam(name = "md5sum", targetNamespace = "")
+            String md5Sum,
+            @WebParam(name = "contents", targetNamespace = "")
+            DataHandler contents) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void deleteFile(
+            @WebParam(name = "pid", targetNamespace = "") String pid) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public String getFileURL(
+            @WebParam(name = "pid", targetNamespace = "") String pid) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void addRelation(
+            @WebParam(name = "subject", targetNamespace = "") String subject,
+            @WebParam(name = "property", targetNamespace = "")
+            String property,
+            @WebParam(name = "object", targetNamespace = "")
+            String object) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<Relation> getRelations(
+            @WebParam(name = "pid", targetNamespace = "") String pid) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public List<Relation> getNamedRelations(
+            @WebParam(name = "pid", targetNamespace = "") String pid) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public void deleteRelation(
+            @WebParam(name = "subject", targetNamespace = "") String subject,
+            @WebParam(name = "property", targetNamespace = "")
+            String property,
+            @WebParam(name = "object", targetNamespace = "")
+            String object) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 }

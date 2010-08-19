@@ -114,7 +114,7 @@
 
 
     <!--File method messages -->
-    <!--
+
 
     <message name="addFile">
         <part name="parameters" element="tns:addFile"/>
@@ -135,18 +135,18 @@
         <part name="parameters" element="tns:getFileURLResponse"/>
     </message>
 
-    -->
+
     <!--Relationship method messages -->
-    <!--
+
 
     <message name="addRelation">
-        <part name="parameters" element="tns:addRelationObjects"/>
+        <part name="parameters" element="tns:addRelation"/>
     </message>
     <message name="addRelationResponse">
         <part name="parameters" element="tns:addRelationResponse"/>
     </message>
     <message name="getRelations">
-        <part name="parameters" element="tns:getRelationsObject"/>
+        <part name="parameters" element="tns:getRelations"/>
     </message>
     <message name="getRelationsResponse">
         <part name="parameters" element="tns:getRelationsResponse"/>
@@ -163,14 +163,7 @@
     <message name="deleteRelationResponse">
         <part name="parameters" element="tns:deleteRelationResponse"/>
     </message>
-    <message name="modifyRelation">
-        <part name="parameters" element="tns:modifyRelation"/>
-    </message>
-    <message name="modifyRelationResponse">
-        <part name="parameters" element="tns:modifyRelationResponse"/>
-    </message>
 
-    -->
     <!--Search operations-->
     <!--
 
@@ -325,7 +318,8 @@
             <output message="tns:getDatastreamContentsResponse"/>
         </operation>
         <operation name="getDatastreamProfile">
-            <documentation>Given a pid and a datastream, return the datastream profile. Will fail of datastream does not exist.
+            <documentation>Given a pid and a datastream, return the datastream
+                profile. Will fail of datastream does not exist.
             </documentation>
             <input message="tns:getDatastreamProfile"/>
             <output message="tns:getDatastreamProfileResponse"/>
@@ -334,72 +328,71 @@
 
         <!--File methods        -->
 
-        <!--
-
-                <operation name="addFile">
-                    <documentation>Given a pid and a name, add a new file to the object with the given content. Will fail if pid does not describe a file object, if a file is already added to the object with different content, or if content does not match checksum.
-                    </documentation>
-                    <input message="tns:addFile"/>
-                    <output message="tns:addFileResponse"/>
-                </operation>
-                <operation name="deleteFile">
-                    <documentation>Given a pid, delete the file in this object. This will fail if this is not a file object, if no file is present in the object, or if the object has been published so the file is undeletable.
-
-                        /!\ TODO: Do we need/want this operation?
-                    </documentation>
-                    <input message="tns:deleteFile"/>
-                    <output message="tns:deleteFileResponse"/>
-                </operation>
-                <operation name="getFileURL">
-                    <documentation>Given a pid, return an externally resolvable URL that disseminates this file.
-                    </documentation>
-                    <input message="tns:getFileURL"/>
-                    <output message="tns:getFileURLResponse"/>
-                </operation>
 
 
+        <operation name="addFile">
+            <documentation>Given a pid and a name, add a new file to the object
+                with the given content. Will fail if pid does not describe a
+                file object, if a file is already added to the object with
+                different content, or if content does not match checksum.
+            </documentation>
+            <input message="tns:addFile"/>
+            <output message="tns:addFileResponse"/>
+        </operation>
+        <operation name="deleteFile">
+            <documentation>Given a pid, delete the file in this object. This
+                will fail if this is not a file object, if no file is present
+                in the object, or if the object has been published so the file
+                is undeletable.
+
+                /!\ TODO: Do we need/want this operation?
+            </documentation>
+            <input message="tns:deleteFile"/>
+            <output message="tns:deleteFileResponse"/>
+        </operation>
+        <operation name="getFileURL">
+            <documentation>Given a pid, return an externally resolvable URL that
+                disseminates this file.
+            </documentation>
+            <input message="tns:getFileURL"/>
+            <output message="tns:getFileURLResponse"/>
+        </operation>
 
 
-        -->
+
+
+
         <!--Relationship operations-->
-        <!--
 
 
-                <operation name="addRelation">
-                    <documentation>Add a relation between two objects.
-                    </documentation>
-                    <input message="tns:addRelation"/>
-                    <output message="tns:addRelationResponse"/>
-                </operation>
-                <operation name="getRelations">
-                    <documentation>Given a pid, list relations out of this object
-                    </documentation>
-                    <input message="tns:getRelations"/>
-                    <output message="tns:getRelationsResponse"/>
-                </operation>
-                <operation name="getNamedRelations">
-                    <documentation>Given a pid, list relations out of this object of a specific type
-                    </documentation>
-                    <input message="tns:getNamedRelations"/>
-                    <output message="tns:getNamedRelationsResponse"/>
-                </operation>
-                <operation name="deleteRelation">
-                    <documentation>Given a specific relation, remove it.
-                    </documentation>
-                    <input message="tns:deleteRelation"/>
-                    <output message="tns:deleteRelationResponse"/>
-                </operation>
-                <operation name="modifyRelation">
-                    <documentation>Given an old relation, replace it with a new relation.
 
-                        /!\ TODO: Do we need this operation?
-                    </documentation>
-                    <input message="tns:modifyRelation"/>
-                    <output message="tns:modifyRelationResponse"/>
-                </operation>
+        <operation name="addRelation">
+            <documentation>Add a relation between two objects.
+            </documentation>
+            <input message="tns:addRelation"/>
+            <output message="tns:addRelationResponse"/>
+        </operation>
+        <operation name="getRelations">
+            <documentation>Given a pid, list relations out of this object
+            </documentation>
+            <input message="tns:getRelations"/>
+            <output message="tns:getRelationsResponse"/>
+        </operation>
+        <operation name="getNamedRelations">
+            <documentation>Given a pid, list relations out of this object of a specific type
+            </documentation>
+            <input message="tns:getNamedRelations"/>
+            <output message="tns:getNamedRelationsResponse"/>
+        </operation>
+        <operation name="deleteRelation">
+            <documentation>Given a specific relation, remove it.
+            </documentation>
+            <input message="tns:deleteRelation"/>
+            <output message="tns:deleteRelationResponse"/>
+        </operation>
 
 
-        -->
+
         <!--Search Operations-->
         <!--
 
@@ -627,6 +620,72 @@
                 <soap:body use="literal"/>
             </output>
         </operation>
+        <operation name="addFile">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="deleteFile">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getFileURL">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="addRelation">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getRelations">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getNamedRelations">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="deleteRelation">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+
+
+
     </binding>
     <service name="CentralWebserviceService">
         <port name="CentralWebservicePort"
