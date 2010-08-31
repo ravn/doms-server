@@ -30,12 +30,12 @@
 <endpoints xmlns='http://java.sun.com/xml/ns/jax-ws/ri/runtime' version='2.0'>
 
     <endpoint
-            name='LowlevelBitstorage'
-            interface='dk.statsbiblioteket.doms.bitstorage.lowlevel.LowlevelBitstorageSoapWebservice'
+            name='CentralWebservice'
+            interface='dk.statsbiblioteket.doms.centralWebservice.CentralWebservice'
             implementation='dk.statsbiblioteket.doms.central.CentralWebserviceImpl'
             wsdl='WEB-INF/wsdl/centralWebservice.wsdl'
-            service="{http://lowlevel.bitstorage.doms.statsbiblioteket.dk/}LowlevelBitstorageSoapWebserviceService"
-            port="{http://lowlevel.bitstorage.doms.statsbiblioteket.dk/}LowlevelBitstorageSoapWebservicePort"
+            service="{http://central.doms.statsbiblioteket.dk/}CentralWebserviceService"
+            port="{http://central.doms.statsbiblioteket.dk/}CentralWebservicePort"
             url-pattern='/central/'
             />
 </endpoints>

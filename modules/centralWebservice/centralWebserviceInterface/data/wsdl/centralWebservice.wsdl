@@ -40,6 +40,14 @@
         </xsd:schema>
     </types>
 
+    <message name="MethodFailedException">
+        <part name="fault" element="tns:MethodFailedException"/>
+    </message>
+
+    <message name="InvalidCredentialsException">
+        <part name="fault" element="tns:InvalidCredentialsException"/>
+    </message>
+
     <!--Object method messages-->
     <message name="newObject">
         <part name="parameters" element="tns:newObject"/>
@@ -47,12 +55,14 @@
     <message name="newObjectResponse">
         <part name="parameters" element="tns:newObjectResponse"/>
     </message>
-    <message name="deleteObject">
-        <part name="parameters" element="tns:deleteObject"/>
-    </message>
-    <message name="deleteObjectResponse">
-        <part name="parameters" element="tns:deleteObjectResponse"/>
-    </message>
+    <!--
+        <message name="deleteObject">
+            <part name="parameters" element="tns:deleteObject"/>
+        </message>
+        <message name="deleteObjectResponse">
+            <part name="parameters" element="tns:deleteObjectResponse"/>
+        </message>
+    -->
     <message name="markPublishedObject">
         <part name="parameters" element="tns:markPublishedObject"/>
     </message>
@@ -64,7 +74,7 @@
     </message>
     <message name="markInProgressObjectResponse">
         <part name="parameters" element="tns:markInProgressObjectResponse"/>
-    </message>
+    </message><!--
     <message name="listDatastreamsObject">
         <part name="parameters" element="tns:listDatastreamsObject"/>
     </message>
@@ -77,10 +87,10 @@
     <message name="getTitleObjectResponse">
         <part name="parameters" element="tns:getTitleObjectResponse"/>
     </message>
-
+-->
     <!--Datastream method messages-->
 
-
+    <!--
     <message name="newDatastream">
         <part name="parameters" element="tns:newDatastream"/>
     </message>
@@ -92,7 +102,7 @@
     </message>
     <message name="deleteDatastreamResponse">
         <part name="parameters" element="tns:deleteDatastreamResponse"/>
-    </message>
+    </message>-->
     <message name="modifyDatastream">
         <part name="parameters" element="tns:modifyDatastream"/>
     </message>
@@ -105,35 +115,55 @@
     <message name="getDatastreamContentsResponse">
         <part name="parameters" element="tns:getDatastreamContentsResponse"/>
     </message>
-    <message name="getDatastreamProfile">
-        <part name="parameters" element="tns:getDatastreamProfile"/>
-    </message>
-    <message name="getDatastreamProfileResponse">
-        <part name="parameters" element="tns:getDatastreamProfileResponse"/>
-    </message>
+    <!--
+        <message name="getDatastreamProfile">
+            <part name="parameters" element="tns:getDatastreamProfile"/>
+        </message>
+        <message name="getDatastreamProfileResponse">
+            <part name="parameters" element="tns:getDatastreamProfileResponse"/>
+        </message>
+    -->
 
 
     <!--File method messages -->
 
 
+<!--
     <message name="addFile">
         <part name="parameters" element="tns:addFile"/>
     </message>
     <message name="addFileResponse">
         <part name="parameters" element="tns:addFileResponse"/>
     </message>
-    <message name="deleteFile">
-        <part name="parameters" element="tns:deleteFile"/>
+-->
+    <message name="addFileFromPermanentURL">
+        <part name="parameters" element="tns:addFileFromPermanentURL"/>
     </message>
-    <message name="deleteFileResponse">
-        <part name="parameters" element="tns:deleteFileResponse"/>
+    <message name="addFileFromPermanentURLResponse">
+        <part name="parameters" element="tns:addFileFromPermanentURLResponse"/>
     </message>
-    <message name="getFileURL">
-        <part name="parameters" element="tns:getFileURL"/>
+
+    <message name="getFileObjectWithURL">
+        <part name="parameters" element="tns:getFileObjectWithURL"/>
     </message>
-    <message name="getFileURLResponse">
-        <part name="parameters" element="tns:getFileURLResponse"/>
+    <message name="getFileObjectWithURLResponse">
+        <part name="parameters" element="tns:getFileObjectWithURLResponse"/>
     </message>
+
+    <!--
+        <message name="deleteFile">
+            <part name="parameters" element="tns:deleteFile"/>
+        </message>
+        <message name="deleteFileResponse">
+            <part name="parameters" element="tns:deleteFileResponse"/>
+        </message>
+        <message name="getFileURL">
+            <part name="parameters" element="tns:getFileURL"/>
+        </message>
+        <message name="getFileURLResponse">
+            <part name="parameters" element="tns:getFileURLResponse"/>
+        </message>
+    -->
 
 
     <!--Relationship method messages -->
@@ -145,24 +175,26 @@
     <message name="addRelationResponse">
         <part name="parameters" element="tns:addRelationResponse"/>
     </message>
-    <message name="getRelations">
-        <part name="parameters" element="tns:getRelations"/>
-    </message>
-    <message name="getRelationsResponse">
-        <part name="parameters" element="tns:getRelationsResponse"/>
-    </message>
-    <message name="getNamedRelations">
-        <part name="parameters" element="tns:getNamedRelations"/>
-    </message>
-    <message name="getNamedRelationsResponse">
-        <part name="parameters" element="tns:getNamedRelationsResponse"/>
-    </message>
-    <message name="deleteRelation">
-        <part name="parameters" element="tns:deleteRelation"/>
-    </message>
-    <message name="deleteRelationResponse">
-        <part name="parameters" element="tns:deleteRelationResponse"/>
-    </message>
+    <!--
+        <message name="getRelations">
+            <part name="parameters" element="tns:getRelations"/>
+        </message>
+        <message name="getRelationsResponse">
+            <part name="parameters" element="tns:getRelationsResponse"/>
+        </message>
+        <message name="getNamedRelations">
+            <part name="parameters" element="tns:getNamedRelations"/>
+        </message>
+        <message name="getNamedRelationsResponse">
+            <part name="parameters" element="tns:getNamedRelationsResponse"/>
+        </message>
+        <message name="deleteRelation">
+            <part name="parameters" element="tns:deleteRelation"/>
+        </message>
+        <message name="deleteRelationResponse">
+            <part name="parameters" element="tns:deleteRelationResponse"/>
+        </message>
+    -->
 
     <!--Search operations-->
     <!--
@@ -255,81 +287,123 @@
             </documentation>
             <input message="tns:newObject"/>
             <output message="tns:newObjectResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException" message="tns:MethodFailedException"/>
         </operation>
-        <operation name="deleteObject">
-            <documentation>Given a PID, mark the object as deleted (note: object
-                may only be undeleted by direct access to Fedora)
-            </documentation>
-            <input message="tns:deleteObject"/>
-            <output message="tns:deleteObjectResponse"/>
-        </operation>
+        <!--
+                <operation name="deleteObject">
+                    <documentation>Given a PID, mark the object as deleted (note: object
+                        may only be undeleted by direct access to Fedora)
+                    </documentation>
+                    <input message="tns:deleteObject"/>
+                    <output message="tns:deleteObjectResponse"/>
+                    <fault name="InvalidCredentialsException"
+                           message="InvalidCredentialsException"/>
+                    <fault name="MethodFailedException" message="tns:MethodFailedException"/>
+                </operation>
+        -->
         <operation name="markPublishedObject">
             <documentation>Given a PID, mark the object as published. Will fail if object does not validate.
             </documentation>
             <input message="tns:markPublishedObject"/>
             <output message="tns:markPublishedObjectResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException" message="tns:MethodFailedException"/>
         </operation>
         <operation name="markInProgressObject">
             <documentation>Given a PID, mark the object as in progress.
             </documentation>
             <input message="tns:markInProgressObject"/>
             <output message="tns:markInProgressObjectResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException" message="tns:MethodFailedException"/>
         </operation>
-        <operation name="listDatastreamsObject">
-            <documentation>Given a PID, list datastream names in object.
-            </documentation>
-            <input message="tns:listDatastreamsObject"/>
-            <output message="tns:listDatastreamsObjectResponse"/>
-        </operation>
-        <operation name="getTitleObject">
-            <documentation>Given a PID, return the title of the object.
-            </documentation>
-            <input message="tns:getTitleObject"/>
-            <output message="tns:getTitleObjectResponse"/>
-        </operation>
+        <!--
+                <operation name="listDatastreamsObject">
+                    <documentation>Given a PID, list datastream names in object.
+                    </documentation>
+                    <input message="tns:listDatastreamsObject"/>
+                    <output message="tns:listDatastreamsObjectResponse"/>
+                    <fault name="InvalidCredentialsException"
+                           message="tns:InvalidCredentialsException"/>
+                    <fault name="MethodFailedException" message="tns:MethodFailedException"/>
+                </operation>
+                <operation name="getTitleObject">
+                    <documentation>Given a PID, return the title of the object.
+                    </documentation>
+                    <input message="tns:getTitleObject"/>
+                    <output message="tns:getTitleObjectResponse"/>
+                    <fault name="InvalidCredentialsException"
+                           message="tns:InvalidCredentialsException"/>
+                    <fault name="MethodFailedException" message="tns:MethodFailedException"/>
+                </operation>
+        -->
 
         <!--Datastream methods-->
 
+        <!--
 
-        <operation name="newDatastream">
-            <documentation>Given a pid and a datastream name, add a datastream
-                with that name, and given content. Will fail if name already
-                exists with different content.
-            </documentation>
-            <input message="tns:newDatastream"/>
-            <output message="tns:newDatastreamResponse"/>
-        </operation>
-        <operation name="deleteDatastream">
-            <documentation>Given a pid and a datastream name, mark that datastream as deleted.
-            </documentation>
-            <input message="tns:deleteDatastream"/>
-            <output message="tns:deleteDatastreamResponse"/>
-        </operation>
+                <operation name="newDatastream">
+                    <documentation>Given a pid and a datastream name, add a datastream
+                        with that name, and given content. Will fail if name already
+                        exists with different content.
+                    </documentation>
+                    <input message="tns:newDatastream"/>
+                    <output message="tns:newDatastreamResponse"/>
+                    <fault name="InvalidCredentialsException"
+                           message="tns:InvalidCredentialsException"/>
+                    <fault name="MethodFailedException" message="tns:MethodFailedException"/>
+                </operation>
+                <operation name="deleteDatastream">
+                    <documentation>Given a pid and a datastream name, mark that datastream as deleted.
+                    </documentation>
+                    <input message="tns:deleteDatastream"/>
+                    <output message="tns:deleteDatastreamResponse"/>
+                    <fault name="InvalidCredentialsException"
+                           message="tns:InvalidCredentialsException"/>
+                    <fault name="MethodFailedException" message="tns:MethodFailedException"/>
+                </operation>
+        -->
         <operation name="modifyDatastream">
             <documentation>Given a pid and a datastream name, replace the contents of that datastream with the given content. Will fail of datastream does not exist.
             </documentation>
             <input message="tns:modifyDatastream"/>
             <output message="tns:modifyDatastreamResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException" message="tns:MethodFailedException"/>
         </operation>
         <operation name="getDatastreamContents">
             <documentation>Given a pid and a datastream, return the datastream content. Will fail of datastream does not exist.
             </documentation>
             <input message="tns:getDatastreamContents"/>
             <output message="tns:getDatastreamContentsResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException" message="tns:MethodFailedException"/>
         </operation>
-        <operation name="getDatastreamProfile">
-            <documentation>Given a pid and a datastream, return the datastream
-                profile. Will fail of datastream does not exist.
-            </documentation>
-            <input message="tns:getDatastreamProfile"/>
-            <output message="tns:getDatastreamProfileResponse"/>
-        </operation>
+        <!--
+                <operation name="getDatastreamProfile">
+                    <documentation>Given a pid and a datastream, return the datastream
+                        profile. Will fail of datastream does not exist.
+                    </documentation>
+                    <input message="tns:getDatastreamProfile"/>
+                    <output message="tns:getDatastreamProfileResponse"/>
+                    <fault name="InvalidCredentialsException"
+                           message="tns:InvalidCredentialsException"/>
+                    <fault name="MethodFailedException" message="tns:MethodFailedException"/>
+                </operation>
+        -->
 
 
         <!--File methods        -->
 
 
 
+<!--
         <operation name="addFile">
             <documentation>Given a pid and a name, add a new file to the object
                 with the given content. Will fail if pid does not describe a
@@ -338,27 +412,65 @@
             </documentation>
             <input message="tns:addFile"/>
             <output message="tns:addFileResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException" message="tns:MethodFailedException"/>
         </operation>
-        <operation name="deleteFile">
-            <documentation>Given a pid, delete the file in this object. This
-                will fail if this is not a file object, if no file is present
-                in the object, or if the object has been published so the file
-                is undeletable.
-
-                /!\ TODO: Do we need/want this operation?
+-->
+        <operation name="addFileFromPermanentURL">
+            <documentation>Given a pid and a name, add a new file to the object
+                with the given content. Will fail if pid does not describe a
+                file object, if a file is already added to the object with
+                different content, or if content does not match checksum.
             </documentation>
-            <input message="tns:deleteFile"/>
-            <output message="tns:deleteFileResponse"/>
+            <input message="tns:addFileFromPermanentURL"/>
+            <output message="tns:addFileFromPermanentURLResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException" message="tns:MethodFailedException"/>
         </operation>
-        <operation name="getFileURL">
-            <documentation>Given a pid, return an externally resolvable URL that
-                disseminates this file.
+
+        <operation name="getFileObjectWithURL">
+            <documentation>Given a pid and a name, add a new file to the object
+                with the given content. Will fail if pid does not describe a
+                file object, if a file is already added to the object with
+                different content, or if content does not match checksum.
             </documentation>
-            <input message="tns:getFileURL"/>
-            <output message="tns:getFileURLResponse"/>
+            <input message="tns:getFileObjectWithURL"/>
+            <output message="tns:getFileObjectWithURLResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException" message="tns:MethodFailedException"/>
         </operation>
 
+        <!--
+                <operation name="deleteFile">
+                    <documentation>Given a pid, delete the file in this object. This
+                        will fail if this is not a file object, if no file is present
+                        in the object, or if the object has been published so the file
+                        is undeletable.
 
+                        /!\ TODO: Do we need/want this operation?
+                    </documentation>
+                    <input message="tns:deleteFile"/>
+                    <output message="tns:deleteFileResponse"/>
+                    <fault name="InvalidCredentialsException"
+                           message="tns:InvalidCredentialsException"/>
+                    <fault name="MethodFailedException" message="tns:MethodFailedException"/>
+                </operation>
+                <operation name="getFileURL">
+                    <documentation>Given a pid, return an externally resolvable URL that
+                        disseminates this file.
+                    </documentation>
+                    <input message="tns:getFileURL"/>
+                    <output message="tns:getFileURLResponse"/>
+                    <fault name="InvalidCredentialsException"
+                           message="tns:InvalidCredentialsException"/>
+                    <fault name="MethodFailedException" message="tns:MethodFailedException"/>
+                </operation>
+
+
+        -->
 
 
 
@@ -371,25 +483,30 @@
             </documentation>
             <input message="tns:addRelation"/>
             <output message="tns:addRelationResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException" message="tns:MethodFailedException"/>
         </operation>
-        <operation name="getRelations">
-            <documentation>Given a pid, list relations out of this object
-            </documentation>
-            <input message="tns:getRelations"/>
-            <output message="tns:getRelationsResponse"/>
-        </operation>
-        <operation name="getNamedRelations">
-            <documentation>Given a pid, list relations out of this object of a specific type
-            </documentation>
-            <input message="tns:getNamedRelations"/>
-            <output message="tns:getNamedRelationsResponse"/>
-        </operation>
-        <operation name="deleteRelation">
-            <documentation>Given a specific relation, remove it.
-            </documentation>
-            <input message="tns:deleteRelation"/>
-            <output message="tns:deleteRelationResponse"/>
-        </operation>
+        <!--
+                <operation name="getRelations">
+                    <documentation>Given a pid, list relations out of this object
+                    </documentation>
+                    <input message="tns:getRelations"/>
+                    <output message="tns:getRelationsResponse"/>
+                </operation>
+                <operation name="getNamedRelations">
+                    <documentation>Given a pid, list relations out of this object of a specific type
+                    </documentation>
+                    <input message="tns:getNamedRelations"/>
+                    <output message="tns:getNamedRelationsResponse"/>
+                </operation>
+                <operation name="deleteRelation">
+                    <documentation>Given a specific relation, remove it.
+                    </documentation>
+                    <input message="tns:deleteRelation"/>
+                    <output message="tns:deleteRelationResponse"/>
+                </operation>
+        -->
 
 
 
@@ -523,16 +640,24 @@
             <output>
                 <soap:body use="literal"/>
             </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
         </operation>
-        <operation name="deleteObject">
-            <soap:operation soapAction=""/>
-            <input>
-                <soap:body use="literal"/>
-            </input>
-            <output>
-                <soap:body use="literal"/>
-            </output>
-        </operation>
+        <!--
+                <operation name="deleteObject">
+                    <soap:operation soapAction=""/>
+                    <input>
+                        <soap:body use="literal"/>
+                    </input>
+                    <output>
+                        <soap:body use="literal"/>
+                    </output>
+                </operation>
+        -->
 
         <operation name="markPublishedObject">
             <soap:operation soapAction=""/>
@@ -542,6 +667,12 @@
             <output>
                 <soap:body use="literal"/>
             </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
         </operation>
 
         <operation name="markInProgressObject">
@@ -552,56 +683,70 @@
             <output>
                 <soap:body use="literal"/>
             </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
         </operation>
 
-        <operation name="listDatastreamsObject">
-            <soap:operation soapAction=""/>
-            <input>
-                <soap:body use="literal"/>
-            </input>
-            <output>
-                <soap:body use="literal"/>
-            </output>
-        </operation>
+        <!--
+                <operation name="listDatastreamsObject">
+                    <soap:operation soapAction=""/>
+                    <input>
+                        <soap:body use="literal"/>
+                    </input>
+                    <output>
+                        <soap:body use="literal"/>
+                    </output>
+                </operation>
 
-        <operation name="getTitleObject">
-            <soap:operation soapAction=""/>
-            <input>
-                <soap:body use="literal"/>
-            </input>
-            <output>
-                <soap:body use="literal"/>
-            </output>
-        </operation>
+                <operation name="getTitleObject">
+                    <soap:operation soapAction=""/>
+                    <input>
+                        <soap:body use="literal"/>
+                    </input>
+                    <output>
+                        <soap:body use="literal"/>
+                    </output>
+                </operation>
+        -->
 
         <!--Datastream methods-->
-        <operation name="newDatastream">
-            <soap:operation soapAction=""/>
-            <input>
-                <soap:body use="literal"/>
-            </input>
-            <output>
-                <soap:body use="literal"/>
-            </output>
-        </operation>
-        <operation name="deleteDatastream">
-            <soap:operation soapAction=""/>
-            <input>
-                <soap:body use="literal"/>
-            </input>
-            <output>
-                <soap:body use="literal"/>
-            </output>
-        </operation>
-        <operation name="modifyDatastream">
-            <soap:operation soapAction=""/>
-            <input>
-                <soap:body use="literal"/>
-            </input>
-            <output>
-                <soap:body use="literal"/>
-            </output>
-        </operation>
+        <!--       <operation name="newDatastream">
+                   <soap:operation soapAction=""/>
+                   <input>
+                       <soap:body use="literal"/>
+                   </input>
+                   <output>
+                       <soap:body use="literal"/>
+                   </output>
+               </operation>
+               <operation name="deleteDatastream">
+                   <soap:operation soapAction=""/>
+                   <input>
+                       <soap:body use="literal"/>
+                   </input>
+                   <output>
+                       <soap:body use="literal"/>
+                   </output>
+               </operation>
+        -->       <operation name="modifyDatastream">
+        <soap:operation soapAction=""/>
+        <input>
+            <soap:body use="literal"/>
+        </input>
+        <output>
+            <soap:body use="literal"/>
+        </output>
+        <fault name="MethodFailedException">
+            <soap:fault name="MethodFailedException" use="literal"/>
+        </fault>
+        <fault name="InvalidCredentialsException">
+            <soap:fault name="InvalidCredentialsException" use="literal"/>
+        </fault>
+    </operation>
         <operation name="getDatastreamContents">
             <soap:operation soapAction=""/>
             <input>
@@ -610,8 +755,26 @@
             <output>
                 <soap:body use="literal"/>
             </output>
+
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
         </operation>
-        <operation name="getDatastreamProfile">
+        <!--
+                <operation name="getDatastreamProfile">
+                    <soap:operation soapAction=""/>
+                    <input>
+                        <soap:body use="literal"/>
+                    </input>
+                    <output>
+                        <soap:body use="literal"/>
+                    </output>
+                </operation>
+        -->
+        <operation name="addFileFromPermanentURL">
             <soap:operation soapAction=""/>
             <input>
                 <soap:body use="literal"/>
@@ -619,8 +782,14 @@
             <output>
                 <soap:body use="literal"/>
             </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
         </operation>
-        <operation name="addFile">
+        <operation name="getFileObjectWithURL">
             <soap:operation soapAction=""/>
             <input>
                 <soap:body use="literal"/>
@@ -628,25 +797,34 @@
             <output>
                 <soap:body use="literal"/>
             </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
         </operation>
-        <operation name="deleteFile">
-            <soap:operation soapAction=""/>
-            <input>
-                <soap:body use="literal"/>
-            </input>
-            <output>
-                <soap:body use="literal"/>
-            </output>
-        </operation>
-        <operation name="getFileURL">
-            <soap:operation soapAction=""/>
-            <input>
-                <soap:body use="literal"/>
-            </input>
-            <output>
-                <soap:body use="literal"/>
-            </output>
-        </operation>
+
+        <!--
+                <operation name="deleteFile">
+                    <soap:operation soapAction=""/>
+                    <input>
+                        <soap:body use="literal"/>
+                    </input>
+                    <output>
+                        <soap:body use="literal"/>
+                    </output>
+                </operation>
+                <operation name="getFileURL">
+                    <soap:operation soapAction=""/>
+                    <input>
+                        <soap:body use="literal"/>
+                    </input>
+                    <output>
+                        <soap:body use="literal"/>
+                    </output>
+                </operation>
+        -->
         <operation name="addRelation">
             <soap:operation soapAction=""/>
             <input>
@@ -655,35 +833,43 @@
             <output>
                 <soap:body use="literal"/>
             </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
         </operation>
-        <operation name="getRelations">
-            <soap:operation soapAction=""/>
-            <input>
-                <soap:body use="literal"/>
-            </input>
-            <output>
-                <soap:body use="literal"/>
-            </output>
-        </operation>
-        <operation name="getNamedRelations">
-            <soap:operation soapAction=""/>
-            <input>
-                <soap:body use="literal"/>
-            </input>
-            <output>
-                <soap:body use="literal"/>
-            </output>
-        </operation>
-        <operation name="deleteRelation">
-            <soap:operation soapAction=""/>
-            <input>
-                <soap:body use="literal"/>
-            </input>
-            <output>
-                <soap:body use="literal"/>
-            </output>
-        </operation>
+        <!--
+                <operation name="getRelations">
+                    <soap:operation soapAction=""/>
+                    <input>
+                        <soap:body use="literal"/>
+                    </input>
+                    <output>
+                        <soap:body use="literal"/>
+                    </output>
+                </operation>
+                <operation name="getNamedRelations">
+                    <soap:operation soapAction=""/>
+                    <input>
+                        <soap:body use="literal"/>
+                    </input>
+                    <output>
+                        <soap:body use="literal"/>
+                    </output>
+                </operation>
+                <operation name="deleteRelation">
+                    <soap:operation soapAction=""/>
+                    <input>
+                        <soap:body use="literal"/>
+                    </input>
+                    <output>
+                        <soap:body use="literal"/>
+                    </output>
+                </operation>
 
+        -->
 
 
     </binding>

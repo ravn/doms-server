@@ -30,6 +30,11 @@
            xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0"
            targetNamespace="http://central.doms.statsbiblioteket.dk/">
 
+    <!--Exceptions-->
+
+    <xs:element name="MethodFailedException" type="xs:string"/>
+    <xs:element name="InvalidCredentialsException" type="xs:string"/>
+
     <!--Object operations-->
     <xs:element name="newObject" type="tns:singlePid"/>
     <xs:element name="newObjectResponse" type="tns:string"/>
@@ -43,43 +48,61 @@
     <xs:element name="markInProgressObject" type="tns:singlePid"/>
     <xs:element name="markInProgressObjectResponse" type="tns:void"/>
 
+<!--
     <xs:element name="listDatastreamsObject" type="tns:singlePid"/>
     <xs:element name="listDatastreamsObjectResponse" type="tns:Stringlist"/>
 
     <xs:element name="getTitleObject" type="tns:singlePid"/>
     <xs:element name="getTitleObjectResponse" type="tns:string"/>
+-->
 
 
     <!--Datastream operations-->
+<!--
     <xs:element name="newDatastream" type="tns:pidAndDSIDandContents"/>
     <xs:element name="newDatastreamResponse" type="tns:void"/>
+-->
+<!--
 
     <xs:element name="deleteDatastream" type="tns:pidAndDSID"/>
     <xs:element name="deleteDatastreamResponse" type="tns:void"/>
+-->
 
-    <xs:element name="modifyDatastream" type="tns:pidAndDSIDandContents"/>
+    <xs:element name="modifyDatastream" type="tns:pid_DSID_Contents"/>
     <xs:element name="modifyDatastreamResponse" type="tns:void"/>
 
     <xs:element name="getDatastreamContents" type="tns:pidAndDSID"/>
     <xs:element name="getDatastreamContentsResponse" type="tns:string"/>
 
+<!--
     <xs:element name="getDatastreamProfile" type="tns:pidAndDSID"/>
     <xs:element name="getDatastreamProfileResponse" type="tns:DatastreamProfile"/>
+-->
 
     <!--File methods-->
-    <xs:element name="addFile" type="tns:pidAndFileNameAndChecksumAndContents"/>
+    <xs:element name="addFile" type="tns:pid_FileName_Checksum_Contents"/>
     <xs:element name="addFileResponse" type="tns:void"/>
+
+    <xs:element name="addFileFromPermanentURL" type="tns:pid_filename_checksum_url_format"/>
+    <xs:element name="addFileFromPermanentURLResponse" type="tns:void"/>
+
+
+    <xs:element name="getFileObjectWithURL" type="tns:URL"/>
+    <xs:element name="getFileObjectWithURLResponse" type="tns:singlePid"/>
+<!--
 
     <xs:element name="deleteFile" type="tns:singlePid"/>
     <xs:element name="deleteFileResponse" type="tns:void"/>
 
     <xs:element name="getFileURL" type="tns:singlePid"/>
     <xs:element name="getFileURLResponse" type="tns:URL"/>
+-->
 
     <!--Relation methods-->
 
-    <xs:element name="addRelation" type="tns:relation"/>
+    <xs:element name="addRelation" type="tns:PidAndRelation"/>
     <xs:element name="addRelationResponse" type="tns:void"/>
+<!--
 
     <xs:element name="getRelations" type="tns:singlePid"/>
     <xs:element name="getRelationsResponse" type="tns:ListOfRelations"/>
@@ -89,6 +112,7 @@
     
     <xs:element name="deleteRelation" type="tns:relation"/>
     <xs:element name="deleteRelationResponse" type="tns:void"/>
+-->
 
 
     
@@ -123,7 +147,7 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="pidAndDSIDandContents">
+    <xs:complexType name="pid_DSID_Contents">
         <xs:sequence>
             <xs:element name="pid" type="xs:string"/>
             <xs:element name="datastream" type="xs:string"/>
@@ -138,7 +162,7 @@
     </xs:complexType>
 
 
-    <xs:complexType name="pidAndFileNameAndChecksumAndContents">
+    <xs:complexType name="pid_FileName_Checksum_Contents">
         <xs:sequence>
             <xs:element name="pid" type="xs:string"/>
             <xs:element name="filename" type="xs:string"/>
@@ -149,6 +173,17 @@
                         type="xs:base64Binary"/>
         </xs:sequence>
     </xs:complexType>
+
+    <xs:complexType name="pid_filename_checksum_url_format">
+        <xs:sequence>
+            <xs:element name="pid" type="xs:string"/>
+            <xs:element name="filename" type="xs:string"/>
+            <xs:element name="md5sum" type="xs:string"/>
+            <xs:element name="permanentURL" type="xs:string"/>
+            <xs:element name="formatURI" type="xs:anyURI"/>
+        </xs:sequence>
+    </xs:complexType>
+
 
     <xs:complexType name="relation">
         <xs:sequence>
@@ -168,4 +203,12 @@
 
     <!--Complex types-->
     <xs:complexType name="DatastreamProfile"></xs:complexType>
+    <xs:complexType name="PidAndRelation">
+        <xs:sequence>
+            <xs:element name="pid" type="xs:string"/>
+            <xs:element name="subject" type="xs:string"/>
+            <xs:element name="predicate" type="xs:string"/>
+            <xs:element name="object" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>
