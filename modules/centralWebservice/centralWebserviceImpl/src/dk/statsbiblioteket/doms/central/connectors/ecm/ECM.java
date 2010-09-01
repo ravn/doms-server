@@ -29,17 +29,16 @@ public class ECM extends Connector {
         super(creds, ecmLocation);
         Client client = Client.create();
         restApi = client.resource(location);
-        restApi.header("Authorization", "VALUDACHANGEME");
     }
 
     public String createNewObject(String templatePid) throws
                                                       BackendMethodFailedException,
                                                       BackendInvalidCredsException {
-
         try {
             String clonePID = restApi
                     .path("/clone/")
                     .path(URLEncoder.encode(templatePid, "UTF-8"))
+                    .header("Authorization", credsAsBase64())
                     .post(String.class);
             return clonePID;
         } catch (UnsupportedEncodingException e) {

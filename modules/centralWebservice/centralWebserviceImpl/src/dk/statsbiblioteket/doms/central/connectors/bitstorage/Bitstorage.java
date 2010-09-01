@@ -31,8 +31,8 @@ public class Bitstorage extends Connector {
         URL wsdlLocation = new URL(location);
         service = new HighlevelBitstorageSoapWebserviceService(wsdlLocation,
                                                                QNAME).getHighlevelBitstorageSoapWebservicePort();
-        ((BindingProvider)service).getRequestContext().put(BindingProvider.USERNAME_PROPERTY,username);
-        ((BindingProvider)service).getRequestContext().put(BindingProvider.PASSWORD_PROPERTY,password);
+        ((BindingProvider)service).getRequestContext().put(BindingProvider.USERNAME_PROPERTY,creds.getUsername());
+        ((BindingProvider)service).getRequestContext().put(BindingProvider.PASSWORD_PROPERTY,creds.getPassword());
     }
 
     public void uploadFileToObjectFromPermanentURLWithCharacterisation(String pid,

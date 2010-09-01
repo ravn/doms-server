@@ -14,19 +14,18 @@ import java.net.MalformedURLException;
  */
 public abstract class Connector {
 
-    protected String username;
-    protected String password;
+    private Credentials creds;
     protected String location;
 
     protected Connector(Credentials creds, String location) throws
                                                                            MalformedURLException {
-        this.username = username;
-        this.password = password;
+        this.creds = creds;
+
         this.location = location;
     }
 
     protected String credsAsBase64(){
-        String preBase64 = username + ":" + password;
+        String preBase64 = creds.getUsername() + ":" + creds.getPassword();
         String base64 = Base64.encodeBytes(preBase64.getBytes());
         return "Basic "+base64;
     }

@@ -44,6 +44,39 @@
         </listener-class>
     </listener>
 
+    <filter>
+        <display-name>AuthFilter</display-name>
+        <filter-name>AuthFilter</filter-name>
+        <filter-class>dk.statsbiblioteket.doms.webservices.AuthFilter</filter-class>
+        <init-param>
+            <param-name>Realm name</param-name>
+            <param-value>Doms Central</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <servlet-name>WSServlet</servlet-name>
+    </filter-mapping>
+
+
+    <context-param>
+        <description>the location of the highlevel bitstorage WSDL</description>
+        <param-name>dk.statsbiblioteket.doms.central.bitstorageWSDL</param-name>
+        <param-value>http://localhost:8080/highlevelbitstorage/highlevel/?wsdl</param-value>
+    </context-param>
+    <context-param>
+        <description>the location of the ecm webservice</description>
+        <param-name>dk.statsbiblioteket.doms.central.ecmLocation</param-name>
+        <param-value>http://localhost:8080/ecm</param-value>
+    </context-param>
+
+    <context-param>
+        <description>the location of the fedora instance</description>
+        <param-name>dk.statsbiblioteket.doms.central.fedoraLocation</param-name>
+        <param-value>http://localhost:8080/fedora</param-value>
+    </context-param>
+
+
     <servlet>
         <description>JAX-WS endpoint</description>
         <display-name>WSServlet</display-name>

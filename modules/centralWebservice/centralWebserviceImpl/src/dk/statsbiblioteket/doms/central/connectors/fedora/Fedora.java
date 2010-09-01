@@ -35,15 +35,16 @@ public class Fedora extends Connector {
         super(creds, location);
         client = Client.create();
         restApi = client.resource(location + "/objects/");
-        restApi.header("Authorization", "VALUDACHANGEME");
+
     }
 
     public void modifyObjectState(String pid, String state)
             throws BackendMethodFailedException, BackendInvalidCredsException {
         try {
-            restApi.path(URLEncoder.encode(pid, "UTF-8")).
-                    queryParam("state", state)
-                    .post();
+            restApi.path(URLEncoder.encode(pid, "UTF-8"))
+                    .queryParam("state", state)
+                    .header("Authorization", credsAsBase64())
+                    .put();
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
         } catch (UniformInterfaceException e) {
@@ -66,6 +67,7 @@ public class Fedora extends Connector {
             restApi.path(URLEncoder.encode(pid, "UTF-8"))
                     .path("/datastreams/")
                     .path(URLEncoder.encode(datastream,"UTF-8"))
+                    .header("Authorization", credsAsBase64())
                     .post(contents);
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
@@ -88,6 +90,7 @@ public class Fedora extends Connector {
                     .path("/datastreams/")
                     .path(URLEncoder.encode(datastream, "UTF-8"))
                     .path("/content")
+                    .header("Authorization", credsAsBase64())
                     .get(String.class);
             return contents;
         } catch (UnsupportedEncodingException e) {
@@ -112,6 +115,7 @@ public class Fedora extends Connector {
                     .queryParam("subject",subject)
                     .queryParam("predicate",property)
                     .queryParam("object",object)
+                    .header("Authorization", credsAsBase64())
                     .post();
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);

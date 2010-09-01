@@ -11,6 +11,7 @@ import dk.statsbiblioteket.doms.webservices.ConfigCollection;
 import dk.statsbiblioteket.doms.bitstorage.highlevel.Characterisation;
 
 import javax.jws.WebParam;
+import javax.jws.WebService;
 import javax.activation.DataHandler;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
@@ -29,6 +30,7 @@ import org.apache.commons.logging.LogFactory;
  * Time: 2:01:51 PM
  * To change this template use File | Settings | File Templates.
  */
+@WebService(endpointInterface = "dk.statsbiblioteket.doms.centralWebservice.CentralWebservice")
 public class CentralWebserviceImpl implements CentralWebservice {
 
 
@@ -37,14 +39,13 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
     private static Log log = LogFactory.getLog(
             CentralWebserviceImpl.class);
-    private String bitstorageWSDL;
     private String ecmLocation;
     private String fedoraLocation;
     private String bitstorageLocation;
 
 
     public CentralWebserviceImpl() {
-        bitstorageWSDL = ConfigCollection.getProperties().getProperty(
+        bitstorageLocation = ConfigCollection.getProperties().getProperty(
                 "dk.statsbiblioteket.doms.central.bitstorageWSDL");
         ecmLocation = ConfigCollection.getProperties().getProperty(
                 "dk.statsbiblioteket.doms.central.ecmLocation");
@@ -323,7 +324,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                 .get(MessageContext.SERVLET_REQUEST);
         Credentials creds = (Credentials) request.getAttribute("Credentials");
         if (creds == null) {
-            log.warn("Attempted call at Bitstorage without credentials");
+            log.warn("Attempted call at Central without credentials");
             creds = new Credentials("", "");
         }
         return creds;
