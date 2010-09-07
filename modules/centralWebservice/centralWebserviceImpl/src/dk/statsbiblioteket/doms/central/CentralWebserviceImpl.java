@@ -48,6 +48,7 @@ import javax.annotation.Resource;
 import java.lang.String;
 import java.net.MalformedURLException;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -141,44 +142,57 @@ public class CentralWebserviceImpl implements CentralWebservice {
     }
 
     public void markPublishedObject(
-            @WebParam(name = "pid", targetNamespace = "") String pid)
-            throws MethodFailedException, InvalidCredentialsException {
-
+            @WebParam(name = "pids", targetNamespace = "")
+            List<java.lang.String> pids)
+            throws InvalidCredentialsException, MethodFailedException {
+        List<String> activated = new ArrayList<String>();
         try {
             Credentials creds = getCredentials();
             Fedora fedora = new Fedora(creds,
                                        fedoraLocation);
-            fedora.modifyObjectState(pid, fedora.STATE_ACTIVE);
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            throw new MethodFailedException("Webservice Config invalid",
-                                            "Webservice Config invalid",
-                                            e);
+            for (String pid : pids) {
+                fedora.modifyObjectState(pid, fedora.STATE_ACTIVE);
+                activated.add(pid);
+            }
         } catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
+            //rollback
+            markInProgressObject(activated);
             throw new MethodFailedException("Method failed to execute",
                                             "Method failed to execute",
                                             e);
         } catch (BackendInvalidCredsException e) {
             log.debug("User supplied invalid credentials", e);
+            markInProgressObject(activated);
             throw new InvalidCredentialsException("Invalid Credentials Supplied",
                                                   "Invalid Credentials Supplied",
                                                   e);
-        } catch (Exception e) {
+        } catch (MalformedURLException e) {
+            log.error("caught problemException", e);
+            markInProgressObject(activated);
+            throw new MethodFailedException("Webservice Config invalid",
+                                            "Webservice Config invalid",
+                                            e);
+        }
+        catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
+            markInProgressObject(activated);
             throw new MethodFailedException("Server error", "Server error", e);
         }
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
     public void markInProgressObject(
-            @WebParam(name = "pid", targetNamespace = "") String pid)
+            @WebParam(name = "pids", targetNamespace = "")
+            List<java.lang.String> pids)
             throws MethodFailedException, InvalidCredentialsException {
         try {
             Credentials creds = getCredentials();
             Fedora fedora = new Fedora(creds,
                                        fedoraLocation);
-            fedora.modifyObjectState(pid, fedora.STATE_INACTIVE);
+            for (String pid : pids) {
+                fedora.modifyObjectState(pid, fedora.STATE_INACTIVE);
+            }
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
             throw new MethodFailedException("Webservice Config invalid",

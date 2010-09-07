@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--
-  ~ $Id: lowlevel.xsd 507 2010-08-17 12:30:24Z blekinge $
-  ~ $Revision: 507 $
-  ~ $Date: 2010-08-17 14:30:24 +0200 (Tue, 17 Aug 2010) $
-  ~ $Author: blekinge $
+  ~ $Id$
+  ~ $Revision$
+  ~ $Date$
+  ~ $Author$
   ~
   ~ The DOMS project.
   ~ Copyright (C) 2007-2010  The State and University Library
@@ -42,10 +42,10 @@
     <xs:element name="deleteObject" type="tns:singlePid"/>
     <xs:element name="deleteObjectResponse" type="tns:void"/>
 
-    <xs:element name="markPublishedObject" type="tns:singlePid"/>
+    <xs:element name="markPublishedObject" type="tns:Pidlist"/>
     <xs:element name="markPublishedObjectResponse" type="tns:void"/>
 
-    <xs:element name="markInProgressObject" type="tns:singlePid"/>
+    <xs:element name="markInProgressObject" type="tns:Pidlist"/>
     <xs:element name="markInProgressObjectResponse" type="tns:void"/>
 
 <!--
@@ -122,6 +122,13 @@
             <xs:element name="pid" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
+
+    <xs:complexType name="Pidlist">
+        <xs:sequence>
+            <xs:element name="pids" type="xs:string" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
 
     <xs:complexType name="void">
         <xs:sequence>
