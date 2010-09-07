@@ -175,6 +175,7 @@ public class Fedora extends Connector {
                     .queryParam("lang", "iTQL")
                     .queryParam("format", "CSV")
                     .queryParam("query", query)
+                    .header("Authorization", credsAsBase64())
                     .post(String.class);
             String[] lines = objects.split("\n");
             List<String> foundobjects = new ArrayList<String>();
