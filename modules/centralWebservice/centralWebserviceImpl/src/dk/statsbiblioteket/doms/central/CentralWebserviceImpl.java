@@ -1,3 +1,31 @@
+/*
+ * $Id$
+ * $Revision$
+ * $Date$
+ * $Author$
+ *
+ * The DOMS project.
+ * Copyright (C) 2007-2010  The State and University Library
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+
 package dk.statsbiblioteket.doms.central;
 
 import dk.statsbiblioteket.doms.centralWebservice.*;
@@ -19,6 +47,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.annotation.Resource;
 import java.lang.String;
 import java.net.MalformedURLException;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -249,7 +278,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
             Bitstorage bs = new Bitstorage(creds, bitstorageLocation);
             Characterisation emptycharac = new Characterisation();
             emptycharac.setValidationStatus("valid");
-            emptycharac.setValidationStatus(formatURI);
+            emptycharac.setBestFormat(formatURI);
+            emptycharac.getFormatURIs().add(formatURI);
             bs.uploadFileToObjectFromPermanentURLWithCharacterisation(pid,
                                                                       filename,
                                                                       permanentURL,
@@ -278,9 +308,40 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
 
     public String getFileObjectWithURL(
-            @WebParam(name = "URL", targetNamespace = "") String url) {
-        //TODO
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+            @WebParam(name = "URL", targetNamespace = "") String url)
+            throws MethodFailedException, InvalidCredentialsException {
+        try {
+            Credentials creds = getCredentials();
+            Fedora fedora = new Fedora(creds,
+                                       fedoraLocation);
+            List<String> objects = fedora.listObjectsWithThisLabel(url);
+
+            if (objects != null && !objects.isEmpty()){
+                return objects.get(0);
+            } else {
+                //TODO
+                return null;
+            }
+
+        } catch (MalformedURLException e) {
+            log.error("caught problemException", e);
+            throw new MethodFailedException("Webservice Config invalid",
+                                            "Webservice Config invalid",
+                                            e);
+        } catch (BackendMethodFailedException e) {
+            log.warn("Failed to execute method", e);
+            throw new MethodFailedException("Method failed to execute",
+                                            "Method failed to execute",
+                                            e);
+        } catch (BackendInvalidCredsException e) {
+            log.debug("User supplied invalid credentials", e);
+            throw new InvalidCredentialsException("Invalid Credentials Supplied",
+                                                  "Invalid Credentials Supplied",
+                                                  e);
+        } catch (Exception e) {
+            log.warn("Caught Unknown Exception", e);
+            throw new MethodFailedException("Server error", "Server error", e);
+        }
     }
 
     public void addRelation(
