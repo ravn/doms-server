@@ -39,12 +39,12 @@
     <orderEntry type="module-library">
       <library name="highlevel Bitstorage Interface">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/highlevelInterface/jars/highlevel_interface.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/bitstorage-0.0.2/jars/highlevel_interface.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/lib/highlevelInterface/src/highlevel_interface-src.zip!/" />
-        </SOURCES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/lib/bitstorage-0.0.2/apidocs/bitstorage-0.0.2-doc.zip!/bitstorage-0.0.2" />
+        </JAVADOC>
+        <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library">
