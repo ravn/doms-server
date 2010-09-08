@@ -1,6 +1,4 @@
 /*
- * Doms build framework version 1.0.9
- *
  * $Id$
  * $Revision$
  * $Date$
