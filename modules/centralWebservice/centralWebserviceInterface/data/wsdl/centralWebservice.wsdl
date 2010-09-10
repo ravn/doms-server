@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--
-  ~ $Id: lowlevel.wsdl 507 2010-08-17 12:30:24Z blekinge $
-  ~ $Revision: 507 $
-  ~ $Date: 2010-08-17 14:30:24 +0200 (Tue, 17 Aug 2010) $
-  ~ $Author: blekinge $
+  ~ $Id$
+  ~ $Revision$
+  ~ $Date$
+  ~ $Author$
   ~
   ~ The DOMS project.
   ~ Copyright (C) 2007-2010  The State and University Library
@@ -283,7 +283,8 @@
         </documentation>
         <!--Object methods-->
         <operation name="newObject">
-            <documentation>Given a template, create a new object, return the PID
+            <documentation>Create a new object. The new object is created by cloning
+                the template, which is given (as a pid) to this method.
             </documentation>
             <input message="tns:newObject"/>
             <output message="tns:newObjectResponse"/>
@@ -304,7 +305,13 @@
                 </operation>
         -->
         <operation name="markPublishedObject">
-            <documentation>Given a PID, mark the object as published. Will fail if object does not validate.
+            <documentation>Given list of Pids, mark each object as published.
+                Will fail if object does not validate. If any of the objects fail
+                to publish, the method will undo the publish, and mark all the
+                already published objects in-progress.
+                If a object is already published, the object will be validated,
+                but the method will not fail (but if the validation fails, the
+                method fails)
             </documentation>
             <input message="tns:markPublishedObject"/>
             <output message="tns:markPublishedObjectResponse"/>
@@ -313,7 +320,8 @@
             <fault name="MethodFailedException" message="tns:MethodFailedException"/>
         </operation>
         <operation name="markInProgressObject">
-            <documentation>Given a PID, mark the object as in progress.
+            <documentation>Given a list of pids, mark each object as in-progress.
+                If any of the objects fail this marking, nothing furhter happens.
             </documentation>
             <input message="tns:markInProgressObject"/>
             <output message="tns:markInProgressObjectResponse"/>
@@ -368,7 +376,10 @@
                 </operation>
         -->
         <operation name="modifyDatastream">
-            <documentation>Given a pid and a datastream name, replace the contents of that datastream with the given content. Will fail of datastream does not exist.
+            <documentation>Given a pid and a datastream name, replace the
+                contents of that datastream with the given content.
+                Will fail of datastream or the object does not exist.
+                The content must be valid XML.
             </documentation>
             <input message="tns:modifyDatastream"/>
             <output message="tns:modifyDatastreamResponse"/>
@@ -377,7 +388,10 @@
             <fault name="MethodFailedException" message="tns:MethodFailedException"/>
         </operation>
         <operation name="getDatastreamContents">
-            <documentation>Given a pid and a datastream, return the datastream content. Will fail of datastream does not exist.
+            <documentation>Given a pid and a datastream, return the datastream
+                content. Will fail of datastream or object does not exist. The
+                datastream content is returned as a String, so only use this
+                method for getting xml content, not the binary files.
             </documentation>
             <input message="tns:getDatastreamContents"/>
             <output message="tns:getDatastreamContentsResponse"/>
@@ -418,10 +432,11 @@
         </operation>
 -->
         <operation name="addFileFromPermanentURL">
-            <documentation>Given a pid and a name, add a new file to the object
-                with the given content. Will fail if pid does not describe a
+            <documentation>Given a pid and a name, add a new file (specified
+                by the url) to the object. Will fail if pid does not describe a
                 file object, if a file is already added to the object with
-                different content, or if content does not match checksum.
+                different content, or if content does not match the given
+                checksum.
             </documentation>
             <input message="tns:addFileFromPermanentURL"/>
             <output message="tns:addFileFromPermanentURLResponse"/>
@@ -431,10 +446,9 @@
         </operation>
 
         <operation name="getFileObjectWithURL">
-            <documentation>Given a pid and a name, add a new file to the object
-                with the given content. Will fail if pid does not describe a
-                file object, if a file is already added to the object with
-                different content, or if content does not match checksum.
+            <documentation>Find the file object(s) which contains the given
+                URL. This method is to be used to check for duplicate files in
+                DOMS.
             </documentation>
             <input message="tns:getFileObjectWithURL"/>
             <output message="tns:getFileObjectWithURLResponse"/>
@@ -479,7 +493,8 @@
 
 
         <operation name="addRelation">
-            <documentation>Add a relation between two objects.
+            <documentation>Add a relation between two objects. The "subject" must
+                exist, but the "object" does not have to.
             </documentation>
             <input message="tns:addRelation"/>
             <output message="tns:addRelationResponse"/>
