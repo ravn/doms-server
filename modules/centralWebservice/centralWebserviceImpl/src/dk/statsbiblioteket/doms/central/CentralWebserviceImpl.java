@@ -321,7 +321,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
     }
 
 
-    public String getFileObjectWithURL(
+    public List<String> getFileObjectWithURL(
             @WebParam(name = "URL", targetNamespace = "") String url)
             throws MethodFailedException, InvalidCredentialsException {
         try {
@@ -330,11 +330,10 @@ public class CentralWebserviceImpl implements CentralWebservice {
                                        fedoraLocation);
             List<String> objects = fedora.listObjectsWithThisLabel(url);
 
-            if (objects != null && !objects.isEmpty()){
-                return objects.get(0);
+            if (objects != null){
+                return objects;
             } else {
-                //TODO
-                return null;
+                return new ArrayList<String>(0);
             }
 
         } catch (MalformedURLException e) {
