@@ -88,7 +88,7 @@
 
 
     <xs:element name="getFileObjectWithURL" type="tns:URL"/>
-    <xs:element name="getFileObjectWithURLResponse" type="tns:Pidlist"/>
+    <xs:element name="getFileObjectWithURLResponse" type="tns:singlePid"/>
 <!--
 
     <xs:element name="deleteFile" type="tns:singlePid"/>

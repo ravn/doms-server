@@ -290,6 +290,16 @@ public class CentralWebserviceImpl implements CentralWebservice {
         try {
             Credentials creds = getCredentials();
             Bitstorage bs = new Bitstorage(creds, bitstorageLocation);
+            String existingObject = getFileObjectWithURL(permanentURL);
+            if (existingObject != null){
+                log.warn("Attempt to add a permament url that already exists"
+                         + "in DOMS");
+                throw new MethodFailedException("This permanent url has already "
+                                                + "been added to the object '"+
+                existingObject+"'","This permanent url has already "
+                                                + "been added to the object '"+
+                existingObject+"'");
+            }
             Characterisation emptycharac = new Characterisation();
             emptycharac.setValidationStatus("valid");
             emptycharac.setBestFormat(formatURI);
@@ -321,7 +331,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
     }
 
 
-    public List<String> getFileObjectWithURL(
+    public String getFileObjectWithURL(
             @WebParam(name = "URL", targetNamespace = "") String url)
             throws MethodFailedException, InvalidCredentialsException {
         try {
@@ -330,10 +340,10 @@ public class CentralWebserviceImpl implements CentralWebservice {
                                        fedoraLocation);
             List<String> objects = fedora.listObjectsWithThisLabel(url);
 
-            if (objects != null){
-                return objects;
+            if (objects != null && !objects.isEmpty()){
+                return objects.get(0);
             } else {
-                return new ArrayList<String>(0);
+                return null;
             }
 
         } catch (MalformedURLException e) {
