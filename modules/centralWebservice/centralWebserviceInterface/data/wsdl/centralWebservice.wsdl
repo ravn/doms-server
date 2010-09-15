@@ -495,17 +495,18 @@
         <operation name="addRelation">
             <documentation>Add a relation between two objects.
 
-                    * Pid is the fedora object that will store the relation
+                * Pid is the fedora object that will store the relation
 
-                    * Subject is the "origin" of the relation. This will most
-                        often be the pid also, but with the "info:fedora/" prefix
+                * Subject is the "origin" of the relation. This will most
+                often be the pid also, but with the "info:fedora/" prefix
 
-                    *Predicate is the "name" of the relation, the label, whatever.
+                *Predicate is the "name" of the relation, the label, whatever.
+                Look in the ONTOLOGY datastream in the content model, about
+                the ObjectProperty tag, to find legal values of this parameter
 
-                    *Object is the "Target" of the relation. If the target is a
-                        fedora resource, such as another fedora object, it should use
-                        the prefix "info:fedora/"
-                
+                *Object is the "Target" of the relation. If the target is a
+                fedora resource, such as another fedora object, it should use
+                the prefix "info:fedora/"
             </documentation>
             <input message="tns:addRelation"/>
             <output message="tns:addRelationResponse"/>
