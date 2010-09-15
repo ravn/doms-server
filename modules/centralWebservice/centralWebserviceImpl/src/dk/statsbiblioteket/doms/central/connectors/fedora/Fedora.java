@@ -98,6 +98,7 @@ public class Fedora extends Connector {
             restApi.path(URLEncoder.encode(pid, "UTF-8"))
                     .path("/datastreams/")
                     .path(URLEncoder.encode(datastream,"UTF-8"))
+                    .queryParam("mimeType","text/xml")
                     .header("Authorization", credsAsBase64())
                     .post(contents);
         } catch (UnsupportedEncodingException e) {

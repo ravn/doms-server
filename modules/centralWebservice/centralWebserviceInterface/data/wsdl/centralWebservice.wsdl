@@ -128,14 +128,14 @@
     <!--File method messages -->
 
 
-<!--
-    <message name="addFile">
-        <part name="parameters" element="tns:addFile"/>
-    </message>
-    <message name="addFileResponse">
-        <part name="parameters" element="tns:addFileResponse"/>
-    </message>
--->
+    <!--
+        <message name="addFile">
+            <part name="parameters" element="tns:addFile"/>
+        </message>
+        <message name="addFileResponse">
+            <part name="parameters" element="tns:addFileResponse"/>
+        </message>
+    -->
     <message name="addFileFromPermanentURL">
         <part name="parameters" element="tns:addFileFromPermanentURL"/>
     </message>
@@ -417,20 +417,20 @@
 
 
 
-<!--
-        <operation name="addFile">
-            <documentation>Given a pid and a name, add a new file to the object
-                with the given content. Will fail if pid does not describe a
-                file object, if a file is already added to the object with
-                different content, or if content does not match checksum.
-            </documentation>
-            <input message="tns:addFile"/>
-            <output message="tns:addFileResponse"/>
-            <fault name="InvalidCredentialsException"
-                   message="tns:InvalidCredentialsException"/>
-            <fault name="MethodFailedException" message="tns:MethodFailedException"/>
-        </operation>
--->
+        <!--
+                <operation name="addFile">
+                    <documentation>Given a pid and a name, add a new file to the object
+                        with the given content. Will fail if pid does not describe a
+                        file object, if a file is already added to the object with
+                        different content, or if content does not match checksum.
+                    </documentation>
+                    <input message="tns:addFile"/>
+                    <output message="tns:addFileResponse"/>
+                    <fault name="InvalidCredentialsException"
+                           message="tns:InvalidCredentialsException"/>
+                    <fault name="MethodFailedException" message="tns:MethodFailedException"/>
+                </operation>
+        -->
         <operation name="addFileFromPermanentURL">
             <documentation>Given a pid and a name, add a new file (specified
                 by the url) to the object. Will fail if pid does not describe a
@@ -493,8 +493,20 @@
 
 
         <operation name="addRelation">
-            <documentation>Add a relation between two objects. The "subject" must
-                exist, but the "object" does not have to.
+            <documentation>Add a relation between two objects.
+
+                * Pid is the fedora object that will store the relation
+
+                * Subject is the "origin" of the relation. This will most
+                often be the pid also, but with the "info:fedora/" prefix
+
+                *Predicate is the "name" of the relation, the label, whatever.
+                Look in the ONTOLOGY datastream in the content model, about
+                the ObjectProperty tag, to find legal values of this parameter
+
+                *Object is the "Target" of the relation. If the target is a
+                fedora resource, such as another fedora object, it should use
+                the prefix "info:fedora/"
             </documentation>
             <input message="tns:addRelation"/>
             <output message="tns:addRelationResponse"/>
