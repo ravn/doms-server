@@ -142,6 +142,12 @@ public class Fedora extends Connector {
     public void addRelation(String pid, String subject, String property, String object)
             throws BackendMethodFailedException, BackendInvalidCredsException {
         try {
+            if (!subject.startsWith("info:fedora/")){
+                subject = "info:fedora/"+subject;
+            }
+            if (!object.startsWith("info:fedora/")){
+                object = "info:fedora/"+object;
+            }
             restApi.path(URLEncoder.encode(pid, "UTF-8"))
                     .path("/relationships/new")
                     .queryParam("subject",subject)
