@@ -31,6 +31,7 @@ import dk.statsbiblioteket.doms.bitstorage.highlevel.*;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.Connector;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
+import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.webservices.Credentials;
 
 import javax.xml.namespace.QName;
@@ -68,7 +69,8 @@ public class Bitstorage extends Connector {
                                                                        String md5String,
                                                                        Characterisation characterisation)
             throws BackendMethodFailedException,
-                   BackendInvalidCredsException
+                   BackendInvalidCredsException,
+                   BackendInvalidResourceException
     {
         try {
             service.uploadFileToObjectFromPermanentURLWithCharacterisation(pid,

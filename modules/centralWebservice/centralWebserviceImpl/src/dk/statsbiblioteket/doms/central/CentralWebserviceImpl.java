@@ -32,6 +32,7 @@ import dk.statsbiblioteket.doms.centralWebservice.*;
 import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
+import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.bitstorage.Bitstorage;
 import dk.statsbiblioteket.doms.central.connectors.ecm.ECM;
 import dk.statsbiblioteket.doms.webservices.Credentials;
@@ -43,12 +44,14 @@ import javax.jws.WebService;
 import javax.activation.DataHandler;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
+import javax.xml.transform.stream.StreamSource;
 import javax.servlet.http.HttpServletRequest;
 import javax.annotation.Resource;
 import java.lang.String;
 import java.net.MalformedURLException;
 import java.util.List;
 import java.util.ArrayList;
+import java.io.StringReader;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -106,6 +109,12 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throw new InvalidCredentialsException("Invalid Credentials Supplied",
                                                   "Invalid Credentials Supplied",
                                                   e);
+        } catch (BackendInvalidResourceException e) {
+            log.debug("Invalid resource requested", e);
+            throw new InvalidCredentialsException("Invalid Resource Requested",
+                                                  "Invalid Resource Requested",
+                                                  e);
+
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
@@ -135,6 +144,12 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throw new InvalidCredentialsException("Invalid Credentials Supplied",
                                                   "Invalid Credentials Supplied",
                                                   e);
+        } catch (BackendInvalidResourceException e) {
+            log.debug("Invalid resource requested", e);
+            throw new InvalidCredentialsException("Invalid Resource Requested",
+                                                  "Invalid Resource Requested",
+                                                  e);
+
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
@@ -173,8 +188,13 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throw new MethodFailedException("Webservice Config invalid",
                                             "Webservice Config invalid",
                                             e);
-        }
-        catch (Exception e) {
+
+        } catch (BackendInvalidResourceException e) {
+            log.debug("Invalid resource requested", e);
+            throw new InvalidCredentialsException("Invalid Resource Requested",
+                                                  "Invalid Resource Requested",
+                                                  e);
+        } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             markInProgressObject(activated);
             throw new MethodFailedException("Server error", "Server error", e);
@@ -208,6 +228,12 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throw new InvalidCredentialsException("Invalid Credentials Supplied",
                                                   "Invalid Credentials Supplied",
                                                   e);
+        } catch (BackendInvalidResourceException e) {
+            log.debug("Invalid resource requested", e);
+            throw new InvalidCredentialsException("Invalid Resource Requested",
+                                                  "Invalid Resource Requested",
+                                                  e);
+
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
@@ -241,6 +267,12 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throw new InvalidCredentialsException("Invalid Credentials Supplied",
                                                   "Invalid Credentials Supplied",
                                                   e);
+        } catch (BackendInvalidResourceException e) {
+            log.debug("Invalid resource requested", e);
+            throw new InvalidCredentialsException("Invalid Resource Requested",
+                                                  "Invalid Resource Requested",
+                                                  e);
+
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
@@ -272,6 +304,12 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throw new InvalidCredentialsException("Invalid Credentials Supplied",
                                                   "Invalid Credentials Supplied",
                                                   e);
+        } catch (BackendInvalidResourceException e) {
+            log.debug("Invalid resource requested", e);
+            throw new InvalidCredentialsException("Invalid Resource Requested",
+                                                  "Invalid Resource Requested",
+                                                  e);
+
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
@@ -291,14 +329,16 @@ public class CentralWebserviceImpl implements CentralWebservice {
             Credentials creds = getCredentials();
             Bitstorage bs = new Bitstorage(creds, bitstorageLocation);
             String existingObject = getFileObjectWithURL(permanentURL);
-            if (existingObject != null){
+            if (existingObject != null) {
                 log.warn("Attempt to add a permament url that already exists"
                          + "in DOMS");
-                throw new MethodFailedException("This permanent url has already "
-                                                + "been added to the object '"+
-                existingObject+"'","This permanent url has already "
-                                                + "been added to the object '"+
-                existingObject+"'");
+                throw new MethodFailedException(
+                        "This permanent url has already "
+                        + "been added to the object '" +
+                        existingObject + "'",
+                        "This permanent url has already "
+                        + "been added to the object '" +
+                        existingObject + "'");
             }
             Characterisation emptycharac = new Characterisation();
             emptycharac.setValidationStatus("valid");
@@ -324,6 +364,12 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throw new InvalidCredentialsException("Invalid Credentials Supplied",
                                                   "Invalid Credentials Supplied",
                                                   e);
+        } catch (BackendInvalidResourceException e) {
+            log.debug("Invalid resource requested", e);
+            throw new InvalidCredentialsException("Invalid Resource Requested",
+                                                  "Invalid Resource Requested",
+                                                  e);
+
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
@@ -340,7 +386,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                                        fedoraLocation);
             List<String> objects = fedora.listObjectsWithThisLabel(url);
 
-            if (objects != null && !objects.isEmpty()){
+            if (objects != null && !objects.isEmpty()) {
                 return objects.get(0);
             } else {
                 return null;
@@ -360,6 +406,11 @@ public class CentralWebserviceImpl implements CentralWebservice {
             log.debug("User supplied invalid credentials", e);
             throw new InvalidCredentialsException("Invalid Credentials Supplied",
                                                   "Invalid Credentials Supplied",
+                                                  e);
+        } catch (BackendInvalidResourceException e) {
+            log.debug("Invalid resource requested", e);
+            throw new InvalidCredentialsException("Invalid Resource Requested",
+                                                  "Invalid Resource Requested",
                                                   e);
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
@@ -396,10 +447,84 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throw new InvalidCredentialsException("Invalid Credentials Supplied",
                                                   "Invalid Credentials Supplied",
                                                   e);
+        } catch (BackendInvalidResourceException e) {
+            log.debug("Invalid resource requested", e);
+            throw new InvalidCredentialsException("Invalid Resource Requested",
+                                                  "Invalid Resource Requested",
+                                                  e);
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
         }
+    }
+
+    public ViewBundle getViewBundle(
+            @WebParam(name = "pid", targetNamespace = "") String pid,
+            @WebParam(name = "viewAngle", targetNamespace = "")
+            String viewAngle)
+            throws InvalidCredentialsException, MethodFailedException {
+        /*
+        * Pseudo kode here
+        * We need to figure two things out
+        * the bundle
+        * the type
+        * ECM generates the bundle
+        * The type is the entry content model of the origin pid
+        * */
+
+        Credentials creds = getCredentials();
+        try {
+            ECM ecm = new ECM(creds, ecmLocation);
+/*
+            List<String> types = ecm.getEntryContentModelsForObject(pid,
+                                                                    viewAngle);
+            if (types.isEmpty()) {
+                throw new BackendInvalidResourceException("Pid '"+pid+"'is not an entry object for angle '"+viewAngle+"'");
+            }
+*/
+            String bundleContentsString = ecm.createBundle(pid, viewAngle);
+
+            ViewBundle viewBundle = new ViewBundle();
+            viewBundle.setId(pid);
+            viewBundle.setContents(bundleContentsString);
+            return viewBundle;
+
+        } catch (MalformedURLException e) {
+            log.error("caught problemException", e);
+            throw new MethodFailedException("Webservice Config invalid",
+                                            "Webservice Config invalid",
+                                            e);
+        } catch (BackendMethodFailedException e) {
+            log.warn("Failed to execute method", e);
+            throw new MethodFailedException("Method failed to execute",
+                                            "Method failed to execute",
+                                            e);
+        } catch (BackendInvalidCredsException e) {
+            log.debug("User supplied invalid credentials", e);
+            throw new InvalidCredentialsException("Invalid Credentials Supplied",
+                                                  "Invalid Credentials Supplied",
+                                                  e);
+        } catch (BackendInvalidResourceException e) {
+            log.debug("Invalid resource requested", e);
+            throw new InvalidCredentialsException("Invalid Resource Requested",
+                                                  "Invalid Resource Requested",
+                                                  e);
+        } catch (Exception e) {
+            log.warn("Caught Unknown Exception", e);
+            throw new MethodFailedException("Server error", "Server error", e);
+        }
+    }
+
+    public List<String> getIDsModified(
+            @WebParam(name = "since", targetNamespace = "") long since,
+            @WebParam(name = "collectionPid", targetNamespace = "")
+            String collectionPid,
+            @WebParam(name = "viewAngle", targetNamespace = "")
+            String viewAngle,
+            @WebParam(name = "entryContentModel", targetNamespace = "")
+            String entryContentModel)
+            throws InvalidCredentialsException, MethodFailedException {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     private Credentials getCredentials() {

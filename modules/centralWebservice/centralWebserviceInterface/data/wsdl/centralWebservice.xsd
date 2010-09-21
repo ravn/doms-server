@@ -33,6 +33,7 @@
     <!--Exceptions-->
 
     <xs:element name="MethodFailedException" type="xs:string"/>
+    <xs:element name="InvalidResourceException" type="xs:string"/>
     <xs:element name="InvalidCredentialsException" type="xs:string"/>
 
     <!--Object operations-->
@@ -48,25 +49,25 @@
     <xs:element name="markInProgressObject" type="tns:Pidlist"/>
     <xs:element name="markInProgressObjectResponse" type="tns:void"/>
 
-<!--
-    <xs:element name="listDatastreamsObject" type="tns:singlePid"/>
-    <xs:element name="listDatastreamsObjectResponse" type="tns:Stringlist"/>
+    <!--
+        <xs:element name="listDatastreamsObject" type="tns:singlePid"/>
+        <xs:element name="listDatastreamsObjectResponse" type="tns:Stringlist"/>
 
-    <xs:element name="getTitleObject" type="tns:singlePid"/>
-    <xs:element name="getTitleObjectResponse" type="tns:string"/>
--->
+        <xs:element name="getTitleObject" type="tns:singlePid"/>
+        <xs:element name="getTitleObjectResponse" type="tns:string"/>
+    -->
 
 
     <!--Datastream operations-->
-<!--
-    <xs:element name="newDatastream" type="tns:pidAndDSIDandContents"/>
-    <xs:element name="newDatastreamResponse" type="tns:void"/>
--->
-<!--
+    <!--
+        <xs:element name="newDatastream" type="tns:pidAndDSIDandContents"/>
+        <xs:element name="newDatastreamResponse" type="tns:void"/>
+    -->
+    <!--
 
-    <xs:element name="deleteDatastream" type="tns:pidAndDSID"/>
-    <xs:element name="deleteDatastreamResponse" type="tns:void"/>
--->
+        <xs:element name="deleteDatastream" type="tns:pidAndDSID"/>
+        <xs:element name="deleteDatastreamResponse" type="tns:void"/>
+    -->
 
     <xs:element name="modifyDatastream" type="tns:pid_DSID_Contents"/>
     <xs:element name="modifyDatastreamResponse" type="tns:void"/>
@@ -74,10 +75,10 @@
     <xs:element name="getDatastreamContents" type="tns:pidAndDSID"/>
     <xs:element name="getDatastreamContentsResponse" type="tns:string"/>
 
-<!--
-    <xs:element name="getDatastreamProfile" type="tns:pidAndDSID"/>
-    <xs:element name="getDatastreamProfileResponse" type="tns:DatastreamProfile"/>
--->
+    <!--
+        <xs:element name="getDatastreamProfile" type="tns:pidAndDSID"/>
+        <xs:element name="getDatastreamProfileResponse" type="tns:DatastreamProfile"/>
+    -->
 
     <!--File methods-->
     <xs:element name="addFile" type="tns:pid_FileName_Checksum_Contents"/>
@@ -89,33 +90,41 @@
 
     <xs:element name="getFileObjectWithURL" type="tns:URL"/>
     <xs:element name="getFileObjectWithURLResponse" type="tns:singlePid"/>
-<!--
+    <!--
 
-    <xs:element name="deleteFile" type="tns:singlePid"/>
-    <xs:element name="deleteFileResponse" type="tns:void"/>
+        <xs:element name="deleteFile" type="tns:singlePid"/>
+        <xs:element name="deleteFileResponse" type="tns:void"/>
 
-    <xs:element name="getFileURL" type="tns:singlePid"/>
-    <xs:element name="getFileURLResponse" type="tns:URL"/>
--->
+        <xs:element name="getFileURL" type="tns:singlePid"/>
+        <xs:element name="getFileURLResponse" type="tns:URL"/>
+    -->
 
     <!--Relation methods-->
 
     <xs:element name="addRelation" type="tns:PidAndRelation"/>
     <xs:element name="addRelationResponse" type="tns:void"/>
-<!--
+    <!--
 
-    <xs:element name="getRelations" type="tns:singlePid"/>
-    <xs:element name="getRelationsResponse" type="tns:ListOfRelations"/>
-    
-    <xs:element name="getNamedRelations" type="tns:singlePid"/>
-    <xs:element name="getNamedRelationsResponse" type="tns:ListOfRelations"/>
-    
-    <xs:element name="deleteRelation" type="tns:relation"/>
-    <xs:element name="deleteRelationResponse" type="tns:void"/>
--->
+        <xs:element name="getRelations" type="tns:singlePid"/>
+        <xs:element name="getRelationsResponse" type="tns:ListOfRelations"/>
+
+        <xs:element name="getNamedRelations" type="tns:singlePid"/>
+        <xs:element name="getNamedRelationsResponse" type="tns:ListOfRelations"/>
+
+        <xs:element name="deleteRelation" type="tns:relation"/>
+        <xs:element name="deleteRelationResponse" type="tns:void"/>
+    -->
 
 
-    
+    <!--Search methods-->
+    <xs:element name="getViewBundle" type="tns:pidAndName"/>
+    <xs:element name="getViewBundleResponse" type="tns:viewBundleWrapper"/>
+
+
+    <xs:element name="getIDsModified" type="tns:IdsModified"/>
+    <xs:element name="getIDsModifiedResponse" type="tns:Pidlist"/>
+
+
     <!--Simple types-->
     <xs:complexType name="singlePid">
         <xs:sequence>
@@ -153,6 +162,15 @@
             <xs:element name="datastream" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
+
+    <xs:complexType name="pidAndName">
+        <xs:sequence>
+            <xs:element name="pid" type="xs:string"/>
+            <xs:element name="viewAngle" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
 
     <xs:complexType name="pid_DSID_Contents">
         <xs:sequence>
@@ -216,6 +234,28 @@
             <xs:element name="subject" type="xs:string"/>
             <xs:element name="predicate" type="xs:string"/>
             <xs:element name="object" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="viewBundleWrapper">
+        <xs:sequence>
+            <xs:element name="viewBundle" type="tns:ViewBundle"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ViewBundle">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string"/>
+            <xs:element name="contents" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="IdsModified">
+        <xs:sequence>
+            <xs:element name="since" type="xs:long"/>
+            <xs:element name="collectionPid" type="xs:string"/>
+            <xs:element name="viewAngle" type="xs:string"/>
+            <xs:element name="entryContentModel" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

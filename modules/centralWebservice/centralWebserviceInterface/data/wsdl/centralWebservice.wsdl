@@ -44,6 +44,11 @@
         <part name="fault" element="tns:MethodFailedException"/>
     </message>
 
+    <message name="InvalidResourceException">
+        <part name="fault" element="tns:InvalidResourceException"/>
+    </message>
+
+
     <message name="InvalidCredentialsException">
         <part name="fault" element="tns:InvalidCredentialsException"/>
     </message>
@@ -74,20 +79,21 @@
     </message>
     <message name="markInProgressObjectResponse">
         <part name="parameters" element="tns:markInProgressObjectResponse"/>
-    </message><!--
-    <message name="listDatastreamsObject">
-        <part name="parameters" element="tns:listDatastreamsObject"/>
     </message>
-    <message name="listDatastreamsObjectResponse">
-        <part name="parameters" element="tns:listDatastreamsObjectResponse"/>
-    </message>
-    <message name="getTitleObject">
-        <part name="parameters" element="tns:getTitleObject"/>
-    </message>
-    <message name="getTitleObjectResponse">
-        <part name="parameters" element="tns:getTitleObjectResponse"/>
-    </message>
--->
+    <!--
+        <message name="listDatastreamsObject">
+            <part name="parameters" element="tns:listDatastreamsObject"/>
+        </message>
+        <message name="listDatastreamsObjectResponse">
+            <part name="parameters" element="tns:listDatastreamsObjectResponse"/>
+        </message>
+        <message name="getTitleObject">
+            <part name="parameters" element="tns:getTitleObject"/>
+        </message>
+        <message name="getTitleObjectResponse">
+            <part name="parameters" element="tns:getTitleObjectResponse"/>
+        </message>
+    -->
     <!--Datastream method messages-->
 
     <!--
@@ -220,14 +226,23 @@
 
     -->
     <!--Structural method messages-->
-    <!--
 
-        <message name="getViewBundle">
-            <part name="parameters" element="tns:getViewBundle"/>
-        </message>
-        <message name="getViewBundleResponse">
-            <part name="parameters" element="tns:getViewBundleResponse"/>
-        </message>
+
+    <message name="getViewBundle">
+        <part name="parameters" element="tns:getViewBundle"/>
+    </message>
+    <message name="getViewBundleResponse">
+        <part name="body" element="tns:getViewBundleResponse"/>
+    </message>
+
+    <message name="getIDsModified">
+        <part name="parameters" element="tns:getIDsModified"/>
+    </message>
+    <message name="getIDsModifiedResponse">
+        <part name="body" element="tns:getIDsModifiedResponse"/>
+    </message>
+
+    <!--
         <message name="getViewStructure">
             <part name="parameters" element="tns:getViewStructure"/>
         </message>
@@ -283,14 +298,18 @@
         </documentation>
         <!--Object methods-->
         <operation name="newObject">
-            <documentation>Create a new object. The new object is created by cloning
+            <documentation>Create a new object. The new object is created by
+                cloning
                 the template, which is given (as a pid) to this method.
             </documentation>
             <input message="tns:newObject"/>
             <output message="tns:newObjectResponse"/>
             <fault name="InvalidCredentialsException"
                    message="tns:InvalidCredentialsException"/>
-            <fault name="MethodFailedException" message="tns:MethodFailedException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+            <fault name="InvalidResourceException"
+                   message="tns:InvalidResourceException"/>
         </operation>
         <!--
                 <operation name="deleteObject">
@@ -306,7 +325,8 @@
         -->
         <operation name="markPublishedObject">
             <documentation>Given list of Pids, mark each object as published.
-                Will fail if object does not validate. If any of the objects fail
+                Will fail if object does not validate. If any of the objects
+                fail
                 to publish, the method will undo the publish, and mark all the
                 already published objects in-progress.
                 If a object is already published, the object will be validated,
@@ -317,17 +337,25 @@
             <output message="tns:markPublishedObjectResponse"/>
             <fault name="InvalidCredentialsException"
                    message="tns:InvalidCredentialsException"/>
-            <fault name="MethodFailedException" message="tns:MethodFailedException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+            <fault name="InvalidResourceException"
+                   message="tns:InvalidResourceException"/>
         </operation>
         <operation name="markInProgressObject">
-            <documentation>Given a list of pids, mark each object as in-progress.
-                If any of the objects fail this marking, nothing furhter happens.
+            <documentation>Given a list of pids, mark each object as
+                in-progress.
+                If any of the objects fail this marking, nothing furhter
+                happens.
             </documentation>
             <input message="tns:markInProgressObject"/>
             <output message="tns:markInProgressObjectResponse"/>
             <fault name="InvalidCredentialsException"
                    message="tns:InvalidCredentialsException"/>
-            <fault name="MethodFailedException" message="tns:MethodFailedException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+            <fault name="InvalidResourceException"
+                   message="tns:InvalidResourceException"/>
         </operation>
         <!--
                 <operation name="listDatastreamsObject">
@@ -385,7 +413,10 @@
             <output message="tns:modifyDatastreamResponse"/>
             <fault name="InvalidCredentialsException"
                    message="tns:InvalidCredentialsException"/>
-            <fault name="MethodFailedException" message="tns:MethodFailedException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+            <fault name="InvalidResourceException"
+                   message="tns:InvalidResourceException"/>
         </operation>
         <operation name="getDatastreamContents">
             <documentation>Given a pid and a datastream, return the datastream
@@ -397,7 +428,10 @@
             <output message="tns:getDatastreamContentsResponse"/>
             <fault name="InvalidCredentialsException"
                    message="tns:InvalidCredentialsException"/>
-            <fault name="MethodFailedException" message="tns:MethodFailedException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+            <fault name="InvalidResourceException"
+                   message="tns:InvalidResourceException"/>
         </operation>
         <!--
                 <operation name="getDatastreamProfile">
@@ -414,7 +448,6 @@
 
 
         <!--File methods        -->
-
 
 
         <!--
@@ -442,7 +475,10 @@
             <output message="tns:addFileFromPermanentURLResponse"/>
             <fault name="InvalidCredentialsException"
                    message="tns:InvalidCredentialsException"/>
-            <fault name="MethodFailedException" message="tns:MethodFailedException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+            <fault name="InvalidResourceException"
+                   message="tns:InvalidResourceException"/>
         </operation>
 
         <operation name="getFileObjectWithURL">
@@ -454,7 +490,10 @@
             <output message="tns:getFileObjectWithURLResponse"/>
             <fault name="InvalidCredentialsException"
                    message="tns:InvalidCredentialsException"/>
-            <fault name="MethodFailedException" message="tns:MethodFailedException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+            <fault name="InvalidResourceException"
+                   message="tns:InvalidResourceException"/>
         </operation>
 
         <!--
@@ -487,9 +526,7 @@
         -->
 
 
-
         <!--Relationship operations-->
-
 
 
         <operation name="addRelation">
@@ -512,7 +549,10 @@
             <output message="tns:addRelationResponse"/>
             <fault name="InvalidCredentialsException"
                    message="tns:InvalidCredentialsException"/>
-            <fault name="MethodFailedException" message="tns:MethodFailedException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+            <fault name="InvalidResourceException"
+                   message="tns:InvalidResourceException"/>
         </operation>
         <!--
                 <operation name="getRelations">
@@ -534,7 +574,6 @@
                     <output message="tns:deleteRelationResponse"/>
                 </operation>
         -->
-
 
 
         <!--Search Operations-->
@@ -574,14 +613,36 @@
         -->
 
         <!--View operations-->
-        <!--
+
 
         <operation name="getViewBundle">
-            <documentation>Given an entry PID and a view name, return a bundle
+            <documentation>Given an entry PID and a view angle name, return a bundle
             </documentation>
             <input message="tns:getViewBundle"/>
             <output message="tns:getViewBundleResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+            <fault name="InvalidResourceException"
+                   message="tns:InvalidResourceException"/>
         </operation>
+
+
+        <operation name="getIDsModified">
+            <documentation>Given an entry PID and a view name, return a bundle
+            </documentation>
+            <input message="tns:getIDsModified"/>
+            <output message="tns:getIDsModifiedResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+
+        </operation>
+
+
+        <!--
         <operation name="getViewStructure">
             <documentation>Given an entry PID and a view name, return a spanning tree over the view graph.
 
@@ -673,6 +734,9 @@
             <fault name="InvalidCredentialsException">
                 <soap:fault name="InvalidCredentialsException" use="literal"/>
             </fault>
+            <fault name="InvalidResourceException">
+                <soap:fault name="InvalidResourceException" use="literal"/>
+            </fault>
         </operation>
         <!--
                 <operation name="deleteObject">
@@ -700,6 +764,9 @@
             <fault name="InvalidCredentialsException">
                 <soap:fault name="InvalidCredentialsException" use="literal"/>
             </fault>
+            <fault name="InvalidResourceException">
+                <soap:fault name="InvalidResourceException" use="literal"/>
+            </fault>
         </operation>
 
         <operation name="markInProgressObject">
@@ -715,6 +782,9 @@
             </fault>
             <fault name="InvalidCredentialsException">
                 <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
+            <fault name="InvalidResourceException">
+                <soap:fault name="InvalidResourceException" use="literal"/>
             </fault>
         </operation>
 
@@ -759,21 +829,25 @@
                        <soap:body use="literal"/>
                    </output>
                </operation>
-        -->       <operation name="modifyDatastream">
-        <soap:operation soapAction=""/>
-        <input>
-            <soap:body use="literal"/>
-        </input>
-        <output>
-            <soap:body use="literal"/>
-        </output>
-        <fault name="MethodFailedException">
-            <soap:fault name="MethodFailedException" use="literal"/>
-        </fault>
-        <fault name="InvalidCredentialsException">
-            <soap:fault name="InvalidCredentialsException" use="literal"/>
-        </fault>
-    </operation>
+        -->
+        <operation name="modifyDatastream">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
+            <fault name="InvalidResourceException">
+                <soap:fault name="InvalidResourceException" use="literal"/>
+            </fault>
+        </operation>
         <operation name="getDatastreamContents">
             <soap:operation soapAction=""/>
             <input>
@@ -788,6 +862,9 @@
             </fault>
             <fault name="InvalidCredentialsException">
                 <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
+            <fault name="InvalidResourceException">
+                <soap:fault name="InvalidResourceException" use="literal"/>
             </fault>
         </operation>
         <!--
@@ -815,6 +892,9 @@
             <fault name="InvalidCredentialsException">
                 <soap:fault name="InvalidCredentialsException" use="literal"/>
             </fault>
+            <fault name="InvalidResourceException">
+                <soap:fault name="InvalidResourceException" use="literal"/>
+            </fault>
         </operation>
         <operation name="getFileObjectWithURL">
             <soap:operation soapAction=""/>
@@ -829,6 +909,9 @@
             </fault>
             <fault name="InvalidCredentialsException">
                 <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
+            <fault name="InvalidResourceException">
+                <soap:fault name="InvalidResourceException" use="literal"/>
             </fault>
         </operation>
 
@@ -866,6 +949,9 @@
             <fault name="InvalidCredentialsException">
                 <soap:fault name="InvalidCredentialsException" use="literal"/>
             </fault>
+            <fault name="InvalidResourceException">
+                <soap:fault name="InvalidResourceException" use="literal"/>
+            </fault>
         </operation>
         <!--
                 <operation name="getRelations">
@@ -897,6 +983,39 @@
                 </operation>
 
         -->
+        <operation name="getViewBundle">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
+            <fault name="InvalidResourceException">
+                <soap:fault name="InvalidResourceException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="getIDsModified">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
+        </operation>
 
 
     </binding>

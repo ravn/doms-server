@@ -32,11 +32,13 @@ import com.sun.jersey.api.client.*;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.Connector;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
+import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.webservices.Credentials;
 
 import java.net.URLEncoder;
 import java.net.MalformedURLException;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -58,7 +60,8 @@ public class ECM extends Connector {
 
     public String createNewObject(String templatePid) throws
                                                       BackendMethodFailedException,
-                                                      BackendInvalidCredsException {
+                                                      BackendInvalidCredsException,
+                                                      BackendInvalidResourceException{
         try {
             String clonePID = restApi
                     .path("/clone/")
@@ -79,4 +82,60 @@ public class ECM extends Connector {
             }
         }
     }
+
+    public String createBundle(String pid, String angle)
+            throws BackendMethodFailedException,
+                   BackendInvalidCredsException,
+                   BackendInvalidResourceException {
+        try {
+            String bundle = restApi
+                    .path("getViewObjectsForObject/")
+                    .path(pid)
+                    .path("/forAngle/")
+                    .path(angle)
+                    .queryParam("bundle","true")
+                    .header("Authorization", credsAsBase64())
+                    .post(String.class);
+            return bundle;
+        } catch (UniformInterfaceException e) {
+            if (e.getResponse().getClientResponseStatus()
+                    .equals(ClientResponse.Status.UNAUTHORIZED)) {
+                throw new BackendInvalidCredsException(
+                        "Invalid Credentials Supplied", e);
+            }
+            else {
+                throw new BackendMethodFailedException("Server error", e);
+            }
+        }
+
+    }
+
+    public List<String> getEntryContentModelsForObject(String pid, String angle)
+            throws BackendInvalidCredsException,
+                   BackendMethodFailedException,
+    BackendInvalidResourceException{
+        try {
+            PidList list = restApi
+                    .path("getEntryContentModelsForObject/")
+                    .path(pid)
+                    .path("/forAngle/")
+                    .path(angle)
+                    .header("Authorization", credsAsBase64())
+                    .post(PidList.class);
+            return  list;
+
+        } catch (UniformInterfaceException e) {
+            if (e.getResponse().getClientResponseStatus()
+                    .equals(ClientResponse.Status.UNAUTHORIZED)) {
+                throw new BackendInvalidCredsException(
+                        "Invalid Credentials Supplied", e);
+            }
+            else {
+                throw new BackendMethodFailedException("Server error", e);
+            }
+        }
+
+
+    }
+
 }

@@ -31,6 +31,7 @@ package dk.statsbiblioteket.doms.central.connectors.fedora;
 import dk.statsbiblioteket.doms.central.connectors.Connector;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
+import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.webservices.Credentials;
 
 import java.net.MalformedURLException;
@@ -70,7 +71,10 @@ public class Fedora extends Connector {
     }
 
     public void modifyObjectState(String pid, String state)
-            throws BackendMethodFailedException, BackendInvalidCredsException {
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException {
         try {
             restApi.path(URLEncoder.encode(pid, "UTF-8"))
                     .queryParam("state", state)
@@ -84,7 +88,10 @@ public class Fedora extends Connector {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied",
                         e);
-            } else {
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()){
+                throw new BackendInvalidResourceException("Resource not found",e);
+            }
+            else  {
                 throw new BackendMethodFailedException("Server error", e);
             }
         }
@@ -93,7 +100,10 @@ public class Fedora extends Connector {
     public void modifyDatastreamByValue(String pid,
                                         String datastream,
                                         String contents)
-            throws BackendMethodFailedException, BackendInvalidCredsException {
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException {
         try {
             restApi.path(URLEncoder.encode(pid, "UTF-8"))
                     .path("/datastreams/")
@@ -109,14 +119,20 @@ public class Fedora extends Connector {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied",
                         e);
-            } else {
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()){
+                throw new BackendInvalidResourceException("Resource not found",e);
+            }
+            else  {
                 throw new BackendMethodFailedException("Server error", e);
             }
         }
     }
 
     public String getXMLDatastreamContents(String pid, String datastream)
-            throws BackendMethodFailedException, BackendInvalidCredsException {
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException {
         try {
             String contents = restApi.path(URLEncoder.encode(pid, "UTF-8"))
                     .path("/datastreams/")
@@ -133,14 +149,20 @@ public class Fedora extends Connector {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied",
                         e);
-            } else {
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()){
+                throw new BackendInvalidResourceException("Resource not found",e);
+            }
+            else  {
                 throw new BackendMethodFailedException("Server error", e);
             }
         }
     }
 
     public void addRelation(String pid, String subject, String property, String object)
-            throws BackendMethodFailedException, BackendInvalidCredsException {
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException {
         try {
             if (!subject.startsWith("info:fedora/")){
                 subject = "info:fedora/"+subject;
@@ -163,14 +185,20 @@ public class Fedora extends Connector {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied",
                         e);
-            } else {
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()){
+                throw new BackendInvalidResourceException("Resource not found",e);
+            }
+            else  {
                 throw new BackendMethodFailedException("Server error", e);
             }
         }
     }
 
     public List<String> listObjectsWithThisLabel(String label)
-            throws BackendInvalidCredsException, BackendMethodFailedException {
+            throws
+            BackendInvalidCredsException,
+            BackendMethodFailedException,
+            BackendInvalidResourceException {
         //TODO sanitize label
         try {
             String query = "select $object\n"
@@ -202,7 +230,10 @@ public class Fedora extends Connector {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied",
                         e);
-            } else {
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()){
+                throw new BackendInvalidResourceException("Resource not found",e);
+            }
+            else  {
                 throw new BackendMethodFailedException("Server error", e);
             }
         }
