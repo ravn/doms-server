@@ -33,6 +33,8 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
+import dk.statsbiblioteket.doms.central.connectors.updatetracker.UpdateTracker;
+import dk.statsbiblioteket.doms.central.connectors.updatetracker.UpdateTrackerRecord;
 import dk.statsbiblioteket.doms.central.connectors.bitstorage.Bitstorage;
 import dk.statsbiblioteket.doms.central.connectors.ecm.ECM;
 import dk.statsbiblioteket.doms.webservices.Credentials;
@@ -75,6 +77,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
     private String ecmLocation;
     private String fedoraLocation;
     private String bitstorageLocation;
+    private String updateTrackerLocation;
 
 
     public CentralWebserviceImpl() {
@@ -515,7 +518,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
         }
     }
 
-    public List<String> getIDsModified(
+    public List<TrackerRecord> getIDsModified(
             @WebParam(name = "since", targetNamespace = "") long since,
             @WebParam(name = "collectionPid", targetNamespace = "")
             String collectionPid,
@@ -524,7 +527,59 @@ public class CentralWebserviceImpl implements CentralWebservice {
             @WebParam(name = "entryContentModel", targetNamespace = "")
             String entryContentModel)
             throws InvalidCredentialsException, MethodFailedException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        try {
+            Credentials creds = getCredentials();
+            UpdateTracker tracker = new UpdateTracker(creds,
+                                                      updateTrackerLocation);
+            List<UpdateTrackerRecord> modifieds = tracker.listObjectsChangedSince(
+                    collectionPid,
+                    entryContentModel,
+                    viewAngle,
+                    since);
+            return transform(modifieds);
+        } catch (MalformedURLException e) {
+            log.error("caught problemException", e);
+            throw new MethodFailedException("Webservice Config invalid",
+                                            "Webservice Config invalid",
+                                            e);
+        } catch (BackendMethodFailedException e) {
+            log.warn("Failed to execute method", e);
+            throw new MethodFailedException("Method failed to execute",
+                                            "Method failed to execute",
+                                            e);
+        } catch (BackendInvalidCredsException e) {
+            log.debug("User supplied invalid credentials", e);
+            throw new InvalidCredentialsException("Invalid Credentials Supplied",
+                                                  "Invalid Credentials Supplied",
+                                                  e);
+        } catch (BackendInvalidResourceException e) {
+            log.debug("Invalid resource requested", e);
+            throw new InvalidCredentialsException("Invalid Resource Requested",
+                                                  "Invalid Resource Requested",
+                                                  e);
+
+        } catch (Exception e) {
+            log.warn("Caught Unknown Exception", e);
+            throw new MethodFailedException("Server error", "Server error", e);
+        }
+
+    }
+
+    private List<TrackerRecord> transform(List<UpdateTrackerRecord> input) {
+        List<TrackerRecord> output = new ArrayList<TrackerRecord>();
+        for (UpdateTrackerRecord updateTrackerRecord : input) {
+            output.add(transform(updateTrackerRecord));
+        }
+        return output;
+    }
+
+    private TrackerRecord transform(UpdateTrackerRecord updateTrackerRecord) {
+        TrackerRecord a = new TrackerRecord();
+        a.setCollectionPid(updateTrackerRecord.getCollectionPid());
+        a.setEntryContentModelPid(updateTrackerRecord.getEntryContentModelPid());
+        a.setPid(updateTrackerRecord.getPid());
+        a.setDate(updateTrackerRecord.getDate().getTime());
+        return a;
     }
 
     private Credentials getCredentials() {
