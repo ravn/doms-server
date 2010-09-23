@@ -34,6 +34,8 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceExcepti
 import dk.statsbiblioteket.doms.webservices.Credentials;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Date;
 import java.net.MalformedURLException;
 
 /**
@@ -59,7 +61,16 @@ public class UpdateTracker extends Connector{
             BackendMethodFailedException,
             BackendInvalidCredsException,
             BackendInvalidResourceException {
-        return null;
+        List<UpdateTrackerRecord> list
+                = new ArrayList<UpdateTrackerRecord>();
+        UpdateTrackerRecord rec = new UpdateTrackerRecord();
+        rec.setCollectionPid("doms:RadioTV_Collection");
+        rec.setEntryContentModelPid("doms:ContentModel_Program");
+        rec.setViewAngle("SummaVisible");
+        rec.setDate(new Date(0));
+        list.add(rec);
+        return list;
+
     }
 
     public long getLatestModification(String collectionPid,
