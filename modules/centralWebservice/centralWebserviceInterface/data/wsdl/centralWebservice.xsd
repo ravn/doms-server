@@ -125,6 +125,9 @@
     <xs:element name="getIDsModifiedResponse" type="tns:ListTrackerRecord"/>
 
 
+    <xs:element name="getLatestModified" type="tns:LatestModified"/>
+    <xs:element name="getLatestModifiedResponse" type="tns:long"/>
+
     <!--Simple types-->
     <xs:complexType name="singlePid">
         <xs:sequence>
@@ -167,6 +170,12 @@
         <xs:sequence>
             <xs:element name="pid" type="xs:string"/>
             <xs:element name="viewAngle" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="long">
+        <xs:sequence>
+            <xs:element name="date" type="xs:long"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -273,5 +282,14 @@
             <xs:element name="date" type="xs:long"/>
         </xs:sequence>
     </xs:complexType>
+
+    <xs:complexType name="LatestModified">
+        <xs:sequence>
+            <xs:element name="collectionPid" type="xs:string"/>
+            <xs:element name="viewAngle" type="xs:string"/>
+            <xs:element name="entryContentModel" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
 
 </xs:schema>

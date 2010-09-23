@@ -45,6 +45,7 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.activation.DataHandler;
 import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.Holder;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.transform.stream.StreamSource;
 import javax.servlet.http.HttpServletRequest;
@@ -518,6 +519,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
         }
     }
 
+    
+
     public List<TrackerRecord> getIDsModified(
             @WebParam(name = "since", targetNamespace = "") long since,
             @WebParam(name = "collectionPid", targetNamespace = "")
@@ -537,6 +540,47 @@ public class CentralWebserviceImpl implements CentralWebservice {
                     viewAngle,
                     since);
             return transform(modifieds);
+        } catch (MalformedURLException e) {
+            log.error("caught problemException", e);
+            throw new MethodFailedException("Webservice Config invalid",
+                                            "Webservice Config invalid",
+                                            e);
+        } catch (BackendMethodFailedException e) {
+            log.warn("Failed to execute method", e);
+            throw new MethodFailedException("Method failed to execute",
+                                            "Method failed to execute",
+                                            e);
+        } catch (BackendInvalidCredsException e) {
+            log.debug("User supplied invalid credentials", e);
+            throw new InvalidCredentialsException("Invalid Credentials Supplied",
+                                                  "Invalid Credentials Supplied",
+                                                  e);
+        } catch (BackendInvalidResourceException e) {
+            log.debug("Invalid resource requested", e);
+            throw new InvalidCredentialsException("Invalid Resource Requested",
+                                                  "Invalid Resource Requested",
+                                                  e);
+
+        } catch (Exception e) {
+            log.warn("Caught Unknown Exception", e);
+            throw new MethodFailedException("Server error", "Server error", e);
+        }
+
+    }
+
+    public long getLatestModified(
+            @WebParam(name = "collectionPid", targetNamespace = "")
+            String collectionPid,
+            @WebParam(name = "viewAngle", targetNamespace = "")
+            String viewAngle,
+            @WebParam(name = "entryContentModel", targetNamespace = "")
+            String entryContentModel)
+            throws InvalidCredentialsException, MethodFailedException {
+        try {
+            Credentials creds = getCredentials();
+            UpdateTracker tracker = new UpdateTracker(creds,
+                                                      updateTrackerLocation);
+            return tracker.getLatestModification(collectionPid,entryContentModel,viewAngle);
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
             throw new MethodFailedException("Webservice Config invalid",

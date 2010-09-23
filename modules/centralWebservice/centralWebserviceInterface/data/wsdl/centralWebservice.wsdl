@@ -239,8 +239,16 @@
         <part name="parameters" element="tns:getIDsModified"/>
     </message>
     <message name="getIDsModifiedResponse">
-        <part name="body" element="tns:getIDsModifiedResponse"/>
+        <part name="parameters" element="tns:getIDsModifiedResponse"/>
     </message>
+
+    <message name="getLatestModified">
+        <part name="parameters" element="tns:getLatestModified"/>
+    </message>
+    <message name="getLatestModifiedResponse">
+        <part name="parameters" element="tns:getLatestModifiedResponse"/>
+    </message>
+
 
     <!--
         <message name="getViewStructure">
@@ -630,10 +638,22 @@
 
 
         <operation name="getIDsModified">
-            <documentation>Given an entry PID and a view name, return a bundle
+            <documentation>Get the id's of records modified since the cutoff date.
             </documentation>
             <input message="tns:getIDsModified"/>
             <output message="tns:getIDsModifiedResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+
+        </operation>
+
+        <operation name="getLatestModified">
+            <documentation>Get the latest modificationtime in the specified collection
+            </documentation>
+            <input message="tns:getLatestModified"/>
+            <output message="tns:getLatestModifiedResponse"/>
             <fault name="InvalidCredentialsException"
                    message="tns:InvalidCredentialsException"/>
             <fault name="MethodFailedException"
@@ -1002,6 +1022,21 @@
             </fault>
         </operation>
         <operation name="getIDsModified">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="getLatestModified">
             <soap:operation soapAction=""/>
             <input>
                 <soap:body use="literal"/>

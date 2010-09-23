@@ -62,4 +62,14 @@ public class UpdateTracker extends Connector{
         return null;
     }
 
+    public long getLatestModification(String collectionPid,
+                                      String entryContentModel,
+                                      String viewAngle)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException {
+        return 0;
+    }
+
 }
