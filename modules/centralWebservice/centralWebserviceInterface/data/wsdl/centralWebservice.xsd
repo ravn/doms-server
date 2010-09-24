@@ -122,7 +122,7 @@
 
 
     <xs:element name="getIDsModified" type="tns:IdsModified"/>
-    <xs:element name="getIDsModifiedResponse" type="tns:ListTrackerRecord"/>
+    <xs:element name="getIDsModifiedResponse" type="tns:ListRecordDescription"/>
 
 
     <xs:element name="getLatestModified" type="tns:LatestModified"/>
@@ -265,21 +265,23 @@
             <xs:element name="collectionPid" type="xs:string"/>
             <xs:element name="viewAngle" type="xs:string"/>
             <xs:element name="entryContentModel" type="xs:string"/>
+            <xs:element name="state" type="xs:string" minOccurs="0" nillable="true"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="ListTrackerRecord">
+    <xs:complexType name="ListRecordDescription">
         <xs:sequence>
-            <xs:element name="TrackerRecord" minOccurs="0" maxOccurs="unbounded" type="tns:TrackerRecord"/>
+            <xs:element name="TrackerRecord" minOccurs="0" maxOccurs="unbounded" type="tns:RecordDescription"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="TrackerRecord">
+    <xs:complexType name="RecordDescription">
         <xs:sequence>
             <xs:element name="pid" type="xs:string"/>
             <xs:element name="entryContentModelPid" type="xs:string"/>
             <xs:element name="collectionPid" type="xs:string"/>
             <xs:element name="date" type="xs:long"/>
+            <xs:element name="state" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 
