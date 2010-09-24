@@ -519,22 +519,23 @@ public class CentralWebserviceImpl implements CentralWebservice {
         }
     }
 
-    
-
-    public List<TrackerRecord> getIDsModified(
+    public List<RecordDescription> getIDsModified(
             @WebParam(name = "since", targetNamespace = "") long since,
             @WebParam(name = "collectionPid", targetNamespace = "")
             String collectionPid,
             @WebParam(name = "viewAngle", targetNamespace = "")
             String viewAngle,
             @WebParam(name = "entryContentModel", targetNamespace = "")
-            String entryContentModel)
+            String entryContentModel,
+            @WebParam(name = "state", targetNamespace = "") String state)
             throws InvalidCredentialsException, MethodFailedException {
+
         try {
             Credentials creds = getCredentials();
             UpdateTracker tracker = new UpdateTracker(creds,
                                                       updateTrackerLocation);
-            List<UpdateTrackerRecord> modifieds = tracker.listObjectsChangedSince(
+            List<UpdateTrackerRecord> modifieds
+                    = tracker.listObjectsChangedSince(
                     collectionPid,
                     entryContentModel,
                     viewAngle,
@@ -555,12 +556,6 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throw new InvalidCredentialsException("Invalid Credentials Supplied",
                                                   "Invalid Credentials Supplied",
                                                   e);
-        } catch (BackendInvalidResourceException e) {
-            log.debug("Invalid resource requested", e);
-            throw new InvalidCredentialsException("Invalid Resource Requested",
-                                                  "Invalid Resource Requested",
-                                                  e);
-
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
@@ -580,7 +575,9 @@ public class CentralWebserviceImpl implements CentralWebservice {
             Credentials creds = getCredentials();
             UpdateTracker tracker = new UpdateTracker(creds,
                                                       updateTrackerLocation);
-            return tracker.getLatestModification(collectionPid,entryContentModel,viewAngle);
+            return tracker.getLatestModification(collectionPid,
+                                                 entryContentModel,
+                                                 viewAngle);
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
             throw new MethodFailedException("Webservice Config invalid",
@@ -609,16 +606,16 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
     }
 
-    private List<TrackerRecord> transform(List<UpdateTrackerRecord> input) {
-        List<TrackerRecord> output = new ArrayList<TrackerRecord>();
+    private List<RecordDescription> transform(List<UpdateTrackerRecord> input) {
+        List<RecordDescription> output = new ArrayList<RecordDescription>();
         for (UpdateTrackerRecord updateTrackerRecord : input) {
             output.add(transform(updateTrackerRecord));
         }
         return output;
     }
 
-    private TrackerRecord transform(UpdateTrackerRecord updateTrackerRecord) {
-        TrackerRecord a = new TrackerRecord();
+    private RecordDescription transform(UpdateTrackerRecord updateTrackerRecord) {
+        RecordDescription a = new RecordDescription();
         a.setCollectionPid(updateTrackerRecord.getCollectionPid());
         a.setEntryContentModelPid(updateTrackerRecord.getEntryContentModelPid());
         a.setPid(updateTrackerRecord.getPid());
