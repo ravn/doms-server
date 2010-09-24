@@ -88,6 +88,7 @@ public class UpdateTracker extends Connector{
             List<PidDatePidPid> changed = service.listObjectsChangedSince(
                     collectionPid,
                     entryContentModel,
+                    viewAngle,
                     long2Gregorian(date));
             for (PidDatePidPid pidDatePidPid : changed) {
                 UpdateTrackerRecord rec = new UpdateTrackerRecord();
