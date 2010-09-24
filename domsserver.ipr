@@ -357,6 +357,15 @@
         <root url="jar://$PROJECT_DIR$/lib/servlet-api-2.5-apache-tomcat-6.0.20/src/servlet-api-2.5-apache-tomcat-6.0.20-src.zip!/" />
       </SOURCES>
     </library>
+    <library name="updatetracker">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/updatetracker-0.0.1#SNAPSHOT/jars/updatetrackerwebserviceInterface.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/lib/updatetracker-0.0.1#SNAPSHOT/source/updatetrackerwebserviceInterface-src.zip!/" />
+      </SOURCES>
+    </library>
   </component>
 </project>
 

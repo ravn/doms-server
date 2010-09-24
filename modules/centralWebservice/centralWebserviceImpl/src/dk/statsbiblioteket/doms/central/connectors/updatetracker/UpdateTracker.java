@@ -32,11 +32,22 @@ import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.webservices.Credentials;
+import dk.statsbiblioteket.doms.bitstorage.highlevel.HighlevelBitstorageSoapWebserviceService;
+import dk.statsbiblioteket.doms.bitstorage.highlevel.HighlevelBitstorageSoapWebservice;
+import dk.statsbiblioteket.doms.updatetracker.webservice.*;
 
+import javax.xml.ws.BindingProvider;
+import javax.xml.namespace.QName;
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.DatatypeConfigurationException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.lang.String;
 
 /**
  * Created by IntelliJ IDEA.
@@ -46,11 +57,20 @@ import java.net.MalformedURLException;
  * To change this template use File | Settings | File Templates.
  */
 public class UpdateTracker extends Connector{
+    private UpdateTrackerWebservice service;
+    private QName QNAME = new QName("http://updatetracker.doms.statsbiblioteket.dk/", "UpdateTrackerWebserviceService");
 
 
     public UpdateTracker(Credentials creds, String location)
             throws MalformedURLException {
         super(creds, location);
+        URL wsdlLocation = new URL(location);
+        service = new UpdateTrackerWebserviceService(wsdlLocation,
+                                                     QNAME).getUpdateTrackerWebservicePort();
+        ((BindingProvider)service).getRequestContext().put(BindingProvider.USERNAME_PROPERTY,creds.getUsername());
+        ((BindingProvider)service).getRequestContext().put(BindingProvider.PASSWORD_PROPERTY,creds.getPassword());
+
+
     }
 
     public List<UpdateTrackerRecord> listObjectsChangedSince(String collectionPid,
@@ -61,14 +81,28 @@ public class UpdateTracker extends Connector{
             BackendMethodFailedException,
             BackendInvalidCredsException,
             BackendInvalidResourceException {
+
         List<UpdateTrackerRecord> list
                 = new ArrayList<UpdateTrackerRecord>();
-        UpdateTrackerRecord rec = new UpdateTrackerRecord();
-        rec.setCollectionPid("doms:RadioTV_Collection");
-        rec.setEntryContentModelPid("doms:ContentModel_Program");
-        rec.setViewAngle("SummaVisible");
-        rec.setDate(new Date(0));
-        list.add(rec);
+
+        try {
+            List<PidDatePidPid> changed = service.listObjectsChangedSince(
+                    collectionPid,
+                    entryContentModel,
+                    long2Gregorian(date));
+            for (PidDatePidPid pidDatePidPid : changed) {
+                UpdateTrackerRecord rec = new UpdateTrackerRecord();
+                rec.setCollectionPid(pidDatePidPid.getCollectionPid());
+                rec.setEntryContentModelPid(pidDatePidPid.getEntryCMPid());
+                rec.setDate(pidDatePidPid.getLastChangedTime().toGregorianCalendar().getTime());
+                list.add(rec);
+            }
+        } catch (InvalidCredentialsException e) {
+            throw new BackendInvalidCredsException("Invalid credentials for update tracker",e);
+        } catch (MethodFailedException e) {
+            throw new BackendMethodFailedException("Update tracker failed",e);
+        }
+
         return list;
 
     }
@@ -81,6 +115,19 @@ public class UpdateTracker extends Connector{
             BackendInvalidCredsException,
             BackendInvalidResourceException {
         return 0;
+    }
+
+    public static XMLGregorianCalendar long2Gregorian(long date)
+            throws BackendMethodFailedException {
+        DatatypeFactory dataTypeFactory;
+        try {
+            dataTypeFactory = DatatypeFactory.newInstance();
+        } catch (DatatypeConfigurationException e) {
+            throw new BackendMethodFailedException("Failed to convert dates...",e);
+        }
+        GregorianCalendar gc = new GregorianCalendar();
+        gc.setTimeInMillis(date);
+        return dataTypeFactory.newXMLGregorianCalendar(gc);
     }
 
 }
