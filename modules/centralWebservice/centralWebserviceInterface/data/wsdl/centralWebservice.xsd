@@ -271,7 +271,7 @@
 
     <xs:complexType name="ListRecordDescription">
         <xs:sequence>
-            <xs:element name="TrackerRecord" minOccurs="0" maxOccurs="unbounded" type="tns:RecordDescription"/>
+            <xs:element name="RecordDescription" minOccurs="0" maxOccurs="unbounded" type="tns:RecordDescription"/>
         </xs:sequence>
     </xs:complexType>
 
