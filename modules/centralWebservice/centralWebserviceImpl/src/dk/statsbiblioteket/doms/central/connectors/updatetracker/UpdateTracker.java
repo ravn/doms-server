@@ -79,8 +79,7 @@ public class UpdateTracker extends Connector{
                                                              long date)
             throws
             BackendMethodFailedException,
-            BackendInvalidCredsException,
-            BackendInvalidResourceException {
+            BackendInvalidCredsException {
 
         List<UpdateTrackerRecord> list
                 = new ArrayList<UpdateTrackerRecord>();
