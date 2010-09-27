@@ -76,13 +76,16 @@ public class UpdateTracker extends Connector{
     public List<UpdateTrackerRecord> listObjectsChangedSince(String collectionPid,
                                                              String entryContentModel,
                                                              String viewAngle,
-                                                             long date)
+                                                             long date,
+                                                             String state)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException {
 
         List<UpdateTrackerRecord> list
                 = new ArrayList<UpdateTrackerRecord>();
+
+
 
         try {
             List<PidDatePidPid> changed = service.listObjectsChangedSince(

@@ -536,12 +536,16 @@ public class CentralWebserviceImpl implements CentralWebservice {
             Credentials creds = getCredentials();
             UpdateTracker tracker = new UpdateTracker(creds,
                                                       updateTrackerLocation);
+            if (state == null || state.isEmpty()){
+                state = "Published";
+            }
             List<UpdateTrackerRecord> modifieds
                     = tracker.listObjectsChangedSince(
                     collectionPid,
                     entryContentModel,
                     viewAngle,
-                    since);
+                    since,
+                    state);
             return transform(modifieds);
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
