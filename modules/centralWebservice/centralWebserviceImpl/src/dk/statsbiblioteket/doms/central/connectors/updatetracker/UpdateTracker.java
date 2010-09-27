@@ -95,6 +95,8 @@ public class UpdateTracker extends Connector{
                 rec.setCollectionPid(pidDatePidPid.getCollectionPid());
                 rec.setEntryContentModelPid(pidDatePidPid.getEntryCMPid());
                 rec.setDate(pidDatePidPid.getLastChangedTime().toGregorianCalendar().getTime());
+                rec.setPid(pidDatePidPid.getPid());
+                rec.setViewAngle(viewAngle);
                 list.add(rec);
             }
         } catch (InvalidCredentialsException e) {
