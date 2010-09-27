@@ -209,6 +209,8 @@ public class Fedora extends Connector {
                     .queryParam("type", "tuples")
                     .queryParam("lang", "iTQL")
                     .queryParam("format", "CSV")
+                    .queryParam("flush","true")
+                    .queryParam("stream","on")
                     .queryParam("query", query)
                     .header("Authorization", credsAsBase64())
                     .post(String.class);
