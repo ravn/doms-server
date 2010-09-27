@@ -51,7 +51,7 @@ import java.util.*;
  * </pre>
 
  */
-@XmlRootElement(name = "pidList")
+@XmlRootElement(name = "pidList", namespace = "")
 public class PidList implements List<String> {
 
     @XmlElement(name = "pid")
