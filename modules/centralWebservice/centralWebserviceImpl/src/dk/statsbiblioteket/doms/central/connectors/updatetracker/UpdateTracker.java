@@ -114,7 +114,19 @@ public class UpdateTracker extends Connector{
             BackendMethodFailedException,
             BackendInvalidCredsException,
             BackendInvalidResourceException {
-        return 0;
+
+        try {
+            XMLGregorianCalendar changed = service.getLatestModificationTime(
+                    collectionPid,
+                    entryContentModel,
+                    viewAngle
+            );
+            return changed.toGregorianCalendar().getTime().getTime();
+        } catch (InvalidCredentialsException e) {
+            throw new BackendInvalidCredsException("Invalid credentials for update tracker",e);
+        } catch (MethodFailedException e) {
+            throw new BackendMethodFailedException("Update tracker failed",e);
+        }
     }
 
     public static XMLGregorianCalendar long2Gregorian(long date)
