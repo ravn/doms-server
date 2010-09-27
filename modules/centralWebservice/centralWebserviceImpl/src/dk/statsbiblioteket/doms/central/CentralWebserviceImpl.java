@@ -88,6 +88,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
                 "dk.statsbiblioteket.doms.central.ecmLocation");
         fedoraLocation = ConfigCollection.getProperties().getProperty(
                 "dk.statsbiblioteket.doms.central.fedoraLocation");
+        updateTrackerLocation = ConfigCollection.getProperties().getProperty(
+                "dk.statsbiblioteket.doms.central.updateTrackerLocation");
     }
 
     public String newObject(
