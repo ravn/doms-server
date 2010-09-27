@@ -69,12 +69,17 @@
         <param-name>dk.statsbiblioteket.doms.central.ecmLocation</param-name>
         <param-value>http://localhost:8080/ecm</param-value>
     </context-param>
-
     <context-param>
         <description>the location of the fedora instance</description>
         <param-name>dk.statsbiblioteket.doms.central.fedoraLocation</param-name>
         <param-value>http://localhost:8080/fedora</param-value>
     </context-param>
+    <context-param>
+        <description>the location of the fedora instance</description>
+        <param-name>dk.statsbiblioteket.doms.central.updateTrackerLocation</param-name>
+        <param-value>http://localhost:8080/updatetrackerWebservice/updatetracker/?wsdl</param-value>
+    </context-param>
+
 
 
     <servlet>
