@@ -90,12 +90,12 @@ public class ECM extends Connector {
         try {
             String bundle = restApi
                     .path("getViewObjectsForObject/")
-                    .path(pid)
+                    .path(URLEncoder.encode(pid,"UTF-8"))
                     .path("/forAngle/")
                     .path(angle)
                     .queryParam("bundle","true")
                     .header("Authorization", credsAsBase64())
-                    .post(String.class);
+                    .get(String.class);
             return bundle;
         } catch (UniformInterfaceException e) {
             if (e.getResponse().getClientResponseStatus()
@@ -106,6 +106,8 @@ public class ECM extends Connector {
             else {
                 throw new BackendMethodFailedException("Server error", e);
             }
+        } catch (UnsupportedEncodingException e) {
+            throw new BackendMethodFailedException("UTF-8 not known....", e);
         }
 
     }
@@ -113,15 +115,15 @@ public class ECM extends Connector {
     public List<String> getEntryContentModelsForObject(String pid, String angle)
             throws BackendInvalidCredsException,
                    BackendMethodFailedException,
-    BackendInvalidResourceException{
+                   BackendInvalidResourceException{
         try {
             PidList list = restApi
                     .path("getEntryContentModelsForObject/")
-                    .path(pid)
+                    .path(URLEncoder.encode(pid,"UTF-8"))
                     .path("/forAngle/")
                     .path(angle)
                     .header("Authorization", credsAsBase64())
-                    .post(PidList.class);
+                    .get(PidList.class);
             return  list;
 
         } catch (UniformInterfaceException e) {
@@ -133,6 +135,8 @@ public class ECM extends Connector {
             else {
                 throw new BackendMethodFailedException("Server error", e);
             }
+        } catch (UnsupportedEncodingException e) {
+            throw new BackendMethodFailedException("UTF-8 not known....", e);
         }
 
 

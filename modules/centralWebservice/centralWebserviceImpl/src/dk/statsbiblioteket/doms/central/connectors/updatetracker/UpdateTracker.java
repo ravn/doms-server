@@ -92,7 +92,8 @@ public class UpdateTracker extends Connector{
                     collectionPid,
                     entryContentModel,
                     viewAngle,
-                    long2Gregorian(date));
+                    long2Gregorian(date),
+                    state);
             for (PidDatePidPid pidDatePidPid : changed) {
                 UpdateTrackerRecord rec = new UpdateTrackerRecord();
                 rec.setCollectionPid(pidDatePidPid.getCollectionPid());
