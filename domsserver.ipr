@@ -359,11 +359,12 @@
     </library>
     <library name="updatetracker">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/updatetracker-0.0.1#SNAPSHOT/jars/updatetrackerwebserviceInterface.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/updatetracker-0.0.1/jars/updatetrackerwebserviceInterface.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/lib/updatetracker-0.0.1#SNAPSHOT/source/updatetrackerwebserviceInterface-src.zip!/" />
+        <root url="jar://$PROJECT_DIR$/lib/updatetracker-0.0.1/src/updatetracker-0.0.1-src.zip!/updatetracker-0.0.1/modules/updatetrackerwebservice/updatetrackerwebserviceInterface/tempsrc" />
+        <root url="jar://$PROJECT_DIR$/lib/updatetracker-0.0.1/src/updatetracker-0.0.1-src.zip!/updatetracker-0.0.1/modules/updatetrackerwebservice/updatetrackerwebserviceInterface/src" />
       </SOURCES>
     </library>
   </component>
