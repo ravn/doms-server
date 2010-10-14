@@ -266,6 +266,7 @@
             <xs:element name="viewAngle" type="xs:string"/>
             <xs:element name="entryContentModel" type="xs:string"/>
             <xs:element name="state" type="xs:string" minOccurs="0" nillable="true"/>
+            <xs:element name="limit" type="xs:string" minOccurs="0" nillable="true"/>
         </xs:sequence>
     </xs:complexType>
 
