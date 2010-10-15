@@ -27,27 +27,25 @@
 
 package dk.statsbiblioteket.doms.central.connectors.updatetracker;
 
-import dk.statsbiblioteket.doms.central.connectors.Connector;
-import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
-import dk.statsbiblioteket.doms.webservices.Credentials;
-import dk.statsbiblioteket.doms.bitstorage.highlevel.HighlevelBitstorageSoapWebserviceService;
-import dk.statsbiblioteket.doms.bitstorage.highlevel.HighlevelBitstorageSoapWebservice;
+import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
+import dk.statsbiblioteket.doms.central.connectors.Connector;
 import dk.statsbiblioteket.doms.updatetracker.webservice.*;
+import dk.statsbiblioteket.doms.webservices.Credentials;
 
-import javax.xml.ws.BindingProvider;
-import javax.xml.namespace.QName;
-import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.DatatypeConfigurationException;
-import java.util.List;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.namespace.QName;
+import javax.xml.ws.BindingProvider;
+import java.lang.String;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.lang.String;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -74,10 +72,11 @@ public class UpdateTracker extends Connector{
     }
 
     public List<UpdateTrackerRecord> listObjectsChangedSince(String collectionPid,
-                                                             String entryContentModel,
                                                              String viewAngle,
                                                              long date,
-                                                             String state)
+                                                             String state,
+                                                             int offset,
+                                                             int limit)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException {
@@ -87,18 +86,19 @@ public class UpdateTracker extends Connector{
 
 
 
-        try {
+        try {//TODO require new version of updateTracker
             List<PidDatePidPid> changed = service.listObjectsChangedSince(
                     collectionPid,
-                    entryContentModel,
                     viewAngle,
-                    long2Gregorian(date),
-                    state);
+                    date,
+                    state,
+                    offset,
+                    limit);
             for (PidDatePidPid pidDatePidPid : changed) {
                 UpdateTrackerRecord rec = new UpdateTrackerRecord();
                 rec.setCollectionPid(pidDatePidPid.getCollectionPid());
                 rec.setEntryContentModelPid(pidDatePidPid.getEntryCMPid());
-                rec.setDate(pidDatePidPid.getLastChangedTime().toGregorianCalendar().getTime());
+                rec.setDate(new Date(pidDatePidPid.getLastChangedTime()));
                 rec.setPid(pidDatePidPid.getPid());
                 rec.setViewAngle(viewAngle);
                 list.add(rec);
@@ -114,20 +114,20 @@ public class UpdateTracker extends Connector{
     }
 
     public long getLatestModification(String collectionPid,
-                                      String entryContentModel,
-                                      String viewAngle)
+                                      String viewAngle,
+                                      String state)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,
             BackendInvalidResourceException {
 
         try {
-            XMLGregorianCalendar changed = service.getLatestModificationTime(
+            long changed = service.getLatestModificationTime(
                     collectionPid,
-                    entryContentModel,
-                    viewAngle
+                    viewAngle,
+                    state
             );
-            return changed.toGregorianCalendar().getTime().getTime();
+            return changed;
         } catch (InvalidCredentialsException e) {
             throw new BackendInvalidCredsException("Invalid credentials for update tracker",e);
         } catch (MethodFailedException e) {

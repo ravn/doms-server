@@ -522,12 +522,10 @@ public class CentralWebserviceImpl implements CentralWebservice {
             String collectionPid,
             @WebParam(name = "viewAngle", targetNamespace = "")
             String viewAngle,
-            @WebParam(name = "entryContentModel", targetNamespace = "")
-            String entryContentModel,
             @WebParam(name = "state", targetNamespace = "") String state,
-            @WebParam(name = "limit", targetNamespace= "") String limit)
-            throws InvalidCredentialsException,MethodFailedException  {
-
+            @WebParam(name = "offset", targetNamespace = "") Integer offset,
+            @WebParam(name = "limit", targetNamespace = "") Integer limit)
+            throws InvalidCredentialsException, MethodFailedException {
         try {
             Credentials creds = getCredentials();
             UpdateTracker tracker = new UpdateTracker(creds,
@@ -538,10 +536,11 @@ public class CentralWebserviceImpl implements CentralWebservice {
             List<UpdateTrackerRecord> modifieds
                     = tracker.listObjectsChangedSince(
                     collectionPid,
-                    entryContentModel,
                     viewAngle,
                     since,
-                    state);
+                    state,
+                    offset,
+                    limit);
             return transform(modifieds);
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
@@ -563,23 +562,25 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throw new MethodFailedException("Server error", "Server error", e);
         }
 
+
     }
+
 
     public long getLatestModified(
             @WebParam(name = "collectionPid", targetNamespace = "")
             String collectionPid,
             @WebParam(name = "viewAngle", targetNamespace = "")
             String viewAngle,
-            @WebParam(name = "entryContentModel", targetNamespace = "")
-            String entryContentModel)
+            @WebParam(name = "state", targetNamespace = "")
+            String state)
             throws InvalidCredentialsException, MethodFailedException {
         try {
             Credentials creds = getCredentials();
             UpdateTracker tracker = new UpdateTracker(creds,
                                                       updateTrackerLocation);
             return tracker.getLatestModification(collectionPid,
-                                                 entryContentModel,
-                                                 viewAngle);
+                                                 viewAngle,
+                                                 state);
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
             throw new MethodFailedException("Webservice Config invalid",
