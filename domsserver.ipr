@@ -359,12 +359,14 @@
     </library>
     <library name="updatetracker">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/updatetracker-0.0.1/jars/updatetrackerwebserviceInterface.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/updatetracker-0.0.3/jars/updatetrackerwebserviceInterface.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/lib/updatetracker-0.0.1/src/updatetracker-0.0.1-src.zip!/updatetracker-0.0.1/modules/updatetrackerwebservice/updatetrackerwebserviceInterface/tempsrc" />
-        <root url="jar://$PROJECT_DIR$/lib/updatetracker-0.0.1/src/updatetracker-0.0.1-src.zip!/updatetracker-0.0.1/modules/updatetrackerwebservice/updatetrackerwebserviceInterface/src" />
+        <root url="jar://$PROJECT_DIR$/lib/updatetracker-0.0.3/src/updatetracker-0.0.3-src.zip!/updatetracker-0.0.3/modules/updatetrackerwebservice/updatetrackerwebserviceImpl/src" />
+        <root url="jar://$PROJECT_DIR$/lib/updatetracker-0.0.3/src/updatetracker-0.0.3-src.zip!/updatetracker-0.0.3/modules/updatetrackerwebservice/updatetrackerwebserviceInterface/tempsrc" />
+        <root url="jar://$PROJECT_DIR$/lib/updatetracker-0.0.3/src/updatetracker-0.0.3-src.zip!/updatetracker-0.0.3/modules/updatetrackerwebservice/updatetrackerwebserviceImpl/tempsrc" />
+        <root url="jar://$PROJECT_DIR$/lib/updatetracker-0.0.3/src/updatetracker-0.0.3-src.zip!/updatetracker-0.0.3/modules/updatetrackerwebservice/updatetrackerwebserviceInterface/src" />
       </SOURCES>
     </library>
   </component>

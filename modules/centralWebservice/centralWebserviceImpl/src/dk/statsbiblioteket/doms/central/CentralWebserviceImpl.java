@@ -28,36 +28,31 @@
 
 package dk.statsbiblioteket.doms.central;
 
-import dk.statsbiblioteket.doms.centralWebservice.*;
-import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
-import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
+import dk.statsbiblioteket.doms.bitstorage.highlevel.Characterisation;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
-import dk.statsbiblioteket.doms.central.connectors.updatetracker.UpdateTracker;
-import dk.statsbiblioteket.doms.central.connectors.updatetracker.UpdateTrackerRecord;
+import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.bitstorage.Bitstorage;
 import dk.statsbiblioteket.doms.central.connectors.ecm.ECM;
-import dk.statsbiblioteket.doms.webservices.Credentials;
+import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
+import dk.statsbiblioteket.doms.central.connectors.updatetracker.UpdateTracker;
+import dk.statsbiblioteket.doms.central.connectors.updatetracker.UpdateTrackerRecord;
+import dk.statsbiblioteket.doms.centralWebservice.*;
 import dk.statsbiblioteket.doms.webservices.ConfigCollection;
-import dk.statsbiblioteket.doms.bitstorage.highlevel.Characterisation;
-
-import javax.jws.WebParam;
-import javax.jws.WebService;
-import javax.activation.DataHandler;
-import javax.xml.ws.WebServiceContext;
-import javax.xml.ws.Holder;
-import javax.xml.ws.handler.MessageContext;
-import javax.xml.transform.stream.StreamSource;
-import javax.servlet.http.HttpServletRequest;
-import javax.annotation.Resource;
-import java.lang.String;
-import java.net.MalformedURLException;
-import java.util.List;
-import java.util.ArrayList;
-import java.io.StringReader;
-
+import dk.statsbiblioteket.doms.webservices.Credentials;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import javax.annotation.Resource;
+import javax.jws.WebParam;
+import javax.jws.WebService;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.handler.MessageContext;
+import java.lang.String;
+import java.net.MalformedURLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -527,25 +522,25 @@ public class CentralWebserviceImpl implements CentralWebservice {
             String collectionPid,
             @WebParam(name = "viewAngle", targetNamespace = "")
             String viewAngle,
-            @WebParam(name = "entryContentModel", targetNamespace = "")
-            String entryContentModel,
-            @WebParam(name = "state", targetNamespace = "") String state)
+            @WebParam(name = "state", targetNamespace = "") String state,
+            @WebParam(name = "offset", targetNamespace = "") Integer offset,
+            @WebParam(name = "limit", targetNamespace = "") Integer limit)
             throws InvalidCredentialsException, MethodFailedException {
-
         try {
             Credentials creds = getCredentials();
             UpdateTracker tracker = new UpdateTracker(creds,
                                                       updateTrackerLocation);
-            if (state == null || state.isEmpty()){
+            if (state == null || state.isEmpty()) {
                 state = "Published";
             }
             List<UpdateTrackerRecord> modifieds
                     = tracker.listObjectsChangedSince(
                     collectionPid,
-                    entryContentModel,
                     viewAngle,
                     since,
-                    state);
+                    state,
+                    offset,
+                    limit);
             return transform(modifieds);
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
@@ -567,23 +562,25 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throw new MethodFailedException("Server error", "Server error", e);
         }
 
+
     }
+
 
     public long getLatestModified(
             @WebParam(name = "collectionPid", targetNamespace = "")
             String collectionPid,
             @WebParam(name = "viewAngle", targetNamespace = "")
             String viewAngle,
-            @WebParam(name = "entryContentModel", targetNamespace = "")
-            String entryContentModel)
+            @WebParam(name = "state", targetNamespace = "")
+            String state)
             throws InvalidCredentialsException, MethodFailedException {
         try {
             Credentials creds = getCredentials();
             UpdateTracker tracker = new UpdateTracker(creds,
                                                       updateTrackerLocation);
             return tracker.getLatestModification(collectionPid,
-                                                 entryContentModel,
-                                                 viewAngle);
+                                                 viewAngle,
+                                                 state);
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
             throw new MethodFailedException("Webservice Config invalid",
