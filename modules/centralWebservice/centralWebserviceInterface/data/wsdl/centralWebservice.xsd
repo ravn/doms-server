@@ -40,6 +40,9 @@
     <xs:element name="newObject" type="tns:singlePid"/>
     <xs:element name="newObjectResponse" type="tns:string"/>
 
+    <xs:element name="setObjectLabel" type="tns:pidAndName"/>
+    <xs:element name="setObjectLabelResponse" type="tns:void"/>
+
     <xs:element name="deleteObject" type="tns:singlePid"/>
     <xs:element name="deleteObjectResponse" type="tns:void"/>
 
@@ -169,7 +172,7 @@
     <xs:complexType name="pidAndName">
         <xs:sequence>
             <xs:element name="pid" type="xs:string"/>
-            <xs:element name="viewAngle" type="xs:string"/>
+            <xs:element name="name" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 

@@ -28,22 +28,21 @@
 
 package dk.statsbiblioteket.doms.central.connectors.fedora;
 
-import dk.statsbiblioteket.doms.central.connectors.Connector;
-import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.UniformInterfaceException;
+import com.sun.jersey.api.client.WebResource;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
+import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
+import dk.statsbiblioteket.doms.central.connectors.Connector;
 import dk.statsbiblioteket.doms.webservices.Credentials;
 
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
-import java.io.UnsupportedEncodingException;
-import java.util.List;
 import java.util.ArrayList;
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.UniformInterfaceException;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -227,6 +226,33 @@ public class Fedora extends Connector {
             }
             return foundobjects;
         }  catch (UniformInterfaceException e) {
+            if (e.getResponse().getStatus()
+                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                throw new BackendInvalidCredsException(
+                        "Invalid Credentials Supplied",
+                        e);
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()){
+                throw new BackendInvalidResourceException("Resource not found",e);
+            }
+            else  {
+                throw new BackendMethodFailedException("Server error", e);
+            }
+        }
+    }
+
+    public void modifyObjectLabel(String pid, String name)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException {
+        try {
+            restApi.path(URLEncoder.encode(pid, "UTF-8"))
+                    .queryParam("label", name)
+                    .header("Authorization", credsAsBase64())
+                    .put();
+        } catch (UnsupportedEncodingException e) {
+            throw new BackendMethodFailedException("UTF-8 not known....", e);
+        } catch (UniformInterfaceException e) {
             if (e.getResponse().getStatus()
                 == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException(
