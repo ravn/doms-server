@@ -46,9 +46,9 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="updatetracker" level="project" />
-    <orderEntry type="library" name="Fedora Client" level="project" />
     <orderEntry type="library" name="Bitstorage" level="project" />
     <orderEntry type="library" name="Jersey" level="project" />
+    <orderEntry type="library" name="Commons-loggin" level="project" />
   </component>
 </module>
 
