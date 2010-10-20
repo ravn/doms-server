@@ -501,7 +501,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
     public ViewBundle getViewBundle(
             @WebParam(name = "pid", targetNamespace = "") String pid,
-            @WebParam(name = "viewAngle", targetNamespace = "")
+            @WebParam(name = "name", targetNamespace = "")
             String viewAngle)
             throws InvalidCredentialsException, MethodFailedException {
         /*
