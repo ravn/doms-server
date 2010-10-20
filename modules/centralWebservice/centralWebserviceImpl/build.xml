@@ -54,6 +54,8 @@
         <include name="${commons-logging.lib}"/>
         <include name="${saxon.lib}"/>
         <include name="${updatetracker.client}"/>
+        <include name="${bitstorage.client}"/>
+        <include name="${jersey.lib}"/>
     </dirset>
 
     <dirset id="build.project.libs" dir="${global.dir}/lib/">
