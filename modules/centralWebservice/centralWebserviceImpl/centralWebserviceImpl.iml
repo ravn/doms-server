@@ -49,6 +49,7 @@
     <orderEntry type="library" name="Bitstorage" level="project" />
     <orderEntry type="library" name="Jersey" level="project" />
     <orderEntry type="library" name="Commons-loggin" level="project" />
+    <orderEntry type="library" name="sbutils" level="project" />
   </component>
 </module>
 
