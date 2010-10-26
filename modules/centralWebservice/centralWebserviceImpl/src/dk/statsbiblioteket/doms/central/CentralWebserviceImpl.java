@@ -35,6 +35,7 @@ import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.bitstorage.Bitstorage;
 import dk.statsbiblioteket.doms.central.connectors.ecm.ECM;
 import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
+import dk.statsbiblioteket.doms.central.connectors.fedora.FedoraRest;
 import dk.statsbiblioteket.doms.central.connectors.updatetracker.UpdateTracker;
 import dk.statsbiblioteket.doms.central.connectors.updatetracker.UpdateTrackerRecord;
 import dk.statsbiblioteket.doms.centralWebservice.*;
@@ -131,7 +132,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                               MethodFailedException {
         try {
             Credentials creds = getCredentials();
-            Fedora fedora = new Fedora(creds,
+            Fedora fedora = new FedoraRest(creds,
                                        fedoraLocation);
             fedora.modifyObjectLabel(pid, name);
         } catch (MalformedURLException e) {
@@ -167,7 +168,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throws MethodFailedException, InvalidCredentialsException {
         try {
             Credentials creds = getCredentials();
-            Fedora fedora = new Fedora(creds,
+            Fedora fedora = new FedoraRest(creds,
                                        fedoraLocation);
             fedora.modifyObjectState(pid, fedora.STATE_DELETED);
         } catch (MalformedURLException e) {
@@ -204,7 +205,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
         List<String> activated = new ArrayList<String>();
         try {
             Credentials creds = getCredentials();
-            Fedora fedora = new Fedora(creds,
+            Fedora fedora = new FedoraRest(creds,
                                        fedoraLocation);
             for (String pid : pids) {
                 fedora.modifyObjectState(pid, fedora.STATE_ACTIVE);
@@ -249,7 +250,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throws MethodFailedException, InvalidCredentialsException {
         try {
             Credentials creds = getCredentials();
-            Fedora fedora = new Fedora(creds,
+            Fedora fedora = new FedoraRest(creds,
                                        fedoraLocation);
             for (String pid : pids) {
                 fedora.modifyObjectState(pid, fedora.STATE_INACTIVE);
@@ -290,7 +291,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throws MethodFailedException, InvalidCredentialsException {
         try {
             Credentials creds = getCredentials();
-            Fedora fedora = new Fedora(creds,
+            Fedora fedora = new FedoraRest(creds,
                                        fedoraLocation);
             fedora.modifyDatastreamByValue(pid, datastream, contents);
         } catch (MalformedURLException e) {
@@ -327,7 +328,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throws MethodFailedException, InvalidCredentialsException {
         try {
             Credentials creds = getCredentials();
-            Fedora fedora = new Fedora(creds,
+            Fedora fedora = new FedoraRest(creds,
                                        fedoraLocation);
             return fedora.getXMLDatastreamContents(pid, datastream);
         } catch (MalformedURLException e) {
@@ -423,7 +424,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throws MethodFailedException, InvalidCredentialsException {
         try {
             Credentials creds = getCredentials();
-            Fedora fedora = new Fedora(creds,
+            Fedora fedora = new FedoraRest(creds,
                                        fedoraLocation);
             List<String> objects = fedora.listObjectsWithThisLabel(url);
 
@@ -470,7 +471,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throws InvalidCredentialsException, MethodFailedException {
         try {
             Credentials creds = getCredentials();
-            Fedora fedora = new Fedora(creds,
+            Fedora fedora = new FedoraRest(creds,
                                        fedoraLocation);
             fedora.addRelation(pid, subject, predicate, object);
         } catch (MalformedURLException e) {
