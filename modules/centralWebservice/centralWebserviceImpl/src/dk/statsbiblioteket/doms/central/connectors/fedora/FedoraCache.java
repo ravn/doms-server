@@ -103,7 +103,7 @@ public class FedoraCache implements Fedora{
                                                                           BackendInvalidCredsException,
                                                                           BackendInvalidResourceException {
         String content = myCaches.getDatastreamContents(pid,datastream);
-        if (content != null){
+        if (content == null){
             content = fedora.getXMLDatastreamContents(pid,datastream);
             myCaches.putDatastreamContents(pid,datastream,content);
         }
