@@ -398,7 +398,7 @@
         <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.1.1/src/commons-logging-1.1.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="sbutils">
+    <library name="sbutil">
       <CLASSES>
         <root url="jar://$PROJECT_DIR$/lib/sbutil-0.5.2/jars/sbutil-0.5.2.jar!/" />
       </CLASSES>
