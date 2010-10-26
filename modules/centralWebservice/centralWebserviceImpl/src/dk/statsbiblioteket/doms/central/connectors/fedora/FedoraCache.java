@@ -31,6 +31,7 @@ import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.webservices.Credentials;
+import dk.statsbiblioteket.doms.webservices.ConfigCollection;
 import dk.statsbiblioteket.util.caching.TimeSensitiveCache;
 
 import java.util.List;
@@ -52,14 +53,27 @@ public class FedoraCache implements Fedora{
      * This is the blob of user specific caches. Note that this is itself a cache
      * so it will be garbage collected
      */
-    private static TimeSensitiveCache<Credentials,Caches> userspecificCaches
-            = new TimeSensitiveCache<Credentials,Caches>(1000*60*30,true,20);
+    private static TimeSensitiveCache<Credentials,Caches> userspecificCaches;
+
     private Caches myCaches;
 
 
-    public FedoraCache(Credentials creds, String location)
+    public FedoraCache(Credentials creds, Fedora fedora)
             throws MalformedURLException {
-        fedora = new FedoraRest(creds,location);
+        if (userspecificCaches == null){
+            String lifetime = ConfigCollection.getProperties().getProperty(
+                    "dk.statsbiblioteket.doms.central.connectors.fedora.usercache.lifetime",
+                    "" + 1000 * 60 * 10);
+            String size = ConfigCollection.getProperties().getProperty(
+                    "dk.statsbiblioteket.doms.central.connectors.fedora.usercache.size",
+                    "" + 20);
+            userspecificCaches = new TimeSensitiveCache<Credentials,Caches>(
+                    Long.parseLong(lifetime),
+                    true,
+                    Integer.parseInt(size));
+        }
+
+        this.fedora = fedora;
         myCaches = userspecificCaches.get(creds);
         if (myCaches == null){
             myCaches = new Caches();

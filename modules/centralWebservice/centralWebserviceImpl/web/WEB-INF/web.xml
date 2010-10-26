@@ -80,7 +80,26 @@
         <param-value>http://localhost:8080/updatetrackerWebservice/updatetracker/?wsdl</param-value>
     </context-param>
 
-
+    <context-param>
+        <description>Usercache lifetime in milliseconds (10 mins)</description>
+        <param-name>dk.statsbiblioteket.doms.central.connectors.fedora.usercache.lifetime</param-name>
+        <param-value>600000</param-value>
+    </context-param>
+    <context-param>
+        <description>Usercache size</description>
+        <param-name>dk.statsbiblioteket.doms.central.connectors.fedora.usercache.size</param-name>
+        <param-value>20</param-value>
+    </context-param>
+    <context-param>
+        <description>Datastream contents cache per user lifetime</description>
+        <param-name>dk.statsbiblioteket.doms.central.connectors.fedora.caches.datastreamContents.lifetime</param-name>
+        <param-value>600000</param-value>
+    </context-param>
+    <context-param>
+        <description>Datastream contents cache per user max size</description>
+        <param-name>dk.statsbiblioteket.doms.central.connectors.fedora.caches.datastreamContents.size</param-name>
+        <param-value>20</param-value>
+    </context-param>
 
     <servlet>
         <description>JAX-WS endpoint</description>

@@ -28,6 +28,7 @@
 package dk.statsbiblioteket.doms.central.connectors.fedora;
 
 import dk.statsbiblioteket.util.caching.TimeSensitiveCache;
+import dk.statsbiblioteket.doms.webservices.ConfigCollection;
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,14 +40,22 @@ import dk.statsbiblioteket.util.caching.TimeSensitiveCache;
 public class Caches {
 
 
+
+
     private TimeSensitiveCache<String, String> datastreamContents;
 
     public Caches() {
-        long timeToLive = 1000 * 60 * 10;
+        String timeToLive = ConfigCollection.getProperties().getProperty(
+                "dk.statsbiblioteket.doms.central.connectors.fedora.caches.datastreamContents.lifetime",
+                "" + 600000);
+
+        String size = ConfigCollection.getProperties().getProperty(
+                "dk.statsbiblioteket.doms.central.connectors.fedora.caches.datastreamContents.size",
+                "" + 25);
         datastreamContents = new TimeSensitiveCache<String, String>(
-                timeToLive,
+                Long.parseLong(timeToLive),
                 true,
-                25);
+                Integer.parseInt(size));
     }
 
     private String mergeStrings(String... strings) {
