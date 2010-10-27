@@ -49,13 +49,15 @@ import java.util.List;
  */
 public class ECM extends Connector {
 
-    private WebResource restApi;
+    private static WebResource restApi;
 
     public ECM(Credentials creds, String ecmLocation)
             throws MalformedURLException {
         super(creds, ecmLocation);
-        Client client = Client.create();
-        restApi = client.resource(location);
+        if (restApi == null){
+            Client client = Client.create();
+            restApi = client.resource(location);
+        }
     }
 
     public String createNewObject(String templatePid) throws
