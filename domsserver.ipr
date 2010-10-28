@@ -357,11 +357,11 @@
     </library>
     <library name="updatetracker">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/updatetracker-0.0.4/jars/updatetrackerwebserviceInterface.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/updatetracker-0.0.6/jars/updatetrackerwebserviceInterface.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/lib/updatetracker-0.0.4/src/updatetrackerwebserviceInterface-src.zip!/" />
+        <root url="jar://$PROJECT_DIR$/lib/updatetracker-0.0.6/src/updatetrackerwebserviceInterface-src.zip!/" />
       </SOURCES>
     </library>
     <library name="Jersey">
@@ -382,11 +382,11 @@
     </library>
     <library name="Bitstorage">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/bitstorage-0.0.8/jars/highlevel_interface.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/bitstorage-0.0.9/jars/highlevel_interface.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/lib/bitstorage-0.0.8/src/highlevel_interface-src.zip!/" />
+        <root url="jar://$PROJECT_DIR$/lib/bitstorage-0.0.9/src/highlevel_interface-src.zip!/" />
       </SOURCES>
     </library>
     <library name="Commons-loggin">
