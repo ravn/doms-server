@@ -69,14 +69,13 @@
     </message>
 
 
-    <!--
-        <message name="deleteObject">
-            <part name="parameters" element="tns:deleteObject"/>
-        </message>
-        <message name="deleteObjectResponse">
-            <part name="parameters" element="tns:deleteObjectResponse"/>
-        </message>
-    -->
+    <message name="deleteObject">
+        <part name="parameters" element="tns:deleteObject"/>
+    </message>
+    <message name="deleteObjectResponse">
+        <part name="parameters" element="tns:deleteObjectResponse"/>
+    </message>
+
     <message name="markPublishedObject">
         <part name="parameters" element="tns:markPublishedObject"/>
     </message>
@@ -340,18 +339,21 @@
                    message="tns:InvalidResourceException"/>
         </operation>
 
-        <!--
-                <operation name="deleteObject">
-                    <documentation>Given a PID, mark the object as deleted (note: object
-                        may only be undeleted by direct access to Fedora)
-                    </documentation>
-                    <input message="tns:deleteObject"/>
-                    <output message="tns:deleteObjectResponse"/>
-                    <fault name="InvalidCredentialsException"
-                           message="InvalidCredentialsException"/>
-                    <fault name="MethodFailedException" message="tns:MethodFailedException"/>
-                </operation>
-        -->
+
+        <operation name="deleteObject">
+            <documentation>Given a PID, mark the object as deleted (note: object
+                may only be undeleted by direct access to Fedora)
+            </documentation>
+            <input message="tns:deleteObject"/>
+            <output message="tns:deleteObjectResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+            <fault name="InvalidResourceException"
+                   message="tns:InvalidResourceException"/>
+        </operation>
+
         <operation name="markPublishedObject">
             <documentation>Given list of Pids, mark each object as published.
                 Will fail if object does not validate. If any of the objects
@@ -797,17 +799,27 @@
                 <soap:fault name="InvalidResourceException" use="literal"/>
             </fault>
         </operation>
-        <!--
-                <operation name="deleteObject">
-                    <soap:operation soapAction=""/>
-                    <input>
-                        <soap:body use="literal"/>
-                    </input>
-                    <output>
-                        <soap:body use="literal"/>
-                    </output>
-                </operation>
-        -->
+
+        <operation name="deleteObject">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
+            <fault name="InvalidResourceException">
+                <soap:fault name="InvalidResourceException" use="literal"/>
+            </fault>
+            
+        </operation>
+
 
         <operation name="markPublishedObject">
             <soap:operation soapAction=""/>

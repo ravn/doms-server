@@ -43,7 +43,7 @@
     <xs:element name="setObjectLabel" type="tns:pidAndName"/>
     <xs:element name="setObjectLabelResponse" type="tns:void"/>
 
-    <xs:element name="deleteObject" type="tns:singlePid"/>
+    <xs:element name="deleteObject" type="tns:Pidlist"/>
     <xs:element name="deleteObjectResponse" type="tns:void"/>
 
     <xs:element name="markPublishedObject" type="tns:Pidlist"/>
