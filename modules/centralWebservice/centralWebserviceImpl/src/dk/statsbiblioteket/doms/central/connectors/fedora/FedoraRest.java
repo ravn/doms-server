@@ -53,7 +53,7 @@ import java.util.List;
  */
 public class FedoraRest extends Connector implements Fedora {
     private static Client client = Client.create();
-    private static WebResource restApi;
+    private WebResource restApi;
 
 
 
@@ -62,9 +62,7 @@ public class FedoraRest extends Connector implements Fedora {
     public FedoraRest(Credentials creds, String location)
             throws MalformedURLException {
         super(creds, location);
-        if (restApi == null){
-            restApi = client.resource(location + "/objects/");
-        }
+        restApi = client.resource(location + "/objects/");
     }
 
     public void modifyObjectState(String pid, String state)
