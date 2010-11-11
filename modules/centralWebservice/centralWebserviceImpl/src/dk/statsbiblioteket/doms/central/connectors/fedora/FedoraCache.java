@@ -60,24 +60,27 @@ public class FedoraCache implements Fedora{
 
     public FedoraCache(Credentials creds, Fedora fedora)
             throws MalformedURLException {
-        if (userspecificCaches == null){
-            String lifetime = ConfigCollection.getProperties().getProperty(
-                    "dk.statsbiblioteket.doms.central.connectors.fedora.usercache.lifetime",
-                    "" + 1000 * 60 * 10);
-            String size = ConfigCollection.getProperties().getProperty(
-                    "dk.statsbiblioteket.doms.central.connectors.fedora.usercache.size",
-                    "" + 20);
-            userspecificCaches = new TimeSensitiveCache<Credentials,Caches>(
-                    Long.parseLong(lifetime),
-                    true,
-                    Integer.parseInt(size));
-        }
+        synchronized (FedoraCache.class){
+            if (userspecificCaches == null){
+                String lifetime = ConfigCollection.getProperties().getProperty(
+                        "dk.statsbiblioteket.doms.central.connectors.fedora.usercache.lifetime",
+                        "" + 1000 * 60 * 10);
+                String size = ConfigCollection.getProperties().getProperty(
+                        "dk.statsbiblioteket.doms.central.connectors.fedora.usercache.size",
+                        "" + 20);
+                userspecificCaches = new TimeSensitiveCache<Credentials,Caches>(
+                        Long.parseLong(lifetime),
+                        true,
+                        Integer.parseInt(size));
+            }
 
-        this.fedora = fedora;
-        myCaches = userspecificCaches.get(creds);
-        if (myCaches == null){
-            myCaches = new Caches();
-            userspecificCaches.put(creds, myCaches);
+            this.fedora = fedora;
+            myCaches = userspecificCaches.get(creds);
+            if (myCaches == null){
+                myCaches = new Caches();
+                userspecificCaches.put(creds, myCaches);
+            }
+
         }
 
     }
