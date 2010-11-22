@@ -58,15 +58,20 @@ public class ECM extends Connector {
         restApi = client.resource(location);
     }
 
-    public String createNewObject(String templatePid) throws
-                                                      BackendMethodFailedException,
-                                                      BackendInvalidCredsException,
-                                                      BackendInvalidResourceException{
+    public String createNewObject(String templatePid, List<String> oldIdentifiers) throws
+                                                                                   BackendMethodFailedException,
+                                                                                   BackendInvalidCredsException,
+                                                                                   BackendInvalidResourceException{
         try {
-            String clonePID = restApi
+            WebResource temp = restApi
                     .path("/clone/")
-                    .path(URLEncoder.encode(templatePid, "UTF-8"))
-                    .header("Authorization", credsAsBase64())
+                    .path(URLEncoder.encode(templatePid, "UTF-8"));
+            if (oldIdentifiers != null){
+                for (String oldIdentifier : oldIdentifiers) {
+                    temp = temp.queryParam("oldID",oldIdentifier);
+                }
+            }
+            String clonePID = temp.header("Authorization", credsAsBase64())
                     .post(String.class);
             return clonePID;
         } catch (UnsupportedEncodingException e) {

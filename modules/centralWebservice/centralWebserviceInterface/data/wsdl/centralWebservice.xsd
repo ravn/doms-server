@@ -37,7 +37,7 @@
     <xs:element name="InvalidCredentialsException" type="xs:string"/>
 
     <!--Object operations-->
-    <xs:element name="newObject" type="tns:singlePid"/>
+    <xs:element name="newObject" type="tns:pidAndList"/>
     <xs:element name="newObjectResponse" type="tns:string"/>
 
     <xs:element name="setObjectLabel" type="tns:pidAndName"/>
@@ -179,6 +179,13 @@
     <xs:complexType name="long">
         <xs:sequence>
             <xs:element name="date" type="xs:long"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="pidAndList">
+        <xs:sequence>
+            <xs:element name="pid" type="xs:string"/>
+            <xs:element name="oldID" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 

@@ -88,14 +88,18 @@ public class CentralWebserviceImpl implements CentralWebservice {
                 "dk.statsbiblioteket.doms.central.updateTrackerLocation");
     }
 
-    public String newObject(
-            @WebParam(name = "pid", targetNamespace = "") String pid)
-            throws MethodFailedException, InvalidCredentialsException {
 
+    public String newObject(
+            @WebParam(name="pid", targetNamespace="") String pid,
+            @WebParam(name="oldID", targetNamespace="")
+            List<String> oldID) throws
+                                InvalidCredentialsException,
+                                InvalidResourceException,
+                                MethodFailedException {
         try {
             Credentials creds = getCredentials();
             ECM ecm = new ECM(creds, ecmLocation);
-            return ecm.createNewObject(pid);
+            return ecm.createNewObject(pid, oldID);
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
             throw new MethodFailedException("Webservice Config invalid",
@@ -122,6 +126,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throw new MethodFailedException("Server error", "Server error", e);
         }
     }
+
 
     public void setObjectLabel(
             @WebParam(name = "pid", targetNamespace = "") String pid,
