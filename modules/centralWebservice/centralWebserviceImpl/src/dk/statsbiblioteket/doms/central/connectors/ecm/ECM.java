@@ -68,7 +68,7 @@ public class ECM extends Connector {
                     .path(URLEncoder.encode(templatePid, "UTF-8"));
             if (oldIdentifiers != null){
                 for (String oldIdentifier : oldIdentifiers) {
-                    temp.queryParam("oldID",oldIdentifier);
+                    temp = temp.queryParam("oldID",oldIdentifier);
                 }
             }
             String clonePID = temp.header("Authorization", credsAsBase64())
