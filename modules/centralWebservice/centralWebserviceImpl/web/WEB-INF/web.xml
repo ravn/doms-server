@@ -101,6 +101,17 @@
         <param-value>20</param-value>
     </context-param>
 
+    <context-param>
+        <description>The class that will be exposed for surveillance
+        </description>
+        <param-name>
+            dk.statsbiblioteket.doms.domsutil.surveyable.surveyables
+        </param-name>
+        <param-value>
+            dk.statsbiblioteket.doms.central.CentralSurveyable
+        </param-value>
+    </context-param>
+
     <servlet>
         <description>JAX-WS endpoint</description>
         <display-name>WSServlet</display-name>
@@ -113,4 +124,18 @@
         <servlet-name>WSServlet</servlet-name>
         <url-pattern>/central/*</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <description>JAX-WS endpoint</description>
+        <display-name>WSServletSurveyable</display-name>
+        <servlet-name>WSServletSurveyable</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>WSServletSurveyable</servlet-name>
+        <url-pattern>/domsserversurveyable/*</url-pattern>
+    </servlet-mapping>
+
 </web-app>
