@@ -407,6 +407,36 @@
         <root url="jar://$PROJECT_DIR$/lib/sbutil-0.5.2/src/sbutil-0.5.2-src.zip!/sbutil-0.5.2/src" />
       </SOURCES>
     </library>
+    <library name="log4j">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/apache-log4j-1.2.16/jars/log4j-1.2.16.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="file://$PROJECT_DIR$/lib/apache-log4j-1.2.16/apidocs" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/lib/apache-log4j-1.2.16/src/src.zip!/main/java" />
+      </SOURCES>
+    </library>
+    <library name="surveilance">
+      <CLASSES>
+        <root url="jar://$PROJECT_DIR$/lib/surveillance-0.0.5/jars/surveillance-status.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/surveillance-0.0.5/jars/surveillance-rest.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/surveillance-0.0.5/jars/surveillance-logappender.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$PROJECT_DIR$/lib/surveillance-0.0.5/apidocs/surveillance-0.0.5-doc.zip!/surveillance-0.0.5" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$PROJECT_DIR$/lib/surveillance-0.0.5/src/surveillance-fedorasurveyor-src.zip!/" />
+        <root url="jar://$PROJECT_DIR$/lib/surveillance-0.0.5/src/surveillance-logappender-src.zip!/" />
+        <root url="jar://$PROJECT_DIR$/lib/surveillance-0.0.5/src/surveillance-logregistrywebservice-src.zip!/" />
+        <root url="jar://$PROJECT_DIR$/lib/surveillance-0.0.5/src/surveillance-surveyor-src.zip!/" />
+        <root url="jar://$PROJECT_DIR$/lib/surveillance-0.0.5/src/surveillance-rest-src.zip!/" />
+        <root url="jar://$PROJECT_DIR$/lib/surveillance-0.0.5/src/surveillance-planetssurveyor-src.zip!/" />
+        <root url="jar://$PROJECT_DIR$/lib/surveillance-0.0.5/src/surveillance-status-src.zip!/" />
+      </SOURCES>
+    </library>
   </component>
 </project>
 
