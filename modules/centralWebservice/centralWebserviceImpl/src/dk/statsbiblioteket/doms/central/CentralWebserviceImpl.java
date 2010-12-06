@@ -43,6 +43,7 @@ import dk.statsbiblioteket.doms.webservices.ConfigCollection;
 import dk.statsbiblioteket.doms.webservices.Credentials;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.xml.DOMConfigurator;
 
 import javax.annotation.Resource;
 import javax.jws.WebParam;
@@ -54,6 +55,7 @@ import java.lang.String;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.File;
 
 /**
  * Created by IntelliJ IDEA.
@@ -65,7 +67,6 @@ import java.util.List;
 @WebService(endpointInterface = "dk.statsbiblioteket.doms.centralWebservice.CentralWebservice")
 public class CentralWebserviceImpl implements CentralWebservice {
 
-
     @Resource
     WebServiceContext context;
 
@@ -75,6 +76,26 @@ public class CentralWebserviceImpl implements CentralWebservice {
     private String fedoraLocation;
     private String bitstorageLocation;
     private String updateTrackerLocation;
+
+     static {
+        String log4jconfigLocation
+                = ConfigCollection.getProperties().getProperty("dk.statsbiblioteket.doms.central.log4jconfig");
+        if (log4jconfigLocation != null){
+            File configFile = new File(log4jconfigLocation);
+            if (configFile.canRead()){
+                DOMConfigurator.configure(configFile.getAbsolutePath());
+            } else {
+                // The file could not be found, either because the path is not
+                // an absolute path or because it does not exist. Now try
+                // locating it within the WAR file before giving up.
+                configFile = new File(ConfigCollection
+                        .getServletContext().getRealPath(log4jconfigLocation));
+                DOMConfigurator.configure(configFile.getAbsolutePath());
+            }
+        } else {
+            log.error("Failed to load log4jconfig parameter");
+        }
+    }
 
 
     public CentralWebserviceImpl() {

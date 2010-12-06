@@ -58,6 +58,10 @@
         <servlet-name>WSServlet</servlet-name>
     </filter-mapping>
 
+    <context-param>
+        <param-name>dk.statsbiblioteket.doms.central.log4jconfig</param-name>
+        <param-value>/WEB-INF/log4jproperties.xml</param-value>
+    </context-param>
 
     <context-param>
         <description>the location of the highlevel bitstorage WSDL</description>
@@ -135,7 +139,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>WSServletSurveyable</servlet-name>
-        <url-pattern>/domsserversurveyable/*</url-pattern>
+        <url-pattern>/centralsurveyable/*</url-pattern>
     </servlet-mapping>
 
 </web-app>
