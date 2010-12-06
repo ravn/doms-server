@@ -50,7 +50,11 @@ public class CentralSurveyable implements Surveyable {
         log.trace("Enter getStatusSince(" + l + ")");
 
         Surveyable surveyer = LogRegistryFactory.getLogRegistry().getSurveyable(LOGAPPENDERNAME);
-        return surveyer.getStatusSince(l);
+        if (surveyer != null){
+            return surveyer.getStatusSince(l);
+        } else {
+            return null;
+        }
 /*
 
         Status status = new Status();
@@ -74,6 +78,10 @@ public class CentralSurveyable implements Surveyable {
         log.trace("Enter getStatus()");
 
         Surveyable surveyer = LogRegistryFactory.getLogRegistry().getSurveyable(LOGAPPENDERNAME);
-        return surveyer.getStatus();
+        if (surveyer != null){
+            return surveyer.getStatus();
+        } else {
+            return null;
+        }
     }
 }
