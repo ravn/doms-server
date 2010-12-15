@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!--
-  ~ $Id$
-  ~ $Revision$
-  ~ $Date$
-  ~ $Author$
+  ~ $Id: log4j-example.xml 1336 2010-12-14 14:00:40Z blekinge $
+  ~ $Revision: 1336 $
+  ~ $Date: 2010-12-14 15:00:40 +0100 (Tue, 14 Dec 2010) $
+  ~ $Author: blekinge $
   ~
   ~ The DOMS project.
   ~ Copyright (C) 2007-2010  The State and University Library
@@ -33,9 +33,9 @@
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/"
                      debug="false">
     <appender name="LogRegistry"
-              class="dk.statsbiblioteket.doms.surveillance.logappender.LogRegistryAppender">
+              class="dk.statsbiblioteket.doms.domsutil.surveillance.logappender.Log4jRegistryAppender">
         <param name="Threshold" value="WARN"/>
-        <param name="dk.statsbiblioteket.doms.surveillance.logappender.numberOfMessages" value="100"/>
+        <param name="dk.statsbiblioteket.doms.domsutil.surveillance.logappender.numberOfMessages" value="100"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%-5p [%t] [%d] [%c] %m%n"/>
         </layout>
