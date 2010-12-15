@@ -34,7 +34,7 @@
 
     <listener>
         <listener-class>
-            dk.statsbiblioteket.doms.webservices.ConfigContextListener
+            dk.statsbiblioteket.doms.webservices.configuration.ConfigContextListener
         </listener-class>
     </listener>
 
@@ -47,7 +47,7 @@
     <filter>
         <display-name>AuthFilter</display-name>
         <filter-name>AuthFilter</filter-name>
-        <filter-class>dk.statsbiblioteket.doms.webservices.AuthFilter</filter-class>
+        <filter-class>dk.statsbiblioteket.doms.webservices.authentication.AuthFilter</filter-class>
         <init-param>
             <param-name>Realm name</param-name>
             <param-value>Doms Central</param-value>
@@ -58,11 +58,19 @@
         <servlet-name>WSServlet</servlet-name>
     </filter-mapping>
 
-    <context-param>
-        <param-name>dk.statsbiblioteket.doms.central.log4jconfig</param-name>
-        <param-value>/WEB-INF/log4jproperties.xml</param-value>
-    </context-param>
-
+    <!--This is the real servlet, the one doing the work. It is configured through sun-jaxws.xml-->
+    <servlet>
+        <description>JAX-WS endpoint</description>
+        <display-name>WSServlet</display-name>
+        <servlet-name>WSServlet</servlet-name>
+        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet
+        </servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>WSServlet</servlet-name>
+        <url-pattern>/central/*</url-pattern>
+    </servlet-mapping>
     <context-param>
         <description>the location of the highlevel bitstorage WSDL</description>
         <param-name>dk.statsbiblioteket.doms.central.bitstorageWSDL</param-name>
@@ -83,7 +91,6 @@
         <param-name>dk.statsbiblioteket.doms.central.updateTrackerLocation</param-name>
         <param-value>http://localhost:8080/updatetrackerWebservice/updatetracker/?wsdl</param-value>
     </context-param>
-
     <context-param>
         <description>Usercache lifetime in milliseconds (10 mins)</description>
         <param-name>dk.statsbiblioteket.doms.central.connectors.fedora.usercache.lifetime</param-name>
@@ -105,30 +112,8 @@
         <param-value>20</param-value>
     </context-param>
 
-    <context-param>
-        <description>The class that will be exposed for surveillance
-        </description>
-        <param-name>
-            dk.statsbiblioteket.doms.domsutil.surveyable.surveyables
-        </param-name>
-        <param-value>
-            dk.statsbiblioteket.doms.central.CentralSurveyable
-        </param-value>
-    </context-param>
 
-    <servlet>
-        <description>JAX-WS endpoint</description>
-        <display-name>WSServlet</display-name>
-        <servlet-name>WSServlet</servlet-name>
-        <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet
-        </servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>WSServlet</servlet-name>
-        <url-pattern>/central/*</url-pattern>
-    </servlet-mapping>
-
+<!--This is the surveyable servlet, the one that initialialises the surveyable classes-->
     <servlet>
         <description>JAX-WS endpoint</description>
         <display-name>WSServletSurveyable</display-name>
@@ -141,5 +126,41 @@
         <servlet-name>WSServletSurveyable</servlet-name>
         <url-pattern>/centralsurveyable/*</url-pattern>
     </servlet-mapping>
+    <context-param>
+        <description>The class that will be exposed for surveillance
+        </description>
+        <param-name>
+            dk.statsbiblioteket.doms.domsutil.surveyable.surveyables
+        </param-name>
+        <param-value>
+            dk.statsbiblioteket.doms.central.CentralSurveyable;
+            dk.statsbiblioteket.doms.domsutil.surveillance.logappender.CachingLogRegistry
+        </param-value>
+    </context-param>
+
+    
+
+<!--This servlet is used only to load on startup, and configure the logging framework.-->
+    <servlet>
+        <description>The servlet that is loaded on startup, and initializes the logging system</description>
+        <servlet-name>Log4jInitialisation</servlet-name>
+        <servlet-class>dk.statsbiblioteket.doms.webservices.logging.Log4JInitServlet</servlet-class>
+        <init-param>
+            <description>Name of the context param that controls the location of the log4j config file</description>
+            <param-name>
+                dk.statsbiblioteket.doms.webservices.logging.Log4JInitServlet.log4jConfigurationPropertyKey
+            </param-name>
+            <param-value>
+                dk.statsbiblioteket.doms.central.log4jconfig
+            </param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <context-param>
+        <description>The location of the log4j config file</description>
+        <param-name>dk.statsbiblioteket.doms.central.log4jconfig</param-name>
+        <param-value>WEB-INF/log4jproperties.xml</param-value>
+    </context-param>
+
 
 </web-app>

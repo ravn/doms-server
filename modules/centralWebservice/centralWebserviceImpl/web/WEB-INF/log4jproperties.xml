@@ -33,8 +33,8 @@
 
     <!--DO NOT RENAME THIS APPENDER-->
     <appender name="DomsCentralLogRegistry"
-              class="dk.statsbiblioteket.doms.surveillance.logappender.LogRegistryAppender">
-        <param name="Threshold" value="WARN"/>
+              class="dk.statsbiblioteket.doms.domsutil.surveillance.logappender.Log4jRegistryAppender">
+        <param name="Threshold" value="INFO"/>
         <param name="dk.statsbiblioteket.doms.surveillance.logappender.numberOfMessages" value="100"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%-5p [%t] [%d] [%c] %m%n"/>
