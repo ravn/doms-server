@@ -27,9 +27,10 @@
 
 package dk.statsbiblioteket.doms.central;
 
+import dk.statsbiblioteket.doms.domsutil.surveyable.Severity;
 import dk.statsbiblioteket.doms.domsutil.surveyable.Status;
+import dk.statsbiblioteket.doms.domsutil.surveyable.StatusMessage;
 import dk.statsbiblioteket.doms.domsutil.surveyable.Surveyable;
-import dk.statsbiblioteket.doms.surveillance.logappender.LogRegistryFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -41,21 +42,11 @@ public class CentralSurveyable implements Surveyable {
     /** Log for this class. */
     private final Log log = LogFactory.getLog(getClass());
 
-    public static final String LOGAPPENDERNAME = "DomsCentralLogRegistry";
-
     /**
      *
      */
     public Status getStatusSince(long l) {
         log.trace("Enter getStatusSince(" + l + ")");
-
-        Surveyable surveyer = LogRegistryFactory.getLogRegistry().getSurveyable(LOGAPPENDERNAME);
-        if (surveyer != null){
-            return surveyer.getStatusSince(l);
-        } else {
-            return null;
-        }
-/*
 
         Status status = new Status();
         StatusMessage statusMessage = new StatusMessage();
@@ -67,7 +58,6 @@ public class CentralSurveyable implements Surveyable {
         status.setName(SURVEYABLE_NAME);
         status.getMessages().add(statusMessage);
         return status;
-*/
     }
 
     /**
@@ -76,12 +66,6 @@ public class CentralSurveyable implements Surveyable {
      */
     public Status getStatus() {
         log.trace("Enter getStatus()");
-
-        Surveyable surveyer = LogRegistryFactory.getLogRegistry().getSurveyable(LOGAPPENDERNAME);
-        if (surveyer != null){
-            return surveyer.getStatus();
-        } else {
-            return null;
-        }
+        return getStatusSince(0l);
     }
 }
