@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ $Id: web-example.xml 385 2010-04-21 07:18:33Z kchristiansen $
-  ~ $Revision: 385 $
-  ~ $Date: 2010-04-21 09:18:33 +0200 (Wed, 21 Apr 2010) $
-  ~ $Author: kchristiansen $
+  ~ $Id: web-example.xml 1350 2010-12-15 12:53:40Z blekinge $
+  ~ $Revision: 1350 $
+  ~ $Date: 2010-12-15 13:53:40 +0100 (Wed, 15 Dec 2010) $
+  ~ $Author: blekinge $
   ~
   ~ The DOMS project.
   ~ Copyright (C) 2007-2010  The State and University Library
@@ -33,7 +33,7 @@
          version="2.5">
     <listener>
         <listener-class>
-            dk.statsbiblioteket.doms.webservices.ConfigContextListener
+            dk.statsbiblioteket.doms.webservices.configuration.ConfigContextListener
         </listener-class>
     </listener>
 

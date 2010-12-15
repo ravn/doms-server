@@ -39,8 +39,8 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.FedoraFactory;
 import dk.statsbiblioteket.doms.central.connectors.updatetracker.UpdateTracker;
 import dk.statsbiblioteket.doms.central.connectors.updatetracker.UpdateTrackerRecord;
 import dk.statsbiblioteket.doms.centralWebservice.*;
-import dk.statsbiblioteket.doms.webservices.ConfigCollection;
-import dk.statsbiblioteket.doms.webservices.Credentials;
+import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
+import dk.statsbiblioteket.doms.webservices.configuration.ConfigCollection;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -51,11 +51,11 @@ import javax.jws.WebService;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
+import java.io.File;
 import java.lang.String;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.File;
 
 /**
  * Created by IntelliJ IDEA.

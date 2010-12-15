@@ -27,8 +27,9 @@
 
 package dk.statsbiblioteket.doms.central.connectors.fedora;
 
+import dk.statsbiblioteket.doms.webservices.configuration.ConfigCollection;
 import dk.statsbiblioteket.util.caching.TimeSensitiveCache;
-import dk.statsbiblioteket.doms.webservices.ConfigCollection;
+
 
 /**
  * Created by IntelliJ IDEA.

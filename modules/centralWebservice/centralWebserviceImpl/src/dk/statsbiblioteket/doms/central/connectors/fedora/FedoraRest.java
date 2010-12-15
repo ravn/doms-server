@@ -36,7 +36,8 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.Connector;
-import dk.statsbiblioteket.doms.webservices.Credentials;
+
+import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;

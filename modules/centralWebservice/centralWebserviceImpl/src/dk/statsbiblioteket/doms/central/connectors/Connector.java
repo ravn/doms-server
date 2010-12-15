@@ -28,8 +28,8 @@
 
 package dk.statsbiblioteket.doms.central.connectors;
 
-import dk.statsbiblioteket.doms.webservices.Base64;
-import dk.statsbiblioteket.doms.webservices.Credentials;
+import dk.statsbiblioteket.doms.webservices.authentication.Base64;
+import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
 
 import java.net.MalformedURLException;
 

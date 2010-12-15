@@ -27,17 +27,20 @@
 
 package dk.statsbiblioteket.doms.central.connectors.bitstorage;
 
-import dk.statsbiblioteket.doms.bitstorage.highlevel.*;
-import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
-import dk.statsbiblioteket.doms.central.connectors.Connector;
+import dk.statsbiblioteket.doms.bitstorage.highlevel.Characterisation;
+import dk.statsbiblioteket.doms.bitstorage.highlevel.HighlevelBitstorageSoapWebservice;
+import dk.statsbiblioteket.doms.bitstorage.highlevel.HighlevelBitstorageSoapWebserviceService;
+import dk.statsbiblioteket.doms.bitstorage.highlevel.HighlevelSoapException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
-import dk.statsbiblioteket.doms.webservices.Credentials;
+import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
+import dk.statsbiblioteket.doms.central.connectors.Connector;
+import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Created by IntelliJ IDEA.
