@@ -124,7 +124,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>WSServletSurveyable</servlet-name>
-        <url-pattern>/centralsurveyable/*</url-pattern>
+        <url-pattern>/surveyable/*</url-pattern>
     </servlet-mapping>
     <context-param>
         <description>The class that will be exposed for surveillance
