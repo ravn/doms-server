@@ -37,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
 /** Reports PidGenerator Status. */
 public class CentralSurveyable implements Surveyable {
     /** The name this status reports. */
-    private static final String SURVEYABLE_NAME = "Doms Central";
+    private static final String SURVEYABLE_NAME = "DomsCentral";
 
     /** Log for this class. */
     private final Log log = LogFactory.getLog(getClass());
