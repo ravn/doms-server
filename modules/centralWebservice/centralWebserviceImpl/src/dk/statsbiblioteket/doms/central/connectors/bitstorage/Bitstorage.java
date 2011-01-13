@@ -36,6 +36,8 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceExcepti
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.Connector;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
@@ -50,6 +52,9 @@ import java.net.URL;
  * To change this template use File | Settings | File Templates.
  */
 public class Bitstorage extends Connector {
+
+    private static Log log = LogFactory.getLog(
+            Bitstorage.class);
 
     private HighlevelBitstorageSoapWebservice service;
     private static final QName QNAME = new QName(
@@ -76,6 +81,10 @@ public class Bitstorage extends Connector {
                    BackendInvalidResourceException
     {
         try {
+            log.trace("Entering uploadFileToObjectFromPermanentURLWithCharacterisation with params"
+                      + " pid='"+pid+"', filename='"+filename+"', permanentURL='"
+                      +permanentURL+"', md5String='"+md5String
+                      +"', Characterisation='"+characterisation+"'");
             service.uploadFileToObjectFromPermanentURLWithCharacterisation(pid,
                                                                            filename,
                                                                            permanentURL,
