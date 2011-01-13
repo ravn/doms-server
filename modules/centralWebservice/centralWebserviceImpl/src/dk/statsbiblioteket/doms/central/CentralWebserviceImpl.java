@@ -88,14 +88,16 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
 
     public String newObject(
-            @WebParam(name="pid", targetNamespace="") String pid,
-            @WebParam(name="oldID", targetNamespace="")
+            @WebParam(name = "pid", targetNamespace = "") String pid,
+            @WebParam(name = "oldID", targetNamespace = "")
             List<String> oldID) throws
                                 InvalidCredentialsException,
                                 InvalidResourceException,
                                 MethodFailedException {
         try {
-            log.trace("Entering newObject with params pid="+pid+" and oldIDs="+oldID.toString());
+            log.trace(
+                    "Entering newObject with params pid=" + pid + " and oldIDs="
+                    + oldID.toString());
             Credentials creds = getCredentials();
             ECM ecm = new ECM(creds, ecmLocation);
             return ecm.createNewObject(pid, oldID);
@@ -135,7 +137,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
                          InvalidResourceException,
                          MethodFailedException {
         try {
-            log.trace("Entering setObjectLabel with params pid="+pid+" and name="+name);
+            log.trace("Entering setObjectLabel with params pid=" + pid
+                      + " and name=" + name);
             Credentials creds = getCredentials();
             Fedora fedora = FedoraFactory.newInstance(creds,
                                                       fedoraLocation);
@@ -172,7 +175,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             @WebParam(name = "pids", targetNamespace = "") List<String> pids)
             throws MethodFailedException, InvalidCredentialsException {
         try {
-            log.trace("Entering deleteObject with params pid="+pids);
+            log.trace("Entering deleteObject with params pid=" + pids);
             Credentials creds = getCredentials();
             Fedora fedora = FedoraFactory.newInstance(creds,
                                                       fedoraLocation);
@@ -211,7 +214,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throws InvalidCredentialsException, MethodFailedException {
         List<String> activated = new ArrayList<String>();
         try {
-            log.trace("Entering markPublishedObject with params pids="+pids);
+            log.trace("Entering markPublishedObject with params pids=" + pids);
             Credentials creds = getCredentials();
             Fedora fedora = FedoraFactory.newInstance(creds,
                                                       fedoraLocation);
@@ -257,7 +260,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             List<java.lang.String> pids)
             throws MethodFailedException, InvalidCredentialsException {
         try {
-            log.trace("Entering markInProgressObject with params pids="+pids);
+            log.trace("Entering markInProgressObject with params pids=" + pids);
             Credentials creds = getCredentials();
             Fedora fedora = FedoraFactory.newInstance(creds,
                                                       fedoraLocation);
@@ -299,7 +302,9 @@ public class CentralWebserviceImpl implements CentralWebservice {
             String contents)
             throws MethodFailedException, InvalidCredentialsException {
         try {
-            log.trace("Entering modifyDatastream with params pid="+pid+" and datastream="+datastream+" and contents="+contents);
+            log.trace("Entering modifyDatastream with params pid=" + pid
+                      + " and datastream=" + datastream + " and contents="
+                      + contents);
             Credentials creds = getCredentials();
             Fedora fedora = FedoraFactory.newInstance(creds,
                                                       fedoraLocation);
@@ -337,7 +342,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
             String datastream)
             throws MethodFailedException, InvalidCredentialsException {
         try {
-            log.trace("Entering getDatastreamContents with params pid="+pid+" and datastream="+datastream);
+            log.trace("Entering getDatastreamContents with params pid=" + pid
+                      + " and datastream=" + datastream);
             Credentials creds = getCredentials();
             Fedora fedora = FedoraFactory.newInstance(creds,
                                                       fedoraLocation);
@@ -379,7 +385,10 @@ public class CentralWebserviceImpl implements CentralWebservice {
             String formatURI)
             throws InvalidCredentialsException, MethodFailedException {
         try {
-            log.trace("Entering addFileFromPermamentURL with params pid="+pid+" and filename="+filename+" and md5sum="+md5Sum+" and permanentURL="+permanentURL+" and formatURI="+formatURI);
+            log.trace("Entering addFileFromPermamentURL with params pid=" + pid
+                      + " and filename=" + filename + " and md5sum=" + md5Sum
+                      + " and permanentURL=" + permanentURL + " and formatURI="
+                      + formatURI);
             Credentials creds = getCredentials();
             Bitstorage bs = new Bitstorage(creds, bitstorageLocation);
             String existingObject = getFileObjectWithURL(permanentURL);
@@ -435,7 +444,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             @WebParam(name = "URL", targetNamespace = "") String url)
             throws MethodFailedException, InvalidCredentialsException {
         try {
-            log.trace("Entering getFileObjectWithURL with param url="+url);
+            log.trace("Entering getFileObjectWithURL with param url=" + url);
             Credentials creds = getCredentials();
             Fedora fedora = FedoraFactory.newInstance(creds,
                                                       fedoraLocation);
@@ -483,7 +492,9 @@ public class CentralWebserviceImpl implements CentralWebservice {
             String object)
             throws InvalidCredentialsException, MethodFailedException {
         try {
-            log.trace("Entering addRelation with params pid="+pid+" and subject="+subject+" and predicate="+predicate+" and object="+object);
+            log.trace("Entering addRelation with params pid=" + pid
+                      + " and subject=" + subject + " and predicate="
+                      + predicate + " and object=" + object);
             Credentials creds = getCredentials();
             Fedora fedora = FedoraFactory.newInstance(creds,
                                                       fedoraLocation);
@@ -519,7 +530,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
             @WebParam(name = "name", targetNamespace = "")
             String viewAngle)
             throws InvalidCredentialsException, MethodFailedException {
-        log.trace("Entering getViewBundle with params pid="+pid+" and viewAngle="+viewAngle);
+        log.trace("Entering getViewBundle with params pid=" + pid
+                  + " and viewAngle=" + viewAngle);
         /*
         * Pseudo kode here
         * We need to figure two things out
@@ -583,7 +595,13 @@ public class CentralWebserviceImpl implements CentralWebservice {
             @WebParam(name = "limit", targetNamespace = "") Integer limit)
             throws InvalidCredentialsException, MethodFailedException {
         try {
-            logEntering("getIDsModified",since+"",collectionPid,viewAngle,state,offset+"",limit+"");
+            logEntering("getIDsModified",
+                        since + "",
+                        collectionPid,
+                        viewAngle,
+                        state,
+                        offset + "",
+                        limit + "");
             Credentials creds = getCredentials();
             UpdateTracker tracker = new UpdateTracker(creds,
                                                       updateTrackerLocation);
@@ -632,7 +650,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             String state)
             throws InvalidCredentialsException, MethodFailedException {
         try {
-            logEntering("getLatestModified",collectionPid,viewAngle,state);
+            logEntering("getLatestModified", collectionPid, viewAngle, state);
             Credentials creds = getCredentials();
             UpdateTracker tracker = new UpdateTracker(creds,
                                                       updateTrackerLocation);
@@ -697,14 +715,14 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
     }
 
-    private void logEntering(String method, String... params){
-        if (log.isTraceEnabled()){
-            String command=method+"(";
+    private void logEntering(String method, String... params) {
+        if (log.isTraceEnabled()) {
+            String command = method + "(";
             for (String param : params) {
-                command=method+" "+param+",";
+                command = method + " " + param + ",";
             }
-            command = command.substring(0,command.length()-1)+")";
-            log.trace("Entering "+command);
+            command = command.substring(0, command.length() - 1) + ")";
+            log.trace("Entering " + command);
         }
     }
 
