@@ -10,12 +10,13 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/dist/centralWebserviceInterface.jar!/" />
+          <root url="file://$MODULE_DIR$/dist" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
           <root url="file://$MODULE_DIR$/tempsrc" />
         </SOURCES>
+        <jarDirectory url="file://$MODULE_DIR$/dist" recursive="false" />
       </library>
     </orderEntry>
   </component>
