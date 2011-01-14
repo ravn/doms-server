@@ -719,7 +719,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
         if (log.isTraceEnabled()) {
             String command = method + "(";
             for (String param : params) {
-                command = method + " " + param + ",";
+                command = command + " " + param + ",";
             }
             command = command.substring(0, command.length() - 1) + ")";
             log.trace("Entering " + command);
