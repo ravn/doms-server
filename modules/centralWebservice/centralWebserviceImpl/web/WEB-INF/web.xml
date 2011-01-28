@@ -152,7 +152,7 @@
 
     
 
-<!--This servlet is used only to load on startup, and configure the logging framework.-->
+    <!--This servlet is used only to load on startup, and configure the logging framework.-->
     <servlet>
         <description>The servlet that is loaded on startup, and initializes the logging system</description>
         <servlet-name>Log4jInitialisation</servlet-name>

@@ -333,15 +333,15 @@
     </library>
     <library name="domsutils">
       <CLASSES>
-        <root url="jar://$PROJECT_DIR$/lib/domsutil-0.0.16/jars/surveillance-logappender-0.0.16.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/domsutil-0.0.16/jars/webservice-common-0.0.16.jar!/" />
-        <root url="jar://$PROJECT_DIR$/lib/domsutil-0.0.16/jars/surveyable_interface-0.0.16.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/domsutil-0.0.17/jars/surveillance-logappender-0.0.16.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/domsutil-0.0.17/jars/webservice-common-0.0.16.jar!/" />
+        <root url="jar://$PROJECT_DIR$/lib/domsutil-0.0.17/jars/surveyable_interface-0.0.16.jar!/" />
       </CLASSES>
       <JAVADOC />
       <SOURCES>
-        <root url="jar://$PROJECT_DIR$/lib/domsutil-0.0.16/src/surveyable_interface-0.0.16-src.zip!/" />
-        <root url="jar://$PROJECT_DIR$/lib/domsutil-0.0.16/src/surveillance-logappender-0.0.16-src.zip!/" />
-        <root url="jar://$PROJECT_DIR$/lib/domsutil-0.0.16/src/webservice-common-0.0.16-src.zip!/" />
+        <root url="jar://$PROJECT_DIR$/lib/domsutil-0.0.17/src/surveyable_interface-0.0.16-src.zip!/" />
+        <root url="jar://$PROJECT_DIR$/lib/domsutil-0.0.17/src/surveillance-logappender-0.0.16-src.zip!/" />
+        <root url="jar://$PROJECT_DIR$/lib/domsutil-0.0.17/src/webservice-common-0.0.16-src.zip!/" />
       </SOURCES>
     </library>
     <library name="servlet-api">
