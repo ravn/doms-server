@@ -39,6 +39,7 @@
 
     <artifactId>${parent.artifactId}-service</artifactId>
 
+    <packaging>war</packaging>
     <build>
         <plugins>
             <plugin>
