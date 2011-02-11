@@ -34,7 +34,7 @@
 
     <property name="warfilename" value="centralDomsWebservice.war"/>
     <property name="wsdl.dir"
-              value="${global.dir}/modules/centralWebservice/centralWebserviceInterface/data/wsdl"/>
+              value="/src/main/resources/wsdl"/>
 
 
     <!--Contain the normal build tasks, including war-->
