@@ -6,12 +6,12 @@
   <component name="ArtifactManager">
     <artifact type="war" name="centralWebservice-service:war">
       <output-path>$PROJECT_DIR$/modules/centralWebservice/centralWebserviceImpl/target</output-path>
-      <root id="archive" name="centralWebservice-service-0.0.17-SNAPSHOT.war">
+      <root id="archive" name="centralWebservice-service-0.0.18.war">
         <element id="artifact" artifact-name="centralWebservice-service:war exploded" />
       </root>
     </artifact>
     <artifact type="exploded-war" name="centralWebservice-service:war exploded">
-      <output-path>$PROJECT_DIR$/modules/centralWebservice/centralWebserviceImpl/target/centralWebservice-service-0.0.17-SNAPSHOT</output-path>
+      <output-path>$PROJECT_DIR$/modules/centralWebservice/centralWebserviceImpl/target/centralWebservice-service-0.0.18</output-path>
       <root id="root">
         <element id="javaee-facet-resources" facet="centralWebservice-service/web/Web" />
         <element id="directory" name="WEB-INF">
@@ -19,7 +19,7 @@
             <element id="module-output" name="centralWebservice-service" />
           </element>
           <element id="directory" name="lib">
-            <element id="archive" name="centralWebservice-interface-0.0.17-SNAPSHOT.jar">
+            <element id="archive" name="centralWebservice-interface-0.0.18.jar">
               <element id="module-output" name="centralWebservice-interface" />
             </element>
             <element id="library" level="project" name="Maven: dk.statsbiblioteket.sbutil:sbutil:0.5.2" />
