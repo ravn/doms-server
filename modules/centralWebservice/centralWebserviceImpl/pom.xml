@@ -32,7 +32,7 @@
     <parent>
         <groupId>dk.statsbiblioteket.doms.central</groupId>
         <artifactId>centralWebservice</artifactId>
-        <version>0.0.19-SNAPSHOT</version>
+        <version>0.0.19</version>
     </parent>
 
     <artifactId>${parent.artifactId}-service</artifactId>
@@ -66,7 +66,7 @@
                         <phase>generate-sources</phase>
                         <configuration>
                             <includeGroupIds>dk.statsbiblioteket.doms.domsutil,${groupId}</includeGroupIds>
-                            <includeArtifactIds>domsutil-surveyable_interface,${parent.artifactId}-interface</includeArtifactIds>
+                            <includeArtifactIds>domsutil-surveyable-interface,${parent.artifactId}-interface</includeArtifactIds>
                             <includes>wsdl/*</includes>
                             <outputDirectory>${project.build.directory}/wsdl</outputDirectory>
                         </configuration>
