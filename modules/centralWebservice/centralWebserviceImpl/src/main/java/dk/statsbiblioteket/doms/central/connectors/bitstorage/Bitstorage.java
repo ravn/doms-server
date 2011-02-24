@@ -64,8 +64,8 @@ public class Bitstorage extends Connector {
         URL wsdlLocation = new URL(location);
         service = new HighlevelBitstorageSoapWebserviceService(wsdlLocation,
                                                                QNAME).getHighlevelBitstorageSoapWebservicePort();
-        ((BindingProvider)service).getRequestContext().put(BindingProvider.USERNAME_PROPERTY,creds.getUsername());
-        ((BindingProvider)service).getRequestContext().put(BindingProvider.PASSWORD_PROPERTY,creds.getPassword());
+        ((BindingProvider) service).getRequestContext().put(BindingProvider.USERNAME_PROPERTY, creds.getUsername());
+        ((BindingProvider) service).getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, creds.getPassword());
     }
 
     public void uploadFileToObjectFromPermanentURLWithCharacterisation(String pid,
@@ -75,13 +75,12 @@ public class Bitstorage extends Connector {
                                                                        Characterisation characterisation)
             throws BackendMethodFailedException,
                    BackendInvalidCredsException,
-                   BackendInvalidResourceException
-    {
+                   BackendInvalidResourceException {
         try {
             log.trace("Entering uploadFileToObjectFromPermanentURLWithCharacterisation with params"
-                      + " pid='"+pid+"', filename='"+filename+"', permanentURL='"
-                      +permanentURL+"', md5String='"+md5String
-                      +"', Characterisation='"+characterisation+"'");
+                      + " pid='" + pid + "', filename='" + filename + "', permanentURL='"
+                      + permanentURL + "', md5String='" + md5String
+                      + "', Characterisation='" + characterisation + "'");
             service.uploadFileToObjectFromPermanentURLWithCharacterisation(pid,
                                                                            filename,
                                                                            permanentURL,
@@ -90,28 +89,38 @@ public class Bitstorage extends Connector {
                                                                            characterisation);
 
         } catch (ObjectNotFoundException e) {
-            throw new BackendMethodFailedException("The uploadFileToObjectFromPermanentURLWithCharacterisation method failed to execute",e);
+            throw new BackendMethodFailedException(
+                    "The uploadFileToObjectFromPermanentURLWithCharacterisation method failed to execute", e);
         } catch (FileObjectAlreadyInUseException e) {
-            throw new BackendMethodFailedException("The uploadFileToObjectFromPermanentURLWithCharacterisation method failed to execute",e);
+            throw new BackendMethodFailedException(
+                    "The uploadFileToObjectFromPermanentURLWithCharacterisation method failed to execute", e);
         } catch (InvalidFilenameException e) {
-            throw new BackendMethodFailedException("The uploadFileToObjectFromPermanentURLWithCharacterisation method failed to execute",e);
+            throw new BackendMethodFailedException(
+                    "The uploadFileToObjectFromPermanentURLWithCharacterisation method failed to execute", e);
         } catch (InvalidCredentialsException e) {
-            throw new BackendMethodFailedException("The uploadFileToObjectFromPermanentURLWithCharacterisation method failed to execute",e);
+            throw new BackendMethodFailedException(
+                    "The uploadFileToObjectFromPermanentURLWithCharacterisation method failed to execute", e);
         } catch (FileAlreadyApprovedException e) {
-            throw new BackendMethodFailedException("The uploadFileToObjectFromPermanentURLWithCharacterisation method failed to execute",e);
+            throw new BackendMethodFailedException(
+                    "The uploadFileToObjectFromPermanentURLWithCharacterisation method failed to execute", e);
         } catch (NotEnoughFreeSpaceException e) {
-            throw new BackendMethodFailedException("The uploadFileToObjectFromPermanentURLWithCharacterisation method failed to execute",e);
+            throw new BackendMethodFailedException(
+                    "The uploadFileToObjectFromPermanentURLWithCharacterisation method failed to execute", e);
         } catch (ChecksumFailedException e) {
-            throw new BackendMethodFailedException("The uploadFileToObjectFromPermanentURLWithCharacterisation method failed to execute",e);
+            throw new BackendMethodFailedException(
+                    "The uploadFileToObjectFromPermanentURLWithCharacterisation method failed to execute", e);
         } catch (CommunicationException e) {
-            throw new BackendMethodFailedException("The uploadFileToObjectFromPermanentURLWithCharacterisation method failed to execute",e);
+            throw new BackendMethodFailedException(
+                    "The uploadFileToObjectFromPermanentURLWithCharacterisation method failed to execute", e);
         } catch (CharacterisationFailedException e) {
-            throw new BackendMethodFailedException("The uploadFileToObjectFromPermanentURLWithCharacterisation method failed to execute",e);
+            throw new BackendMethodFailedException(
+                    "The uploadFileToObjectFromPermanentURLWithCharacterisation method failed to execute", e);
         } catch (FileIsLockedException e) {
-            throw new BackendMethodFailedException("The uploadFileToObjectFromPermanentURLWithCharacterisation method failed to execute",e);
-        }
-        catch (Exception e) {
-            throw new BackendMethodFailedException("The uploadFileToObjectFromPermanentURLWithCharacterisation method failed to execute",e);
+            throw new BackendMethodFailedException(
+                    "The uploadFileToObjectFromPermanentURLWithCharacterisation method failed to execute", e);
+        } catch (Exception e) {
+            throw new BackendMethodFailedException(
+                    "The uploadFileToObjectFromPermanentURLWithCharacterisation method failed to execute", e);
         }
     }
 }
