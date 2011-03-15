@@ -36,6 +36,7 @@ import dk.statsbiblioteket.doms.central.connectors.bitstorage.Bitstorage;
 import dk.statsbiblioteket.doms.central.connectors.ecm.ECM;
 import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
 import dk.statsbiblioteket.doms.central.connectors.fedora.FedoraFactory;
+import dk.statsbiblioteket.doms.central.connectors.fedora.FedoraRelation;
 import dk.statsbiblioteket.doms.central.connectors.updatetracker.UpdateTracker;
 import dk.statsbiblioteket.doms.central.connectors.updatetracker.UpdateTrackerRecord;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
@@ -69,10 +70,13 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
     private static Log log = LogFactory.getLog(
             CentralWebserviceImpl.class);
+    private static Lock lock = new Lock();
+
     private String ecmLocation;
     private String fedoraLocation;
     private String bitstorageLocation;
     private String updateTrackerLocation;
+
 
     public CentralWebserviceImpl() {
         bitstorageLocation = ConfigCollection.getProperties().getProperty(
@@ -83,6 +87,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
                 "dk.statsbiblioteket.doms.central.fedoraLocation");
         updateTrackerLocation = ConfigCollection.getProperties().getProperty(
                 "dk.statsbiblioteket.doms.central.updateTrackerLocation");
+
+
     }
 
 
@@ -93,6 +99,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                                 InvalidCredentialsException,
                                 InvalidResourceException,
                                 MethodFailedException {
+        long token = lock.getReadAndWritePerm();
         try {
             log.trace(
                     "Entering newObject with params pid=" + pid + " and oldIDs="
@@ -124,6 +131,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
+        } finally {
+            lock.releaseReadAndWritePerm(token);
         }
     }
 
@@ -135,6 +144,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                          InvalidCredentialsException,
                          InvalidResourceException,
                          MethodFailedException {
+        long token = lock.getReadAndWritePerm();
         try {
             log.trace("Entering setObjectLabel with params pid=" + pid
                       + " and name=" + name);
@@ -166,13 +176,17 @@ public class CentralWebserviceImpl implements CentralWebservice {
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
+        } finally {
+            lock.releaseReadAndWritePerm(token);
         }
+
 
     }
 
     public void deleteObject(
             @WebParam(name = "pids", targetNamespace = "") List<String> pids)
             throws MethodFailedException, InvalidCredentialsException {
+        long token = lock.getReadAndWritePerm();
         try {
             log.trace("Entering deleteObject with params pid=" + pids);
             Credentials creds = getCredentials();
@@ -204,13 +218,17 @@ public class CentralWebserviceImpl implements CentralWebservice {
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
+        } finally {
+            lock.releaseReadAndWritePerm(token);
         }
+
     }
 
     public void markPublishedObject(
             @WebParam(name = "pids", targetNamespace = "")
             List<java.lang.String> pids)
             throws InvalidCredentialsException, MethodFailedException {
+        long token = lock.getReadAndWritePerm();
         List<String> activated = new ArrayList<String>();
         try {
             log.trace("Entering markPublishedObject with params pids=" + pids);
@@ -250,14 +268,18 @@ public class CentralWebserviceImpl implements CentralWebservice {
             log.warn("Caught Unknown Exception", e);
             markInProgressObject(activated);
             throw new MethodFailedException("Server error", "Server error", e);
+        } finally {
+            lock.releaseReadAndWritePerm(token);
         }
-        //To change body of implemented methods use File | Settings | File Templates.
+
+
     }
 
     public void markInProgressObject(
             @WebParam(name = "pids", targetNamespace = "")
             List<java.lang.String> pids)
             throws MethodFailedException, InvalidCredentialsException {
+        long token = lock.getReadAndWritePerm();
         try {
             log.trace("Entering markInProgressObject with params pids=" + pids);
             Credentials creds = getCredentials();
@@ -290,7 +312,10 @@ public class CentralWebserviceImpl implements CentralWebservice {
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
+        } finally {
+            lock.releaseReadAndWritePerm(token);
         }
+
     }
 
     public void modifyDatastream(
@@ -300,6 +325,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             @WebParam(name = "contents", targetNamespace = "")
             String contents)
             throws MethodFailedException, InvalidCredentialsException {
+        long token = lock.getReadAndWritePerm();
         try {
             log.trace("Entering modifyDatastream with params pid=" + pid
                       + " and datastream=" + datastream + " and contents="
@@ -332,7 +358,10 @@ public class CentralWebserviceImpl implements CentralWebservice {
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
+        } finally {
+            lock.releaseReadAndWritePerm(token);
         }
+
     }
 
     public String getDatastreamContents(
@@ -383,6 +412,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             @WebParam(name = "formatURI", targetNamespace = "")
             String formatURI)
             throws InvalidCredentialsException, MethodFailedException {
+        long token = lock.getReadAndWritePerm();
         try {
             log.trace("Entering addFileFromPermamentURL with params pid=" + pid
                       + " and filename=" + filename + " and md5sum=" + md5Sum
@@ -435,7 +465,10 @@ public class CentralWebserviceImpl implements CentralWebservice {
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
+        } finally {
+            lock.releaseReadAndWritePerm(token);
         }
+
     }
 
 
@@ -490,6 +523,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             @WebParam(name = "object", targetNamespace = "")
             String object)
             throws InvalidCredentialsException, MethodFailedException {
+        long token = lock.getReadAndWritePerm();
         try {
             log.trace("Entering addRelation with params pid=" + pid
                       + " and subject=" + subject + " and predicate="
@@ -521,8 +555,103 @@ public class CentralWebserviceImpl implements CentralWebservice {
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
+        } finally {
+            lock.releaseReadAndWritePerm(token);
         }
+
     }
+
+    @Override
+    public List<Relation> getRelations(@WebParam(name = "pid", targetNamespace = "") String pid)
+            throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
+
+        log.trace("Entering getRelations with params pid='" + pid + "'");
+        return getNamedRelations(pid, null);
+    }
+
+    @Override
+    public List<Relation> getNamedRelations(@WebParam(name = "pid", targetNamespace = "") String pid,
+                                            @WebParam(name = "name", targetNamespace = "") String name)
+            throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
+        try {
+            log.trace("Entering getNamedRelations with params pid='" + pid + "'");
+            Credentials creds = getCredentials();
+            Fedora fedora = FedoraFactory.newInstance(creds,
+                                                      fedoraLocation);
+            List<FedoraRelation> fedorarels = fedora.getNamedRelations(pid, name);
+            return convertRelations(fedorarels);
+        } catch (MalformedURLException e) {
+            log.error("caught problemException", e);
+            throw new MethodFailedException("Webservice Config invalid",
+                                            "Webservice Config invalid",
+                                            e);
+        } catch (BackendMethodFailedException e) {
+            log.warn("Failed to execute method", e);
+            throw new MethodFailedException("Method failed to execute",
+                                            "Method failed to execute",
+                                            e);
+        } catch (BackendInvalidCredsException e) {
+            log.debug("User supplied invalid credentials", e);
+            throw new InvalidCredentialsException("Invalid Credentials Supplied",
+                                                  "Invalid Credentials Supplied",
+                                                  e);
+        } catch (BackendInvalidResourceException e) {
+            log.debug("Invalid resource requested", e);
+            throw new InvalidCredentialsException("Invalid Resource Requested",
+                                                  "Invalid Resource Requested",
+                                                  e);
+        } catch (Exception e) {
+            log.warn("Caught Unknown Exception", e);
+            throw new MethodFailedException("Server error", "Server error", e);
+        }
+
+    }
+
+
+    @Override
+    public void deleteRelation(@WebParam(name = "pid", targetNamespace = "") String pid,
+                               @WebParam(name = "subject", targetNamespace = "") String subject,
+                               @WebParam(name = "predicate", targetNamespace = "") String predicate,
+                               @WebParam(name = "object", targetNamespace = "") String object)
+            throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
+        long token = lock.getReadAndWritePerm();
+        try {
+            log.trace("Entering deleteRelation with params pid=" + pid
+                      + " and subject=" + subject + " and predicate="
+                      + predicate + " and object=" + object);
+            Credentials creds = getCredentials();
+            Fedora fedora = FedoraFactory.newInstance(creds,
+                                                      fedoraLocation);
+            fedora.deleteRelation(pid, subject, predicate, object);
+        } catch (MalformedURLException e) {
+            log.error("caught problemException", e);
+            throw new MethodFailedException("Webservice Config invalid",
+                                            "Webservice Config invalid",
+                                            e);
+        } catch (BackendMethodFailedException e) {
+            log.warn("Failed to execute method", e);
+            throw new MethodFailedException("Method failed to execute",
+                                            "Method failed to execute",
+                                            e);
+        } catch (BackendInvalidCredsException e) {
+            log.debug("User supplied invalid credentials", e);
+            throw new InvalidCredentialsException("Invalid Credentials Supplied",
+                                                  "Invalid Credentials Supplied",
+                                                  e);
+        } catch (BackendInvalidResourceException e) {
+            log.debug("Invalid resource requested", e);
+            throw new InvalidCredentialsException("Invalid Resource Requested",
+                                                  "Invalid Resource Requested",
+                                                  e);
+        } catch (Exception e) {
+            log.warn("Caught Unknown Exception", e);
+            throw new MethodFailedException("Server error", "Server error", e);
+        } finally {
+            lock.releaseReadAndWritePerm(token);
+        }
+
+    }
+
 
     public ViewBundle getViewBundle(
             @WebParam(name = "pid", targetNamespace = "") String pid,
@@ -684,6 +813,64 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
     }
 
+    @Override
+    public List<String> findObjectFromDCIdentifier(@WebParam(name = "string", targetNamespace = "") String string)
+            throws InvalidCredentialsException, MethodFailedException {
+        try {
+            log.trace("Entering findObjectFromDCIdentifier with param string=" + string);
+            Credentials creds = getCredentials();
+            Fedora fedora = FedoraFactory.newInstance(creds,
+                                                      fedoraLocation);
+            List<String> objects = fedora.findObjectFromDCIdentifier(string);
+
+
+            return objects;
+/*
+            if (objects != null && !objects.isEmpty()) {
+                return objects.get(0);
+            } else {
+                return null;
+            }
+*/
+
+        } catch (MalformedURLException e) {
+            log.error("caught problemException", e);
+            throw new MethodFailedException("Webservice Config invalid",
+                                            "Webservice Config invalid",
+                                            e);
+        } catch (BackendMethodFailedException e) {
+            log.warn("Failed to execute method", e);
+            throw new MethodFailedException("Method failed to execute",
+                                            "Method failed to execute",
+                                            e);
+        } catch (BackendInvalidCredsException e) {
+            log.debug("User supplied invalid credentials", e);
+            throw new InvalidCredentialsException("Invalid Credentials Supplied",
+                                                  "Invalid Credentials Supplied",
+                                                  e);
+        } catch (BackendInvalidResourceException e) {
+            log.debug("Invalid resource requested", e);
+            throw new InvalidCredentialsException("Invalid Resource Requested",
+                                                  "Invalid Resource Requested",
+                                                  e);
+        } catch (Exception e) {
+            log.warn("Caught Unknown Exception", e);
+            throw new MethodFailedException("Server error", "Server error", e);
+        }
+
+    }
+
+
+    @Override
+    public void lockForWriting() throws InvalidCredentialsException, MethodFailedException {
+        lock.lockForWriting();
+    }
+
+    @Override
+    public void unlockForWriting() throws InvalidCredentialsException, MethodFailedException {
+        lock.unlockForWriting();
+    }
+
     private List<RecordDescription> transform(List<UpdateTrackerRecord> input) {
         List<RecordDescription> output = new ArrayList<RecordDescription>();
         for (UpdateTrackerRecord updateTrackerRecord : input) {
@@ -724,5 +911,18 @@ public class CentralWebserviceImpl implements CentralWebservice {
             log.trace("Entering " + command);
         }
     }
+
+    private static List<Relation> convertRelations(List<FedoraRelation> fedorarels) {
+        List<Relation> outrealtions = new ArrayList<Relation>();
+        for (FedoraRelation fedorarel : fedorarels) {
+            Relation outrel = new Relation();
+            outrel.setSubject(fedorarel.getSubject());
+            outrel.setProperty(fedorarel.getProperty());
+            outrel.setObject(fedorarel.getObject());
+            outrealtions.add(outrel);
+        }
+        return outrealtions;
+    }
+
 
 }

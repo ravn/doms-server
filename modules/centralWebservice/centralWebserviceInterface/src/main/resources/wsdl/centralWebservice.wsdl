@@ -53,6 +53,7 @@
         <part name="fault" element="tns:InvalidCredentialsException"/>
     </message>
 
+
     <!--Object method messages-->
     <message name="newObject">
         <part name="parameters" element="tns:newObject"/>
@@ -189,26 +190,26 @@
     <message name="addRelationResponse">
         <part name="parameters" element="tns:addRelationResponse"/>
     </message>
-    <!--
-        <message name="getRelations">
-            <part name="parameters" element="tns:getRelations"/>
-        </message>
-        <message name="getRelationsResponse">
-            <part name="parameters" element="tns:getRelationsResponse"/>
-        </message>
-        <message name="getNamedRelations">
-            <part name="parameters" element="tns:getNamedRelations"/>
-        </message>
-        <message name="getNamedRelationsResponse">
-            <part name="parameters" element="tns:getNamedRelationsResponse"/>
-        </message>
-        <message name="deleteRelation">
-            <part name="parameters" element="tns:deleteRelation"/>
-        </message>
-        <message name="deleteRelationResponse">
-            <part name="parameters" element="tns:deleteRelationResponse"/>
-        </message>
-    -->
+
+    <message name="getRelations">
+        <part name="parameters" element="tns:getRelations"/>
+    </message>
+    <message name="getRelationsResponse">
+        <part name="parameters" element="tns:getRelationsResponse"/>
+    </message>
+    <message name="getNamedRelations">
+        <part name="parameters" element="tns:getNamedRelations"/>
+    </message>
+    <message name="getNamedRelationsResponse">
+        <part name="parameters" element="tns:getNamedRelationsResponse"/>
+    </message>
+    <message name="deleteRelation">
+        <part name="parameters" element="tns:deleteRelation"/>
+    </message>
+    <message name="deleteRelationResponse">
+        <part name="parameters" element="tns:deleteRelationResponse"/>
+    </message>
+
 
     <!--Search operations-->
     <!--
@@ -233,6 +234,15 @@
     </message>
 
     -->
+
+    <message name="findObjectFromDCIdendifier">
+        <part name="parameters" element="tns:findObjectFromDCIdentifier"/>
+    </message>
+    <message name="findObjectFromDCIdendifierResponse">
+        <part name="parameters" element="tns:findObjectFromDCIdentifierResponse"/>
+    </message>
+
+
     <!--Structural method messages-->
 
 
@@ -257,6 +267,22 @@
         <part name="parameters" element="tns:getLatestModifiedResponse"/>
     </message>
 
+
+    <message name="lockForWriting">
+        <part name="parameters" element="tns:lockForWriting"/>
+    </message>
+
+    <message name="lockForWritingResponse">
+        <part name="parameters" element="tns:lockForWritingResponse"/>
+    </message>
+
+    <message name="unlockForWriting">
+        <part name="parameters" element="tns:unlockForWriting"/>
+    </message>
+
+    <message name="unlockForWritingResponse">
+        <part name="parameters" element="tns:unlockForWritingResponse"/>
+    </message>
 
     <!--
         <message name="getViewStructure">
@@ -585,26 +611,46 @@
             <fault name="InvalidResourceException"
                    message="tns:InvalidResourceException"/>
         </operation>
-        <!--
-                <operation name="getRelations">
-                    <documentation>Given a pid, list relations out of this object
-                    </documentation>
-                    <input message="tns:getRelations"/>
-                    <output message="tns:getRelationsResponse"/>
-                </operation>
-                <operation name="getNamedRelations">
-                    <documentation>Given a pid, list relations out of this object of a specific type
-                    </documentation>
-                    <input message="tns:getNamedRelations"/>
-                    <output message="tns:getNamedRelationsResponse"/>
-                </operation>
-                <operation name="deleteRelation">
-                    <documentation>Given a specific relation, remove it.
-                    </documentation>
-                    <input message="tns:deleteRelation"/>
-                    <output message="tns:deleteRelationResponse"/>
-                </operation>
-        -->
+
+        <operation name="getRelations">
+            <documentation>Given a pid, list relations out of this object
+            </documentation>
+            <input message="tns:getRelations"/>
+            <output message="tns:getRelationsResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+            <fault name="InvalidResourceException"
+                   message="tns:InvalidResourceException"/>
+
+        </operation>
+        <operation name="getNamedRelations">
+            <documentation>Given a pid, list relations out of this object of a specific type
+            </documentation>
+            <input message="tns:getNamedRelations"/>
+            <output message="tns:getNamedRelationsResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+            <fault name="InvalidResourceException"
+                   message="tns:InvalidResourceException"/>
+
+        </operation>
+        <operation name="deleteRelation">
+            <documentation>Given a specific relation, remove it.
+            </documentation>
+            <input message="tns:deleteRelation"/>
+            <output message="tns:deleteRelationResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+            <fault name="InvalidResourceException"
+                   message="tns:InvalidResourceException"/>
+
+        </operation>
 
 
         <!--Search Operations-->
@@ -642,6 +688,17 @@
                 </operation>
 
         -->
+        <operation name="findObjectFromDCIdentifier">
+            <documentation>Given an old ID, return the list of objects having this old ID. Hopefully, there is just one
+                but we cannot guarantee uniqueness with these.
+            </documentation>
+            <input message="tns:findObjectFromDCIdendifier"/>
+            <output message="tns:findObjectFromDCIdendifierResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+        </operation>
 
         <!--View operations-->
 
@@ -682,6 +739,29 @@
             <fault name="MethodFailedException"
                    message="tns:MethodFailedException"/>
 
+        </operation>
+
+
+        <operation name="lockForWriting">
+            <documentation>Lock the repository for writing operations. Will be locked until unlockForWriting is called
+            </documentation>
+            <input message="tns:lockForWriting"/>
+            <output message="tns:lockForWritingResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+        </operation>
+
+        <operation name="unlockForWriting">
+            <documentation>Unlock the repository for writing operations.
+            </documentation>
+            <input message="tns:unlockForWriting"/>
+            <output message="tns:unlockForWritingResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
         </operation>
 
 
@@ -817,7 +897,7 @@
             <fault name="InvalidResourceException">
                 <soap:fault name="InvalidResourceException" use="literal"/>
             </fault>
-            
+
         </operation>
 
 
@@ -1024,36 +1104,66 @@
                 <soap:fault name="InvalidResourceException" use="literal"/>
             </fault>
         </operation>
-        <!--
-                <operation name="getRelations">
-                    <soap:operation soapAction=""/>
-                    <input>
-                        <soap:body use="literal"/>
-                    </input>
-                    <output>
-                        <soap:body use="literal"/>
-                    </output>
-                </operation>
-                <operation name="getNamedRelations">
-                    <soap:operation soapAction=""/>
-                    <input>
-                        <soap:body use="literal"/>
-                    </input>
-                    <output>
-                        <soap:body use="literal"/>
-                    </output>
-                </operation>
-                <operation name="deleteRelation">
-                    <soap:operation soapAction=""/>
-                    <input>
-                        <soap:body use="literal"/>
-                    </input>
-                    <output>
-                        <soap:body use="literal"/>
-                    </output>
-                </operation>
 
-        -->
+        <operation name="getRelations">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
+            <fault name="InvalidResourceException">
+                <soap:fault name="InvalidResourceException" use="literal"/>
+            </fault>
+
+        </operation>
+        <operation name="getNamedRelations">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
+            <fault name="InvalidResourceException">
+                <soap:fault name="InvalidResourceException" use="literal"/>
+            </fault>
+
+        </operation>
+        <operation name="deleteRelation">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
+            <fault name="InvalidResourceException">
+                <soap:fault name="InvalidResourceException" use="literal"/>
+            </fault>
+
+        </operation>
+
+
         <operation name="getViewBundle">
             <soap:operation soapAction=""/>
             <input>
@@ -1088,6 +1198,55 @@
             </fault>
         </operation>
         <operation name="getLatestModified">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
+        </operation>
+
+        <operation name="findObjectFromDCIdentifier">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
+        </operation>
+
+
+        <operation name="lockForWriting">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
+        </operation>
+
+        <operation name="unlockForWriting">
             <soap:operation soapAction=""/>
             <input>
                 <soap:body use="literal"/>

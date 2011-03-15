@@ -44,7 +44,7 @@ import java.util.List;
  * Time: 11:52:18 AM
  * To change this template use File | Settings | File Templates.
  */
-public class FedoraCache implements Fedora{
+public class FedoraCache implements Fedora {
 
 
     private final Fedora fedora;
@@ -53,22 +53,22 @@ public class FedoraCache implements Fedora{
      * This is the blob of user specific caches. Note that this is itself a cache
      * so it will be garbage collected
      */
-    private static TimeSensitiveCache<Credentials,Caches> userspecificCaches;
+    private static TimeSensitiveCache<Credentials, Caches> userspecificCaches;
 
     private Caches myCaches;
 
 
     public FedoraCache(Credentials creds, Fedora fedora)
             throws MalformedURLException {
-        synchronized (FedoraCache.class){
-            if (userspecificCaches == null){
+        synchronized (FedoraCache.class) {
+            if (userspecificCaches == null) {
                 String lifetime = ConfigCollection.getProperties().getProperty(
                         "dk.statsbiblioteket.doms.central.connectors.fedora.usercache.lifetime",
                         "" + 1000 * 60 * 10);
                 String size = ConfigCollection.getProperties().getProperty(
                         "dk.statsbiblioteket.doms.central.connectors.fedora.usercache.size",
                         "" + 20);
-                userspecificCaches = new TimeSensitiveCache<Credentials,Caches>(
+                userspecificCaches = new TimeSensitiveCache<Credentials, Caches>(
                         Long.parseLong(lifetime),
                         true,
                         Integer.parseInt(size));
@@ -76,7 +76,7 @@ public class FedoraCache implements Fedora{
 
             this.fedora = fedora;
             myCaches = userspecificCaches.get(creds);
-            if (myCaches == null){
+            if (myCaches == null) {
                 myCaches = new Caches();
                 userspecificCaches.put(creds, myCaches);
             }
@@ -89,7 +89,7 @@ public class FedoraCache implements Fedora{
                                                             BackendMethodFailedException,
                                                             BackendInvalidCredsException,
                                                             BackendInvalidResourceException {
-        fedora.modifyObjectState(pid,state);
+        fedora.modifyObjectState(pid, state);
     }
 
     public void modifyDatastreamByValue(String pid,
@@ -98,17 +98,17 @@ public class FedoraCache implements Fedora{
                                                          BackendMethodFailedException,
                                                          BackendInvalidCredsException,
                                                          BackendInvalidResourceException {
-        fedora.modifyDatastreamByValue(pid,datastream,contents);
+        fedora.modifyDatastreamByValue(pid, datastream, contents);
     }
 
     public String getXMLDatastreamContents(String pid, String datastream) throws
                                                                           BackendMethodFailedException,
                                                                           BackendInvalidCredsException,
                                                                           BackendInvalidResourceException {
-        String content = myCaches.getDatastreamContents(pid,datastream);
-        if (content == null){
-            content = fedora.getXMLDatastreamContents(pid,datastream);
-            myCaches.putDatastreamContents(pid,datastream,content);
+        String content = myCaches.getDatastreamContents(pid, datastream);
+        if (content == null) {
+            content = fedora.getXMLDatastreamContents(pid, datastream);
+            myCaches.putDatastreamContents(pid, datastream, content);
         }
         return content;
     }
@@ -120,7 +120,19 @@ public class FedoraCache implements Fedora{
                                            BackendMethodFailedException,
                                            BackendInvalidCredsException,
                                            BackendInvalidResourceException {
-        fedora.addRelation(pid,subject,property,object);
+        fedora.addRelation(pid, subject, property, object);
+    }
+
+    @Override
+    public List<FedoraRelation> getNamedRelations(String pid, String name)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
+        return fedora.getNamedRelations(pid, name);
+    }
+
+    @Override
+    public void deleteRelation(String pid, String subject, String predicate, String object)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
+        fedora.deleteRelation(pid, subject, predicate, object);
     }
 
     public List<String> listObjectsWithThisLabel(String label) throws
@@ -134,6 +146,12 @@ public class FedoraCache implements Fedora{
                                                            BackendMethodFailedException,
                                                            BackendInvalidCredsException,
                                                            BackendInvalidResourceException {
-        fedora.modifyObjectLabel(pid,name);
+        fedora.modifyObjectLabel(pid, name);
+    }
+
+    @Override
+    public List<String> findObjectFromDCIdentifier(String string)
+            throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+        return fedora.findObjectFromDCIdentifier(string);
     }
 }

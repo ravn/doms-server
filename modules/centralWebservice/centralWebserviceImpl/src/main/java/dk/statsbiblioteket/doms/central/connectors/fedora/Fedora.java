@@ -27,9 +27,9 @@
 
 package dk.statsbiblioteket.doms.central.connectors.fedora;
 
-import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
+import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 
 import java.util.List;
 
@@ -71,6 +71,20 @@ public interface Fedora {
             BackendInvalidCredsException,
             BackendInvalidResourceException;
 
+    List<FedoraRelation> getNamedRelations(String pid, String name)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException;
+
+
+    void deleteRelation(String pid, String subject, String predicate, String object)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException;
+
+
     List<String> listObjectsWithThisLabel(String label)
             throws
             BackendInvalidCredsException,
@@ -82,4 +96,11 @@ public interface Fedora {
             BackendMethodFailedException,
             BackendInvalidCredsException,
             BackendInvalidResourceException;
+
+    List<String> findObjectFromDCIdentifier(String string)
+            throws
+            BackendInvalidCredsException,
+            BackendMethodFailedException,
+            BackendInvalidResourceException;
+
 }

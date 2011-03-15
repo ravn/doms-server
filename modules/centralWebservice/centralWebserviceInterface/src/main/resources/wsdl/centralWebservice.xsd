@@ -36,6 +36,14 @@
     <xs:element name="InvalidResourceException" type="xs:string"/>
     <xs:element name="InvalidCredentialsException" type="xs:string"/>
 
+    <!--Repo operations-->
+
+    <xs:element name="lockForWriting" type="tns:void"/>
+    <xs:element name="lockForWritingResponse" type="tns:void"/>
+    <xs:element name="unlockForWriting" type="tns:void"/>
+    <xs:element name="unlockForWritingResponse" type="tns:void"/>
+
+
     <!--Object operations-->
     <xs:element name="newObject" type="tns:pidAndList"/>
     <xs:element name="newObjectResponse" type="tns:string"/>
@@ -106,17 +114,16 @@
 
     <xs:element name="addRelation" type="tns:PidAndRelation"/>
     <xs:element name="addRelationResponse" type="tns:void"/>
-    <!--
 
-        <xs:element name="getRelations" type="tns:singlePid"/>
-        <xs:element name="getRelationsResponse" type="tns:ListOfRelations"/>
 
-        <xs:element name="getNamedRelations" type="tns:singlePid"/>
-        <xs:element name="getNamedRelationsResponse" type="tns:ListOfRelations"/>
+    <xs:element name="getRelations" type="tns:singlePid"/>
+    <xs:element name="getRelationsResponse" type="tns:ListOfRelations"/>
 
-        <xs:element name="deleteRelation" type="tns:relation"/>
-        <xs:element name="deleteRelationResponse" type="tns:void"/>
-    -->
+    <xs:element name="getNamedRelations" type="tns:pidAndName"/>
+    <xs:element name="getNamedRelationsResponse" type="tns:ListOfRelations"/>
+
+    <xs:element name="deleteRelation" type="tns:PidAndRelation"/>
+    <xs:element name="deleteRelationResponse" type="tns:void"/>
 
 
     <!--Search methods-->
@@ -130,6 +137,9 @@
 
     <xs:element name="getLatestModified" type="tns:LatestModified"/>
     <xs:element name="getLatestModifiedResponse" type="tns:long"/>
+
+    <xs:element name="findObjectFromDCIdentifier" type="tns:string"/>
+    <xs:element name="findObjectFromDCIdentifierResponse" type="tns:Pidlist"/>
 
     <!--Simple types-->
     <xs:complexType name="singlePid">
@@ -188,7 +198,6 @@
             <xs:element name="oldID" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
-
 
 
     <xs:complexType name="pid_DSID_Contents">

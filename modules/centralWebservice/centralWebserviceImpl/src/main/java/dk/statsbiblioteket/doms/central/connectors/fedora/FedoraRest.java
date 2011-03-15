@@ -36,7 +36,6 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.Connector;
-
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
 
 import java.io.UnsupportedEncodingException;
@@ -55,9 +54,6 @@ import java.util.List;
 public class FedoraRest extends Connector implements Fedora {
     private static Client client = Client.create();
     private WebResource restApi;
-
-
-
 
 
     public FedoraRest(Credentials creds, String location)
@@ -84,10 +80,9 @@ public class FedoraRest extends Connector implements Fedora {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied",
                         e);
-            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()){
-                throw new BackendInvalidResourceException("Resource not found",e);
-            }
-            else  {
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
+                throw new BackendInvalidResourceException("Resource not found", e);
+            } else {
                 throw new BackendMethodFailedException("Server error", e);
             }
         }
@@ -103,8 +98,8 @@ public class FedoraRest extends Connector implements Fedora {
         try {
             restApi.path(URLEncoder.encode(pid, "UTF-8"))
                     .path("/datastreams/")
-                    .path(URLEncoder.encode(datastream,"UTF-8"))
-                    .queryParam("mimeType","text/xml")
+                    .path(URLEncoder.encode(datastream, "UTF-8"))
+                    .queryParam("mimeType", "text/xml")
                     .header("Authorization", credsAsBase64())
                     .post(contents);
         } catch (UnsupportedEncodingException e) {
@@ -115,10 +110,9 @@ public class FedoraRest extends Connector implements Fedora {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied",
                         e);
-            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()){
-                throw new BackendInvalidResourceException("Resource not found",e);
-            }
-            else  {
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
+                throw new BackendInvalidResourceException("Resource not found", e);
+            } else {
                 throw new BackendMethodFailedException("Server error", e);
             }
         }
@@ -145,10 +139,9 @@ public class FedoraRest extends Connector implements Fedora {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied",
                         e);
-            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()){
-                throw new BackendInvalidResourceException("Resource not found",e);
-            }
-            else  {
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
+                throw new BackendInvalidResourceException("Resource not found", e);
+            } else {
                 throw new BackendMethodFailedException("Server error", e);
             }
         }
@@ -160,17 +153,21 @@ public class FedoraRest extends Connector implements Fedora {
             BackendInvalidCredsException,
             BackendInvalidResourceException {
         try {
-            if (!subject.startsWith("info:fedora/")){
-                subject = "info:fedora/"+subject;
+            if (subject == null || subject.isEmpty()) {
+                subject = pid;
             }
-            if (!object.startsWith("info:fedora/")){
-                object = "info:fedora/"+object;
+
+            if (!subject.startsWith("info:fedora/")) {
+                subject = "info:fedora/" + subject;
+            }
+            if (!object.startsWith("info:fedora/")) {
+                object = "info:fedora/" + object;
             }
             restApi.path(URLEncoder.encode(pid, "UTF-8"))
                     .path("/relationships/new")
-                    .queryParam("subject",subject)
-                    .queryParam("predicate",property)
-                    .queryParam("object",object)
+                    .queryParam("subject", subject)
+                    .queryParam("predicate", property)
+                    .queryParam("object", object)
                     .header("Authorization", credsAsBase64())
                     .post();
         } catch (UnsupportedEncodingException e) {
@@ -181,10 +178,116 @@ public class FedoraRest extends Connector implements Fedora {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied",
                         e);
-            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()){
-                throw new BackendInvalidResourceException("Resource not found",e);
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
+                throw new BackendInvalidResourceException("Resource not found", e);
+            } else {
+                throw new BackendMethodFailedException("Server error", e);
             }
-            else  {
+        }
+    }
+
+    @Override
+    public List<FedoraRelation> getNamedRelations(String pid, String name)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
+        try {
+            if (name == null) {
+                name = "";
+            }
+
+            String subject = pid;
+            if (!subject.startsWith("info:fedora/")) {
+                subject = "info:fedora/" + subject;
+            }
+            WebResource temp = restApi.path(URLEncoder.encode(pid, "UTF-8"))
+                    .path("/relationships/")
+                    .queryParam("subject", subject)
+                    .queryParam("format", "n-triples");
+            if (name != null) {
+                temp = temp.queryParam("predicate", name);
+            }
+            String relationString = temp.header("Authorization", credsAsBase64()).get(String.class);
+
+
+            String[] lines = relationString.split("\n");
+            List<FedoraRelation> relations = new ArrayList<FedoraRelation>();
+            for (String line : lines) {
+                String[] elements = line.split(" ");
+                if (elements.length > 2) {
+                    FedoraRelation rel = new FedoraRelation(cleanInfo(elements[0]), clean(elements[1]), cleanInfo(
+                            elements[2]));
+                    relations.add(rel);
+                }
+            }
+            return relations;
+
+
+        } catch (UnsupportedEncodingException e) {
+            throw new BackendMethodFailedException("UTF-8 not known....", e);
+        } catch (UniformInterfaceException e) {
+            if (e.getResponse().getStatus()
+                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                throw new BackendInvalidCredsException(
+                        "Invalid Credentials Supplied",
+                        e);
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
+                throw new BackendInvalidResourceException("Resource not found", e);
+            } else {
+                throw new BackendMethodFailedException("Server error", e);
+            }
+        }
+    }
+
+    private String clean(String element) {
+        if (element.startsWith("<") && element.endsWith(">")) {
+            element = element.substring(1, element.length() - 1);
+        }
+        return element;
+        //To change body of created methods use File | Settings | File Templates.
+    }
+
+    private String cleanInfo(String element) {
+        element = clean(element);
+
+        if (element.startsWith("info:fedora/")) {
+            element = element.substring("info:fedora/".length());
+        }
+
+        return element;
+        //To change body of created methods use File | Settings | File Templates.
+    }
+
+
+    @Override
+    public void deleteRelation(String pid, String subject, String predicate, String object)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
+        try {
+            if (subject == null || subject.isEmpty()) {
+                subject = pid;
+            }
+            if (!subject.startsWith("info:fedora/")) {
+                subject = "info:fedora/" + subject;
+            }
+            if (!object.startsWith("info:fedora/")) {
+                object = "info:fedora/" + object;
+            }
+            restApi.path(URLEncoder.encode(pid, "UTF-8"))
+                    .path("/relationships/")
+                    .queryParam("subject", subject)
+                    .queryParam("predicate", predicate)
+                    .queryParam("object", object)
+                    .header("Authorization", credsAsBase64())
+                    .delete();
+        } catch (UnsupportedEncodingException e) {
+            throw new BackendMethodFailedException("UTF-8 not known....", e);
+        } catch (UniformInterfaceException e) {
+            if (e.getResponse().getStatus()
+                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                throw new BackendInvalidCredsException(
+                        "Invalid Credentials Supplied",
+                        e);
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
+                throw new BackendInvalidResourceException("Resource not found", e);
+            } else {
                 throw new BackendMethodFailedException("Server error", e);
             }
         }
@@ -199,39 +302,38 @@ public class FedoraRest extends Connector implements Fedora {
         try {
             String query = "select $object\n"
                            + "from <#ri>\n"
-                           + "where $object <fedora-model:label> '"+label+"'";
+                           + "where $object <fedora-model:label> '" + label + "'";
             String objects = client.resource(location)
                     .path("/risearch")
                     .queryParam("type", "tuples")
                     .queryParam("lang", "iTQL")
                     .queryParam("format", "CSV")
-                    .queryParam("flush","true")
-                    .queryParam("stream","on")
+                    .queryParam("flush", "true")
+                    .queryParam("stream", "on")
                     .queryParam("query", query)
                     .header("Authorization", credsAsBase64())
                     .post(String.class);
             String[] lines = objects.split("\n");
             List<String> foundobjects = new ArrayList<String>();
             for (String line : lines) {
-                if (line.startsWith("\"")){
+                if (line.startsWith("\"")) {
                     continue;
                 }
-                if (line.startsWith("info:fedora/")){
+                if (line.startsWith("info:fedora/")) {
                     line = line.substring("info:fedora/".length());
                 }
                 foundobjects.add(line);
             }
             return foundobjects;
-        }  catch (UniformInterfaceException e) {
+        } catch (UniformInterfaceException e) {
             if (e.getResponse().getStatus()
                 == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied",
                         e);
-            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()){
-                throw new BackendInvalidResourceException("Resource not found",e);
-            }
-            else  {
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
+                throw new BackendInvalidResourceException("Resource not found", e);
+            } else {
                 throw new BackendMethodFailedException("Server error", e);
             }
         }
@@ -255,12 +357,60 @@ public class FedoraRest extends Connector implements Fedora {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied",
                         e);
-            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()){
-                throw new BackendInvalidResourceException("Resource not found",e);
-            }
-            else  {
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
+                throw new BackendInvalidResourceException("Resource not found", e);
+            } else {
                 throw new BackendMethodFailedException("Server error", e);
             }
         }
+    }
+
+    @Override
+    public List<String> findObjectFromDCIdentifier(String string)
+            throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+
+        //TODO sanitize label
+
+        try {
+            String query = "select $object\n"
+                           + "from <#ri>\n"
+                           + "where $object <dc:identifier> '" + string + "'"
+                           + "and ($object <fedora-model:state> <fedora-model:Active>\n" +
+                           "or $object <fedora-model:state> <fedora-model:Inactive>)";
+            String objects = client.resource(location)
+                    .path("/risearch")
+                    .queryParam("type", "tuples")
+                    .queryParam("lang", "iTQL")
+                    .queryParam("format", "CSV")
+                    .queryParam("flush", "true")
+                    .queryParam("stream", "on")
+                    .queryParam("query", query)
+                    .header("Authorization", credsAsBase64())
+                    .post(String.class);
+            String[] lines = objects.split("\n");
+            List<String> foundobjects = new ArrayList<String>();
+            for (String line : lines) {
+                if (line.startsWith("\"")) {
+                    continue;
+                }
+                if (line.startsWith("info:fedora/")) {
+                    line = line.substring("info:fedora/".length());
+                }
+                foundobjects.add(line);
+            }
+            return foundobjects;
+        } catch (UniformInterfaceException e) {
+            if (e.getResponse().getStatus()
+                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                throw new BackendInvalidCredsException(
+                        "Invalid Credentials Supplied",
+                        e);
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
+                throw new BackendInvalidResourceException("Resource not found", e);
+            } else {
+                throw new BackendMethodFailedException("Server error", e);
+            }
+        }
+
     }
 }
