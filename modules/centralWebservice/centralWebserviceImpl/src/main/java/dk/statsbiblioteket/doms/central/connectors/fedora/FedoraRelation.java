@@ -11,12 +11,12 @@ public class FedoraRelation {
     private String subject;
 
     private String object;
-    private String property;
+    private String predicate;
 
-    public FedoraRelation(String subject, String property, String object) {
+    public FedoraRelation(String subject, String predicate, String object) {
 
         this.subject = subject;
-        this.property = property;
+        this.predicate = predicate;
         this.object = object;
     }
 
@@ -28,7 +28,7 @@ public class FedoraRelation {
         return object;
     }
 
-    public String getProperty() {
-        return property;
+    public String getPredicate() {
+        return predicate;
     }
 }

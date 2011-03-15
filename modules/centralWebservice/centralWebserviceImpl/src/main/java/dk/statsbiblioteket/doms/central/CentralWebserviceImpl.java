@@ -917,7 +917,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
         for (FedoraRelation fedorarel : fedorarels) {
             Relation outrel = new Relation();
             outrel.setSubject(fedorarel.getSubject());
-            outrel.setProperty(fedorarel.getProperty());
+            outrel.setPredicate(fedorarel.getPredicate());
             outrel.setObject(fedorarel.getObject());
             outrealtions.add(outrel);
         }

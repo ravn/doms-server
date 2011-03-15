@@ -190,10 +190,6 @@ public class FedoraRest extends Connector implements Fedora {
     public List<FedoraRelation> getNamedRelations(String pid, String name)
             throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
         try {
-            if (name == null) {
-                name = "";
-            }
-
             String subject = pid;
             if (!subject.startsWith("info:fedora/")) {
                 subject = "info:fedora/" + subject;
