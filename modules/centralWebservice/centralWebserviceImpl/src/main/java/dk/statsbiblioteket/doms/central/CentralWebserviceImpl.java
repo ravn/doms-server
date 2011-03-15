@@ -863,7 +863,36 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
     @Override
     public void lockForWriting() throws InvalidCredentialsException, MethodFailedException {
-        lock.lockForWriting();
+        Credentials creds = getCredentials();
+
+        lock.lockForWriting(); //DO the lock
+
+
+        try { //Execute a command to flush the unflushed triple changes.
+            Fedora fedora = FedoraFactory.newInstance(creds,
+                                                      fedoraLocation);
+            fedora.flushTripples();
+        } catch (MalformedURLException e) {
+            log.error("caught problemException", e);
+            throw new MethodFailedException("Webservice Config invalid",
+                                            "Webservice Config invalid",
+                                            e);
+        } catch (BackendMethodFailedException e) {
+            log.warn("Failed to execute method", e);
+            throw new MethodFailedException("Method failed to execute",
+                                            "Method failed to execute",
+                                            e);
+        } catch (BackendInvalidCredsException e) {
+            log.debug("User supplied invalid credentials", e);
+            throw new InvalidCredentialsException("Invalid Credentials Supplied",
+                                                  "Invalid Credentials Supplied",
+                                                  e);
+        } catch (Exception e) {
+            log.warn("Caught Unknown Exception", e);
+            throw new MethodFailedException("Server error", "Server error", e);
+        }
+
+
     }
 
     @Override

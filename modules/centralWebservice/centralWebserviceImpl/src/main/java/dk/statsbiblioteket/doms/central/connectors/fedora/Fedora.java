@@ -103,4 +103,10 @@ public interface Fedora {
             BackendMethodFailedException,
             BackendInvalidResourceException;
 
+    void flushTripples()
+            throws
+            BackendInvalidCredsException,
+            BackendMethodFailedException;
+
+
 }

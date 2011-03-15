@@ -363,7 +363,7 @@ public class FedoraRest extends Connector implements Fedora {
 
     @Override
     public List<String> findObjectFromDCIdentifier(String string)
-            throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+            throws BackendInvalidCredsException, BackendMethodFailedException {
 
         //TODO sanitize label
 
@@ -401,12 +401,15 @@ public class FedoraRest extends Connector implements Fedora {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied",
                         e);
-            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
-                throw new BackendInvalidResourceException("Resource not found", e);
             } else {
                 throw new BackendMethodFailedException("Server error", e);
             }
         }
 
+    }
+
+    @Override
+    public void flushTripples() throws BackendInvalidCredsException, BackendMethodFailedException {
+        findObjectFromDCIdentifier("doms:ContentModel_DOMS");
     }
 }

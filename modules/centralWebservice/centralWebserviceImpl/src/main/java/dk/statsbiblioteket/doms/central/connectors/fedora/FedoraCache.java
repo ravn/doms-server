@@ -154,4 +154,9 @@ public class FedoraCache implements Fedora {
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
         return fedora.findObjectFromDCIdentifier(string);
     }
+
+    @Override
+    public void flushTripples() throws BackendInvalidCredsException, BackendMethodFailedException {
+        fedora.flushTripples();
+    }
 }
