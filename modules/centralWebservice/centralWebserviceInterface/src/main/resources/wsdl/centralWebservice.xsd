@@ -51,13 +51,13 @@
     <xs:element name="setObjectLabel" type="tns:pidAndName"/>
     <xs:element name="setObjectLabelResponse" type="tns:void"/>
 
-    <xs:element name="deleteObject" type="tns:Pidlist"/>
+    <xs:element name="deleteObject" type="tns:PidlistInput"/>
     <xs:element name="deleteObjectResponse" type="tns:void"/>
 
-    <xs:element name="markPublishedObject" type="tns:Pidlist"/>
+    <xs:element name="markPublishedObject" type="tns:PidlistInput"/>
     <xs:element name="markPublishedObjectResponse" type="tns:void"/>
 
-    <xs:element name="markInProgressObject" type="tns:Pidlist"/>
+    <xs:element name="markInProgressObject" type="tns:PidlistInput"/>
     <xs:element name="markInProgressObjectResponse" type="tns:void"/>
 
     <!--
@@ -119,7 +119,7 @@
     <xs:element name="getRelations" type="tns:singlePid"/>
     <xs:element name="getRelationsResponse" type="tns:ListOfRelations"/>
 
-    <xs:element name="getNamedRelations" type="tns:pidAndName"/>
+    <xs:element name="getNamedRelations" type="tns:pidAndPredicate"/>
     <xs:element name="getNamedRelationsResponse" type="tns:ListOfRelations"/>
 
     <xs:element name="deleteRelation" type="tns:PidAndRelation"/>
@@ -127,7 +127,7 @@
 
 
     <!--Search methods-->
-    <xs:element name="getViewBundle" type="tns:pidAndName"/>
+    <xs:element name="getViewBundle" type="tns:pidAndViewAngle"/>
     <xs:element name="getViewBundleResponse" type="tns:viewBundleWrapper"/>
 
 
@@ -145,6 +145,13 @@
     <xs:complexType name="singlePid">
         <xs:sequence>
             <xs:element name="pid" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PidlistInput">
+        <xs:sequence>
+            <xs:element name="pids" type="xs:string" maxOccurs="unbounded" minOccurs="0"/>
+            <xs:element name="comment" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -183,8 +190,25 @@
         <xs:sequence>
             <xs:element name="pid" type="xs:string"/>
             <xs:element name="name" type="xs:string"/>
+            <xs:element name="comment" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
+
+    <xs:complexType name="pidAndViewAngle">
+        <xs:sequence>
+            <xs:element name="pid" type="xs:string"/>
+            <xs:element name="ViewAngle" type="xs:string"/>
+
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="pidAndPredicate">
+        <xs:sequence>
+            <xs:element name="pid" type="xs:string"/>
+            <xs:element name="predicate" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
 
     <xs:complexType name="long">
         <xs:sequence>
@@ -196,6 +220,7 @@
         <xs:sequence>
             <xs:element name="pid" type="xs:string"/>
             <xs:element name="oldID" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="comment" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -205,6 +230,7 @@
             <xs:element name="pid" type="xs:string"/>
             <xs:element name="datastream" type="xs:string"/>
             <xs:element name="contents" type="xs:string"/>
+            <xs:element name="comment" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -220,6 +246,7 @@
             <xs:element name="pid" type="xs:string"/>
             <xs:element name="filename" type="xs:string"/>
             <xs:element name="md5sum" type="xs:string"/>
+            <xs:element name="comment" type="xs:string"/>
             <xs:element xmlns:ns1="http://www.w3.org/2005/05/xmlmime"
                         name="contents"
                         ns1:expectedContentTypes="application/octet-stream"
@@ -234,6 +261,7 @@
             <xs:element name="md5sum" type="xs:string"/>
             <xs:element name="permanentURL" type="xs:string"/>
             <xs:element name="formatURI" type="xs:anyURI"/>
+            <xs:element name="comment" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -259,9 +287,8 @@
     <xs:complexType name="PidAndRelation">
         <xs:sequence>
             <xs:element name="pid" type="xs:string"/>
-            <xs:element name="subject" type="xs:string"/>
-            <xs:element name="predicate" type="xs:string"/>
-            <xs:element name="object" type="xs:string"/>
+            <xs:element name="relation" type="tns:relation"/>
+            <xs:element name="comment" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 

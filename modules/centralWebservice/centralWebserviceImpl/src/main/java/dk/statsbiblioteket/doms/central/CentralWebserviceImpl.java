@@ -92,13 +92,11 @@ public class CentralWebserviceImpl implements CentralWebservice {
     }
 
 
-    public String newObject(
-            @WebParam(name = "pid", targetNamespace = "") String pid,
-            @WebParam(name = "oldID", targetNamespace = "")
-            List<String> oldID) throws
-                                InvalidCredentialsException,
-                                InvalidResourceException,
-                                MethodFailedException {
+    @Override
+    public String newObject(@WebParam(name = "pid", targetNamespace = "") String pid,
+                            @WebParam(name = "oldID", targetNamespace = "") List<String> oldID,
+                            @WebParam(name = "comment", targetNamespace = "") String comment)
+            throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         long token = lock.getReadAndWritePerm();
         try {
             log.trace(
@@ -136,14 +134,11 @@ public class CentralWebserviceImpl implements CentralWebservice {
         }
     }
 
-
-    public void setObjectLabel(
-            @WebParam(name = "pid", targetNamespace = "") String pid,
-            @WebParam(name = "name", targetNamespace = "")
-            String name) throws
-                         InvalidCredentialsException,
-                         InvalidResourceException,
-                         MethodFailedException {
+    @Override
+    public void setObjectLabel(@WebParam(name = "pid", targetNamespace = "") String pid,
+                               @WebParam(name = "name", targetNamespace = "") String name,
+                               @WebParam(name = "comment", targetNamespace = "") String comment)
+            throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         long token = lock.getReadAndWritePerm();
         try {
             log.trace("Entering setObjectLabel with params pid=" + pid
@@ -183,9 +178,11 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
     }
 
-    public void deleteObject(
-            @WebParam(name = "pids", targetNamespace = "") List<String> pids)
-            throws MethodFailedException, InvalidCredentialsException {
+
+    @Override
+    public void deleteObject(@WebParam(name = "pids", targetNamespace = "") List<String> pids,
+                             @WebParam(name = "comment", targetNamespace = "") String comment)
+            throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         long token = lock.getReadAndWritePerm();
         try {
             log.trace("Entering deleteObject with params pid=" + pids);
@@ -224,10 +221,11 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
     }
 
-    public void markPublishedObject(
-            @WebParam(name = "pids", targetNamespace = "")
-            List<java.lang.String> pids)
-            throws InvalidCredentialsException, MethodFailedException {
+
+    @Override
+    public void markPublishedObject(@WebParam(name = "pids", targetNamespace = "") List<String> pids,
+                                    @WebParam(name = "comment", targetNamespace = "") String comment)
+            throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         long token = lock.getReadAndWritePerm();
         List<String> activated = new ArrayList<String>();
         try {
@@ -242,31 +240,36 @@ public class CentralWebserviceImpl implements CentralWebservice {
         } catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             //rollback
-            markInProgressObject(activated);
+            comment = comment + ": Publishing failed, marking back to InProgress";
+            markInProgressObject(activated, comment);
             throw new MethodFailedException("Method failed to execute",
                                             "Method failed to execute",
                                             e);
         } catch (BackendInvalidCredsException e) {
             log.debug("User supplied invalid credentials", e);
-            markInProgressObject(activated);
+            comment = comment + ": Publishing failed, marking back to InProgress";
+            markInProgressObject(activated, comment);
             throw new InvalidCredentialsException("Invalid Credentials Supplied",
                                                   "Invalid Credentials Supplied",
                                                   e);
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
-            markInProgressObject(activated);
+            comment = comment + ": Publishing failed, marking back to InProgress";
+            markInProgressObject(activated, comment);
             throw new MethodFailedException("Webservice Config invalid",
                                             "Webservice Config invalid",
                                             e);
 
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
+
             throw new InvalidCredentialsException("Invalid Resource Requested",
                                                   "Invalid Resource Requested",
                                                   e);
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
-            markInProgressObject(activated);
+            comment = comment + ": Publishing failed, marking back to InProgress";
+            markInProgressObject(activated, comment);
             throw new MethodFailedException("Server error", "Server error", e);
         } finally {
             lock.releaseReadAndWritePerm(token);
@@ -275,10 +278,11 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
     }
 
-    public void markInProgressObject(
-            @WebParam(name = "pids", targetNamespace = "")
-            List<java.lang.String> pids)
-            throws MethodFailedException, InvalidCredentialsException {
+
+    @Override
+    public void markInProgressObject(@WebParam(name = "pids", targetNamespace = "") List<String> pids,
+                                     @WebParam(name = "comment", targetNamespace = "") String comment)
+            throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         long token = lock.getReadAndWritePerm();
         try {
             log.trace("Entering markInProgressObject with params pids=" + pids);
@@ -318,13 +322,13 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
     }
 
-    public void modifyDatastream(
-            @WebParam(name = "pid", targetNamespace = "") String pid,
-            @WebParam(name = "datastream", targetNamespace = "")
-            String datastream,
-            @WebParam(name = "contents", targetNamespace = "")
-            String contents)
-            throws MethodFailedException, InvalidCredentialsException {
+
+    @Override
+    public void modifyDatastream(@WebParam(name = "pid", targetNamespace = "") String pid,
+                                 @WebParam(name = "datastream", targetNamespace = "") String datastream,
+                                 @WebParam(name = "contents", targetNamespace = "") String contents,
+                                 @WebParam(name = "comment", targetNamespace = "") String comment)
+            throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         long token = lock.getReadAndWritePerm();
         try {
             log.trace("Entering modifyDatastream with params pid=" + pid
@@ -363,6 +367,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
         }
 
     }
+
 
     public String getDatastreamContents(
             @WebParam(name = "pid", targetNamespace = "") String pid,
@@ -403,15 +408,14 @@ public class CentralWebserviceImpl implements CentralWebservice {
         }
     }
 
-    public void addFileFromPermanentURL(
-            @WebParam(name = "pid", targetNamespace = "") String pid,
-            @WebParam(name = "filename", targetNamespace = "") String filename,
-            @WebParam(name = "md5sum", targetNamespace = "") String md5Sum,
-            @WebParam(name = "permanentURL", targetNamespace = "")
-            String permanentURL,
-            @WebParam(name = "formatURI", targetNamespace = "")
-            String formatURI)
-            throws InvalidCredentialsException, MethodFailedException {
+    @Override
+    public void addFileFromPermanentURL(@WebParam(name = "pid", targetNamespace = "") String pid,
+                                        @WebParam(name = "filename", targetNamespace = "") String filename,
+                                        @WebParam(name = "md5sum", targetNamespace = "") String md5Sum,
+                                        @WebParam(name = "permanentURL", targetNamespace = "") String permanentURL,
+                                        @WebParam(name = "formatURI", targetNamespace = "") String formatURI,
+                                        @WebParam(name = "comment", targetNamespace = "") String comment)
+            throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         long token = lock.getReadAndWritePerm();
         try {
             log.trace("Entering addFileFromPermamentURL with params pid=" + pid
@@ -514,24 +518,20 @@ public class CentralWebserviceImpl implements CentralWebservice {
         }
     }
 
-    public void addRelation(
-            @WebParam(name = "pid", targetNamespace = "") String pid,
-            @WebParam(name = "subject", targetNamespace = "")
-            String subject,
-            @WebParam(name = "predicate", targetNamespace = "")
-            String predicate,
-            @WebParam(name = "object", targetNamespace = "")
-            String object)
-            throws InvalidCredentialsException, MethodFailedException {
+    @Override
+    public void addRelation(@WebParam(name = "pid", targetNamespace = "") String pid,
+                            @WebParam(name = "relation", targetNamespace = "") Relation relation,
+                            @WebParam(name = "comment", targetNamespace = "") String comment)
+            throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         long token = lock.getReadAndWritePerm();
         try {
             log.trace("Entering addRelation with params pid=" + pid
-                      + " and subject=" + subject + " and predicate="
-                      + predicate + " and object=" + object);
+                      + " and subject=" + relation.getSubject() + " and predicate="
+                      + relation.getPredicate() + " and object=" + relation.getObject());
             Credentials creds = getCredentials();
             Fedora fedora = FedoraFactory.newInstance(creds,
                                                       fedoraLocation);
-            fedora.addRelation(pid, subject, predicate, object);
+            fedora.addRelation(pid, relation.subject, relation.predicate, relation.object);
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
             throw new MethodFailedException("Webservice Config invalid",
@@ -571,14 +571,14 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
     @Override
     public List<Relation> getNamedRelations(@WebParam(name = "pid", targetNamespace = "") String pid,
-                                            @WebParam(name = "name", targetNamespace = "") String name)
+                                            @WebParam(name = "predicate", targetNamespace = "") String predicate)
             throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         try {
             log.trace("Entering getNamedRelations with params pid='" + pid + "'");
             Credentials creds = getCredentials();
             Fedora fedora = FedoraFactory.newInstance(creds,
                                                       fedoraLocation);
-            List<FedoraRelation> fedorarels = fedora.getNamedRelations(pid, name);
+            List<FedoraRelation> fedorarels = fedora.getNamedRelations(pid, predicate);
             return convertRelations(fedorarels);
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
@@ -607,22 +607,20 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
     }
 
-
     @Override
     public void deleteRelation(@WebParam(name = "pid", targetNamespace = "") String pid,
-                               @WebParam(name = "subject", targetNamespace = "") String subject,
-                               @WebParam(name = "predicate", targetNamespace = "") String predicate,
-                               @WebParam(name = "object", targetNamespace = "") String object)
+                               @WebParam(name = "relation", targetNamespace = "") Relation relation,
+                               @WebParam(name = "comment", targetNamespace = "") String comment)
             throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         long token = lock.getReadAndWritePerm();
         try {
             log.trace("Entering deleteRelation with params pid=" + pid
-                      + " and subject=" + subject + " and predicate="
-                      + predicate + " and object=" + object);
+                      + " and subject=" + relation.subject + " and predicate="
+                      + relation.predicate + " and object=" + relation.object);
             Credentials creds = getCredentials();
             Fedora fedora = FedoraFactory.newInstance(creds,
                                                       fedoraLocation);
-            fedora.deleteRelation(pid, subject, predicate, object);
+            fedora.deleteRelation(pid, relation.subject, relation.predicate, relation.object);
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
             throw new MethodFailedException("Webservice Config invalid",
