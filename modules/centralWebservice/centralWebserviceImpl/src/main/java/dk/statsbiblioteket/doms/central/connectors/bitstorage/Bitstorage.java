@@ -72,7 +72,8 @@ public class Bitstorage extends Connector {
                                                                        String filename,
                                                                        String permanentURL,
                                                                        String md5String,
-                                                                       Characterisation characterisation)
+                                                                       Characterisation characterisation,
+                                                                       String comment)
             throws BackendMethodFailedException,
                    BackendInvalidCredsException,
                    BackendInvalidResourceException {

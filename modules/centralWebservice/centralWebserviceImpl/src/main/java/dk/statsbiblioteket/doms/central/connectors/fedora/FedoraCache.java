@@ -85,20 +85,20 @@ public class FedoraCache implements Fedora {
 
     }
 
-    public void modifyObjectState(String pid, String state) throws
-                                                            BackendMethodFailedException,
-                                                            BackendInvalidCredsException,
-                                                            BackendInvalidResourceException {
-        fedora.modifyObjectState(pid, state);
+    public void modifyObjectState(String pid, String state, String comment) throws
+                                                                            BackendMethodFailedException,
+                                                                            BackendInvalidCredsException,
+                                                                            BackendInvalidResourceException {
+        fedora.modifyObjectState(pid, state, comment);
     }
 
     public void modifyDatastreamByValue(String pid,
                                         String datastream,
-                                        String contents) throws
-                                                         BackendMethodFailedException,
-                                                         BackendInvalidCredsException,
-                                                         BackendInvalidResourceException {
-        fedora.modifyDatastreamByValue(pid, datastream, contents);
+                                        String contents, String comment) throws
+                                                                         BackendMethodFailedException,
+                                                                         BackendInvalidCredsException,
+                                                                         BackendInvalidResourceException {
+        fedora.modifyDatastreamByValue(pid, datastream, contents, comment);
     }
 
     public String getXMLDatastreamContents(String pid, String datastream) throws
@@ -116,11 +116,11 @@ public class FedoraCache implements Fedora {
     public void addRelation(String pid,
                             String subject,
                             String property,
-                            String object) throws
-                                           BackendMethodFailedException,
-                                           BackendInvalidCredsException,
-                                           BackendInvalidResourceException {
-        fedora.addRelation(pid, subject, property, object);
+                            String object, String comment) throws
+                                                           BackendMethodFailedException,
+                                                           BackendInvalidCredsException,
+                                                           BackendInvalidResourceException {
+        fedora.addRelation(pid, subject, property, object, comment);
     }
 
     @Override
@@ -130,9 +130,9 @@ public class FedoraCache implements Fedora {
     }
 
     @Override
-    public void deleteRelation(String pid, String subject, String predicate, String object)
+    public void deleteRelation(String pid, String subject, String predicate, String object, String comment)
             throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
-        fedora.deleteRelation(pid, subject, predicate, object);
+        fedora.deleteRelation(pid, subject, predicate, object, comment);
     }
 
     public List<String> listObjectsWithThisLabel(String label) throws
@@ -142,11 +142,11 @@ public class FedoraCache implements Fedora {
         return fedora.listObjectsWithThisLabel(label);
     }
 
-    public void modifyObjectLabel(String pid, String name) throws
-                                                           BackendMethodFailedException,
-                                                           BackendInvalidCredsException,
-                                                           BackendInvalidResourceException {
-        fedora.modifyObjectLabel(pid, name);
+    public void modifyObjectLabel(String pid, String name, String comment) throws
+                                                                           BackendMethodFailedException,
+                                                                           BackendInvalidCredsException,
+                                                                           BackendInvalidResourceException {
+        fedora.modifyObjectLabel(pid, name, comment);
     }
 
     @Override

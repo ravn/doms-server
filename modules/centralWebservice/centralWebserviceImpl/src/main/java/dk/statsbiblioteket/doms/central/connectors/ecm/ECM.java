@@ -61,17 +61,18 @@ public class ECM extends Connector {
         restApi = client.resource(location);
     }
 
-    public String createNewObject(String templatePid, List<String> oldIdentifiers) throws
-                                                                                   BackendMethodFailedException,
-                                                                                   BackendInvalidCredsException,
-                                                                                   BackendInvalidResourceException{
+    public String createNewObject(String templatePid, List<String> oldIdentifiers, String comment) throws
+                                                                                                   BackendMethodFailedException,
+                                                                                                   BackendInvalidCredsException,
+                                                                                                   BackendInvalidResourceException {
         try {
             WebResource temp = restApi
                     .path("/clone/")
+                    .queryParam("logMessage", comment)
                     .path(URLEncoder.encode(templatePid, "UTF-8"));
-            if (oldIdentifiers != null){
+            if (oldIdentifiers != null) {
                 for (String oldIdentifier : oldIdentifiers) {
-                    temp = temp.queryParam("oldID",oldIdentifier);
+                    temp = temp.queryParam("oldID", oldIdentifier);
                 }
             }
             String clonePID = temp.header("Authorization", credsAsBase64())
@@ -84,8 +85,7 @@ public class ECM extends Connector {
                     .equals(ClientResponse.Status.UNAUTHORIZED)) {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied", e);
-            }
-            else {
+            } else {
                 throw new BackendMethodFailedException("Server error", e);
             }
         }
@@ -98,10 +98,10 @@ public class ECM extends Connector {
         try {
             String bundle = restApi
                     .path("getViewObjectsForObject/")
-                    .path(URLEncoder.encode(pid,"UTF-8"))
+                    .path(URLEncoder.encode(pid, "UTF-8"))
                     .path("/forAngle/")
                     .path(angle)
-                    .queryParam("bundle","true")
+                    .queryParam("bundle", "true")
                     .header("Authorization", credsAsBase64())
                     .get(String.class);
             return bundle;
@@ -110,8 +110,7 @@ public class ECM extends Connector {
                     .equals(ClientResponse.Status.UNAUTHORIZED)) {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied", e);
-            }
-            else {
+            } else {
                 throw new BackendMethodFailedException("Server error", e);
             }
         } catch (UnsupportedEncodingException e) {
@@ -123,24 +122,23 @@ public class ECM extends Connector {
     public List<String> getEntryContentModelsForObject(String pid, String angle)
             throws BackendInvalidCredsException,
                    BackendMethodFailedException,
-                   BackendInvalidResourceException{
+                   BackendInvalidResourceException {
         try {
             PidList list = restApi
                     .path("getEntryContentModelsForObject/")
-                    .path(URLEncoder.encode(pid,"UTF-8"))
+                    .path(URLEncoder.encode(pid, "UTF-8"))
                     .path("/forAngle/")
                     .path(angle)
                     .header("Authorization", credsAsBase64())
                     .get(PidList.class);
-            return  list;
+            return list;
 
         } catch (UniformInterfaceException e) {
             if (e.getResponse().getClientResponseStatus()
                     .equals(ClientResponse.Status.UNAUTHORIZED)) {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied", e);
-            }
-            else {
+            } else {
                 throw new BackendMethodFailedException("Server error", e);
             }
         } catch (UnsupportedEncodingException e) {

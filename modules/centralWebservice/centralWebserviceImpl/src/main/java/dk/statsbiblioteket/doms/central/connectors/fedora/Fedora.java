@@ -45,7 +45,7 @@ public interface Fedora {
     String STATE_INACTIVE = "I";
     String STATE_DELETED = "D";
 
-    void modifyObjectState(String pid, String state)
+    void modifyObjectState(String pid, String state, String comment)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,
@@ -53,7 +53,7 @@ public interface Fedora {
 
     void modifyDatastreamByValue(String pid,
                                  String datastream,
-                                 String contents)
+                                 String contents, String comment)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,
@@ -65,7 +65,7 @@ public interface Fedora {
             BackendInvalidCredsException,
             BackendInvalidResourceException;
 
-    void addRelation(String pid, String subject, String property, String object)
+    void addRelation(String pid, String subject, String property, String object, String comment)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,
@@ -78,7 +78,7 @@ public interface Fedora {
             BackendInvalidResourceException;
 
 
-    void deleteRelation(String pid, String subject, String predicate, String object)
+    void deleteRelation(String pid, String subject, String predicate, String object, String comment)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,
@@ -91,7 +91,7 @@ public interface Fedora {
             BackendMethodFailedException,
             BackendInvalidResourceException;
 
-    void modifyObjectLabel(String pid, String name)
+    void modifyObjectLabel(String pid, String name, String comment)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,

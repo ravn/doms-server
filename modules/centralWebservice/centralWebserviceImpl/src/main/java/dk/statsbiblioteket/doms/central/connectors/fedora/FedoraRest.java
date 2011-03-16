@@ -62,14 +62,18 @@ public class FedoraRest extends Connector implements Fedora {
         restApi = client.resource(location + "/objects/");
     }
 
-    public void modifyObjectState(String pid, String state)
+    public void modifyObjectState(String pid, String state, String comment)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,
             BackendInvalidResourceException {
         try {
+            if (comment == null || comment.isEmpty()) {
+                comment = "No message supplied";
+            }
             restApi.path(URLEncoder.encode(pid, "UTF-8"))
                     .queryParam("state", state)
+                    .queryParam("logMessage", comment)
                     .header("Authorization", credsAsBase64())
                     .put();
         } catch (UnsupportedEncodingException e) {
@@ -90,16 +94,21 @@ public class FedoraRest extends Connector implements Fedora {
 
     public void modifyDatastreamByValue(String pid,
                                         String datastream,
-                                        String contents)
+                                        String contents, String comment)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,
             BackendInvalidResourceException {
         try {
+            if (comment == null || comment.isEmpty()) {
+                comment = "No message supplied";
+            }
+
             restApi.path(URLEncoder.encode(pid, "UTF-8"))
                     .path("/datastreams/")
                     .path(URLEncoder.encode(datastream, "UTF-8"))
                     .queryParam("mimeType", "text/xml")
+                    .queryParam("logMessage", comment)
                     .header("Authorization", credsAsBase64())
                     .post(contents);
         } catch (UnsupportedEncodingException e) {
@@ -147,12 +156,16 @@ public class FedoraRest extends Connector implements Fedora {
         }
     }
 
-    public void addRelation(String pid, String subject, String property, String object)
+    public void addRelation(String pid, String subject, String property, String object, String comment)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,
             BackendInvalidResourceException {
         try {
+            if (comment == null || comment.isEmpty()) {
+                comment = "No message supplied";
+            }  //TODO, fedora should take this logmessage
+
             if (subject == null || subject.isEmpty()) {
                 subject = pid;
             }
@@ -254,9 +267,13 @@ public class FedoraRest extends Connector implements Fedora {
 
 
     @Override
-    public void deleteRelation(String pid, String subject, String predicate, String object)
+    public void deleteRelation(String pid, String subject, String predicate, String object, String comment)
             throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
         try {
+            if (comment == null || comment.isEmpty()) {
+                comment = "No message supplied";
+            } //TODO, fedora should take this logmessage
+
             if (subject == null || subject.isEmpty()) {
                 subject = pid;
             }
@@ -335,14 +352,19 @@ public class FedoraRest extends Connector implements Fedora {
         }
     }
 
-    public void modifyObjectLabel(String pid, String name)
+    public void modifyObjectLabel(String pid, String name, String comment)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,
             BackendInvalidResourceException {
         try {
+            if (comment == null || comment.isEmpty()) {
+                comment = "No message supplied";
+            }
+
             restApi.path(URLEncoder.encode(pid, "UTF-8"))
                     .queryParam("label", name)
+                    .queryParam("logMessage", comment)
                     .header("Authorization", credsAsBase64())
                     .put();
         } catch (UnsupportedEncodingException e) {

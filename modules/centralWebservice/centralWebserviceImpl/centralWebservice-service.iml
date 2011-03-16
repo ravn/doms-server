@@ -20,7 +20,6 @@
       <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/xjc" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/annotations" isTestSource="false" />
-      <excludeFolder url="file://$MODULE_DIR$/target/centralWebservice-service-0.0.20" />
       <excludeFolder url="file://$MODULE_DIR$/target/centralWebservice-service-0.0.21-SNAPSHOT" />
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />
       <excludeFolder url="file://$MODULE_DIR$/target/dependency-maven-plugin-markers" />

@@ -104,7 +104,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                     + oldID.toString());
             Credentials creds = getCredentials();
             ECM ecm = new ECM(creds, ecmLocation);
-            return ecm.createNewObject(pid, oldID);
+            return ecm.createNewObject(pid, oldID, comment);
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
             throw new MethodFailedException("Webservice Config invalid",
@@ -146,7 +146,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             Credentials creds = getCredentials();
             Fedora fedora = FedoraFactory.newInstance(creds,
                                                       fedoraLocation);
-            fedora.modifyObjectLabel(pid, name);
+            fedora.modifyObjectLabel(pid, name, comment);
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
             throw new MethodFailedException("Webservice Config invalid",
@@ -190,7 +190,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             Fedora fedora = FedoraFactory.newInstance(creds,
                                                       fedoraLocation);
             for (String pid : pids) {
-                fedora.modifyObjectState(pid, fedora.STATE_DELETED);
+                fedora.modifyObjectState(pid, fedora.STATE_DELETED, comment);
             }
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
@@ -234,7 +234,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             Fedora fedora = FedoraFactory.newInstance(creds,
                                                       fedoraLocation);
             for (String pid : pids) {
-                fedora.modifyObjectState(pid, fedora.STATE_ACTIVE);
+                fedora.modifyObjectState(pid, fedora.STATE_ACTIVE, comment);
                 activated.add(pid);
             }
         } catch (BackendMethodFailedException e) {
@@ -290,7 +290,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             Fedora fedora = FedoraFactory.newInstance(creds,
                                                       fedoraLocation);
             for (String pid : pids) {
-                fedora.modifyObjectState(pid, fedora.STATE_INACTIVE);
+                fedora.modifyObjectState(pid, fedora.STATE_INACTIVE, comment);
             }
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
@@ -337,7 +337,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             Credentials creds = getCredentials();
             Fedora fedora = FedoraFactory.newInstance(creds,
                                                       fedoraLocation);
-            fedora.modifyDatastreamByValue(pid, datastream, contents);
+            fedora.modifyDatastreamByValue(pid, datastream, contents, comment);
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
             throw new MethodFailedException("Webservice Config invalid",
@@ -444,7 +444,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
                                                                       filename,
                                                                       permanentURL,
                                                                       md5Sum,
-                                                                      emptycharac);
+                                                                      emptycharac,
+                                                                      comment);
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
             throw new MethodFailedException("Webservice Config invalid",
@@ -531,7 +532,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             Credentials creds = getCredentials();
             Fedora fedora = FedoraFactory.newInstance(creds,
                                                       fedoraLocation);
-            fedora.addRelation(pid, relation.subject, relation.predicate, relation.object);
+            fedora.addRelation(pid, relation.subject, relation.predicate, relation.object, comment);
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
             throw new MethodFailedException("Webservice Config invalid",
@@ -620,7 +621,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             Credentials creds = getCredentials();
             Fedora fedora = FedoraFactory.newInstance(creds,
                                                       fedoraLocation);
-            fedora.deleteRelation(pid, relation.subject, relation.predicate, relation.object);
+            fedora.deleteRelation(pid, relation.subject, relation.predicate, relation.object, comment);
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
             throw new MethodFailedException("Webservice Config invalid",
