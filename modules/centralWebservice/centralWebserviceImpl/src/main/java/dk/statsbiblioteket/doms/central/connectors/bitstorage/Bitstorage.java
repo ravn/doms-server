@@ -87,7 +87,8 @@ public class Bitstorage extends Connector {
                                                                            permanentURL,
                                                                            md5String,
                                                                            0,
-                                                                           characterisation);
+                                                                           characterisation,
+                                                                           comment);
 
         } catch (ObjectNotFoundException e) {
             throw new BackendMethodFailedException(
