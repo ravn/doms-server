@@ -30,6 +30,7 @@ package dk.statsbiblioteket.doms.central.connectors.fedora;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
+import dk.statsbiblioteket.doms.central.connectors.fedora.search.SearchResult;
 
 import java.util.List;
 
@@ -108,7 +109,9 @@ public interface Fedora {
             BackendInvalidCredsException,
             BackendMethodFailedException;
 
-    List<SearchResult> fieldsearch(String query, int offset, int pageLength);
+    List<SearchResult> fieldsearch(String query, int offset, int pageLength) throws BackendMethodFailedException,
+                                                                                    BackendInvalidCredsException,
+                                                                                    BackendInvalidResourceException;
 
 
 }

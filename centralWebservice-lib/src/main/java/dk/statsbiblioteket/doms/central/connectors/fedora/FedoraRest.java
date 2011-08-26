@@ -36,7 +36,11 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.Connector;
+import dk.statsbiblioteket.doms.central.connectors.fedora.search.ObjectFieldsType;
+import dk.statsbiblioteket.doms.central.connectors.fedora.search.ResultType;
+import dk.statsbiblioteket.doms.central.connectors.fedora.search.SearchResult;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
+import sun.org.mozilla.javascript.internal.Token;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -436,7 +440,53 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     @Override
-    public List<SearchResult> fieldsearch(String query, int offset, int pageLength) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public List<SearchResult> fieldsearch(String query,
+                                          int offset,
+                                          int pageLength) throws
+                                                          BackendMethodFailedException,
+                                                          BackendInvalidCredsException,
+                                                          BackendInvalidResourceException {
+        try {
+
+            ResultType searchResult = restApi.queryParam("query", query)
+                    .queryParam("maxResults", pageLength + "")
+                    .queryParam("resultFormat", "xml")
+                    .queryParam("pid", "true")
+                    .queryParam("label", "true")
+                    .queryParam("state", "true")
+                    .queryParam("cDate", "true")
+                    .queryParam("mDate", "true")
+                    .header("Authorization", credsAsBase64())
+                    .get(ResultType.class);
+
+            if (offset > 0){
+
+                for (int i = 1; i <= offset; i++) {
+                    String token = searchResult.getListSession().getToken();
+                    searchResult = restApi.queryParam("query", query)
+                            .queryParam("sessionToken", token)
+                            .queryParam("resultFormat", "xml")
+                            .header("Authorization", credsAsBase64())
+                            .get(ResultType.class);
+                }
+            }
+            List<SearchResult> outputResults = new ArrayList<SearchResult>(searchResult.getResultList().getObjectFields().size());
+            for (ObjectFieldsType objectFieldsType : searchResult.getResultList().getObjectFields()) {
+                outputResults.add(new SearchResult(objectFieldsType.getPid(),objectFieldsType.getLabel(),objectFieldsType.getState(),objectFieldsType.getCDate(),objectFieldsType.getMDate()));
+            }
+            return outputResults;
+
+        } catch (UniformInterfaceException e) {
+            if (e.getResponse().getStatus()
+                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                throw new BackendInvalidCredsException(
+                        "Invalid Credentials Supplied",
+                        e);
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
+                throw new BackendInvalidResourceException("Resource not found", e);
+            } else {
+                throw new BackendMethodFailedException("Server error", e);
+            }
+        }
     }
 }

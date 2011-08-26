@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.fedora.info/definitions/1/0/types/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="result" type="typ:resultType" xmlns:typ="http://www.fedora.info/definitions/1/0/types/"/>
+    <xs:complexType name="objectFieldsType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="pid"/>
+            <xs:element type="xs:string" name="label"/>
+            <xs:element type="xs:string" name="state"/>
+            <xs:element type="xs:string" name="cDate"/>
+            <xs:element type="xs:string" name="mDate"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="listSessionType">
+        <xs:sequence>
+            <xs:element type="xs:string" name="token"/>
+            <xs:element type="xs:string" name="cursor"/>
+            <xs:element type="xs:string" name="expirationDate"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="resultListType">
+        <xs:sequence>
+            <xs:element type="typ:objectFieldsType" name="objectFields" maxOccurs="unbounded" minOccurs="0" xmlns:typ="http://www.fedora.info/definitions/1/0/types/"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="resultType">
+        <xs:sequence>
+            <xs:element type="typ:listSessionType" name="listSession" xmlns:typ="http://www.fedora.info/definitions/1/0/types/"/>
+            <xs:element type="typ:resultListType" name="resultList" xmlns:typ="http://www.fedora.info/definitions/1/0/types/"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
