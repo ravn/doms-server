@@ -5,13 +5,13 @@
   </component>
   <component name="ArtifactManager">
     <artifact type="war" name="centralWebservice-service:war">
-      <output-path>$PROJECT_DIR$/modules/centralWebservice/centralWebserviceImpl/target</output-path>
-      <root id="archive" name="centralWebservice-service-0.0.21-SNAPSHOT.war">
+      <output-path>$PROJECT_DIR$/centralWebserviceImpl/target</output-path>
+      <root id="archive" name="central-service-0.0.22-SNAPSHOT.war">
         <element id="artifact" artifact-name="centralWebservice-service:war exploded" />
       </root>
     </artifact>
     <artifact type="exploded-war" name="centralWebservice-service:war exploded">
-      <output-path>$PROJECT_DIR$/modules/centralWebservice/centralWebserviceImpl/target/centralWebservice-service-0.0.21-SNAPSHOT</output-path>
+      <output-path>$PROJECT_DIR$/centralWebserviceImpl/target/central-service-0.0.22-SNAPSHOT</output-path>
       <root id="root">
         <element id="javaee-facet-resources" facet="centralWebservice-service/web/Web" />
         <element id="directory" name="WEB-INF">
@@ -19,12 +19,12 @@
             <element id="module-output" name="centralWebservice-service" />
           </element>
           <element id="directory" name="lib">
-            <element id="archive" name="centralWebservice-interface-0.0.21-SNAPSHOT.jar">
+            <element id="archive" name="central-interface-0.0.22-SNAPSHOT.jar">
               <element id="module-output" name="centralWebservice-interface" />
             </element>
             <element id="library" level="project" name="Maven: dk.statsbiblioteket.sbutil:sbutil:0.5.2" />
             <element id="library" level="project" name="Maven: commons-logging:commons-logging:1.1.1" />
-            <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.bitstorage.highlevel:bitstorage-highlevel-interface:0.0.17" />
+            <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.bitstorage.highlevel:bitstorage-highlevel-interface:0.0.18" />
             <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.domsutil.surveyable:domsutil-logappender:0.0.20" />
             <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.domsutil:domsutil-webservice-common:0.0.20" />
             <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.domsutil.surveyable:domsutil-surveyable-interface:0.0.20" />
@@ -39,9 +39,9 @@
             <element id="library" level="project" name="Maven: javax.xml.soap:saaj-api:1.3" />
             <element id="library" level="project" name="Maven: com.sun.xml.stream.buffer:streambuffer:0.9" />
             <element id="library" level="project" name="Maven: org.jvnet.staxex:stax-ex:1.2" />
-            <element id="library" level="project" name="Maven: junit:junit:3.8" />
             <element id="library" level="project" name="Maven: org.codehaus.woodstox:wstx-asl:3.2.3" />
             <element id="library" level="project" name="Maven: stax:stax-api:1.0.1" />
+            <element id="library" level="project" name="Maven: junit:junit:3.8" />
             <element id="library" level="project" name="Maven: com.sun.org.apache.xml.internal:resolver:20050927" />
             <element id="library" level="project" name="Maven: org.jvnet:mimepull:1.3" />
             <element id="library" level="project" name="Maven: log4j:log4j:1.2.16" />
@@ -54,6 +54,75 @@
         </element>
       </root>
     </artifact>
+    <artifact type="war" name="central-service:war">
+      <output-path>$PROJECT_DIR$/centralWebservice-service/target</output-path>
+      <root id="archive" name="central-service-0.0.22-SNAPSHOT.war">
+        <element id="artifact" artifact-name="central-service:war exploded" />
+      </root>
+    </artifact>
+    <artifact type="exploded-war" name="central-service:war exploded">
+      <output-path>$PROJECT_DIR$/centralWebservice-service/target/central-service-0.0.22-SNAPSHOT</output-path>
+      <root id="root">
+        <element id="javaee-facet-resources" facet="central-service/web/Web" />
+        <element id="directory" name="WEB-INF">
+          <element id="directory" name="classes">
+            <element id="module-output" name="central-service" />
+          </element>
+          <element id="directory" name="lib">
+            <element id="archive" name="central-interface-0.0.22-SNAPSHOT.jar">
+              <element id="module-output" name="central-interface" />
+            </element>
+            <element id="library" level="project" name="Maven: dk.statsbiblioteket.sbutil:sbutil:0.5.2" />
+            <element id="library" level="project" name="Maven: commons-logging:commons-logging:1.1.1" />
+            <element id="archive" name="central-lib-0.0.22-SNAPSHOT.jar">
+              <element id="module-output" name="central-lib" />
+            </element>
+            <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.bitstorage.highlevel:bitstorage-highlevel-interface:0.0.18" />
+            <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.domsutil.surveyable:domsutil-logappender:0.0.20" />
+            <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.domsutil:domsutil-webservice-common:0.0.20" />
+            <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.domsutil.surveyable:domsutil-surveyable-interface:0.0.20" />
+            <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.domsutil.surveyable:domsutil-surveyable-impl:0.0.20" />
+            <element id="library" level="project" name="Maven: log4j:log4j:1.2.16" />
+            <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.updatetracker:updatetracker-interface:0.0.13" />
+            <element id="library" level="project" name="Maven: com.sun.jersey:jersey-client:1.3" />
+            <element id="library" level="project" name="Maven: com.sun.jersey:jersey-core:1.3" />
+            <element id="library" level="project" name="Maven: javax.ws.rs:jsr311-api:1.1.1" />
+            <element id="library" level="project" name="Maven: net.sourceforge.saxon:saxon:dom:9.1.0.8" />
+            <element id="library" level="project" name="Maven: com.sun.xml.ws:jaxws-rt:2.1.7" />
+            <element id="library" level="project" name="Maven: javax.xml.ws:jaxws-api:2.1" />
+            <element id="library" level="project" name="Maven: javax.xml.bind:jaxb-api:2.1" />
+            <element id="library" level="project" name="Maven: javax.xml.stream:stax-api:1.0" />
+            <element id="library" level="project" name="Maven: javax.activation:activation:1.1" />
+            <element id="library" level="project" name="Maven: com.sun.xml.bind:jaxb-impl:2.1.11" />
+            <element id="library" level="project" name="Maven: com.sun.xml.messaging.saaj:saaj-impl:1.3.3" />
+            <element id="library" level="project" name="Maven: javax.xml.soap:saaj-api:1.3" />
+            <element id="library" level="project" name="Maven: com.sun.xml.stream.buffer:streambuffer:0.9" />
+            <element id="library" level="project" name="Maven: org.jvnet.staxex:stax-ex:1.2" />
+            <element id="library" level="project" name="Maven: org.codehaus.woodstox:wstx-asl:3.2.3" />
+            <element id="library" level="project" name="Maven: stax:stax-api:1.0.1" />
+            <element id="library" level="project" name="Maven: junit:junit:3.8" />
+            <element id="library" level="project" name="Maven: com.sun.org.apache.xml.internal:resolver:20050927" />
+            <element id="library" level="project" name="Maven: org.jvnet:mimepull:1.3" />
+          </element>
+        </element>
+      </root>
+    </artifact>
+  </component>
+  <component name="CCaseConfig">
+    <option name="checkoutReserved" value="false" />
+    <option name="markExternalChangeAsUpToDate" value="true" />
+    <option name="checkInUseHijack" value="true" />
+    <option name="useUcmModel" value="true" />
+    <option name="synchOutside" value="false" />
+    <option name="isHistoryResticted" value="true" />
+    <option name="useIdenticalSwitch" value="true" />
+    <option name="synchActivitiesOnRefresh" value="true" />
+    <option name="lastScr" value="" />
+    <option name="scrTextFileName" value="" />
+    <option name="historyRevisionsNumber" value="4" />
+  </component>
+  <component name="ClearCaseSharedConfig">
+    <option name="myUseUcmModel" value="true" />
   </component>
   <component name="CompilerConfiguration">
     <option name="DEFAULT_COMPILER" value="Javac" />
@@ -78,6 +147,45 @@
   <component name="CopyrightManager" default="">
     <module2copyright />
   </component>
+  <component name="DaemonCodeAnalyzer">
+    <disable_hints />
+  </component>
+  <component name="DebuggerManager">
+    <breakpoint_any>
+      <breakpoint>
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint>
+        <option name="NOTIFY_CAUGHT" value="true" />
+        <option name="NOTIFY_UNCAUGHT" value="true" />
+        <option name="ENABLED" value="false" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="false" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </breakpoint_any>
+    <breakpoint_rules />
+    <ui_properties />
+  </component>
   <component name="DependencyValidationManager">
     <option name="SKIP_IMPORT_STATEMENTS" value="false" />
   </component>
@@ -89,6 +197,7 @@
     <autodetection-disabled>
       <facet-type id="web">
         <modules>
+          <module name="central-service" />
           <module name="centralWebservice-service" />
         </modules>
       </facet-type>
@@ -120,6 +229,10 @@
         <option value="$PROJECT_DIR$/pom.xml" />
       </list>
     </option>
+  </component>
+  <component name="ModuleEditorState">
+    <option name="LAST_EDITED_MODULE_NAME" />
+    <option name="LAST_EDITED_TAB_NAME" />
   </component>
   <component name="Palette2">
     <group name="Swing">
@@ -247,13 +360,26 @@
       <profile-state />
     </entry>
   </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/central.iml" filepath="$PROJECT_DIR$/central.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/centralWebservice/centralWebservice.iml" filepath="$PROJECT_DIR$/modules/centralWebservice/centralWebservice.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/centralWebservice/centralWebserviceInterface/centralWebservice-interface.iml" filepath="$PROJECT_DIR$/modules/centralWebservice/centralWebserviceInterface/centralWebservice-interface.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/centralWebservice/centralWebserviceImpl/centralWebservice-service.iml" filepath="$PROJECT_DIR$/modules/centralWebservice/centralWebserviceImpl/centralWebservice-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/centralWebservice-interface/central-interface.iml" filepath="$PROJECT_DIR$/centralWebservice-interface/central-interface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/centralWebservice-lib/central-lib.iml" filepath="$PROJECT_DIR$/centralWebservice-lib/central-lib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/centralWebservice-service/central-service.iml" filepath="$PROJECT_DIR$/centralWebservice-service/central-service.iml" />
     </modules>
+  </component>
+  <component name="ProjectReloadState">
+    <option name="STATE" value="0" />
   </component>
   <component name="ProjectResources">
     <default-html-doctype>http://www.w3.org/1999/xhtml</default-html-doctype>
@@ -261,6 +387,94 @@
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.6" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/classes" />
   </component>
+  <component name="RunManager">
+    <configuration default="true" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+      <method>
+        <option name="AntTarget" enabled="false" />
+        <option name="BuildArtifacts" enabled="false" />
+        <option name="Maven.BeforeRunTask" enabled="false" />
+        <option name="PhingTarget" enabled="false" />
+      </method>
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method>
+        <option name="AntTarget" enabled="false" />
+        <option name="BuildArtifacts" enabled="false" />
+        <option name="Make" enabled="true" />
+        <option name="Maven.BeforeRunTask" enabled="false" />
+        <option name="PhingTarget" enabled="false" />
+      </method>
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <extension name="coverage" enabled="false" merge="false" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method>
+        <option name="AntTarget" enabled="false" />
+        <option name="BuildArtifacts" enabled="false" />
+        <option name="Make" enabled="true" />
+        <option name="Maven.BeforeRunTask" enabled="false" />
+        <option name="PhingTarget" enabled="false" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <extension name="coverage" enabled="false" merge="false" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <method>
+        <option name="AntTarget" enabled="false" />
+        <option name="BuildArtifacts" enabled="false" />
+        <option name="Make" enabled="true" />
+        <option name="Maven.BeforeRunTask" enabled="false" />
+        <option name="PhingTarget" enabled="false" />
+      </method>
+    </configuration>
+    <list size="0" />
+    <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
+      <Host>localhost</Host>
+      <Port>5050</Port>
+    </configuration>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
   <component name="SvnBranchConfigurationManager">
     <option name="myConfigurationMap">
       <map>
@@ -294,6 +508,24 @@
       </map>
     </option>
     <option name="mySupportsUserInfoFilter" value="true" />
+  </component>
+  <component name="SvnConfiguration" maxAnnotateRevisions="500">
+    <option name="USER" value="" />
+    <option name="PASSWORD" value="" />
+    <option name="mySSHConnectionTimeout" value="30000" />
+    <option name="mySSHReadTimeout" value="30000" />
+    <option name="LAST_MERGED_REVISION" />
+    <option name="MERGE_DRY_RUN" value="false" />
+    <option name="MERGE_DIFF_USE_ANCESTRY" value="true" />
+    <option name="UPDATE_LOCK_ON_DEMAND" value="false" />
+    <option name="IGNORE_SPACES_IN_MERGE" value="false" />
+    <option name="DETECT_NESTED_COPIES" value="false" />
+    <option name="CHECK_NESTED_FOR_QUICK_MERGE" value="false" />
+    <option name="IGNORE_SPACES_IN_ANNOTATE" value="true" />
+    <option name="SHOW_MERGE_SOURCES_IN_ANNOTATE" value="true" />
+    <option name="FORCE_UPDATE" value="false" />
+    <configuration useDefault="true">$USER_HOME$/.subversion_IDEA</configuration>
+    <myIsUseDefaultProxy>false</myIsUseDefaultProxy>
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="svn" />
@@ -388,15 +620,15 @@
         <root url="jar://$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: dk.statsbiblioteket.doms.bitstorage.highlevel:bitstorage-highlevel-interface:0.0.17">
+    <library name="Maven: dk.statsbiblioteket.doms.bitstorage.highlevel:bitstorage-highlevel-interface:0.0.18">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/dk/statsbiblioteket/doms/bitstorage/highlevel/bitstorage-highlevel-interface/0.0.17/bitstorage-highlevel-interface-0.0.17.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/dk/statsbiblioteket/doms/bitstorage/highlevel/bitstorage-highlevel-interface/0.0.18/bitstorage-highlevel-interface-0.0.18.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/dk/statsbiblioteket/doms/bitstorage/highlevel/bitstorage-highlevel-interface/0.0.17/bitstorage-highlevel-interface-0.0.17-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/dk/statsbiblioteket/doms/bitstorage/highlevel/bitstorage-highlevel-interface/0.0.18/bitstorage-highlevel-interface-0.0.18-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/dk/statsbiblioteket/doms/bitstorage/highlevel/bitstorage-highlevel-interface/0.0.17/bitstorage-highlevel-interface-0.0.17-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/dk/statsbiblioteket/doms/bitstorage/highlevel/bitstorage-highlevel-interface/0.0.18/bitstorage-highlevel-interface-0.0.18-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: dk.statsbiblioteket.doms.domsutil.surveyable:domsutil-logappender:0.0.20">
@@ -619,6 +851,48 @@
         <root url="jar://$MAVEN_REPOSITORY$/stax/stax-api/1.0.1/stax-api-1.0.1-sources.jar!/" />
       </SOURCES>
     </library>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions />
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <splitter-proportions />
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions />
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <splitter-proportions />
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.6</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions />
+        </settings>
+      </state>
+    </states>
   </component>
 </project>
 

@@ -3,7 +3,7 @@
     <parent>
         <groupId>dk.statsbiblioteket.doms</groupId>
         <artifactId>doms</artifactId>
-        <version>0.1.1</version>
+        <version>0.1.2</version>
     </parent>
 
     <groupId>dk.statsbiblioteket.doms.central</groupId>
@@ -21,7 +21,9 @@
 
 
     <modules>
-        <module>modules/centralWebservice</module>
+        <module>centralWebservice-interface</module>
+        <module>centralWebservice-service</module>
+        <module>centralWebservice-lib</module>
     </modules>
 
     <dependencyManagement>
