@@ -859,6 +859,58 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
     }
 
+    @Override
+    public List<SearchResult> findObjects(@WebParam(name = "query", targetNamespace = "") String query,
+                                          @WebParam(name = "offset", targetNamespace = "") int offset,
+                                          @WebParam(name = "pageSize", targetNamespace = "") int pageSize)
+            throws InvalidCredentialsException, MethodFailedException {
+        try {
+            log.trace("Entering findObjectsr with param query=" + query + ", offset="+offset+", pageSize="+pageSize);
+            Credentials creds = getCredentials();
+            Fedora fedora = FedoraFactory.newInstance(creds,
+                                                      fedoraLocation);
+            List<dk.statsbiblioteket.doms.central.connectors.fedora.search.SearchResult> fresults =
+                    fedora.fieldsearch(query, offset, pageSize);
+            List<SearchResult> wresults = new ArrayList<SearchResult>();
+            for (dk.statsbiblioteket.doms.central.connectors.fedora.search.SearchResult fresult : fresults) {
+                SearchResult wresult = new SearchResult();
+                wresult.setPid(fresult.getPid());
+                wresult.setTitle(fresult.getLabel());
+                wresult.setState(fresult.getState());
+                wresult.setCreatedDate(fresult.getcDate());
+                wresult.setModifiedDate(fresult.getmDate());
+                wresults.add(wresult);
+            }
+
+            return wresults;
+
+        } catch (MalformedURLException e) {
+            log.error("caught problemException", e);
+            throw new MethodFailedException("Webservice Config invalid",
+                                            "Webservice Config invalid",
+                                            e);
+        } catch (BackendMethodFailedException e) {
+            log.warn("Failed to execute method", e);
+            throw new MethodFailedException("Method failed to execute",
+                                            "Method failed to execute",
+                                            e);
+        } catch (BackendInvalidCredsException e) {
+            log.debug("User supplied invalid credentials", e);
+            throw new InvalidCredentialsException("Invalid Credentials Supplied",
+                                                  "Invalid Credentials Supplied",
+                                                  e);
+        } catch (BackendInvalidResourceException e) {
+            log.debug("Invalid resource requested", e);
+            throw new InvalidCredentialsException("Invalid Resource Requested",
+                                                  "Invalid Resource Requested",
+                                                  e);
+        } catch (Exception e) {
+            log.warn("Caught Unknown Exception", e);
+            throw new MethodFailedException("Server error", "Server error", e);
+        }
+
+    }
+
 
     @Override
     public void lockForWriting() throws InvalidCredentialsException, MethodFailedException {

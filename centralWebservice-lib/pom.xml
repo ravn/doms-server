@@ -40,11 +40,6 @@
     <packaging>jar</packaging>
 
     <dependencies>
-        <dependency>
-            <groupId>${groupId}</groupId>
-            <artifactId>${parent.artifactId}-interface</artifactId>
-            <version>${project.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>dk.statsbiblioteket.doms.bitstorage.highlevel</groupId>

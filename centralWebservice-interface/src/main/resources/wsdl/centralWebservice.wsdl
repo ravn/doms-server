@@ -212,7 +212,6 @@
 
 
     <!--Search operations-->
-    <!--
 
     <message name="findObjects">
         <part name="parameters" element="tns:findObjects"/>
@@ -220,6 +219,7 @@
     <message name="findObjectsResponse">
         <part name="parameters" element="tns:findObjectsResponse"/>
     </message>
+    <!--
     <message name="listObjects">
         <part name="parameters" element="tns:listObjects"/>
     </message>
@@ -654,28 +654,37 @@
 
 
         <!--Search Operations-->
+
+
+
+        <operation name="findObjects">
+            <documentation>Given a query string, return list of objects matching
+                /!\ TODO: Should we return more than pids?
+
+                /!\ TODO: Paging
+            </documentation>
+            <input message="tns:findObjects"/>
+            <output message="tns:findObjectsResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+
+        </operation>
+
         <!--
+        <operation name="listObjects">
+            <documentation>Given a date, return a list of objects modified since then.
+
+                /!\ TODO: Should we return more than pids?
+
+                /!\ TODO: Paging
+            </documentation>
+            <input message="tns:listObjects"/>
+            <output message="tns:listObjectsResponse"/>
+        </operation>
 
 
-                <operation name="findObjects">
-                    <documentation>Given a query string, return list of objects matching
-                        /!\ TODO: Should we return more than pids?
-
-                        /!\ TODO: Paging
-                    </documentation>
-                    <input message="tns:findObjects"/>
-                    <output message="tns:findObjectsResponse"/>
-                </operation>
-                <operation name="listObjects">
-                    <documentation>Given a date, return a list of objects modified since then.
-
-                        /!\ TODO: Should we return more than pids?
-
-                        /!\ TODO: Paging
-                    </documentation>
-                    <input message="tns:listObjects"/>
-                    <output message="tns:listObjectsResponse"/>
-                </operation>
                 <operation name="riQuery">
                     <documentation>Given a query string for the resource index, return result.
 
@@ -1228,6 +1237,23 @@
                 <soap:fault name="InvalidCredentialsException" use="literal"/>
             </fault>
         </operation>
+
+        <operation name="findObjects">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
+        </operation>
+
 
 
         <operation name="lockForWriting">

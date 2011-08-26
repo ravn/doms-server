@@ -141,6 +141,10 @@
     <xs:element name="findObjectFromDCIdentifier" type="tns:string"/>
     <xs:element name="findObjectFromDCIdentifierResponse" type="tns:Pidlist"/>
 
+    <xs:element name="findObjects" type="tns:SearchQuery"/>
+    <xs:element name="findObjectsResponse" type="tns:SearchResultList"/>
+
+
     <!--Simple types-->
     <xs:complexType name="singlePid">
         <xs:sequence>
@@ -342,4 +346,25 @@
     </xs:complexType>
 
 
+    <xs:complexType name="SearchQuery">
+        <xs:sequence>
+            <xs:element name="query" type="xs:string"/>
+            <xs:element name="offset" type="xs:int"/>
+            <xs:element name="pageSize" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="SearchResultList">
+        <xs:sequence>
+            <xs:element name="searchResult" type="tns:SearchResult" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="SearchResult">
+        <xs:sequence>
+            <xs:element name="pid" type="xs:string"/>
+            <xs:element name="title" type="xs:string"/>
+            <xs:element name="state" type="xs:string"/>
+            <xs:element name="createdDate" type="xs:long"/>
+            <xs:element name="modifiedDate" type="xs:long"/>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>

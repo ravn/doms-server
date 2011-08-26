@@ -162,7 +162,8 @@ public class FedoraCache implements Fedora {
     }
 
     @Override
-    public List<SearchResult> fieldsearch(String query, int offset, int pageLength) {
+    public List<SearchResult> fieldsearch(String query, int offset, int pageLength)
+            throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
         return fedora.fieldsearch(query,offset,pageLength);
     }
 }

@@ -16,10 +16,10 @@ public class SearchResult {
     private String pid;
     private String label;
     private String state;
-    private String cDate;
-    private String mDate;
+    private long cDate;
+    private long mDate;
 
-    public SearchResult(String pid, String label, String state, String cDate, String mDate) {
+    public SearchResult(String pid, String label, String state, long cDate, long mDate) {
         //To change body of created methods use File | Settings | File Templates.
         this.pid = pid;
         this.label = label;
@@ -40,11 +40,11 @@ public class SearchResult {
         return state;
     }
 
-    public String getcDate() {
+    public long getcDate() {
         return cDate;
     }
 
-    public String getmDate() {
+    public long getmDate() {
         return mDate;
     }
 }

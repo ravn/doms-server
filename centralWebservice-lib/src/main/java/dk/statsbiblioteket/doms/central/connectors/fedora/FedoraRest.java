@@ -40,11 +40,12 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.search.ObjectFieldsTyp
 import dk.statsbiblioteket.doms.central.connectors.fedora.search.ResultType;
 import dk.statsbiblioteket.doms.central.connectors.fedora.search.SearchResult;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
-import sun.org.mozilla.javascript.internal.Token;
+
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -472,7 +473,12 @@ public class FedoraRest extends Connector implements Fedora {
             }
             List<SearchResult> outputResults = new ArrayList<SearchResult>(searchResult.getResultList().getObjectFields().size());
             for (ObjectFieldsType objectFieldsType : searchResult.getResultList().getObjectFields()) {
-                outputResults.add(new SearchResult(objectFieldsType.getPid(),objectFieldsType.getLabel(),objectFieldsType.getState(),objectFieldsType.getCDate(),objectFieldsType.getMDate()));
+
+                outputResults.add(new SearchResult(objectFieldsType.getPid(),
+                                                   objectFieldsType.getLabel(),
+                                                   objectFieldsType.getState(),
+                                                   DateUtils.parseDateStrict(objectFieldsType.getCDate()).getTime(),
+                                                   DateUtils.parseDateStrict(objectFieldsType.getMDate()).getTime()));
             }
             return outputResults;
 
@@ -487,6 +493,8 @@ public class FedoraRest extends Connector implements Fedora {
             } else {
                 throw new BackendMethodFailedException("Server error", e);
             }
+        } catch (ParseException e) {
+            throw new BackendMethodFailedException("Failed to parse date from search result",e);
         }
     }
 }
