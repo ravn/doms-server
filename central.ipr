@@ -56,7 +56,7 @@
     </artifact>
     <artifact type="war" name="central-service:war">
       <output-path>$PROJECT_DIR$/centralWebservice-service/target</output-path>
-      <root id="archive" name="central-service-0.0.22-SNAPSHOT.war">
+      <root id="archive" name="centralWebservice-service.war">
         <element id="artifact" artifact-name="central-service:war exploded" />
       </root>
     </artifact>

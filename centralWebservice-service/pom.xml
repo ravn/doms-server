@@ -51,7 +51,7 @@
                             <targetPath>WEB-INF</targetPath>
                         </resource>
                     </webResources>
-
+                    <warName>centralWebservice-service</warName>
                 </configuration>
             </plugin>
 

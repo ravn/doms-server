@@ -64,7 +64,7 @@ public class FedoraRest extends Connector implements Fedora {
     public FedoraRest(Credentials creds, String location)
             throws MalformedURLException {
         super(creds, location);
-        restApi = client.resource(location + "/objects/");
+        restApi = client.resource(location + "/objects");
     }
 
     public void modifyObjectState(String pid, String state, String comment)
@@ -76,7 +76,7 @@ public class FedoraRest extends Connector implements Fedora {
             if (comment == null || comment.isEmpty()) {
                 comment = "No message supplied";
             }
-            restApi.path(URLEncoder.encode(pid, "UTF-8"))
+            restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
                     .queryParam("state", state)
                     .queryParam("logMessage", comment)
                     .header("Authorization", credsAsBase64())
@@ -109,7 +109,8 @@ public class FedoraRest extends Connector implements Fedora {
                 comment = "No message supplied";
             }
 
-            restApi.path(URLEncoder.encode(pid, "UTF-8"))
+            restApi.path("/")
+                    .path(URLEncoder.encode(pid, "UTF-8"))
                     .path("/datastreams/")
                     .path(URLEncoder.encode(datastream, "UTF-8"))
                     .queryParam("mimeType", "text/xml")
@@ -138,7 +139,7 @@ public class FedoraRest extends Connector implements Fedora {
             BackendInvalidCredsException,
             BackendInvalidResourceException {
         try {
-            String contents = restApi.path(URLEncoder.encode(pid, "UTF-8"))
+            String contents = restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
                     .path("/datastreams/")
                     .path(URLEncoder.encode(datastream, "UTF-8"))
                     .path("/content")
@@ -181,7 +182,7 @@ public class FedoraRest extends Connector implements Fedora {
             if (!object.startsWith("info:fedora/")) {
                 object = "info:fedora/" + object;
             }
-            restApi.path(URLEncoder.encode(pid, "UTF-8"))
+            restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
                     .path("/relationships/new")
                     .queryParam("subject", subject)
                     .queryParam("predicate", property)
@@ -212,7 +213,7 @@ public class FedoraRest extends Connector implements Fedora {
             if (!subject.startsWith("info:fedora/")) {
                 subject = "info:fedora/" + subject;
             }
-            WebResource temp = restApi.path(URLEncoder.encode(pid, "UTF-8"))
+            WebResource temp = restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
                     .path("/relationships/")
                     .queryParam("subject", subject)
                     .queryParam("format", "n-triples");
@@ -288,7 +289,7 @@ public class FedoraRest extends Connector implements Fedora {
             if (!object.startsWith("info:fedora/")) {
                 object = "info:fedora/" + object;
             }
-            restApi.path(URLEncoder.encode(pid, "UTF-8"))
+            restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
                     .path("/relationships/")
                     .queryParam("subject", subject)
                     .queryParam("predicate", predicate)
@@ -367,7 +368,7 @@ public class FedoraRest extends Connector implements Fedora {
                 comment = "No message supplied";
             }
 
-            restApi.path(URLEncoder.encode(pid, "UTF-8"))
+            restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
                     .queryParam("label", name)
                     .queryParam("logMessage", comment)
                     .header("Authorization", credsAsBase64())
@@ -449,7 +450,7 @@ public class FedoraRest extends Connector implements Fedora {
                                                           BackendInvalidResourceException {
         try {
 
-            ResultType searchResult = restApi.queryParam("query", query)
+            ResultType searchResult = restApi.queryParam("terms", query)
                     .queryParam("maxResults", pageLength + "")
                     .queryParam("resultFormat", "xml")
                     .queryParam("pid", "true")
