@@ -35,7 +35,7 @@
         <version>0.0.22-SNAPSHOT</version>
     </parent>
 
-    <artifactId>${parent.artifactId}-service</artifactId>
+    <artifactId>${parent.artifactId}Webservice-service</artifactId>
 
     <packaging>war</packaging>
     <build>
@@ -51,7 +51,6 @@
                             <targetPath>WEB-INF</targetPath>
                         </resource>
                     </webResources>
-                    <warName>centralWebservice-service</warName>
                 </configuration>
             </plugin>
 
