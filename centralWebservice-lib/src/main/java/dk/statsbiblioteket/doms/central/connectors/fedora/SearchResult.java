@@ -1,4 +1,4 @@
-package dk.statsbiblioteket.doms.central.connectors.fedora.search;
+package dk.statsbiblioteket.doms.central.connectors.fedora;
 
 import java.util.Date;
 import java.util.List;

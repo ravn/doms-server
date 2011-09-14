@@ -48,6 +48,7 @@ import javax.annotation.Resource;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.ws.Holder;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import java.lang.String;
@@ -131,6 +132,83 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throw new MethodFailedException("Server error", "Server error", e);
         } finally {
             lock.releaseReadAndWritePerm(token);
+        }
+    }
+
+    @Override
+    public ObjectProfile getObjectProfile(@WebParam(name = "pid", targetNamespace = "") String pid)
+            throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
+        try {
+            log.trace("Entering getObjectProfile with params pid='" + pid+"'");
+            Credentials creds = getCredentials();
+            Fedora fedora = FedoraFactory.newInstance(creds,
+                                                      fedoraLocation);
+            dk.statsbiblioteket.doms.central.connectors.fedora.ObjectProfile fprofile = fedora.getObjectProfile(pid);
+            ObjectProfile wprofile = new ObjectProfile();
+            wprofile.setTitle(fprofile.getLabel());
+            wprofile.setPid(fprofile.getPid());
+            wprofile.setState(fprofile.getState());
+            wprofile.setCreatedDate(fprofile.getObjectCreatedDate().getTime());
+            wprofile.setModifiedDate(fprofile.getObjectLastModifiedDate().getTime());
+            wprofile.getContentmodels().addAll(fprofile.getContentModels());
+            switch (fprofile.getType()){
+                case CONTENT_MODEL:
+                    wprofile.setType("ContentModel");
+                    break;
+                case DATA_OBJECT:
+                    wprofile.setType("DataObject");
+                    break;
+                case TEMPLATE:
+                    wprofile.setType("TemplateObject");
+                    break;
+            }
+
+            //Datastreams
+            List<DatastreamProfile> datastreams = wprofile.getDatastreams();
+            for (dk.statsbiblioteket.doms.central.connectors.fedora.DatastreamProfile datastreamProfile : fprofile
+                    .getDatastreams()) {
+                DatastreamProfile wdprofile = new DatastreamProfile();
+                wdprofile.setId(datastreamProfile.getID());
+                datastreams.add(wdprofile);
+            }
+
+            //Relations
+            List<Relation> wrelations = wprofile.getRelations();
+            for (FedoraRelation fedoraRelation : fprofile.getRelations()) {
+                Relation wrel = new Relation();
+                wrel.setObject(fedoraRelation.getObject());
+                wrel.setPredicate(fedoraRelation.getPredicate());
+                wrel.setSubject(fedoraRelation.getSubject());
+                wrelations.add(wrel);
+            }
+
+            return wprofile;
+
+
+        } catch (MalformedURLException e) {
+            log.error("caught problemException", e);
+            throw new MethodFailedException("Webservice Config invalid",
+                                            "Webservice Config invalid",
+                                            e);
+        } catch (BackendMethodFailedException e) {
+            log.warn("Failed to execute method", e);
+            throw new MethodFailedException("Method failed to execute",
+                                            "Method failed to execute",
+                                            e);
+        } catch (BackendInvalidCredsException e) {
+            log.debug("User supplied invalid credentials", e);
+            throw new InvalidCredentialsException("Invalid Credentials Supplied",
+                                                  "Invalid Credentials Supplied",
+                                                  e);
+        } catch (BackendInvalidResourceException e) {
+            log.debug("Invalid resource requested", e);
+            throw new InvalidCredentialsException("Invalid Resource Requested",
+                                                  "Invalid Resource Requested",
+                                                  e);
+
+        } catch (Exception e) {
+            log.warn("Caught Unknown Exception", e);
+            throw new MethodFailedException("Server error", "Server error", e);
         }
     }
 
@@ -869,10 +947,10 @@ public class CentralWebserviceImpl implements CentralWebservice {
             Credentials creds = getCredentials();
             Fedora fedora = FedoraFactory.newInstance(creds,
                                                       fedoraLocation);
-            List<dk.statsbiblioteket.doms.central.connectors.fedora.search.SearchResult> fresults =
+            List<dk.statsbiblioteket.doms.central.connectors.fedora.SearchResult> fresults =
                     fedora.fieldsearch(query, offset, pageSize);
             List<SearchResult> wresults = new ArrayList<SearchResult>();
-            for (dk.statsbiblioteket.doms.central.connectors.fedora.search.SearchResult fresult : fresults) {
+            for (dk.statsbiblioteket.doms.central.connectors.fedora.SearchResult fresult : fresults) {
                 SearchResult wresult = new SearchResult();
                 wresult.setPid(fresult.getPid());
                 wresult.setTitle(fresult.getLabel());

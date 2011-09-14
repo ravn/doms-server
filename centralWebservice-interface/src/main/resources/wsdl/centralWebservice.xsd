@@ -48,6 +48,9 @@
     <xs:element name="newObject" type="tns:pidAndList"/>
     <xs:element name="newObjectResponse" type="tns:string"/>
 
+    <xs:element name="getObjectProfile" type="tns:singlePid"/>
+    <xs:element name="getObjectProfileResponse" type="tns:objectProfileWrapper"/>
+
     <xs:element name="setObjectLabel" type="tns:pidAndName"/>
     <xs:element name="setObjectLabelResponse" type="tns:void"/>
 
@@ -287,7 +290,21 @@
 
 
     <!--Complex types-->
-    <xs:complexType name="DatastreamProfile"></xs:complexType>
+    <xs:complexType name="DatastreamProfile">
+        <xs:sequence>
+            <xs:element name="id" type="xs:string"/>
+            <xs:element name="controlGroup" type="xs:string"/>
+            <xs:element name="checksum" type="tns:checksum" minOccurs="0"/>
+            <xs:element name="url" type="xs:anyURI" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="checksum">
+        <xs:sequence>
+            <xs:element name="type" type="xs:string"/>
+            <xs:element name="value" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:complexType name="PidAndRelation">
         <xs:sequence>
             <xs:element name="pid" type="xs:string"/>
@@ -368,4 +385,26 @@
             <xs:element name="modifiedDate" type="xs:long"/>
         </xs:sequence>
     </xs:complexType>
+
+    <xs:complexType name="objectProfileWrapper">
+        <xs:sequence>
+            <xs:element name="objectProfile" type="tns:objectProfile"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="objectProfile">
+        <xs:sequence>
+            <xs:element name="pid" type="xs:string"/>
+            <xs:element name="title" type="xs:string"/>
+            <xs:element name="state" type="xs:string"/>
+            <xs:element name="createdDate" type="xs:long"/>
+            <xs:element name="modifiedDate" type="xs:long"/>
+            <xs:element name="type" type="xs:string"/>
+            <xs:element name="datastreams" type="tns:DatastreamProfile" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="relations" type="tns:relation" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="contentmodels" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+
+        </xs:sequence>
+
+    </xs:complexType>
+
 </xs:schema>

@@ -30,7 +30,6 @@ package dk.statsbiblioteket.doms.central.connectors.fedora;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
-import dk.statsbiblioteket.doms.central.connectors.fedora.search.SearchResult;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
 import dk.statsbiblioteket.doms.webservices.configuration.ConfigCollection;
 import dk.statsbiblioteket.util.caching.TimeSensitiveCache;
@@ -84,6 +83,12 @@ public class FedoraCache implements Fedora {
 
         }
 
+    }
+
+    @Override
+    public ObjectProfile getObjectProfile(String pid)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
+        return fedora.getObjectProfile(pid);
     }
 
     public void modifyObjectState(String pid, String state, String comment) throws

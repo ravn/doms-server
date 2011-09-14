@@ -30,7 +30,6 @@ package dk.statsbiblioteket.doms.central.connectors.fedora;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
-import dk.statsbiblioteket.doms.central.connectors.fedora.search.SearchResult;
 
 import java.util.List;
 
@@ -45,6 +44,12 @@ public interface Fedora {
     String STATE_ACTIVE = "A";
     String STATE_INACTIVE = "I";
     String STATE_DELETED = "D";
+
+
+    ObjectProfile getObjectProfile(String pid) throws
+                                                      BackendMethodFailedException,
+                                                      BackendInvalidCredsException,
+                                                      BackendInvalidResourceException;
 
     void modifyObjectState(String pid, String state, String comment)
             throws

@@ -36,10 +36,12 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.Connector;
-import dk.statsbiblioteket.doms.central.connectors.fedora.search.ObjectFieldsType;
-import dk.statsbiblioteket.doms.central.connectors.fedora.search.ResultType;
-import dk.statsbiblioteket.doms.central.connectors.fedora.search.SearchResult;
+import dk.statsbiblioteket.doms.central.connectors.fedora.generated.DatastreamType;
+import dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectDatastreams;
+import dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectFieldsType;
+import dk.statsbiblioteket.doms.central.connectors.fedora.generated.ResultType;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
+
 
 
 import java.io.UnsupportedEncodingException;
@@ -65,6 +67,82 @@ public class FedoraRest extends Connector implements Fedora {
             throws MalformedURLException {
         super(creds, location);
         restApi = client.resource(location + "/objects");
+    }
+
+    public ObjectProfile getObjectProfile(String pid) throws
+                                                      BackendMethodFailedException,
+                                                      BackendInvalidCredsException,
+                                                      BackendInvalidResourceException {
+        try {
+            //Get basic fedora profile
+            dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectProfile profile =
+                    restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
+                            .queryParam("format", "text/xml")
+                            .header("Authorization", credsAsBase64())
+                            .get(dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectProfile.class);
+            ObjectProfile prof = new ObjectProfile();
+            prof.setObjectCreatedDate(           profile.getObjCreateDate().toGregorianCalendar().getTime());
+            prof.setObjectLastModifiedDate(profile.getObjLastModDate().toGregorianCalendar().getTime());
+            prof.setLabel(profile.getObjLabel());
+            prof.setOwnerID(profile.getObjOwnerId());
+            prof.setState(profile.getObjState());
+            prof.setPid(profile.getPid());
+            prof.setContentModels(profile.getObjModels().getModel());
+
+            //Get relations
+            List<FedoraRelation> relations = getNamedRelations(pid, null);
+            prof.setRelations(relations);
+
+            //get Datastream list
+            ObjectDatastreams datastreams = restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
+                    .path("/datastreams")
+                    .queryParam("format", "text/xml")
+                    .header("Authorization", credsAsBase64())
+                    .get(ObjectDatastreams.class);
+            List<DatastreamProfile> pdatastreams = new ArrayList<DatastreamProfile>();
+            for (DatastreamType datastreamType : datastreams.getDatastream()) {
+                DatastreamProfile dprofile = new DatastreamProfile();
+                dprofile.setID(datastreamType.getDsid());
+                dprofile.setLabel(datastreamType.getLabel());
+                dprofile.setMimeType(datastreamType.getMimeType());
+                pdatastreams.add(dprofile);
+            }
+            prof.setDatastreams(pdatastreams);
+
+            //decode type
+            prof.setType(ObjectType.DATA_OBJECT);
+            if (prof.getContentModels().contains("info:fedora/fedora-system:ContentModel-3.0")){
+                prof.setType(ObjectType.CONTENT_MODEL);
+            } else {
+                for (FedoraRelation fedoraRelation : prof.getRelations()) {
+                    String predicate = fedoraRelation.getPredicate();
+                    if ("http://ecm.sourceforge.net/relations/0/2/#isTemplateFor".equals(predicate)){
+                        prof.setType(ObjectType.TEMPLATE);
+                        break;
+                    }
+                }
+
+            }
+
+
+            return prof;
+
+
+        } catch (UnsupportedEncodingException e) {
+            throw new BackendMethodFailedException("UTF-8 not known....", e);
+        } catch (UniformInterfaceException e) {
+            if (e.getResponse().getStatus()
+                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                throw new BackendInvalidCredsException(
+                        "Invalid Credentials Supplied",
+                        e);
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
+                throw new BackendInvalidResourceException("Resource not found", e);
+            } else {
+                throw new BackendMethodFailedException("Server error", e);
+            }
+        }
+
     }
 
     public void modifyObjectState(String pid, String state, String comment)

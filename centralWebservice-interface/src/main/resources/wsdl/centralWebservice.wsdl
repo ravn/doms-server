@@ -62,6 +62,14 @@
         <part name="parameters" element="tns:newObjectResponse"/>
     </message>
 
+    <message name="getObjectProfile">
+        <part name="parameters" element="tns:getObjectProfile"/>
+    </message>
+    <message name="getObjectProfileResponse">
+        <part name="parameters" element="tns:getObjectProfileResponse"/>
+    </message>
+
+
     <message name="setObjectLabel">
         <part name="parameters" element="tns:setObjectLabel"/>
     </message>
@@ -353,6 +361,19 @@
             <fault name="InvalidResourceException"
                    message="tns:InvalidResourceException"/>
         </operation>
+        <operation name="getObjectProfile">
+            <documentation>Get a profile representation of the object
+            </documentation>
+            <input  message="tns:getObjectProfile"/>
+            <output message="tns:getObjectProfileResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+            <fault name="InvalidResourceException"
+                   message="tns:InvalidResourceException"/>
+        </operation>
+
         <operation name="setObjectLabel">
             <documentation>Set the object label, which is the canonical title</documentation>
             <input message="tns:setObjectLabel"/>
@@ -870,6 +891,26 @@
                 <soap:fault name="InvalidResourceException" use="literal"/>
             </fault>
         </operation>
+        <operation name="getObjectProfile">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
+            <fault name="InvalidResourceException">
+                <soap:fault name="InvalidResourceException" use="literal"/>
+            </fault>
+        </operation>
+
+
         <operation name="setObjectLabel">
             <soap:operation soapAction=""/>
             <input>
