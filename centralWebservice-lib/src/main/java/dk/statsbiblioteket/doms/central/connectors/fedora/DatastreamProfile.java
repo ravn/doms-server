@@ -13,6 +13,15 @@ public class DatastreamProfile {
     private String label;
 
     private String mimeType;
+    private String state;
+    private String checksum;
+    private String checksumType;
+    private long created;
+    private String formatURI;
+
+    private boolean internal;
+    private String url;
+
 
     public void setID(String ID) {
         this.ID = ID;
@@ -36,5 +45,61 @@ public class DatastreamProfile {
 
     public String getMimeType() {
         return mimeType;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public void setChecksum(String checksum) {
+        this.checksum = checksum;
+    }
+
+    public void setChecksumType(String checksumType) {
+        this.checksumType = checksumType;
+    }
+
+    public void setCreated(long created) {
+        this.created = created;
+    }
+
+    public void setFormatURI(String formatURI) {
+        this.formatURI = formatURI;
+    }
+
+    public boolean isInternal() {
+        return internal;
+    }
+
+    public void setInternal(boolean internal) {
+        this.internal = internal;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public String getChecksum() {
+        return checksum;
+    }
+
+    public String getChecksumType() {
+        return checksumType;
+    }
+
+    public long getCreated() {
+        return created;
+    }
+
+    public String getFormatURI() {
+        return formatURI;
     }
 }

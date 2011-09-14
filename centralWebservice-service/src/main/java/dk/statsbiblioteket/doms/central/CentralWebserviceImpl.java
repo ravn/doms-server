@@ -169,6 +169,15 @@ public class CentralWebserviceImpl implements CentralWebservice {
                     .getDatastreams()) {
                 DatastreamProfile wdprofile = new DatastreamProfile();
                 wdprofile.setId(datastreamProfile.getID());
+                wdprofile.setLabel(datastreamProfile.getLabel());
+                wdprofile.getChecksum().setType(datastreamProfile.getChecksumType());
+                wdprofile.getChecksum().setType(datastreamProfile.getChecksum());
+                wdprofile.setMimeType(datastreamProfile.getMimeType());
+                wdprofile.setFormatUri(datastreamProfile.getFormatURI());
+                wdprofile.setInternal(datastreamProfile.isInternal());
+                if (!wdprofile.isInternal()){
+                    wdprofile.setUrl(datastreamProfile.getUrl());
+                }
                 datastreams.add(wdprofile);
             }
 
