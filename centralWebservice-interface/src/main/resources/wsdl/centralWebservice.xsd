@@ -278,6 +278,7 @@
             <xs:element name="subject" type="xs:string"/>
             <xs:element name="predicate" type="xs:string"/>
             <xs:element name="object" type="xs:string"/>
+            <xs:element name="literal" type="xs:boolean"/>
         </xs:sequence>
     </xs:complexType>
 

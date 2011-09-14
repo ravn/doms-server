@@ -174,15 +174,10 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
             //Relations
             List<Relation> wrelations = wprofile.getRelations();
-            for (FedoraRelation fedoraRelation : fprofile.getRelations()) {
-                Relation wrel = new Relation();
-                wrel.setObject(fedoraRelation.getObject());
-                wrel.setPredicate(fedoraRelation.getPredicate());
-                wrel.setSubject(fedoraRelation.getSubject());
-                wrelations.add(wrel);
-            }
+            wrelations.addAll(convertRelations(fprofile.getRelations()));
 
             return wprofile;
+
 
 
         } catch (MalformedURLException e) {
@@ -1077,6 +1072,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             outrel.setSubject(fedorarel.getSubject());
             outrel.setPredicate(fedorarel.getPredicate());
             outrel.setObject(fedorarel.getObject());
+            outrel.setLiteral(fedorarel.isLiteral());
             outrealtions.add(outrel);
         }
         return outrealtions;

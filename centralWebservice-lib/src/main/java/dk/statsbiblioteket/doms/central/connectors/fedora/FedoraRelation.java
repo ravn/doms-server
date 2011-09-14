@@ -13,6 +13,8 @@ public class FedoraRelation {
     private String object;
     private String predicate;
 
+    private boolean literal;
+
     public FedoraRelation(String subject, String predicate, String object) {
 
         this.subject = subject;
@@ -30,5 +32,13 @@ public class FedoraRelation {
 
     public String getPredicate() {
         return predicate;
+    }
+
+    public boolean isLiteral() {
+        return literal;
+    }
+
+    public void setLiteral(boolean literal) {
+        this.literal = literal;
     }
 }

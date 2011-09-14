@@ -308,6 +308,11 @@ public class FedoraRest extends Connector implements Fedora {
                 if (elements.length > 2) {
                     FedoraRelation rel = new FedoraRelation(cleanInfo(elements[0]), clean(elements[1]), cleanInfo(
                             elements[2]));
+                    if (elements[2].startsWith("<info:fedora/")){
+                        rel.setLiteral(false);
+                    } else {
+                        rel.setLiteral(true);
+                    }
                     relations.add(rel);
                 }
             }
