@@ -294,7 +294,10 @@
     <xs:complexType name="DatastreamProfile">
         <xs:sequence>
             <xs:element name="id" type="xs:string"/>
-            <xs:element name="controlGroup" type="xs:string"/>
+            <xs:element name="label" type="xs:string" minOccurs="0"/>
+            <xs:element name="mimeType" type="xs:string" minOccurs="0"/>
+            <xs:element name="formatUri" type="xs:string" minOccurs="0"/>
+            <xs:element name="controlGroup" type="xs:string" minOccurs="0"/>
             <xs:element name="checksum" type="tns:checksum" minOccurs="0"/>
             <xs:element name="url" type="xs:anyURI" minOccurs="0"/>
         </xs:sequence>

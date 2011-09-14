@@ -87,7 +87,14 @@ public class FedoraRest extends Connector implements Fedora {
             prof.setOwnerID(profile.getObjOwnerId());
             prof.setState(profile.getObjState());
             prof.setPid(profile.getPid());
-            prof.setContentModels(profile.getObjModels().getModel());
+            List<String> contentmodels = new ArrayList<String>();
+            for (String s : profile.getObjModels().getModel()) {
+                if (s.startsWith("info:fedora/")){
+                    s = s.substring("info:fedora/".length());
+                }
+                contentmodels.add(s);
+            }
+            prof.setContentModels(contentmodels);
 
             //Get relations
             List<FedoraRelation> relations = getNamedRelations(pid, null);
