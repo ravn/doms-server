@@ -205,6 +205,13 @@
     <message name="getRelationsResponse">
         <part name="parameters" element="tns:getRelationsResponse"/>
     </message>
+    <message name="getInverseRelations">
+        <part name="parameters" element="tns:getInverseRelations"/>
+    </message>
+    <message name="getInverseRelationsResponse">
+        <part name="parameters" element="tns:getInverseRelationsResponse"/>
+    </message>
+
     <message name="getNamedRelations">
         <part name="parameters" element="tns:getNamedRelations"/>
     </message>
@@ -644,7 +651,6 @@
                    message="tns:MethodFailedException"/>
             <fault name="InvalidResourceException"
                    message="tns:InvalidResourceException"/>
-
         </operation>
         <operation name="getNamedRelations">
             <documentation>Given a pid, list relations out of this object of a specific type
@@ -657,8 +663,21 @@
                    message="tns:MethodFailedException"/>
             <fault name="InvalidResourceException"
                    message="tns:InvalidResourceException"/>
+        </operation>
+        <operation name="getInverseRelations">
+            <documentation>Given a pid, list relations into this object
+            </documentation>
+            <input message="tns:getInverseRelations"/>
+            <output message="tns:getInverseRelationsResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+            <fault name="InvalidResourceException"
+                   message="tns:InvalidResourceException"/>
 
         </operation>
+
         <operation name="deleteRelation">
             <documentation>Given a specific relation, remove it.
             </documentation>
@@ -1191,8 +1210,28 @@
             <fault name="InvalidResourceException">
                 <soap:fault name="InvalidResourceException" use="literal"/>
             </fault>
+        </operation>
+        <operation name="getInverseRelations">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
+            <fault name="InvalidResourceException">
+                <soap:fault name="InvalidResourceException" use="literal"/>
+            </fault>
 
         </operation>
+
+
         <operation name="deleteRelation">
             <soap:operation soapAction=""/>
             <input>

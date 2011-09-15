@@ -633,4 +633,60 @@ public class FedoraRest extends Connector implements Fedora {
             throw new BackendMethodFailedException("Failed to parse date from search result",e);
         }
     }
+
+    @Override
+    public List<FedoraRelation> getInverseRelations(String pid, String predicate)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
+        try {
+
+
+            String subject = pid;
+            if (!subject.startsWith("info:fedora/")) {
+                subject = "info:fedora/" + subject;
+            }
+
+            String query = "select $object $predicate\n"
+                           + "from <#ri>\n"
+                           + "where $object $predicate <" + pid + ">"
+                           + "and ($object <fedora-model:state> <fedora-model:Active>\n" +
+                           "or $object <fedora-model:state> <fedora-model:Inactive>)";
+            String objects = client.resource(location)
+                    .path("/risearch")
+                    .queryParam("type", "tuples")
+                    .queryParam("lang", "iTQL")
+                    .queryParam("format", "CSV")
+                    .queryParam("flush", "true")
+                    .queryParam("stream", "on")
+                    .queryParam("query", query)
+                    .header("Authorization", credsAsBase64())
+                    .post(String.class);
+            String[] lines = objects.split("\n");
+            List<FedoraRelation> relations = new ArrayList<FedoraRelation>();
+
+            for (String line : lines) {
+                if (line.startsWith("\"")) {
+                    continue;
+                }
+                if (line.startsWith("info:fedora/")) {
+                    line = line.substring("info:fedora/".length());
+                }
+                String[] components = line.split(" ");
+
+                relations.add(new FedoraRelation(pid,components[1],components[0]));
+
+            }
+            return relations;
+        } catch (UniformInterfaceException e) {
+            if (e.getResponse().getStatus()
+                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                throw new BackendInvalidCredsException(
+                        "Invalid Credentials Supplied",
+                        e);
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
+                throw new BackendInvalidResourceException("Resource not found", e);
+            } else {
+                throw new BackendMethodFailedException("Server error", e);
+            }
+        }
+    }
 }

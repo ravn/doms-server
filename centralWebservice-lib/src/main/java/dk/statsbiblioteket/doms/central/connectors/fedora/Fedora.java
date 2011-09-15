@@ -119,4 +119,7 @@ public interface Fedora {
                                                                                     BackendInvalidResourceException;
 
 
+    List<FedoraRelation> getInverseRelations(String pid, String predicate) throws BackendMethodFailedException,
+                                                                                    BackendInvalidCredsException,
+                                                                                    BackendInvalidResourceException;
 }

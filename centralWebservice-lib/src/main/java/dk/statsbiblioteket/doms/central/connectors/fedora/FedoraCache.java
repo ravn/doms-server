@@ -171,4 +171,10 @@ public class FedoraCache implements Fedora {
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
         return fedora.fieldsearch(query,offset,pageLength);
     }
+
+    @Override
+    public List<FedoraRelation> getInverseRelations(String pid, String predicate)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
+        return fedora.getInverseRelations(pid,predicate);
+    }
 }

@@ -692,6 +692,42 @@ public class CentralWebserviceImpl implements CentralWebservice {
     }
 
     @Override
+    public List<Relation> getInverseRelations(@WebParam(name = "pid", targetNamespace = "") String pid)
+            throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
+        try {
+            log.trace("Entering getInverseRelations with params pid='" + pid + "'");
+            Credentials creds = getCredentials();
+            Fedora fedora = FedoraFactory.newInstance(creds,
+                                                      fedoraLocation);
+            List<FedoraRelation> fedorarels = fedora.getInverseRelations(pid, null);
+            return convertRelations(fedorarels);
+        } catch (MalformedURLException e) {
+            log.error("caught problemException", e);
+            throw new MethodFailedException("Webservice Config invalid",
+                                            "Webservice Config invalid",
+                                            e);
+        } catch (BackendMethodFailedException e) {
+            log.warn("Failed to execute method", e);
+            throw new MethodFailedException("Method failed to execute",
+                                            "Method failed to execute",
+                                            e);
+        } catch (BackendInvalidCredsException e) {
+            log.debug("User supplied invalid credentials", e);
+            throw new InvalidCredentialsException("Invalid Credentials Supplied",
+                                                  "Invalid Credentials Supplied",
+                                                  e);
+        } catch (BackendInvalidResourceException e) {
+            log.debug("Invalid resource requested", e);
+            throw new InvalidCredentialsException("Invalid Resource Requested",
+                                                  "Invalid Resource Requested",
+                                                  e);
+        } catch (Exception e) {
+            log.warn("Caught Unknown Exception", e);
+            throw new MethodFailedException("Server error", "Server error", e);
+        }
+    }
+
+    @Override
     public void deleteRelation(@WebParam(name = "pid", targetNamespace = "") String pid,
                                @WebParam(name = "relation", targetNamespace = "") Relation relation,
                                @WebParam(name = "comment", targetNamespace = "") String comment)
