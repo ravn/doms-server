@@ -647,7 +647,7 @@ public class FedoraRest extends Connector implements Fedora {
 
             String query = "select $object $predicate\n"
                            + "from <#ri>\n"
-                           + "where $object $predicate <" + pid + ">"
+                           + "where $object $predicate <" + subject + ">\n"
                            + "and ($object <fedora-model:state> <fedora-model:Active>\n" +
                            "or $object <fedora-model:state> <fedora-model:Inactive>)";
             String objects = client.resource(location)
@@ -670,7 +670,7 @@ public class FedoraRest extends Connector implements Fedora {
                 if (line.startsWith("info:fedora/")) {
                     line = line.substring("info:fedora/".length());
                 }
-                String[] components = line.split(" ");
+                String[] components = line.split(",");
 
                 relations.add(new FedoraRelation(pid,components[1],components[0]));
 
