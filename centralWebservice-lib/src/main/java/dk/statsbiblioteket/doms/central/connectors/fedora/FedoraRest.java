@@ -114,7 +114,7 @@ public class FedoraRest extends Connector implements Fedora {
 
             //decode type
             prof.setType(ObjectType.DATA_OBJECT);
-            if (prof.getContentModels().contains("info:fedora/fedora-system:ContentModel-3.0")){
+            if (prof.getContentModels().contains("fedora-system:ContentModel-3.0")){
                 prof.setType(ObjectType.CONTENT_MODEL);
             } else {
                 for (FedoraRelation fedoraRelation : prof.getRelations()) {
