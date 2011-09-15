@@ -672,7 +672,7 @@ public class FedoraRest extends Connector implements Fedora {
                 }
                 String[] components = line.split(",");
 
-                relations.add(new FedoraRelation(pid,components[1],components[0]));
+                relations.add(new FedoraRelation(components[0],components[1],pid));
 
             }
             return relations;
