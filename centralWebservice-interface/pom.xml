@@ -35,7 +35,7 @@
         <version>0.0.22-SNAPSHOT</version>
     </parent>
 
-    <artifactId>${parent.artifactId}-interface</artifactId>
+    <artifactId>centralWebservice-interface</artifactId>
 
 
     <build>

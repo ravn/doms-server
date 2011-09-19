@@ -27,10 +27,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="central-interface" />
+    <orderEntry type="library" name="Maven: dk.statsbiblioteket.doms.central:central-interface:0.0.22-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: dk.statsbiblioteket.sbutil:sbutil:0.5.2" level="project" />
     <orderEntry type="library" name="Maven: commons-logging:commons-logging:1.1.1" level="project" />
-    <orderEntry type="module" module-name="central-lib" />
+    <orderEntry type="library" name="Maven: dk.statsbiblioteket.doms.central:central-lib:0.0.22-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: dk.statsbiblioteket.doms.bitstorage.highlevel:bitstorage-highlevel-interface:0.0.18" level="project" />
     <orderEntry type="library" name="Maven: dk.statsbiblioteket.doms.authchecker:authchecker-authutils:0.0.11" level="project" />
     <orderEntry type="library" name="Maven: dk.statsbiblioteket.doms.domsutil.surveyable:domsutil-logappender:0.0.20" level="project" />

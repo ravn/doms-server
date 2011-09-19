@@ -35,7 +35,7 @@
         <version>0.0.22-SNAPSHOT</version>
     </parent>
 
-    <artifactId>${parent.artifactId}-lib</artifactId>
+    <artifactId>centralWebservice-lib</artifactId>
 
     <packaging>jar</packaging>
 
