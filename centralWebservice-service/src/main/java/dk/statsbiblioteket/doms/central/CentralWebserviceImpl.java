@@ -1074,34 +1074,6 @@ public class CentralWebserviceImpl implements CentralWebservice {
     }
 
     @Override
-    public User createTempUser(@WebParam(name = "username", targetNamespace = "") String username,
-                               @WebParam(name = "roles", targetNamespace = "") List<String> roles)
-            throws InvalidCredentialsException, MethodFailedException {
-        try {
-            Credentials creds = getCredentials();//TODO perhaps we should check something here, against context.xml?
-            AuthChecker auth = new AuthChecker(authCheckerLocation);
-            dk.statsbiblioteket.doms.authchecker.user.User auser = auth.createTempUser(username, roles);
-            User user = new User();
-            user.setUsername(auser.getUsername());
-            user.setPassword(auser.getPassword());
-            return user;
-        } catch (BackendMethodFailedException e) {
-            log.warn("Failed to execute method", e);
-            throw new MethodFailedException("Method failed to execute",
-                                            "Method failed to execute",
-                                            e);
-        } catch (BackendInvalidCredsException e) {
-            log.debug("User supplied invalid credentials", e);
-            throw new InvalidCredentialsException("Invalid Credentials Supplied",
-                                                  "Invalid Credentials Supplied",
-                                                  e);
-        } catch (Exception e) {
-            log.warn("Caught Unknown Exception", e);
-            throw new MethodFailedException("Server error", "Server error", e);
-        }
-    }
-
-    @Override
     public User createTempAdminUser(@WebParam(name = "username", targetNamespace = "") String username,
                                     @WebParam(name = "roles", targetNamespace = "") List<String> roles)
             throws InvalidCredentialsException, MethodFailedException {
