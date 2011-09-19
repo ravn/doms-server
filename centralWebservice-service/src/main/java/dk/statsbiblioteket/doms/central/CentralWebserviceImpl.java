@@ -32,6 +32,7 @@ import dk.statsbiblioteket.doms.bitstorage.highlevel.Characterisation;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
+import dk.statsbiblioteket.doms.central.connectors.authchecker.AuthChecker;
 import dk.statsbiblioteket.doms.central.connectors.bitstorage.Bitstorage;
 import dk.statsbiblioteket.doms.central.connectors.ecm.ECM;
 import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
@@ -77,6 +78,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
     private String fedoraLocation;
     private String bitstorageLocation;
     private String updateTrackerLocation;
+    private String authCheckerLocation;
 
 
     public CentralWebserviceImpl() {
@@ -88,7 +90,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
                 "dk.statsbiblioteket.doms.central.fedoraLocation");
         updateTrackerLocation = ConfigCollection.getProperties().getProperty(
                 "dk.statsbiblioteket.doms.central.updateTrackerLocation");
-
+        authCheckerLocation = ConfigCollection.getProperties().getProperty(
+                "dk.statsbiblioteket.doms.central.authCheckerLocation");
 
     }
 
@@ -1068,6 +1071,60 @@ public class CentralWebserviceImpl implements CentralWebservice {
     @Override
     public void unlockForWriting() throws InvalidCredentialsException, MethodFailedException {
         lock.unlockForWriting();
+    }
+
+    @Override
+    public User createTempUser(@WebParam(name = "username", targetNamespace = "") String username,
+                               @WebParam(name = "roles", targetNamespace = "") List<String> roles)
+            throws InvalidCredentialsException, MethodFailedException {
+        try {
+            AuthChecker auth = new AuthChecker(authCheckerLocation);
+            dk.statsbiblioteket.doms.authchecker.user.User auser = auth.createTempUser(username, roles);
+            User user = new User();
+            user.setUsername(auser.getUsername());
+            user.setPassword(auser.getPassword());
+            return user;
+        } catch (BackendMethodFailedException e) {
+            log.warn("Failed to execute method", e);
+            throw new MethodFailedException("Method failed to execute",
+                                            "Method failed to execute",
+                                            e);
+        } catch (BackendInvalidCredsException e) {
+            log.debug("User supplied invalid credentials", e);
+            throw new InvalidCredentialsException("Invalid Credentials Supplied",
+                                                  "Invalid Credentials Supplied",
+                                                  e);
+        } catch (Exception e) {
+            log.warn("Caught Unknown Exception", e);
+            throw new MethodFailedException("Server error", "Server error", e);
+        }
+    }
+
+    @Override
+    public User createTempAdminUser(@WebParam(name = "username", targetNamespace = "") String username,
+                                    @WebParam(name = "roles", targetNamespace = "") List<String> roles)
+            throws InvalidCredentialsException, MethodFailedException {
+        try {
+            AuthChecker auth = new AuthChecker(authCheckerLocation);
+            dk.statsbiblioteket.doms.authchecker.user.User auser = auth.createTempAdminUser(username, roles);
+            User user = new User();
+            user.setUsername(auser.getUsername());
+            user.setPassword(auser.getPassword());
+            return user;
+        } catch (BackendMethodFailedException e) {
+            log.warn("Failed to execute method", e);
+            throw new MethodFailedException("Method failed to execute",
+                                            "Method failed to execute",
+                                            e);
+        } catch (BackendInvalidCredsException e) {
+            log.debug("User supplied invalid credentials", e);
+            throw new InvalidCredentialsException("Invalid Credentials Supplied",
+                                                  "Invalid Credentials Supplied",
+                                                  e);
+        } catch (Exception e) {
+            log.warn("Caught Unknown Exception", e);
+            throw new MethodFailedException("Server error", "Server error", e);
+        }
     }
 
     private List<RecordDescription> transform(List<UpdateTrackerRecord> input) {

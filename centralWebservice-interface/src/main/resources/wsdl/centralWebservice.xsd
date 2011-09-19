@@ -151,6 +151,13 @@
     <xs:element name="findObjects" type="tns:SearchQuery"/>
     <xs:element name="findObjectsResponse" type="tns:SearchResultList"/>
 
+    <xs:element name="createTempAdminUser" type="tns:newUser"/>
+    <xs:element name="createTempAdminUserResponse" type="tns:UserWrapper"/>
+
+    <xs:element name="createTempUser" type="tns:newUser"/>
+    <xs:element name="createTempUserResponse" type="tns:UserWrapper"/>
+
+
 
     <!--Simple types-->
     <xs:complexType name="singlePid">
@@ -413,6 +420,25 @@
 
         </xs:sequence>
 
+    </xs:complexType>
+
+    <xs:complexType name="newUser">
+        <xs:sequence>
+            <xs:element name="username" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="roles" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="UserWrapper">
+        <xs:sequence>
+            <xs:element name="User" type="tns:User"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="User">
+        <xs:sequence>
+            <xs:element name="username" type="xs:string"/>
+            <xs:element name="password" type="xs:string"/>
+        </xs:sequence>
     </xs:complexType>
 
 </xs:schema>

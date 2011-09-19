@@ -65,6 +65,12 @@
             <artifactId>bitstorage-highlevel-interface</artifactId>
         </dependency>
         <dependency>
+            <groupId>dk.statsbiblioteket.doms.authchecker</groupId>
+            <artifactId>authchecker-authutils</artifactId>
+            <version>0.0.10</version>
+        </dependency>
+
+        <dependency>
             <groupId>dk.statsbiblioteket.doms.domsutil</groupId>
             <artifactId>domsutil-bundle</artifactId>
             <type>pom</type>

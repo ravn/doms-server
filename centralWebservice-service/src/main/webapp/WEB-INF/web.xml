@@ -87,6 +87,12 @@
         <param-value>http://localhost:8080/fedora</param-value>
     </context-param>
     <context-param>
+        <description>the location of the authchecker instance</description>
+        <param-name>dk.statsbiblioteket.doms.central.authCheckerLocation</param-name>
+        <param-value>http://localhost:8080/authchecker-service</param-value>
+    </context-param>
+
+    <context-param>
         <description>the location of the fedora instance</description>
         <param-name>dk.statsbiblioteket.doms.central.updateTrackerLocation</param-name>
         <param-value>http://localhost:8080/updatetrackerWebservice/updatetracker/?wsdl</param-value>

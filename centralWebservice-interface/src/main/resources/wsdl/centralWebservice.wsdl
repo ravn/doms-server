@@ -299,6 +299,24 @@
         <part name="parameters" element="tns:unlockForWritingResponse"/>
     </message>
 
+
+    <message name="createTempUser">
+        <part name="parameters" element="tns:createTempUser"/>
+    </message>
+
+    <message name="createTempUserResponse">
+        <part name="parameters" element="tns:createTempUserResponse"/>
+    </message>
+
+    <message name="createTempAdminUser">
+        <part name="parameters" element="tns:createTempAdminUser"/>
+    </message>
+
+    <message name="createTempAdminUserResponse">
+        <part name="parameters" element="tns:createTempAdminUserResponse"/>
+    </message>
+
+
     <!--
         <message name="getViewStructure">
             <part name="parameters" element="tns:getViewStructure"/>
@@ -807,6 +825,28 @@
             </documentation>
             <input message="tns:unlockForWriting"/>
             <output message="tns:unlockForWritingResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+        </operation>
+
+        <operation name="createTempUser">
+            <documentation>Create a temp user
+            </documentation>
+            <input message="tns:createTempUser"/>
+            <output message="tns:createTempUserResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+        </operation>
+
+        <operation name="createTempAdminUser">
+            <documentation>Create a temp user with admin rights
+            </documentation>
+            <input message="tns:createTempAdminUser"/>
+            <output message="tns:createTempAdminUserResponse"/>
             <fault name="InvalidCredentialsException"
                    message="tns:InvalidCredentialsException"/>
             <fault name="MethodFailedException"
@@ -1353,6 +1393,38 @@
         </operation>
 
         <operation name="unlockForWriting">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
+        </operation>
+
+        <operation name="createTempUser">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
+        </operation>
+
+        <operation name="createTempAdminUser">
             <soap:operation soapAction=""/>
             <input>
                 <soap:body use="literal"/>
