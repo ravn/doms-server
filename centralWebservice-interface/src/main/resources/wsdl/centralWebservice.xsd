@@ -154,8 +154,6 @@
     <xs:element name="createTempAdminUser" type="tns:newUser"/>
     <xs:element name="createTempAdminUserResponse" type="tns:UserWrapper"/>
 
-    <xs:element name="createTempUser" type="tns:newUser"/>
-    <xs:element name="createTempUserResponse" type="tns:UserWrapper"/>
 
 
 

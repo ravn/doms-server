@@ -1078,6 +1078,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                                @WebParam(name = "roles", targetNamespace = "") List<String> roles)
             throws InvalidCredentialsException, MethodFailedException {
         try {
+            Credentials creds = getCredentials();//TODO perhaps we should check something here, against context.xml?
             AuthChecker auth = new AuthChecker(authCheckerLocation);
             dk.statsbiblioteket.doms.authchecker.user.User auser = auth.createTempUser(username, roles);
             User user = new User();
@@ -1105,6 +1106,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                                     @WebParam(name = "roles", targetNamespace = "") List<String> roles)
             throws InvalidCredentialsException, MethodFailedException {
         try {
+            Credentials creds = getCredentials();//TODO perhaps we should check something here, against context.xml?
             AuthChecker auth = new AuthChecker(authCheckerLocation);
             dk.statsbiblioteket.doms.authchecker.user.User auser = auth.createTempAdminUser(username, roles);
             User user = new User();
