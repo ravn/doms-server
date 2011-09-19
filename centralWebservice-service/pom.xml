@@ -80,12 +80,12 @@
     <dependencies>
         <dependency>
             <groupId>${groupId}</groupId>
-            <artifactId>${parent.artifactId}-interface</artifactId>
+            <artifactId>centralWebservice-interface</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>${groupId}</groupId>
-            <artifactId>${parent.artifactId}-lib</artifactId>
+            <artifactId>centralWebservice-lib</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

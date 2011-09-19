@@ -16,10 +16,14 @@
             <element id="module-output" name="centralWebservice-service" />
           </element>
           <element id="directory" name="lib">
-            <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.central:central-interface:0.0.22-SNAPSHOT" />
+            <element id="archive" name="centralWebservice-interface-0.0.22-SNAPSHOT.jar">
+              <element id="module-output" name="central-interface" />
+            </element>
             <element id="library" level="project" name="Maven: dk.statsbiblioteket.sbutil:sbutil:0.5.2" />
             <element id="library" level="project" name="Maven: commons-logging:commons-logging:1.1.1" />
-            <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.central:central-lib:0.0.22-SNAPSHOT" />
+            <element id="archive" name="centralWebservice-lib-0.0.22-SNAPSHOT.jar">
+              <element id="module-output" name="central-lib" />
+            </element>
             <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.bitstorage.highlevel:bitstorage-highlevel-interface:0.0.18" />
             <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.authchecker:authchecker-authutils:0.0.11" />
             <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.domsutil.surveyable:domsutil-logappender:0.0.20" />
@@ -556,28 +560,6 @@
       </JAVADOC>
       <SOURCES>
         <root url="jar://$MAVEN_REPOSITORY$/dk/statsbiblioteket/doms/bitstorage/highlevel/bitstorage-highlevel-interface/0.0.18/bitstorage-highlevel-interface-0.0.18-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: dk.statsbiblioteket.doms.central:central-interface:0.0.22-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/dk/statsbiblioteket/doms/central/central-interface/0.0.22-SNAPSHOT/central-interface-0.0.22-SNAPSHOT.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/dk/statsbiblioteket/doms/central/central-interface/0.0.22-SNAPSHOT/central-interface-0.0.22-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/dk/statsbiblioteket/doms/central/central-interface/0.0.22-SNAPSHOT/central-interface-0.0.22-SNAPSHOT-sources.jar!/" />
-      </SOURCES>
-    </library>
-    <library name="Maven: dk.statsbiblioteket.doms.central:central-lib:0.0.22-SNAPSHOT">
-      <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/dk/statsbiblioteket/doms/central/central-lib/0.0.22-SNAPSHOT/central-lib-0.0.22-SNAPSHOT.jar!/" />
-      </CLASSES>
-      <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/dk/statsbiblioteket/doms/central/central-lib/0.0.22-SNAPSHOT/central-lib-0.0.22-SNAPSHOT-javadoc.jar!/" />
-      </JAVADOC>
-      <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/dk/statsbiblioteket/doms/central/central-lib/0.0.22-SNAPSHOT/central-lib-0.0.22-SNAPSHOT-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: dk.statsbiblioteket.doms.domsutil.surveyable:domsutil-logappender:0.0.20">
