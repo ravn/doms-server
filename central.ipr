@@ -25,7 +25,7 @@
               <element id="module-output" name="central-lib" />
             </element>
             <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.bitstorage.highlevel:bitstorage-highlevel-interface:0.0.18" />
-            <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.authchecker:authchecker-authutils:0.0.10" />
+            <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.authchecker:authchecker-authutils:0.0.11" />
             <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.domsutil.surveyable:domsutil-logappender:0.0.20" />
             <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.domsutil:domsutil-webservice-common:0.0.20" />
             <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.domsutil.surveyable:domsutil-surveyable-interface:0.0.20" />
@@ -540,15 +540,15 @@
         <root url="jar://$MAVEN_REPOSITORY$/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1-sources.jar!/" />
       </SOURCES>
     </library>
-    <library name="Maven: dk.statsbiblioteket.doms.authchecker:authchecker-authutils:0.0.10">
+    <library name="Maven: dk.statsbiblioteket.doms.authchecker:authchecker-authutils:0.0.11">
       <CLASSES>
-        <root url="jar://$MAVEN_REPOSITORY$/dk/statsbiblioteket/doms/authchecker/authchecker-authutils/0.0.10/authchecker-authutils-0.0.10.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/dk/statsbiblioteket/doms/authchecker/authchecker-authutils/0.0.11/authchecker-authutils-0.0.11.jar!/" />
       </CLASSES>
       <JAVADOC>
-        <root url="jar://$MAVEN_REPOSITORY$/dk/statsbiblioteket/doms/authchecker/authchecker-authutils/0.0.10/authchecker-authutils-0.0.10-javadoc.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/dk/statsbiblioteket/doms/authchecker/authchecker-authutils/0.0.11/authchecker-authutils-0.0.11-javadoc.jar!/" />
       </JAVADOC>
       <SOURCES>
-        <root url="jar://$MAVEN_REPOSITORY$/dk/statsbiblioteket/doms/authchecker/authchecker-authutils/0.0.10/authchecker-authutils-0.0.10-sources.jar!/" />
+        <root url="jar://$MAVEN_REPOSITORY$/dk/statsbiblioteket/doms/authchecker/authchecker-authutils/0.0.11/authchecker-authutils-0.0.11-sources.jar!/" />
       </SOURCES>
     </library>
     <library name="Maven: dk.statsbiblioteket.doms.bitstorage.highlevel:bitstorage-highlevel-interface:0.0.18">

@@ -29,6 +29,11 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>dk.statsbiblioteket.doms.authchecker</groupId>
+                <artifactId>authchecker-authutils</artifactId>
+                <version>0.0.11</version>
+            </dependency>
+            <dependency>
                 <groupId>dk.statsbiblioteket.doms.bitstorage.highlevel</groupId>
                 <artifactId>bitstorage-highlevel-interface</artifactId>
                 <version>0.0.18</version>

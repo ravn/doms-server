@@ -67,7 +67,6 @@
         <dependency>
             <groupId>dk.statsbiblioteket.doms.authchecker</groupId>
             <artifactId>authchecker-authutils</artifactId>
-            <version>0.0.10</version>
         </dependency>
 
         <dependency>
