@@ -10,6 +10,7 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 
+import javax.ws.rs.core.MediaType;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.net.UnknownServiceException;
@@ -53,7 +54,10 @@ public class AuthChecker {
                 }
             }
 
-            user = tmp.post(User.class);
+            user = tmp
+                    .accept(MediaType.TEXT_XML)
+                    .type(MediaType.APPLICATION_FORM_URLENCODED)
+                    .post(User.class);
             return user;
 
         } catch (UnsupportedEncodingException e) {
@@ -90,7 +94,10 @@ public class AuthChecker {
                 }
             }
 
-            user = tmp.post(User.class);
+            user = tmp
+                    .accept(MediaType.TEXT_XML)
+                    .type(MediaType.APPLICATION_FORM_URLENCODED)
+                    .post(User.class);
             return user;
 
         } catch (UnsupportedEncodingException e) {
