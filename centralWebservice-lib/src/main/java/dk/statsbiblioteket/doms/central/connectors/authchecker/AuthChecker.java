@@ -56,7 +56,6 @@ public class AuthChecker {
 
             user = tmp
                     .accept(MediaType.TEXT_XML)
-                    .type(MediaType.APPLICATION_FORM_URLENCODED)
                     .post(User.class);
             return user;
 
@@ -96,7 +95,6 @@ public class AuthChecker {
 
             user = tmp
                     .accept(MediaType.TEXT_XML)
-                    .type(MediaType.APPLICATION_FORM_URLENCODED)
                     .post(User.class);
             return user;
 
