@@ -33,7 +33,7 @@
             name='CentralWebservice'
             interface='dk.statsbiblioteket.doms.centralWebservice.CentralWebservice'
             implementation='dk.statsbiblioteket.doms.central.CentralWebserviceImpl'
-            wsdl='wsdl/centralWebservice.wsdl'
+            wsdl='WEB-INF/wsdl/centralWebservice.wsdl'
             service="{http://central.doms.statsbiblioteket.dk/}CentralWebserviceService"
             port="{http://central.doms.statsbiblioteket.dk/}CentralWebservicePort"
             url-pattern='/central/'
@@ -43,7 +43,7 @@
             name='SurveyableService'
             interface='dk.statsbiblioteket.doms.domsutil.surveyable.Surveyable'
             implementation='dk.statsbiblioteket.doms.domsutil.surveyable.SurveyableWebservice'
-            wsdl='wsdl/surveyable.wsdl'
+            wsdl='WEB-INF/wsdl/surveyable.wsdl'
             service="{http://surveyable.domsutil.doms.statsbiblioteket.dk/}SurveyableService"
             port="{http://surveyable.domsutil.doms.statsbiblioteket.dk/}Surveyable"
             url-pattern='/surveyable/'
