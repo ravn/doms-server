@@ -35,7 +35,7 @@
         <version>0.0.23-SNAPSHOT</version>
     </parent>
 
-    <artifactId>${parent.artifactId}Webservice-service</artifactId>
+    <artifactId>centralWebservice-service</artifactId>
 
     <packaging>war</packaging>
     <build>
@@ -64,8 +64,8 @@
                         </goals>
                         <phase>generate-sources</phase>
                         <configuration>
-                            <includeGroupIds>dk.statsbiblioteket.doms.domsutil,${groupId}</includeGroupIds>
-                            <includeArtifactIds>domsutil-surveyable-interface,${parent.artifactId}-interface</includeArtifactIds>
+                            <includeGroupIds>dk.statsbiblioteket.doms.domsutil,dk.statsbiblioteket.doms.central</includeGroupIds>
+                            <includeArtifactIds>domsutil-surveyable-interface,centralWebservice-interface</includeArtifactIds>
                             <includes>wsdl/*</includes>
                             <outputDirectory>${project.build.directory}/wsdl</outputDirectory>
                         </configuration>
@@ -79,12 +79,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>${groupId}</groupId>
+            <groupId>dk.statsbiblioteket.doms.central</groupId>
             <artifactId>centralWebservice-interface</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${groupId}</groupId>
+            <groupId>dk.statsbiblioteket.doms.central</groupId>
             <artifactId>centralWebservice-lib</artifactId>
             <version>${project.version}</version>
         </dependency>

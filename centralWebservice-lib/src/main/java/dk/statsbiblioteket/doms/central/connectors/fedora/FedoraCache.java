@@ -122,11 +122,11 @@ public class FedoraCache implements Fedora {
     public void addRelation(String pid,
                             String subject,
                             String property,
-                            String object, String comment) throws
+                            String object, boolean literal, String comment) throws
                                                            BackendMethodFailedException,
                                                            BackendInvalidCredsException,
                                                            BackendInvalidResourceException {
-        fedora.addRelation(pid, subject, property, object, comment);
+        fedora.addRelation(pid, subject, property, object, literal, comment);
     }
 
     @Override
@@ -136,9 +136,10 @@ public class FedoraCache implements Fedora {
     }
 
     @Override
-    public void deleteRelation(String pid, String subject, String predicate, String object, String comment)
+    public void deleteRelation(String pid, String subject, String predicate, String object, boolean literal,
+                               String comment)
             throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
-        fedora.deleteRelation(pid, subject, predicate, object, comment);
+        fedora.deleteRelation(pid, subject, predicate, object, literal, comment);
     }
 
     public List<String> listObjectsWithThisLabel(String label) throws

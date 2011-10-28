@@ -71,7 +71,7 @@ public interface Fedora {
             BackendInvalidCredsException,
             BackendInvalidResourceException;
 
-    void addRelation(String pid, String subject, String property, String object, String comment)
+    void addRelation(String pid, String subject, String property, String object, boolean literal, String comment)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,
@@ -84,7 +84,7 @@ public interface Fedora {
             BackendInvalidResourceException;
 
 
-    void deleteRelation(String pid, String subject, String predicate, String object, String comment)
+    void deleteRelation(String pid, String subject, String predicate, String object, boolean literal, String comment)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,

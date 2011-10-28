@@ -618,7 +618,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             Credentials creds = getCredentials();
             Fedora fedora = FedoraFactory.newInstance(creds,
                                                       fedoraLocation);
-            fedora.addRelation(pid, relation.subject, relation.predicate, relation.object, comment);
+            fedora.addRelation(pid, relation.subject, relation.predicate, relation.object, relation.literal, comment);
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
             throw new MethodFailedException("Webservice Config invalid",
@@ -743,7 +743,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             Credentials creds = getCredentials();
             Fedora fedora = FedoraFactory.newInstance(creds,
                                                       fedoraLocation);
-            fedora.deleteRelation(pid, relation.subject, relation.predicate, relation.object, comment);
+            fedora.deleteRelation(pid, relation.subject, relation.predicate, relation.object, relation.literal, comment);
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
             throw new MethodFailedException("Webservice Config invalid",

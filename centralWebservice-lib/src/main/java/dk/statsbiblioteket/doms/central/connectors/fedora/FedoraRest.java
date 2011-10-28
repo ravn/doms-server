@@ -41,11 +41,14 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectDatast
 import dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectFieldsType;
 import dk.statsbiblioteket.doms.central.connectors.fedora.generated.ResultType;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -61,6 +64,10 @@ import java.util.List;
 public class FedoraRest extends Connector implements Fedora {
     private static Client client = Client.create();
     private WebResource restApi;
+
+    private static Log log = LogFactory.getLog(
+            FedoraRest.class);
+
 
 
     public FedoraRest(Credentials creds, String location)
@@ -292,7 +299,7 @@ public class FedoraRest extends Connector implements Fedora {
         }
     }
 
-    public void addRelation(String pid, String subject, String property, String object, String comment)
+    public void addRelation(String pid, String subject, String predicate, String object, boolean literal, String comment)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,
@@ -302,21 +309,22 @@ public class FedoraRest extends Connector implements Fedora {
                 comment = "No message supplied";
             }  //TODO, fedora should take this logmessage
 
-            if (subject == null || subject.isEmpty()) {
-                subject = pid;
+            if (!literal){
+                if (!object.startsWith("info:fedora/")) {
+                    object = "info:fedora/" + object;
+                }
             }
 
-            if (!subject.startsWith("info:fedora/")) {
-                subject = "info:fedora/" + subject;
+            URI predURI = new URI(predicate);
+            if (!predURI.isAbsolute()){
+                predicate = "info:fedora/"+predicate;
             }
-            if (!object.startsWith("info:fedora/")) {
-                object = "info:fedora/" + object;
-            }
+
             restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
                     .path("/relationships/new")
-                    .queryParam("subject", subject)
-                    .queryParam("predicate", property)
+                    .queryParam("predicate", predicate)
                     .queryParam("object", object)
+                    .queryParam("isLiteral",""+literal)
                     .header("Authorization", credsAsBase64())
                     .post();
         } catch (UnsupportedEncodingException e) {
@@ -330,8 +338,11 @@ public class FedoraRest extends Connector implements Fedora {
             } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
                 throw new BackendInvalidResourceException("Resource not found", e);
             } else {
+                log.info(e.getResponse().toString());
                 throw new BackendMethodFailedException("Server error", e);
             }
+        } catch (URISyntaxException e) {
+            throw new BackendMethodFailedException("Failed to parse predicate as an URI", e);
         }
     }
 
@@ -408,27 +419,29 @@ public class FedoraRest extends Connector implements Fedora {
 
 
     @Override
-    public void deleteRelation(String pid, String subject, String predicate, String object, String comment)
+    public void deleteRelation(String pid, String subject, String predicate, String object, boolean literal,
+                               String comment)
             throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
         try {
             if (comment == null || comment.isEmpty()) {
                 comment = "No message supplied";
             } //TODO, fedora should take this logmessage
 
-            if (subject == null || subject.isEmpty()) {
-                subject = pid;
+            if (!literal){
+                if (!object.startsWith("info:fedora/")) {
+                    object = "info:fedora/" + object;
+                }
             }
-            if (!subject.startsWith("info:fedora/")) {
-                subject = "info:fedora/" + subject;
+            URI predURI = new URI(predicate);
+            if (!predURI.isAbsolute()){
+                predicate = "info:fedora/"+predicate;
             }
-            if (!object.startsWith("info:fedora/")) {
-                object = "info:fedora/" + object;
-            }
+
             restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
                     .path("/relationships/")
-                    .queryParam("subject", subject)
                     .queryParam("predicate", predicate)
                     .queryParam("object", object)
+                    .queryParam("isLiteral",""+literal)
                     .header("Authorization", credsAsBase64())
                     .delete();
         } catch (UnsupportedEncodingException e) {
@@ -444,6 +457,8 @@ public class FedoraRest extends Connector implements Fedora {
             } else {
                 throw new BackendMethodFailedException("Server error", e);
             }
+        } catch (URISyntaxException e) {
+            throw new BackendMethodFailedException("Failed to parse predicate as an URI", e);
         }
     }
 
