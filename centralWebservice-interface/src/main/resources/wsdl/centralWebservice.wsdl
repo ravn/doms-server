@@ -309,7 +309,12 @@
         <part name="parameters" element="tns:createTempAdminUserResponse"/>
     </message>
 
-
+    <message name="getObjectsInCollection">
+        <part name="parameters" element="tns:getObjectsInCollection"/>
+    </message>
+    <message name="getObjectsInCollectionResponse">
+        <part name="parameters" element="tns:getObjectsInCollectionResponse"/>
+    </message>
     <!--
         <message name="getViewStructure">
             <part name="parameters" element="tns:getViewStructure"/>
@@ -834,6 +839,20 @@
                    message="tns:InvalidCredentialsException"/>
             <fault name="MethodFailedException"
                    message="tns:MethodFailedException"/>
+        </operation>
+
+        <operation name="getObjectsInCollection">
+            <documentation>Get a subset of a collection, with a given content model. Used for getting the content models in a collection
+            </documentation>
+            <input message="tns:getObjectsInCollection"/>
+            <output message="tns:getObjectsInCollectionResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+            <fault name="InvalidResourceException"
+                   message="tns:InvalidResourceException"/>
+
         </operation>
 
 
@@ -1405,6 +1424,25 @@
             <fault name="InvalidCredentialsException">
                 <soap:fault name="InvalidCredentialsException" use="literal"/>
             </fault>
+        </operation>
+        <operation name="getObjectsInCollection">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
+            <fault name="InvalidResourceException">
+                <soap:fault name="InvalidResourceException" use="literal"/>
+            </fault>
+
         </operation>
 
 

@@ -234,7 +234,7 @@ public class FedoraRest extends Connector implements Fedora {
             } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
                 throw new BackendInvalidResourceException("Resource not found", e);
             } else {
-                throw new BackendMethodFailedException("Server error", e);
+                throw new BackendMethodFailedException(e.getResponse().toString(), e);
             }
         }
     }
@@ -465,6 +465,59 @@ public class FedoraRest extends Connector implements Fedora {
         } catch (URISyntaxException e) {
             throw new BackendMethodFailedException("Failed to parse predicate as an URI", e);
         }
+    }
+
+    @Override
+    public List<String> getObjectsInCollection(String collectionPid, String contentModel)
+            throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+        try {
+            if (!collectionPid.startsWith("info:fedora/")){
+                collectionPid = "info:fedora/"+collectionPid.trim();
+            }
+            if (!contentModel.startsWith("info:fedora/")){
+                contentModel = "info:fedora/"+contentModel.trim();
+            }
+            String query = "select $object\n"
+                           + "from <#ri>\n"
+                           + "where $object <http://doms.statsbiblioteket.dk/relations/default/0/1/#isPartOfCollection> <"+collectionPid+">\n"
+                           + "and $object <fedora-model:hasModel> <"+contentModel+">\n"
+                           + "and ($object <fedora-model:state> <fedora-model:Active>\n" +
+                           "or $object <fedora-model:state> <fedora-model:Inactive>)";
+            String objects = client.resource(location)
+                    .path("/risearch")
+                    .queryParam("type", "tuples")
+                    .queryParam("lang", "iTQL")
+                    .queryParam("format", "CSV")
+                    .queryParam("flush", "true")
+                    .queryParam("stream", "on")
+                    .queryParam("query", query)
+                    .header("Authorization", credsAsBase64())
+                    .post(String.class);
+            String[] lines = objects.split("\n");
+            List<String> foundobjects = new ArrayList<String>();
+            for (String line : lines) {
+                if (line.startsWith("\"")) {
+                    continue;
+                }
+                if (line.startsWith("info:fedora/")) {
+                    line = line.substring("info:fedora/".length());
+                }
+                foundobjects.add(line);
+            }
+            return foundobjects;
+        } catch (UniformInterfaceException e) {
+            if (e.getResponse().getStatus()
+                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                throw new BackendInvalidCredsException(
+                        "Invalid Credentials Supplied",
+                        e);
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
+                throw new BackendInvalidResourceException("Resource not found", e);
+            } else {
+                throw new BackendMethodFailedException("Server error", e);
+            }
+        }
+
     }
 
     public List<String> listObjectsWithThisLabel(String label)

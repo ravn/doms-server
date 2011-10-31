@@ -334,8 +334,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
             //rollback
             comment = comment + ": Publishing failed, marking back to InProgress";
             markInProgressObject(activated, comment);
-            throw new MethodFailedException("Method failed to execute",
-                                            "Method failed to execute",
+            throw new MethodFailedException("Method failed to execute: "+e.getMessage(),
+                                            "Method failed to execute: "+e.getMessage(),
                                             e);
         } catch (BackendInvalidCredsException e) {
             log.debug("User supplied invalid credentials", e);
@@ -1105,6 +1105,46 @@ public class CentralWebserviceImpl implements CentralWebservice {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
         }
+    }
+
+    @Override
+    public List<String> getObjectsInCollection(
+            @WebParam(name = "collectionPid", targetNamespace = "") String collectionPid,
+            @WebParam(name = "contentModelPid", targetNamespace = "") String contentModelPid)
+            throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
+        try {
+            log.trace("Entering getObjectsInCollection with param collectionPid=" + collectionPid + " and contentModelPid="+contentModelPid);
+            Credentials creds = getCredentials();
+            Fedora fedora = FedoraFactory.newInstance(creds,
+                                                      fedoraLocation);
+            List<String> objects = fedora.getObjectsInCollection(collectionPid,contentModelPid);
+            return objects;
+        } catch (MalformedURLException e) {
+            log.error("caught problemException", e);
+            throw new MethodFailedException("Webservice Config invalid",
+                                            "Webservice Config invalid",
+                                            e);
+        } catch (BackendMethodFailedException e) {
+            log.warn("Failed to execute method", e);
+            throw new MethodFailedException("Method failed to execute",
+                                            "Method failed to execute",
+                                            e);
+        } catch (BackendInvalidCredsException e) {
+            log.debug("User supplied invalid credentials", e);
+            throw new InvalidCredentialsException("Invalid Credentials Supplied",
+                                                  "Invalid Credentials Supplied",
+                                                  e);
+        } catch (BackendInvalidResourceException e) {
+            log.debug("Invalid resource requested", e);
+            throw new InvalidCredentialsException("Invalid Resource Requested",
+                                                  "Invalid Resource Requested",
+                                                  e);
+        } catch (Exception e) {
+            log.warn("Caught Unknown Exception", e);
+            throw new MethodFailedException("Server error", "Server error", e);
+        }
+
+
     }
 
     private List<RecordDescription> transform(List<UpdateTrackerRecord> input) {

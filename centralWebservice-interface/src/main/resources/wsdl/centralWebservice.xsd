@@ -154,7 +154,8 @@
     <xs:element name="createTempAdminUser" type="tns:newUser"/>
     <xs:element name="createTempAdminUserResponse" type="tns:UserWrapper"/>
 
-
+    <xs:element name="getObjectsInCollection" type="tns:getObjectsInCollection"/>
+    <xs:element name="getObjectsInCollectionResponse" type="tns:Pidlist"/>
 
 
     <!--Simple types-->
@@ -439,4 +440,10 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:complexType name="getObjectsInCollection">
+        <xs:sequence>
+            <xs:element name="collectionPid" type="xs:string"/>
+            <xs:element name="contentModelPid" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>

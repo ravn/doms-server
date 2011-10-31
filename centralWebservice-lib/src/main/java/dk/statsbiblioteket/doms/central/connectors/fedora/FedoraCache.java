@@ -142,6 +142,12 @@ public class FedoraCache implements Fedora {
         fedora.deleteRelation(pid, subject, predicate, object, literal, comment);
     }
 
+    @Override
+    public List<String> getObjectsInCollection(String collectionPid, String contentModel)
+            throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+        return fedora.getObjectsInCollection(collectionPid,contentModel);
+    }
+
     public List<String> listObjectsWithThisLabel(String label) throws
                                                                BackendInvalidCredsException,
                                                                BackendMethodFailedException,

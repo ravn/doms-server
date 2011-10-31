@@ -91,6 +91,12 @@ public interface Fedora {
             BackendInvalidResourceException;
 
 
+    List<String> getObjectsInCollection(String collectionPid, String contentModel) throws
+            BackendInvalidCredsException,
+            BackendMethodFailedException,
+            BackendInvalidResourceException;
+
+
     List<String> listObjectsWithThisLabel(String label)
             throws
             BackendInvalidCredsException,
