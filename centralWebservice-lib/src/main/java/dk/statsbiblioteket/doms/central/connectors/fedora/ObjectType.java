@@ -8,5 +8,5 @@ package dk.statsbiblioteket.doms.central.connectors.fedora;
  * To change this template use File | Settings | File Templates.
  */
 public enum ObjectType {
-    DATA_OBJECT,CONTENT_MODEL,TEMPLATE;
+    DATA_OBJECT,CONTENT_MODEL,TEMPLATE,FILE,COLLECTION;
 }

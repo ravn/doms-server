@@ -123,15 +123,20 @@ public class FedoraRest extends Connector implements Fedora {
             prof.setType(ObjectType.DATA_OBJECT);
             if (prof.getContentModels().contains("fedora-system:ContentModel-3.0")){
                 prof.setType(ObjectType.CONTENT_MODEL);
-            } else {
-                for (FedoraRelation fedoraRelation : prof.getRelations()) {
-                    String predicate = fedoraRelation.getPredicate();
-                    if ("http://ecm.sourceforge.net/relations/0/2/#isTemplateFor".equals(predicate)){
-                        prof.setType(ObjectType.TEMPLATE);
-                        break;
-                    }
-                }
+            }
+            if (prof.getContentModels().contains("doms:ContentModel_File")){
+                prof.setType(ObjectType.FILE);
+            }
+            if (prof.getContentModels().contains("doms:ContentModel_Collection")){
+                prof.setType(ObjectType.COLLECTION);
+            }
 
+            for (FedoraRelation fedoraRelation : prof.getRelations()) {
+                String predicate = fedoraRelation.getPredicate();
+                if ("http://ecm.sourceforge.net/relations/0/2/#isTemplateFor".equals(predicate)){
+                    prof.setType(ObjectType.TEMPLATE);
+                    break;
+                }
             }
 
 

@@ -164,6 +164,12 @@ public class CentralWebserviceImpl implements CentralWebservice {
                 case TEMPLATE:
                     wprofile.setType("TemplateObject");
                     break;
+                case COLLECTION:
+                    wprofile.setType("CollectionObject");
+                    break;
+                case FILE:
+                    wprofile.setType("FileObject");
+                    break;
             }
 
             //Datastreams
