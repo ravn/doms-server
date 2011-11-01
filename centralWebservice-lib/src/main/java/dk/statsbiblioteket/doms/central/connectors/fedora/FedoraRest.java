@@ -352,6 +352,7 @@ public class FedoraRest extends Connector implements Fedora {
                                     "/fedora/objects/" + object + "/datastreams/LICENSE/content")
                         .queryParam("mimeType", "application/rdf+xml")
                         .queryParam("ignoreContent", "true")
+                        .header("Authorization", credsAsBase64())
                         .put();
             }
         } catch (UnsupportedEncodingException e) {
