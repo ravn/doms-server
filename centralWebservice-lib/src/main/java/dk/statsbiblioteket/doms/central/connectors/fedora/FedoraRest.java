@@ -67,13 +67,20 @@ public class FedoraRest extends Connector implements Fedora {
 
     private static Log log = LogFactory.getLog(
             FedoraRest.class);
-
+    private String port;
 
 
     public FedoraRest(Credentials creds, String location)
             throws MalformedURLException {
         super(creds, location);
         restApi = client.resource(location + "/objects");
+         port = calculateFedoraPort(location);
+    }
+
+    private String calculateFedoraPort(String location) {
+        String portString = location.substring(location.lastIndexOf(':') + 1);
+        portString.substring(0, portString.indexOf('/'));
+        return portString;
     }
 
     public ObjectProfile getObjectProfile(String pid) throws
@@ -234,7 +241,7 @@ public class FedoraRest extends Connector implements Fedora {
             } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
                 throw new BackendInvalidResourceException("Resource not found", e);
             } else {
-                throw new BackendMethodFailedException(e.getResponse().toString(), e);
+                throw new BackendMethodFailedException(e.getResponse().getEntity(String.class), e);
             }
         }
     }
@@ -325,6 +332,7 @@ public class FedoraRest extends Connector implements Fedora {
                 predicate = "info:fedora/"+predicate;
             }
 
+
             restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
                     .path("/relationships/new")
                     .queryParam("predicate", predicate)
@@ -332,6 +340,20 @@ public class FedoraRest extends Connector implements Fedora {
                     .queryParam("isLiteral",""+literal)
                     .header("Authorization", credsAsBase64())
                     .post();
+
+            if (predicate.equals("http://doms.statsbiblioteket.dk/relations/default/0/1/#hasLicense")){
+                //this is a license relation, update the policy datastream
+                if (object.startsWith("info:fedora/")){
+                    object = object.substring("info:fedora/".length());
+                }
+                restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
+                        .path("/datastreams/POLICY")
+                        .queryParam("dsLocation", "http://localhost:"+port+
+                                    "/fedora/objects/" + object + "/datastreams/LICENSE/content")
+                        .queryParam("mimeType", "application/rdf+xml")
+                        .queryParam("ignoreContent", "true")
+                        .put();
+            }
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
         } catch (UniformInterfaceException e) {
