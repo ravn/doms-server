@@ -79,7 +79,7 @@ public class FedoraRest extends Connector implements Fedora {
 
     private String calculateFedoraPort(String location) {
         String portString = location.substring(location.lastIndexOf(':') + 1);
-        portString.substring(0, portString.indexOf('/'));
+        portString = portString.substring(0, portString.indexOf('/'));
         return portString;
     }
 
