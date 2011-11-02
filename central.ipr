@@ -3,12 +3,12 @@
   <component name="ArtifactManager">
     <artifact type="war" name="centralWebservice-service:war">
       <output-path>$PROJECT_DIR$/centralWebservice-service/target</output-path>
-      <root id="archive" name="centralWebservice-service-0.0.23-SNAPSHOT.war">
+      <root id="archive" name="centralWebservice-service-0.0.23.war">
         <element id="artifact" artifact-name="centralWebservice-service:war exploded" />
       </root>
     </artifact>
     <artifact type="exploded-war" name="centralWebservice-service:war exploded">
-      <output-path>$PROJECT_DIR$/centralWebservice-service/target/centralWebservice-service-0.0.23-SNAPSHOT</output-path>
+      <output-path>$PROJECT_DIR$/centralWebservice-service/target/centralWebservice-service-0.0.23</output-path>
       <root id="root">
         <element id="javaee-facet-resources" facet="centralWebservice-service/web/Web" />
         <element id="directory" name="WEB-INF">
@@ -16,7 +16,7 @@
             <element id="module-output" name="centralWebservice-service" />
           </element>
           <element id="directory" name="lib">
-            <element id="archive" name="centralWebservice-interface-0.0.23-SNAPSHOT.jar">
+            <element id="archive" name="centralWebservice-interface-0.0.23.jar">
               <element id="module-output" name="centralWebservice-interface" />
             </element>
             <element id="library" level="project" name="Maven: dk.statsbiblioteket.sbutil:sbutil:0.5.3" />
@@ -26,7 +26,7 @@
             <element id="library" level="project" name="Maven: log4j:log4j:1.2.16" />
             <element id="library" level="project" name="Maven: com.thoughtworks.xstream:xstream:1.2.2" />
             <element id="library" level="project" name="Maven: xpp3:xpp3_min:1.1.3.4.O" />
-            <element id="archive" name="centralWebservice-lib-0.0.23-SNAPSHOT.jar">
+            <element id="archive" name="centralWebservice-lib-0.0.23.jar">
               <element id="module-output" name="centralWebservice-lib" />
             </element>
             <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.bitstorage.highlevel:bitstorage-highlevel-interface:0.0.18" />
