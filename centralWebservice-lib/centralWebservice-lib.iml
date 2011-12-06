@@ -23,7 +23,7 @@
     <orderEntry type="library" name="Maven: dk.statsbiblioteket.doms.domsutil.surveyable:domsutil-surveyable-interface:0.0.20" level="project" />
     <orderEntry type="library" name="Maven: dk.statsbiblioteket.doms.domsutil.surveyable:domsutil-surveyable-impl:0.0.20" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.16" level="project" />
-    <orderEntry type="library" name="Maven: dk.statsbiblioteket.doms.updatetracker:updatetracker-interface:0.0.13-BRANCH" level="project" />
+    <orderEntry type="library" name="Maven: dk.statsbiblioteket.doms.updatetracker:updatetracker-interface:0.0.14" level="project" />
     <orderEntry type="library" name="Maven: com.sun.jersey:jersey-client:1.3" level="project" />
     <orderEntry type="library" name="Maven: com.sun.jersey:jersey-core:1.3" level="project" />
     <orderEntry type="library" name="Maven: javax.ws.rs:jsr311-api:1.1.1" level="project" />
