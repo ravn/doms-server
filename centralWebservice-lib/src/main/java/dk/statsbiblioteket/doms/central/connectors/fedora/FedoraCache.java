@@ -144,14 +144,14 @@ public class FedoraCache implements Fedora {
 
     @Override
     public List<String> getObjectsInCollection(String collectionPid, String contentModel)
-            throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+            throws BackendInvalidCredsException, BackendMethodFailedException{
         return fedora.getObjectsInCollection(collectionPid,contentModel);
     }
 
     public List<String> listObjectsWithThisLabel(String label) throws
                                                                BackendInvalidCredsException,
-                                                               BackendMethodFailedException,
-                                                               BackendInvalidResourceException {
+                                                               BackendMethodFailedException
+                                                               {
         return fedora.listObjectsWithThisLabel(label);
     }
 
@@ -164,7 +164,7 @@ public class FedoraCache implements Fedora {
 
     @Override
     public List<String> findObjectFromDCIdentifier(String string)
-            throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+            throws BackendInvalidCredsException, BackendMethodFailedException{
         return fedora.findObjectFromDCIdentifier(string);
     }
 
@@ -175,7 +175,7 @@ public class FedoraCache implements Fedora {
 
     @Override
     public List<SearchResult> fieldsearch(String query, int offset, int pageLength)
-            throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+            throws BackendInvalidCredsException, BackendMethodFailedException{
         return fedora.fieldsearch(query,offset,pageLength);
     }
 

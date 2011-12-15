@@ -118,8 +118,8 @@ public class UpdateTracker extends Connector {
                                       String state)
             throws
             BackendMethodFailedException,
-            BackendInvalidCredsException,
-            BackendInvalidResourceException {
+            BackendInvalidCredsException
+             {
 
         try {
             long changed = service.getLatestModificationTime(

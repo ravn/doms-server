@@ -126,7 +126,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                                                   e);
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
-            throw new InvalidCredentialsException("Invalid Resource Requested",
+            throw new InvalidResourceException("Invalid Resource Requested",
                                                   "Invalid Resource Requested",
                                                   e);
 
@@ -216,7 +216,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                                                   e);
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
-            throw new InvalidCredentialsException("Invalid Resource Requested",
+            throw new InvalidResourceException("Invalid Resource Requested",
                                                   "Invalid Resource Requested",
                                                   e);
 
@@ -256,7 +256,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                                                   e);
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
-            throw new InvalidCredentialsException("Invalid Resource Requested",
+            throw new InvalidResourceException("Invalid Resource Requested",
                                                   "Invalid Resource Requested",
                                                   e);
 
@@ -301,7 +301,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                                                   e);
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
-            throw new InvalidCredentialsException("Invalid Resource Requested",
+            throw new InvalidResourceException("Invalid Resource Requested",
                                                   "Invalid Resource Requested",
                                                   e);
         } catch (Exception e) {
@@ -355,7 +355,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
 
-            throw new InvalidCredentialsException("Invalid Resource Requested",
+            throw new InvalidResourceException("Invalid Resource Requested",
                                                   "Invalid Resource Requested",
                                                   e);
         } catch (Exception e) {
@@ -401,7 +401,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                                                   e);
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
-            throw new InvalidCredentialsException("Invalid Resource Requested",
+            throw new InvalidResourceException("Invalid Resource Requested",
                                                   "Invalid Resource Requested",
                                                   e);
 
@@ -447,7 +447,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                                                   e);
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
-            throw new InvalidCredentialsException("Invalid Resource Requested",
+            throw new InvalidResourceException("Invalid Resource Requested",
                                                   "Invalid Resource Requested",
                                                   e);
 
@@ -465,7 +465,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             @WebParam(name = "pid", targetNamespace = "") String pid,
             @WebParam(name = "datastream", targetNamespace = "")
             String datastream)
-            throws MethodFailedException, InvalidCredentialsException {
+            throws MethodFailedException, InvalidCredentialsException, InvalidResourceException {
         try {
             log.trace("Entering getDatastreamContents with params pid=" + pid
                       + " and datastream=" + datastream);
@@ -490,7 +490,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                                                   e);
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
-            throw new InvalidCredentialsException("Invalid Resource Requested",
+            throw new InvalidResourceException("Invalid Resource Requested",
                                                   "Invalid Resource Requested",
                                                   e);
 
@@ -555,7 +555,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                                                   e);
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
-            throw new InvalidCredentialsException("Invalid Resource Requested",
+            throw new InvalidResourceException("Invalid Resource Requested",
                                                   "Invalid Resource Requested",
                                                   e);
 
@@ -571,7 +571,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
     public String getFileObjectWithURL(
             @WebParam(name = "URL", targetNamespace = "") String url)
-            throws MethodFailedException, InvalidCredentialsException {
+            throws MethodFailedException, InvalidCredentialsException, InvalidResourceException {
         try {
             log.trace("Entering getFileObjectWithURL with param url=" + url);
             Credentials creds = getCredentials();
@@ -602,7 +602,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                                                   e);
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
-            throw new InvalidCredentialsException("Invalid Resource Requested",
+            throw new InvalidResourceException("Invalid Resource Requested",
                                                   "Invalid Resource Requested",
                                                   e);
         } catch (Exception e) {
@@ -642,7 +642,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                                                   e);
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
-            throw new InvalidCredentialsException("Invalid Resource Requested",
+            throw new InvalidResourceException("Invalid Resource Requested",
                                                   "Invalid Resource Requested",
                                                   e);
         } catch (Exception e) {
@@ -690,7 +690,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                                                   e);
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
-            throw new InvalidCredentialsException("Invalid Resource Requested",
+            throw new InvalidResourceException("Invalid Resource Requested",
                                                   "Invalid Resource Requested",
                                                   e);
         } catch (Exception e) {
@@ -727,7 +727,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                                                   e);
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
-            throw new InvalidCredentialsException("Invalid Resource Requested",
+            throw new InvalidResourceException("Invalid Resource Requested",
                                                   "Invalid Resource Requested",
                                                   e);
         } catch (Exception e) {
@@ -767,7 +767,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                                                   e);
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
-            throw new InvalidCredentialsException("Invalid Resource Requested",
+            throw new InvalidResourceException("Invalid Resource Requested",
                                                   "Invalid Resource Requested",
                                                   e);
         } catch (Exception e) {
@@ -784,7 +784,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             @WebParam(name = "pid", targetNamespace = "") String pid,
             @WebParam(name = "name", targetNamespace = "")
             String viewAngle)
-            throws InvalidCredentialsException, MethodFailedException {
+            throws InvalidCredentialsException, MethodFailedException, InvalidResourceException {
         log.trace("Entering getViewBundle with params pid=" + pid
                   + " and viewAngle=" + viewAngle);
         /*
@@ -830,7 +830,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                                                   e);
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
-            throw new InvalidCredentialsException("Invalid Resource Requested",
+            throw new InvalidResourceException("Invalid Resource Requested",
                                                   "Invalid Resource Requested",
                                                   e);
         } catch (Exception e) {
@@ -927,13 +927,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throw new InvalidCredentialsException("Invalid Credentials Supplied",
                                                   "Invalid Credentials Supplied",
                                                   e);
-        } catch (BackendInvalidResourceException e) {
-            log.debug("Invalid resource requested", e);
-            throw new InvalidCredentialsException("Invalid Resource Requested",
-                                                  "Invalid Resource Requested",
-                                                  e);
-
-        } catch (Exception e) {
+               } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
         }
@@ -974,11 +968,6 @@ public class CentralWebserviceImpl implements CentralWebservice {
             log.debug("User supplied invalid credentials", e);
             throw new InvalidCredentialsException("Invalid Credentials Supplied",
                                                   "Invalid Credentials Supplied",
-                                                  e);
-        } catch (BackendInvalidResourceException e) {
-            log.debug("Invalid resource requested", e);
-            throw new InvalidCredentialsException("Invalid Resource Requested",
-                                                  "Invalid Resource Requested",
                                                   e);
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
@@ -1027,12 +1016,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throw new InvalidCredentialsException("Invalid Credentials Supplied",
                                                   "Invalid Credentials Supplied",
                                                   e);
-        } catch (BackendInvalidResourceException e) {
-            log.debug("Invalid resource requested", e);
-            throw new InvalidCredentialsException("Invalid Resource Requested",
-                                                  "Invalid Resource Requested",
-                                                  e);
-        } catch (Exception e) {
+        }  catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
         }
@@ -1133,11 +1117,6 @@ public class CentralWebserviceImpl implements CentralWebservice {
             log.debug("User supplied invalid credentials", e);
             throw new InvalidCredentialsException("Invalid Credentials Supplied",
                                                   "Invalid Credentials Supplied",
-                                                  e);
-        } catch (BackendInvalidResourceException e) {
-            log.debug("Invalid resource requested", e);
-            throw new InvalidCredentialsException("Invalid Resource Requested",
-                                                  "Invalid Resource Requested",
                                                   e);
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);

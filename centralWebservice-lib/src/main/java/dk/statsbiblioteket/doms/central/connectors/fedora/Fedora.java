@@ -93,15 +93,15 @@ public interface Fedora {
 
     List<String> getObjectsInCollection(String collectionPid, String contentModel) throws
             BackendInvalidCredsException,
-            BackendMethodFailedException,
-            BackendInvalidResourceException;
+            BackendMethodFailedException;
+
 
 
     List<String> listObjectsWithThisLabel(String label)
             throws
             BackendInvalidCredsException,
-            BackendMethodFailedException,
-            BackendInvalidResourceException;
+            BackendMethodFailedException;
+
 
     void modifyObjectLabel(String pid, String name, String comment)
             throws
@@ -112,8 +112,8 @@ public interface Fedora {
     List<String> findObjectFromDCIdentifier(String string)
             throws
             BackendInvalidCredsException,
-            BackendMethodFailedException,
-            BackendInvalidResourceException;
+            BackendMethodFailedException;
+
 
     void flushTripples()
             throws
@@ -121,8 +121,8 @@ public interface Fedora {
             BackendMethodFailedException;
 
     List<SearchResult> fieldsearch(String query, int offset, int pageLength) throws BackendMethodFailedException,
-                                                                                    BackendInvalidCredsException,
-                                                                                    BackendInvalidResourceException;
+                                                                                    BackendInvalidCredsException;
+
 
 
     List<FedoraRelation> getInverseRelations(String pid, String predicate) throws BackendMethodFailedException,
