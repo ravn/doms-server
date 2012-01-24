@@ -125,6 +125,9 @@
     <xs:element name="getInverseRelations" type="tns:singlePid"/>
     <xs:element name="getInverseRelationsResponse" type="tns:ListOfRelations"/>
 
+    <xs:element name="getInverseRelationsWithPredicate" type="tns:pidAndPredicate"/>
+    <xs:element name="getInverseRelationsWithPredicateResponse" type="tns:ListOfRelations"/>
+
 
     <xs:element name="getNamedRelations" type="tns:pidAndPredicate"/>
     <xs:element name="getNamedRelationsResponse" type="tns:ListOfRelations"/>
