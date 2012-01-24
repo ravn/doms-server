@@ -10,9 +10,6 @@
           <root url="file://$MODULE_DIR$/src/main/webapp" relative="/" />
           <root url="file://$MODULE_DIR$/target/wsdl" relative="WEB-INF" />
         </webroots>
-        <sourceRoots>
-          <root url="file://$MODULE_DIR$/src/main/java" />
-        </sourceRoots>
       </configuration>
     </facet>
   </component>
@@ -23,7 +20,8 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/annotations" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target/apidocs" />
-      <excludeFolder url="file://$MODULE_DIR$/target/centralWebservice-service-0.0.25-SNAPSHOT" />
+      <excludeFolder url="file://$MODULE_DIR$/target/centralWebservice-service-0.0.25" />
+      <excludeFolder url="file://$MODULE_DIR$/target/centralWebservice-service-0.0.26-SNAPSHOT" />
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />
       <excludeFolder url="file://$MODULE_DIR$/target/dependency-maven-plugin-markers" />
       <excludeFolder url="file://$MODULE_DIR$/target/test-classes" />
