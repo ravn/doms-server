@@ -142,18 +142,6 @@ public class FedoraCache implements Fedora {
         fedora.deleteRelation(pid, subject, predicate, object, literal, comment);
     }
 
-    @Override
-    public List<String> getObjectsInCollection(String collectionPid, String contentModel)
-            throws BackendInvalidCredsException, BackendMethodFailedException{
-        return fedora.getObjectsInCollection(collectionPid,contentModel);
-    }
-
-    public List<String> listObjectsWithThisLabel(String label) throws
-                                                               BackendInvalidCredsException,
-                                                               BackendMethodFailedException
-                                                               {
-        return fedora.listObjectsWithThisLabel(label);
-    }
 
     public void modifyObjectLabel(String pid, String name, String comment) throws
                                                                            BackendMethodFailedException,
@@ -162,16 +150,6 @@ public class FedoraCache implements Fedora {
         fedora.modifyObjectLabel(pid, name, comment);
     }
 
-    @Override
-    public List<String> findObjectFromDCIdentifier(String string)
-            throws BackendInvalidCredsException, BackendMethodFailedException{
-        return fedora.findObjectFromDCIdentifier(string);
-    }
-
-    @Override
-    public void flushTripples() throws BackendInvalidCredsException, BackendMethodFailedException {
-        fedora.flushTripples();
-    }
 
     @Override
     public List<SearchResult> fieldsearch(String query, int offset, int pageLength)
@@ -179,11 +157,6 @@ public class FedoraCache implements Fedora {
         return fedora.fieldsearch(query,offset,pageLength);
     }
 
-    @Override
-    public List<FedoraRelation> getInverseRelations(String pid, String predicate)
-            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
-        return fedora.getInverseRelations(pid,predicate);
-    }
 
     @Override
     public void addExternalDatastream(String pid, String datastream, String label, String url, String formatURI,

@@ -35,9 +35,7 @@ import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.authchecker.AuthChecker;
 
 import dk.statsbiblioteket.doms.central.connectors.ecm.ECM;
-import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
-import dk.statsbiblioteket.doms.central.connectors.fedora.FedoraFactory;
-import dk.statsbiblioteket.doms.central.connectors.fedora.FedoraRelation;
+import dk.statsbiblioteket.doms.central.connectors.fedora.*;
 import dk.statsbiblioteket.doms.central.connectors.updatetracker.UpdateTracker;
 import dk.statsbiblioteket.doms.central.connectors.updatetracker.UpdateTrackerRecord;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
@@ -127,8 +125,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
             throw new InvalidResourceException("Invalid Resource Requested",
-                                                  "Invalid Resource Requested",
-                                                  e);
+                                               "Invalid Resource Requested",
+                                               e);
 
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
@@ -217,8 +215,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
             throw new InvalidResourceException("Invalid Resource Requested",
-                                                  "Invalid Resource Requested",
-                                                  e);
+                                               "Invalid Resource Requested",
+                                               e);
 
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
@@ -257,8 +255,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
             throw new InvalidResourceException("Invalid Resource Requested",
-                                                  "Invalid Resource Requested",
-                                                  e);
+                                               "Invalid Resource Requested",
+                                               e);
 
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
@@ -302,8 +300,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
             throw new InvalidResourceException("Invalid Resource Requested",
-                                                  "Invalid Resource Requested",
-                                                  e);
+                                               "Invalid Resource Requested",
+                                               e);
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
@@ -356,8 +354,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
             log.debug("Invalid resource requested", e);
 
             throw new InvalidResourceException("Invalid Resource Requested",
-                                                  "Invalid Resource Requested",
-                                                  e);
+                                               "Invalid Resource Requested",
+                                               e);
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             comment = comment + ": Publishing failed, marking back to InProgress";
@@ -402,8 +400,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
             throw new InvalidResourceException("Invalid Resource Requested",
-                                                  "Invalid Resource Requested",
-                                                  e);
+                                               "Invalid Resource Requested",
+                                               e);
 
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
@@ -448,8 +446,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
             throw new InvalidResourceException("Invalid Resource Requested",
-                                                  "Invalid Resource Requested",
-                                                  e);
+                                               "Invalid Resource Requested",
+                                               e);
 
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
@@ -491,8 +489,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
             throw new InvalidResourceException("Invalid Resource Requested",
-                                                  "Invalid Resource Requested",
-                                                  e);
+                                               "Invalid Resource Requested",
+                                               e);
 
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
@@ -553,8 +551,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
             throw new InvalidResourceException("Invalid Resource Requested",
-                                                  "Invalid Resource Requested",
-                                                  e);
+                                               "Invalid Resource Requested",
+                                               e);
 
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
@@ -572,9 +570,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
         try {
             log.trace("Entering getFileObjectWithURL with param url=" + url);
             Credentials creds = getCredentials();
-            Fedora fedora = FedoraFactory.newInstance(creds,
-                                                      fedoraLocation);
-            List<String> objects = fedora.listObjectsWithThisLabel(url);
+            TripleStore tripleStore = new TripleStoreRest(creds,fedoraLocation);
+            List<String> objects = tripleStore.listObjectsWithThisLabel(url);
 
             if (objects != null && !objects.isEmpty()) {
                 return objects.get(0);
@@ -635,8 +632,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
             throw new InvalidResourceException("Invalid Resource Requested",
-                                                  "Invalid Resource Requested",
-                                                  e);
+                                               "Invalid Resource Requested",
+                                               e);
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
@@ -683,8 +680,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
             throw new InvalidResourceException("Invalid Resource Requested",
-                                                  "Invalid Resource Requested",
-                                                  e);
+                                               "Invalid Resource Requested",
+                                               e);
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
@@ -698,9 +695,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
         try {
             log.trace("Entering getInverseRelations with params pid='" + pid + "'");
             Credentials creds = getCredentials();
-            Fedora fedora = FedoraFactory.newInstance(creds,
-                                                      fedoraLocation);
-            List<FedoraRelation> fedorarels = fedora.getInverseRelations(pid, null);
+            TripleStore tripleStore = new TripleStoreRest(creds,fedoraLocation);
+            List<FedoraRelation> fedorarels = tripleStore.getInverseRelations(pid, null);
             return convertRelations(fedorarels);
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
@@ -720,8 +716,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
             throw new InvalidResourceException("Invalid Resource Requested",
-                                                  "Invalid Resource Requested",
-                                                  e);
+                                               "Invalid Resource Requested",
+                                               e);
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
@@ -736,9 +732,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
         try {
             log.trace("Entering getInverseRelations with params pid='" + pid + "'");
             Credentials creds = getCredentials();
-            Fedora fedora = FedoraFactory.newInstance(creds,
-                                                      fedoraLocation);
-            List<FedoraRelation> fedorarels = fedora.getInverseRelations(pid, predicate);
+            TripleStore tripleStore = new TripleStoreRest(creds,fedoraLocation);
+            List<FedoraRelation> fedorarels = tripleStore.getInverseRelations(pid, predicate);
             return convertRelations(fedorarels);
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
@@ -758,8 +753,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
             throw new InvalidResourceException("Invalid Resource Requested",
-                                                  "Invalid Resource Requested",
-                                                  e);
+                                               "Invalid Resource Requested",
+                                               e);
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
@@ -799,8 +794,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
             throw new InvalidResourceException("Invalid Resource Requested",
-                                                  "Invalid Resource Requested",
-                                                  e);
+                                               "Invalid Resource Requested",
+                                               e);
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
@@ -862,8 +857,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
         } catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
             throw new InvalidResourceException("Invalid Resource Requested",
-                                                  "Invalid Resource Requested",
-                                                  e);
+                                               "Invalid Resource Requested",
+                                               e);
         } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
@@ -958,7 +953,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throw new InvalidCredentialsException("Invalid Credentials Supplied",
                                                   "Invalid Credentials Supplied",
                                                   e);
-               } catch (Exception e) {
+        } catch (Exception e) {
             log.warn("Caught Unknown Exception", e);
             throw new MethodFailedException("Server error", "Server error", e);
         }
@@ -971,9 +966,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
         try {
             log.trace("Entering findObjectFromDCIdentifier with param string=" + string);
             Credentials creds = getCredentials();
-            Fedora fedora = FedoraFactory.newInstance(creds,
-                                                      fedoraLocation);
-            List<String> objects = fedora.findObjectFromDCIdentifier(string);
+            TripleStore tripleStore = new TripleStoreRest(creds,fedoraLocation);
+            List<String> objects = tripleStore.findObjectFromDCIdentifier(string);
 
 
             return objects;
@@ -1063,9 +1057,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
 
         try { //Execute a command to flush the unflushed triple changes.
-            Fedora fedora = FedoraFactory.newInstance(creds,
-                                                      fedoraLocation);
-            fedora.flushTripples();
+            TripleStore tripleStore = new TripleStoreRest(creds,fedoraLocation);
+            tripleStore.flushTripples();
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
             throw new MethodFailedException("Webservice Config invalid",
@@ -1130,9 +1123,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
         try {
             log.trace("Entering getObjectsInCollection with param collectionPid=" + collectionPid + " and contentModelPid="+contentModelPid);
             Credentials creds = getCredentials();
-            Fedora fedora = FedoraFactory.newInstance(creds,
-                                                      fedoraLocation);
-            List<String> objects = fedora.getObjectsInCollection(collectionPid,contentModelPid);
+            TripleStore tripleStore = new TripleStoreRest(creds,fedoraLocation);
+            List<String> objects = tripleStore.getObjectsInCollection(collectionPid,contentModelPid);
             return objects;
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
