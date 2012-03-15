@@ -184,4 +184,11 @@ public class FedoraCache implements Fedora {
             throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
         return fedora.getInverseRelations(pid,predicate);
     }
+
+    @Override
+    public void addExternalDatastream(String pid, String datastream, String label, String url, String formatURI,
+                                      String mimeType, String comment)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
+        fedora.addExternalDatastream(pid,datastream,label,url,formatURI,mimeType,comment);
+    }
 }

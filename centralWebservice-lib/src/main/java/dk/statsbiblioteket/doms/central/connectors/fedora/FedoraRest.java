@@ -792,4 +792,55 @@ public class FedoraRest extends Connector implements Fedora {
             }
         }
     }
+
+    @Override
+    public void addExternalDatastream(String pid, String datastream, String label, String url, String formatURI,
+                                      String mimeType, String comment)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
+        try {
+            if (comment == null || comment.isEmpty()) {
+                comment = "No message supplied";
+            }
+
+            /*
+            @PathParam(RestParam.PID) String pid,
+                                  @PathParam(RestParam.DSID) String dsID,
+                                  @QueryParam(RestParam.CONTROL_GROUP) @DefaultValue("X") String controlGroup,
+                                  @QueryParam(RestParam.DS_LOCATION) String dsLocation,
+                                  @QueryParam(RestParam.ALT_IDS) List<String> altIDs,
+                                  @QueryParam(RestParam.DS_LABEL) String dsLabel,
+                                  @QueryParam(RestParam.VERSIONABLE) @DefaultValue("true") Boolean versionable,
+                                  @QueryParam(RestParam.DS_STATE) @DefaultValue("A") String dsState,
+                                  @QueryParam(RestParam.FORMAT_URI) String formatURI,
+                                  @QueryParam(RestParam.CHECKSUM_TYPE) String checksumType,
+                                  @QueryParam(RestParam.CHECKSUM) String checksum,
+                                  @QueryParam(RestParam.MIME_TYPE) String mimeType,
+                                  @QueryParam(RestParam.LOG_MESSAGE) String logMessage
+             */
+            restApi.path("/")
+                    .path(URLEncoder.encode(pid, "UTF-8"))
+                    .path("/datastreams/")
+                    .path(URLEncoder.encode(datastream, "UTF-8"))
+                    .queryParam("controlGroup","R")
+                    .queryParam("formatURI",formatURI)
+                    .queryParam("mimeType", mimeType)
+                    .queryParam("logMessage", comment)
+                    .header("Authorization", credsAsBase64())
+                    .post();
+        } catch (UnsupportedEncodingException e) {
+            throw new BackendMethodFailedException("UTF-8 not known....", e);
+        } catch (UniformInterfaceException e) {
+            if (e.getResponse().getStatus()
+                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                throw new BackendInvalidCredsException(
+                        "Invalid Credentials Supplied",
+                        e);
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
+                throw new BackendInvalidResourceException("Resource not found", e);
+            } else {
+                throw new BackendMethodFailedException("Server error", e);
+            }
+        }
+
+    }
 }

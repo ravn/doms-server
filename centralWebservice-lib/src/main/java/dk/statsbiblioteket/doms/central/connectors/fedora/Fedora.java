@@ -47,9 +47,9 @@ public interface Fedora {
 
 
     ObjectProfile getObjectProfile(String pid) throws
-                                                      BackendMethodFailedException,
-                                                      BackendInvalidCredsException,
-                                                      BackendInvalidResourceException;
+                                               BackendMethodFailedException,
+                                               BackendInvalidCredsException,
+                                               BackendInvalidResourceException;
 
     void modifyObjectState(String pid, String state, String comment)
             throws
@@ -92,8 +92,8 @@ public interface Fedora {
 
 
     List<String> getObjectsInCollection(String collectionPid, String contentModel) throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException;
+                                                                                   BackendInvalidCredsException,
+                                                                                   BackendMethodFailedException;
 
 
 
@@ -126,6 +126,12 @@ public interface Fedora {
 
 
     List<FedoraRelation> getInverseRelations(String pid, String predicate) throws BackendMethodFailedException,
-                                                                                    BackendInvalidCredsException,
-                                                                                    BackendInvalidResourceException;
+                                                                                  BackendInvalidCredsException,
+                                                                                  BackendInvalidResourceException;
+
+    void addExternalDatastream(String pid, String datastream, String label, String url, String formatURI,
+                               String mimeType, String comment) throws
+                                                                BackendMethodFailedException,
+                                                                BackendInvalidCredsException,
+                                                                BackendInvalidResourceException;
 }

@@ -28,12 +28,12 @@
 
 package dk.statsbiblioteket.doms.central;
 
-import dk.statsbiblioteket.doms.bitstorage.highlevel.Characterisation;
+
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.authchecker.AuthChecker;
-import dk.statsbiblioteket.doms.central.connectors.bitstorage.Bitstorage;
+
 import dk.statsbiblioteket.doms.central.connectors.ecm.ECM;
 import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
 import dk.statsbiblioteket.doms.central.connectors.fedora.FedoraFactory;
@@ -509,13 +509,17 @@ public class CentralWebserviceImpl implements CentralWebservice {
                                         @WebParam(name = "comment", targetNamespace = "") String comment)
             throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         long token = lock.getReadAndWritePerm();
+
+
         try {
             log.trace("Entering addFileFromPermamentURL with params pid=" + pid
                       + " and filename=" + filename + " and md5sum=" + md5Sum
                       + " and permanentURL=" + permanentURL + " and formatURI="
                       + formatURI);
             Credentials creds = getCredentials();
-            Bitstorage bs = new Bitstorage(creds, bitstorageLocation);
+            Fedora fedora = FedoraFactory.newInstance(creds,fedoraLocation);
+
+
             String existingObject = getFileObjectWithURL(permanentURL);
             if (existingObject != null) {
                 log.warn("Attempt to add a permament url that already exists"
@@ -528,16 +532,9 @@ public class CentralWebserviceImpl implements CentralWebservice {
                         + "been added to the object '" +
                         existingObject + "'");
             }
-            Characterisation emptycharac = new Characterisation();
-            emptycharac.setValidationStatus("valid");
-            emptycharac.setBestFormat(formatURI);
-            emptycharac.getFormatURIs().add(formatURI);
-            bs.uploadFileToObjectFromPermanentURLWithCharacterisation(pid,
-                                                                      filename,
-                                                                      permanentURL,
-                                                                      md5Sum,
-                                                                      emptycharac,
-                                                                      comment);
+            fedora.addExternalDatastream(pid,"CONTENTS",filename,permanentURL,formatURI,"application/octet-stream",comment);
+            setObjectLabel(pid,permanentURL,comment);
+
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
             throw new MethodFailedException("Webservice Config invalid",
