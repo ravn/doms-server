@@ -600,6 +600,8 @@ public class FedoraRest extends Connector implements Fedora {
                     .path("/datastreams/")
                     .path(URLEncoder.encode(datastream, "UTF-8"))
                     .queryParam("controlGroup","R")
+                    .queryParam("dsLocation",url)
+                    .queryParam("dsLabel",label)
                     .queryParam("formatURI",formatURI)
                     .queryParam("mimeType", mimeType)
                     .queryParam("logMessage", comment)
