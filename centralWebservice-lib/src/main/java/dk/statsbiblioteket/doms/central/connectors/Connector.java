@@ -28,6 +28,7 @@
 
 package dk.statsbiblioteket.doms.central.connectors;
 
+import com.sun.jersey.api.client.Client;
 import dk.statsbiblioteket.doms.webservices.authentication.Base64;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
 
@@ -42,6 +43,8 @@ import java.net.MalformedURLException;
  */
 public abstract class Connector {
 
+    public final static Client client = Client.create();
+
     private Credentials creds;
     protected String location;
 
@@ -52,11 +55,8 @@ public abstract class Connector {
         this.location = location;
     }
 
-    protected String credsAsBase64(){
-        String preBase64 = creds.getUsername() + ":" + creds.getPassword();
-        String base64 = Base64.encodeBytes(preBase64.getBytes());
-        return "Basic "+base64;
-    }
+
+
 
 
 

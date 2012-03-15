@@ -9,9 +9,11 @@ import dk.statsbiblioteket.doms.authchecker.user.User;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
+import dk.statsbiblioteket.doms.central.connectors.Connector;
 
 import javax.ws.rs.core.MediaType;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.net.UnknownServiceException;
 import java.util.HashMap;
@@ -26,12 +28,11 @@ import java.util.Set;
  * Time: 4:06 PM
  * To change this template use File | Settings | File Templates.
  */
-public class AuthChecker {
-
-    private Client client = Client.create();
+public class AuthChecker extends Connector{
     private WebResource restApi;
 
-    public AuthChecker(String authCheckerLocation) {
+    public AuthChecker(String authCheckerLocation) throws MalformedURLException {
+        super(null,authCheckerLocation);
         restApi = client.resource(authCheckerLocation);
     }
 

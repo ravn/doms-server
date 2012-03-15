@@ -32,6 +32,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
@@ -62,7 +63,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class FedoraRest extends Connector implements Fedora {
-    private static Client client = Client.create();
+
     private WebResource restApi;
 
     private static Log log = LogFactory.getLog(
@@ -73,7 +74,9 @@ public class FedoraRest extends Connector implements Fedora {
     public FedoraRest(Credentials creds, String location)
             throws MalformedURLException {
         super(creds, location);
+
         restApi = client.resource(location + "/objects");
+        restApi.addFilter(new HTTPBasicAuthFilter(creds.getUsername(),creds.getPassword()));
          port = calculateFedoraPort(location);
     }
 
@@ -92,7 +95,6 @@ public class FedoraRest extends Connector implements Fedora {
             dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectProfile profile =
                     restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
                             .queryParam("format", "text/xml")
-                            .header("Authorization", credsAsBase64())
                             .get(dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectProfile.class);
             ObjectProfile prof = new ObjectProfile();
             prof.setObjectCreatedDate(           profile.getObjCreateDate().toGregorianCalendar().getTime());
@@ -118,7 +120,6 @@ public class FedoraRest extends Connector implements Fedora {
             ObjectDatastreams datastreams = restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
                     .path("/datastreams")
                     .queryParam("format", "text/xml")
-                    .header("Authorization", credsAsBase64())
                     .get(ObjectDatastreams.class);
             List<DatastreamProfile> pdatastreams = new ArrayList<DatastreamProfile>();
             for (DatastreamType datastreamType : datastreams.getDatastream()) {
@@ -175,7 +176,6 @@ public class FedoraRest extends Connector implements Fedora {
                             .path("/datastreams/")
                             .path(dsid)
                             .queryParam("format", "text/xml")
-                            .header("Authorization", credsAsBase64())
                             .get(dk.statsbiblioteket.doms.central.connectors.fedora.generated.DatastreamProfile.class);
             DatastreamProfile profile = new DatastreamProfile();
             profile.setID(fdatastream.getDsID());
@@ -228,7 +228,6 @@ public class FedoraRest extends Connector implements Fedora {
             restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
                     .queryParam("state", state)
                     .queryParam("logMessage", comment)
-                    .header("Authorization", credsAsBase64())
                     .put();
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
@@ -264,7 +263,6 @@ public class FedoraRest extends Connector implements Fedora {
                     .path(URLEncoder.encode(datastream, "UTF-8"))
                     .queryParam("mimeType", "text/xml")
                     .queryParam("logMessage", comment)
-                    .header("Authorization", credsAsBase64())
                     .post(contents);
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
@@ -292,7 +290,6 @@ public class FedoraRest extends Connector implements Fedora {
                     .path("/datastreams/")
                     .path(URLEncoder.encode(datastream, "UTF-8"))
                     .path("/content")
-                    .header("Authorization", credsAsBase64())
                     .get(String.class);
             return contents;
         } catch (UnsupportedEncodingException e) {
@@ -338,7 +335,6 @@ public class FedoraRest extends Connector implements Fedora {
                     .queryParam("predicate", predicate)
                     .queryParam("object", object)
                     .queryParam("isLiteral",""+literal)
-                    .header("Authorization", credsAsBase64())
                     .post();
 
             if (predicate.equals("http://doms.statsbiblioteket.dk/relations/default/0/1/#hasLicense")){
@@ -352,7 +348,6 @@ public class FedoraRest extends Connector implements Fedora {
                                     "/fedora/objects/" + object + "/datastreams/LICENSE/content")
                         .queryParam("mimeType", "application/rdf+xml")
                         .queryParam("ignoreContent", "true")
-                        .header("Authorization", credsAsBase64())
                         .put();
             }
         } catch (UnsupportedEncodingException e) {
@@ -389,7 +384,7 @@ public class FedoraRest extends Connector implements Fedora {
             if (name != null) {
                 temp = temp.queryParam("predicate", name);
             }
-            String relationString = temp.header("Authorization", credsAsBase64()).get(String.class);
+            String relationString = temp.get(String.class);
 
 
             String[] lines = relationString.split("\n");
@@ -470,7 +465,6 @@ public class FedoraRest extends Connector implements Fedora {
                     .queryParam("predicate", predicate)
                     .queryParam("object", object)
                     .queryParam("isLiteral",""+literal)
-                    .header("Authorization", credsAsBase64())
                     .delete();
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
@@ -504,7 +498,6 @@ public class FedoraRest extends Connector implements Fedora {
             restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
                     .queryParam("label", name)
                     .queryParam("logMessage", comment)
-                    .header("Authorization", credsAsBase64())
                     .put();
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
@@ -540,7 +533,6 @@ public class FedoraRest extends Connector implements Fedora {
                     .queryParam("state", "true")
                     .queryParam("cDate", "true")
                     .queryParam("mDate", "true")
-                    .header("Authorization", credsAsBase64())
                     .get(ResultType.class);
 
             if (offset > 0){
@@ -550,7 +542,6 @@ public class FedoraRest extends Connector implements Fedora {
                     searchResult = restApi.queryParam("query", query)
                             .queryParam("sessionToken", token)
                             .queryParam("resultFormat", "xml")
-                            .header("Authorization", credsAsBase64())
                             .get(ResultType.class);
                 }
             }
@@ -612,7 +603,6 @@ public class FedoraRest extends Connector implements Fedora {
                     .queryParam("formatURI",formatURI)
                     .queryParam("mimeType", mimeType)
                     .queryParam("logMessage", comment)
-                    .header("Authorization", credsAsBase64())
                     .post();
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);

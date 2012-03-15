@@ -4,6 +4,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
@@ -26,7 +27,7 @@ import java.util.List;
 public class TripleStoreRest  extends Connector implements TripleStore{
 
 
-    private static Client client = Client.create();
+
     private WebResource restApi;
 
     private static Log log = LogFactory.getLog(
@@ -42,6 +43,7 @@ public class TripleStoreRest  extends Connector implements TripleStore{
                 .queryParam("format", "CSV")
                 .queryParam("flush", "true")
                 .queryParam("stream", "on");
+        restApi.addFilter(new HTTPBasicAuthFilter(creds.getUsername(),creds.getPassword()));
     }
 
 
@@ -72,8 +74,7 @@ public class TripleStoreRest  extends Connector implements TripleStore{
                            "or $object <fedora-model:state> <fedora-model:Inactive>)";
             String objects = restApi
                     .queryParam("query", query)
-                    .header("Authorization", credsAsBase64())
-                    .post(String.class);
+                                        .post(String.class);
             String[] lines = objects.split("\n");
             List<FedoraRelation> relations = new ArrayList<FedoraRelation>();
 
@@ -124,7 +125,6 @@ public class TripleStoreRest  extends Connector implements TripleStore{
                            "or $object <fedora-model:state> <fedora-model:Inactive>)";
             String objects = restApi
                     .queryParam("query", query)
-                    .header("Authorization", credsAsBase64())
                     .post(String.class);
             String[] lines = objects.split("\n");
             List<String> foundobjects = new ArrayList<String>();
@@ -175,7 +175,6 @@ public class TripleStoreRest  extends Connector implements TripleStore{
                            "or $object <fedora-model:state> <fedora-model:Inactive>)";
             String objects = restApi
                     .queryParam("query", query)
-                    .header("Authorization", credsAsBase64())
                     .post(String.class);
             String[] lines = objects.split("\n");
             List<String> foundobjects = new ArrayList<String>();
@@ -213,7 +212,6 @@ public class TripleStoreRest  extends Connector implements TripleStore{
                            + "where $object <fedora-model:label> '" + label + "'";
             String objects = restApi
                     .queryParam("query", query)
-                    .header("Authorization", credsAsBase64())
                     .post(String.class);
             String[] lines = objects.split("\n");
             List<String> foundobjects = new ArrayList<String>();

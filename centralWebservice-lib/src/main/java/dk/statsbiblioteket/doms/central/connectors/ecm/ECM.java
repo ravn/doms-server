@@ -32,6 +32,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
@@ -52,13 +53,13 @@ import java.util.List;
  */
 public class ECM extends Connector {
 
-    private static Client client = Client.create();
     private WebResource restApi;
 
     public ECM(Credentials creds, String ecmLocation)
             throws MalformedURLException {
         super(creds, ecmLocation);
         restApi = client.resource(location);
+        restApi.addFilter(new HTTPBasicAuthFilter(creds.getUsername(),creds.getPassword()));
     }
 
     public String createNewObject(String templatePid, List<String> oldIdentifiers, String comment) throws
@@ -75,7 +76,7 @@ public class ECM extends Connector {
                     temp = temp.queryParam("oldID", oldIdentifier);
                 }
             }
-            String clonePID = temp.header("Authorization", credsAsBase64())
+            String clonePID = temp
                     .post(String.class);
             return clonePID;
         } catch (UnsupportedEncodingException e) {
@@ -102,7 +103,6 @@ public class ECM extends Connector {
                     .path("/forAngle/")
                     .path(angle)
                     .queryParam("bundle", "true")
-                    .header("Authorization", credsAsBase64())
                     .get(String.class);
             return bundle;
         } catch (UniformInterfaceException e) {
@@ -129,7 +129,6 @@ public class ECM extends Connector {
                     .path(URLEncoder.encode(pid, "UTF-8"))
                     .path("/forAngle/")
                     .path(angle)
-                    .header("Authorization", credsAsBase64())
                     .get(PidList.class);
             return list;
 
