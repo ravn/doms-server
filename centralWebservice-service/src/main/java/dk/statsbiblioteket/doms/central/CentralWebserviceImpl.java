@@ -47,7 +47,6 @@ import javax.annotation.Resource;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.ws.Holder;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import java.lang.String;
@@ -72,18 +71,18 @@ public class CentralWebserviceImpl implements CentralWebservice {
             CentralWebserviceImpl.class);
     private static Lock lock = new Lock();
 
-    private String ecmLocation;
     private String fedoraLocation;
-    private String bitstorageLocation;
     private String updateTrackerLocation;
     private String authCheckerLocation;
+    private String pidgeneratorclassString;
+    private String fedoraconnectorclassstring;
 
 
     public CentralWebserviceImpl() {
-        bitstorageLocation = ConfigCollection.getProperties().getProperty(
-                "dk.statsbiblioteket.doms.central.bitstorageWSDL");
-        ecmLocation = ConfigCollection.getProperties().getProperty(
-                "dk.statsbiblioteket.doms.central.ecmLocation");
+        pidgeneratorclassString = ConfigCollection.getProperties()
+                .getProperty("dk.statsbiblioteket.doms.ecm.pidGenerator.client");
+        fedoraconnectorclassstring =
+                ConfigCollection.getProperties().getProperty("dk.statsbiblioteket.doms.ecm.fedora.connector");
         fedoraLocation = ConfigCollection.getProperties().getProperty(
                 "dk.statsbiblioteket.doms.central.fedoraLocation");
         updateTrackerLocation = ConfigCollection.getProperties().getProperty(
@@ -105,7 +104,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                     "Entering newObject with params pid=" + pid + " and oldIDs="
                     + oldID.toString());
             Credentials creds = getCredentials();
-            ECM ecm = new ECM(creds, ecmLocation);
+            ECM ecm = new ECM(creds,fedoraLocation,fedoraconnectorclassstring,pidgeneratorclassString);
             return ecm.createNewObject(pid, oldID, comment);
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
@@ -824,7 +823,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
         Credentials creds = getCredentials();
         try {
-            ECM ecm = new ECM(creds, ecmLocation);
+            ECM ecm = new ECM(creds,fedoraLocation,fedoraconnectorclassstring,pidgeneratorclassString);
 /*
             List<String> types = ecm.getEntryContentModelsForObject(pid,
                                                                     viewAngle);

@@ -93,6 +93,19 @@
         </dependency>
 
 
+         <dependency>
+            <groupId>dk.statsbiblioteket.doms.ecm</groupId>
+            <artifactId>ecm-view</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dk.statsbiblioteket.doms.ecm</groupId>
+            <artifactId>ecm-templates</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dk.statsbiblioteket.doms.ecm</groupId>
+            <artifactId>ecm-fedoraclient</artifactId>
+        </dependency>
+
     </dependencies>
 
 

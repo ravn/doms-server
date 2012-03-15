@@ -37,8 +37,19 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.Connector;
+import dk.statsbiblioteket.doms.ecm.repository.CachingConnector;
+import dk.statsbiblioteket.doms.ecm.repository.FedoraConnector;
+import dk.statsbiblioteket.doms.ecm.repository.FedoraUserToken;
+import dk.statsbiblioteket.doms.ecm.repository.PidGenerator;
+import dk.statsbiblioteket.doms.ecm.repository.exceptions.*;
+import dk.statsbiblioteket.doms.ecm.repository.utils.DocumentUtils;
+import dk.statsbiblioteket.doms.ecm.services.templates.TemplateSubsystem;
+import dk.statsbiblioteket.doms.ecm.services.view.ViewSubsystem;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
+import dk.statsbiblioteket.doms.webservices.configuration.ConfigCollection;
+import org.w3c.dom.Document;
 
+import javax.xml.transform.TransformerException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
@@ -51,44 +62,84 @@ import java.util.List;
  * Time: 1:50:26 PM
  * To change this template use File | Settings | File Templates.
  */
-public class ECM extends Connector {
+public class ECM  {
 
-    private WebResource restApi;
 
-    public ECM(Credentials creds, String ecmLocation)
-            throws MalformedURLException {
-        super(creds, ecmLocation);
-        restApi = client.resource(location);
-        restApi.addFilter(new HTTPBasicAuthFilter(creds.getUsername(),creds.getPassword()));
+    private FedoraConnector fedoraConnector;
+    private boolean initialised;
+    private ViewSubsystem view;
+    private TemplateSubsystem temps;
+    private PidGenerator pidGenerator;
+
+    public ECM(Credentials creds, String fedoraserverurl, String fedoraconnectorclassstring,
+               String pidgeneratorclassString)
+            throws MalformedURLException, InitialisationException {
+
+
+        view = new ViewSubsystem();
+        temps = new TemplateSubsystem();
+
+        try {
+            Class<?> pidgeneratorClass = Class.forName(pidgeneratorclassString);
+            if (PidGenerator.class.isAssignableFrom(pidgeneratorClass)) {
+                try {
+                    pidGenerator = (PidGenerator) pidgeneratorClass.newInstance();
+                } catch (InstantiationException e) {
+                    throw new InitialisationException("Initialise failed", e);
+                } catch (IllegalAccessException e) {
+                    throw new InitialisationException("Initialise failed", e);
+                }
+            } else {//Class not implementing the correct interface
+                throw new InitialisationException("Initialise failed");
+            }
+        } catch (ClassNotFoundException e) {
+            throw new InitialisationException("Initialise failed", e);
+        }
+
+        if (initialised){
+            return;
+        }
+        try {
+            Class<?> fedoraconnectorclass = Class.forName(fedoraconnectorclassstring);
+            if (FedoraConnector.class.isAssignableFrom(fedoraconnectorclass)) {
+                try {
+                    fedoraConnector = (FedoraConnector) fedoraconnectorclass.newInstance();
+                    fedoraConnector = new CachingConnector(fedoraConnector);
+                    FedoraUserToken token =
+                            new FedoraUserToken(fedoraserverurl, creds.getUsername(),creds.getPassword());
+                    fedoraConnector.initialise(token);
+                } catch (InstantiationException e) {//TODO
+                    throw new InitialisationException("Initialise failed", e);
+                } catch (IllegalAccessException e) {//TODO
+                    throw new InitialisationException("Initialise failed", e);
+                }
+            }
+        } catch (ClassNotFoundException e) {//TODO
+            throw new InitialisationException("Initialise failed", e);
+        }
+        initialised = true;
     }
+
+
 
     public String createNewObject(String templatePid, List<String> oldIdentifiers, String comment) throws
                                                                                                    BackendMethodFailedException,
                                                                                                    BackendInvalidCredsException,
                                                                                                    BackendInvalidResourceException {
         try {
-            WebResource temp = restApi
-                    .path("/clone/")
-                    .queryParam("logMessage", comment)
-                    .path(URLEncoder.encode(templatePid, "UTF-8"));
-            if (oldIdentifiers != null) {
-                for (String oldIdentifier : oldIdentifiers) {
-                    temp = temp.queryParam("oldID", oldIdentifier);
-                }
-            }
-            String clonePID = temp
-                    .post(String.class);
-            return clonePID;
-        } catch (UnsupportedEncodingException e) {
-            throw new BackendMethodFailedException("UTF-8 not known....", e);
-        } catch (UniformInterfaceException e) {
-            if (e.getResponse().getClientResponseStatus()
-                    .equals(ClientResponse.Status.UNAUTHORIZED)) {
-                throw new BackendInvalidCredsException(
-                        "Invalid Credentials Supplied", e);
-            } else {
-                throw new BackendMethodFailedException("Server error", e);
-            }
+            return temps.cloneTemplate(templatePid, oldIdentifiers, comment, fedoraConnector, pidGenerator);
+        } catch (PIDGeneratorException e) {
+            throw new BackendMethodFailedException("Server error", e);
+        } catch (InvalidCredentialsException e) {
+            throw new BackendInvalidCredsException("Invalid credentials",e);
+        } catch (ObjectNotFoundException e) {
+            throw new BackendInvalidResourceException("Object not found",e);
+        } catch (FedoraIllegalContentException e) {
+            throw new BackendMethodFailedException("Server error", e);
+        } catch (ObjectIsWrongTypeException e) {
+            throw new BackendMethodFailedException("Server error", e);
+        } catch (FedoraConnectionException e) {
+            throw new BackendMethodFailedException("Server error", e);
         }
     }
 
@@ -97,54 +148,28 @@ public class ECM extends Connector {
                    BackendInvalidCredsException,
                    BackendInvalidResourceException {
         try {
-            String bundle = restApi
-                    .path("getViewObjectsForObject/")
-                    .path(URLEncoder.encode(pid, "UTF-8"))
-                    .path("/forAngle/")
-                    .path(angle)
-                    .queryParam("bundle", "true")
-                    .get(String.class);
-            return bundle;
-        } catch (UniformInterfaceException e) {
-            if (e.getResponse().getClientResponseStatus()
-                    .equals(ClientResponse.Status.UNAUTHORIZED)) {
-                throw new BackendInvalidCredsException(
-                        "Invalid Credentials Supplied", e);
-            } else {
-                throw new BackendMethodFailedException("Server error", e);
-            }
-        } catch (UnsupportedEncodingException e) {
-            throw new BackendMethodFailedException("UTF-8 not known....", e);
+
+            //Return a string, as the two different return formats
+            //confuse java
+            Document dobundle = view.getViewObjectBundleForObject(
+                    pid,
+                    angle,
+                    fedoraConnector);
+            return DocumentUtils.documentToString(dobundle);
+        } catch (InvalidCredentialsException e) {
+            throw new BackendInvalidCredsException("Invalid credentials",e);
+        } catch (ObjectNotFoundException e) {
+            throw new BackendInvalidResourceException("Object not found",e);
+        } catch (FedoraIllegalContentException e) {
+            throw new BackendMethodFailedException("Server error", e);
+        } catch (FedoraConnectionException e) {
+            throw new BackendMethodFailedException("Server error", e);
+        } catch (TransformerException e) {
+            throw new BackendMethodFailedException("Server error", e);
         }
 
     }
 
-    public List<String> getEntryContentModelsForObject(String pid, String angle)
-            throws BackendInvalidCredsException,
-                   BackendMethodFailedException,
-                   BackendInvalidResourceException {
-        try {
-            PidList list = restApi
-                    .path("getEntryContentModelsForObject/")
-                    .path(URLEncoder.encode(pid, "UTF-8"))
-                    .path("/forAngle/")
-                    .path(angle)
-                    .get(PidList.class);
-            return list;
 
-        } catch (UniformInterfaceException e) {
-            if (e.getResponse().getClientResponseStatus()
-                    .equals(ClientResponse.Status.UNAUTHORIZED)) {
-                throw new BackendInvalidCredsException(
-                        "Invalid Credentials Supplied", e);
-            } else {
-                throw new BackendMethodFailedException("Server error", e);
-            }
-        } catch (UnsupportedEncodingException e) {
-            throw new BackendMethodFailedException("UTF-8 not known....", e);
-        }
-
-
-    }
 
 }

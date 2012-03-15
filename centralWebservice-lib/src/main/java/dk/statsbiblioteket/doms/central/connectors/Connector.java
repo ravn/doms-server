@@ -55,9 +55,11 @@ public abstract class Connector {
         this.location = location;
     }
 
+    public String getUsername(){
+        return creds.getUsername();
+    }
 
-
-
-
-
+    public String getPassword() {
+        return creds.getPassword();
+    }
 }
