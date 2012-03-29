@@ -1,8 +1,9 @@
-package dk.statsbiblioteket.doms.central.connectors.fedora;
+package dk.statsbiblioteket.doms.central.connectors.fedora.tripleStore;
 
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
+import dk.statsbiblioteket.doms.central.connectors.fedora.structures.FedoraRelation;
 
 import java.util.List;
 
@@ -44,4 +45,13 @@ public interface TripleStore {
                                                                                   BackendInvalidCredsException,
                                                                                   BackendInvalidResourceException;
 
+
+
+        /**
+     * Runs any query, that produces one column of results, and return each line as a string
+     * @param query The query to execute
+     * @return an empty list
+     */
+    public List<String> genericQuery(String query)
+            throws BackendInvalidCredsException, BackendMethodFailedException;
 }

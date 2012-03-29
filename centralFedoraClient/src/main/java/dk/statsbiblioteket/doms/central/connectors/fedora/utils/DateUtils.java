@@ -1,4 +1,4 @@
-package dk.statsbiblioteket.doms.central.connectors.fedora;
+package dk.statsbiblioteket.doms.central.connectors.fedora.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

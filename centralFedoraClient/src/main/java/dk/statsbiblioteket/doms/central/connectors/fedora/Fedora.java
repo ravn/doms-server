@@ -30,6 +30,9 @@ package dk.statsbiblioteket.doms.central.connectors.fedora;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
+import dk.statsbiblioteket.doms.central.connectors.fedora.structures.FedoraRelation;
+import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectProfile;
+import dk.statsbiblioteket.doms.central.connectors.fedora.structures.SearchResult;
 
 import java.util.List;
 
@@ -41,9 +44,24 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public interface Fedora {
-    String STATE_ACTIVE = "A";
-    String STATE_INACTIVE = "I";
-    String STATE_DELETED = "D";
+
+
+    boolean exists(java.lang.String pid) throws BackendInvalidCredsException, BackendMethodFailedException;
+
+    boolean isDataObject(java.lang.String pid) throws BackendInvalidCredsException, BackendMethodFailedException;
+
+    boolean isTemplate(java.lang.String pid) throws BackendInvalidCredsException, BackendMethodFailedException;
+
+    boolean isContentModel(java.lang.String pid) throws BackendInvalidCredsException, BackendMethodFailedException;
+
+
+    java.lang.String getObjectXml(java.lang.String pid)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException;
+
+    java.lang.String ingestDocument(org.w3c.dom.Document document, java.lang.String pid)
+            throws BackendMethodFailedException, BackendInvalidCredsException;
+
+
 
 
     ObjectProfile getObjectProfile(String pid) throws

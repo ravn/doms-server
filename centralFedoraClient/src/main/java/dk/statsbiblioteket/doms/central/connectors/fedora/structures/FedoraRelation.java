@@ -1,4 +1,4 @@
-package dk.statsbiblioteket.doms.central.connectors.fedora;
+package dk.statsbiblioteket.doms.central.connectors.fedora.structures;
 
 /**
  * Created by IntelliJ IDEA.

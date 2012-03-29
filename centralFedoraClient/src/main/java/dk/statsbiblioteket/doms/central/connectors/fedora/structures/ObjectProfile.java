@@ -1,6 +1,10 @@
-package dk.statsbiblioteket.doms.central.connectors.fedora;
+package dk.statsbiblioteket.doms.central.connectors.fedora.structures;
 
 
+
+import dk.statsbiblioteket.doms.central.connectors.fedora.structures.DatastreamProfile;
+import dk.statsbiblioteket.doms.central.connectors.fedora.structures.FedoraRelation;
+import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectType;
 
 import java.util.Date;
 import java.util.List;

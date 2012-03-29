@@ -28,10 +28,8 @@
 
 package dk.statsbiblioteket.doms.central.connectors.fedora;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.UniformInterfaceException;
-import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.*;
+import com.sun.jersey.api.client.filter.ClientFilter;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
@@ -41,11 +39,19 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.generated.DatastreamTy
 import dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectDatastreams;
 import dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectFieldsType;
 import dk.statsbiblioteket.doms.central.connectors.fedora.generated.ResultType;
+import dk.statsbiblioteket.doms.central.connectors.fedora.structures.*;
+import dk.statsbiblioteket.doms.central.connectors.fedora.utils.DateUtils;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
+import dk.statsbiblioteket.util.xml.DOM;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Document;
 
 
+import javax.security.auth.Subject;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.xml.transform.TransformerException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -77,7 +83,7 @@ public class FedoraRest extends Connector implements Fedora {
 
         restApi = client.resource(location + "/objects");
         restApi.addFilter(new HTTPBasicAuthFilter(creds.getUsername(),creds.getPassword()));
-         port = calculateFedoraPort(location);
+        port = calculateFedoraPort(location);
     }
 
     private String calculateFedoraPort(String location) {
@@ -85,6 +91,106 @@ public class FedoraRest extends Connector implements Fedora {
         portString = portString.substring(0, portString.indexOf('/'));
         return portString;
     }
+
+    @Override
+    public boolean exists(String pid) throws BackendInvalidCredsException, BackendMethodFailedException {
+        try {
+            ObjectProfile profile = getObjectProfile(pid);
+        } catch (BackendInvalidResourceException e) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isDataObject(String pid) throws BackendInvalidCredsException, BackendMethodFailedException {
+        try {
+            ObjectProfile profile = getObjectProfile(pid);
+            return profile.getType().equals(ObjectType.DATA_OBJECT);
+        } catch (BackendInvalidResourceException e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isTemplate(String pid) throws BackendInvalidCredsException, BackendMethodFailedException {
+        try {
+            ObjectProfile profile = getObjectProfile(pid);
+            return profile.getType().equals(ObjectType.TEMPLATE);
+        } catch (BackendInvalidResourceException e) {
+            return false;
+        }
+
+    }
+
+    @Override
+    public boolean isContentModel(String pid) throws BackendInvalidCredsException, BackendMethodFailedException {
+        try {
+            ObjectProfile profile = getObjectProfile(pid);
+            return profile.getType().equals(ObjectType.CONTENT_MODEL);
+        } catch (BackendInvalidResourceException e) {
+            return false;
+        }
+
+    }
+
+    @Override
+    public String getObjectXml(String pid)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
+
+        try {
+            //Get basic fedora profile
+            String xml = restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
+                    .path("/objectXML")
+                    .type(MediaType.TEXT_XML_TYPE)
+                    .get(String.class);
+            return xml;
+        } catch (UnsupportedEncodingException e) {
+            throw new BackendMethodFailedException("UTF-8 not known....", e);
+        } catch (UniformInterfaceException e) {
+            if (e.getResponse().getStatus()
+                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                throw new BackendInvalidCredsException(
+                        "Invalid Credentials Supplied",
+                        e);
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
+                throw new BackendInvalidResourceException("Resource not found", e);
+            } else {
+                throw new BackendMethodFailedException("Server error", e);
+            }
+        }
+    }
+
+
+    @Override
+    public String ingestDocument(Document document, String logmessage)
+            throws BackendMethodFailedException, BackendInvalidCredsException {
+        String payload;
+        try {
+
+            payload = DOM.domToString(document);
+        } catch (TransformerException e) {
+            throw new BackendMethodFailedException("Supplied document not valid", e);
+        }
+        try {
+
+            String pid = restApi.path("/").path(URLEncoder.encode("new", "UTF-8"))
+                    .post(String.class, payload);
+            return pid;
+        } catch (UnsupportedEncodingException e) {
+            throw new BackendMethodFailedException("UTF-8 not known....", e);
+        } catch (UniformInterfaceException e) {
+            if (e.getResponse().getStatus()
+                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                throw new BackendInvalidCredsException(
+                        "Invalid Credentials Supplied when ingesting document: \n'"+payload+"'",
+                        e);
+            } else {
+                throw new BackendMethodFailedException("Server error when ingesting document: \n'"+payload+"'", e);
+            }
+        }
+    }
+
 
     public ObjectProfile getObjectProfile(String pid) throws
                                                       BackendMethodFailedException,
@@ -157,12 +263,12 @@ public class FedoraRest extends Connector implements Fedora {
             if (e.getResponse().getStatus()
                 == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException(
-                        "Invalid Credentials Supplied",
+                        "Invalid Credentials Supplied: pid '"+pid+"'",
                         e);
             } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
-                throw new BackendInvalidResourceException("Resource not found", e);
+                throw new BackendInvalidResourceException("Resource '"+pid+"'not found", e);
             } else {
-                throw new BackendMethodFailedException("Server error", e);
+                throw new BackendMethodFailedException("Server error for '"+pid+"'", e);
             }
         }
 
@@ -205,12 +311,12 @@ public class FedoraRest extends Connector implements Fedora {
             if (e.getResponse().getStatus()
                 == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException(
-                        "Invalid Credentials Supplied",
+                        "Invalid Credentials Supplied: pid '"+pid+"'",
                         e);
             } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
-                throw new BackendInvalidResourceException("Resource not found", e);
+                throw new BackendInvalidResourceException("Resource '"+pid+"'not found", e);
             } else {
-                throw new BackendMethodFailedException("Server error", e);
+                throw new BackendMethodFailedException("Server error for '"+pid+"'", e);
             }
         }
 
@@ -235,12 +341,12 @@ public class FedoraRest extends Connector implements Fedora {
             if (e.getResponse().getStatus()
                 == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException(
-                        "Invalid Credentials Supplied",
+                        "Invalid Credentials Supplied: pid '"+pid+"'",
                         e);
             } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
-                throw new BackendInvalidResourceException("Resource not found", e);
+                throw new BackendInvalidResourceException("Resource '"+pid+"'not found", e);
             } else {
-                throw new BackendMethodFailedException(e.getResponse().getEntity(String.class), e);
+                throw new BackendMethodFailedException("Server error for '"+pid+"'", e);
             }
         }
     }
@@ -270,12 +376,12 @@ public class FedoraRest extends Connector implements Fedora {
             if (e.getResponse().getStatus()
                 == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException(
-                        "Invalid Credentials Supplied",
+                        "Invalid Credentials Supplied: pid '"+pid+"'",
                         e);
             } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
-                throw new BackendInvalidResourceException("Resource not found", e);
+                throw new BackendInvalidResourceException("Resource '"+pid+"'not found", e);
             } else {
-                throw new BackendMethodFailedException("Server error", e);
+                throw new BackendMethodFailedException("Server error for '"+pid+"'", e);
             }
         }
     }
@@ -298,12 +404,12 @@ public class FedoraRest extends Connector implements Fedora {
             if (e.getResponse().getStatus()
                 == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException(
-                        "Invalid Credentials Supplied",
+                        "Invalid Credentials Supplied: pid '"+pid+"'",
                         e);
             } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
-                throw new BackendInvalidResourceException("Resource not found", e);
+                throw new BackendInvalidResourceException("Resource '"+pid+"'not found", e);
             } else {
-                throw new BackendMethodFailedException("Server error", e);
+                throw new BackendMethodFailedException("Server error for '"+pid+"'", e);
             }
         }
     }
@@ -345,7 +451,7 @@ public class FedoraRest extends Connector implements Fedora {
                 restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
                         .path("/datastreams/POLICY")
                         .queryParam("dsLocation", "http://localhost:"+port+
-                                    "/fedora/objects/" + object + "/datastreams/LICENSE/content")
+                                                  "/fedora/objects/" + object + "/datastreams/LICENSE/content")
                         .queryParam("mimeType", "application/rdf+xml")
                         .queryParam("ignoreContent", "true")
                         .put();
@@ -356,14 +462,14 @@ public class FedoraRest extends Connector implements Fedora {
             if (e.getResponse().getStatus()
                 == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException(
-                        "Invalid Credentials Supplied",
+                        "Invalid Credentials Supplied: pid '"+pid+"'",
                         e);
             } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
-                throw new BackendInvalidResourceException("Resource not found", e);
+                throw new BackendInvalidResourceException("Resource '"+pid+"'not found", e);
             } else {
-                log.info(e.getResponse().toString());
-                throw new BackendMethodFailedException("Server error", e);
+                throw new BackendMethodFailedException("Server error for '"+pid+"'", e);
             }
+
         } catch (URISyntaxException e) {
             throw new BackendMethodFailedException("Failed to parse predicate as an URI", e);
         }
@@ -411,12 +517,12 @@ public class FedoraRest extends Connector implements Fedora {
             if (e.getResponse().getStatus()
                 == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException(
-                        "Invalid Credentials Supplied",
+                        "Invalid Credentials Supplied: pid '"+pid+"'",
                         e);
             } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
-                throw new BackendInvalidResourceException("Resource not found", e);
+                throw new BackendInvalidResourceException("Resource '"+pid+"'not found", e);
             } else {
-                throw new BackendMethodFailedException("Server error", e);
+                throw new BackendMethodFailedException("Server error for '"+pid+"'", e);
             }
         }
     }
@@ -472,13 +578,14 @@ public class FedoraRest extends Connector implements Fedora {
             if (e.getResponse().getStatus()
                 == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException(
-                        "Invalid Credentials Supplied",
+                        "Invalid Credentials Supplied: pid '"+pid+"'",
                         e);
             } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
-                throw new BackendInvalidResourceException("Resource not found", e);
+                throw new BackendInvalidResourceException("Resource '"+pid+"'not found", e);
             } else {
-                throw new BackendMethodFailedException("Server error", e);
+                throw new BackendMethodFailedException("Server error for '"+pid+"'", e);
             }
+
         } catch (URISyntaxException e) {
             throw new BackendMethodFailedException("Failed to parse predicate as an URI", e);
         }
@@ -522,7 +629,7 @@ public class FedoraRest extends Connector implements Fedora {
                                           int pageLength) throws
                                                           BackendMethodFailedException,
                                                           BackendInvalidCredsException
-                                                          {
+    {
         try {
 
             ResultType searchResult = restApi.queryParam("terms", query)
@@ -581,20 +688,20 @@ public class FedoraRest extends Connector implements Fedora {
             }
 
             /*
-            @PathParam(RestParam.PID) String pid,
-                                  @PathParam(RestParam.DSID) String dsID,
-                                  @QueryParam(RestParam.CONTROL_GROUP) @DefaultValue("X") String controlGroup,
-                                  @QueryParam(RestParam.DS_LOCATION) String dsLocation,
-                                  @QueryParam(RestParam.ALT_IDS) List<String> altIDs,
-                                  @QueryParam(RestParam.DS_LABEL) String dsLabel,
-                                  @QueryParam(RestParam.VERSIONABLE) @DefaultValue("true") Boolean versionable,
-                                  @QueryParam(RestParam.DS_STATE) @DefaultValue("A") String dsState,
-                                  @QueryParam(RestParam.FORMAT_URI) String formatURI,
-                                  @QueryParam(RestParam.CHECKSUM_TYPE) String checksumType,
-                                  @QueryParam(RestParam.CHECKSUM) String checksum,
-                                  @QueryParam(RestParam.MIME_TYPE) String mimeType,
-                                  @QueryParam(RestParam.LOG_MESSAGE) String logMessage
-             */
+           @PathParam(RestParam.PID) String pid,
+                                 @PathParam(RestParam.DSID) String dsID,
+                                 @QueryParam(RestParam.CONTROL_GROUP) @DefaultValue("X") String controlGroup,
+                                 @QueryParam(RestParam.DS_LOCATION) String dsLocation,
+                                 @QueryParam(RestParam.ALT_IDS) List<String> altIDs,
+                                 @QueryParam(RestParam.DS_LABEL) String dsLabel,
+                                 @QueryParam(RestParam.VERSIONABLE) @DefaultValue("true") Boolean versionable,
+                                 @QueryParam(RestParam.DS_STATE) @DefaultValue("A") String dsState,
+                                 @QueryParam(RestParam.FORMAT_URI) String formatURI,
+                                 @QueryParam(RestParam.CHECKSUM_TYPE) String checksumType,
+                                 @QueryParam(RestParam.CHECKSUM) String checksum,
+                                 @QueryParam(RestParam.MIME_TYPE) String mimeType,
+                                 @QueryParam(RestParam.LOG_MESSAGE) String logMessage
+            */
             restApi.path("/")
                     .path(URLEncoder.encode(pid, "UTF-8"))
                     .path("/datastreams/")
@@ -612,12 +719,12 @@ public class FedoraRest extends Connector implements Fedora {
             if (e.getResponse().getStatus()
                 == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException(
-                        "Invalid Credentials Supplied",
+                        "Invalid Credentials Supplied: pid '"+pid+"'",
                         e);
             } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
-                throw new BackendInvalidResourceException("Resource not found", e);
+                throw new BackendInvalidResourceException("Resource '"+pid+"'not found", e);
             } else {
-                throw new BackendMethodFailedException("Server error", e);
+                throw new BackendMethodFailedException("Server error for '"+pid+"'", e);
             }
         }
 

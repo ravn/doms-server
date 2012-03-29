@@ -6,6 +6,7 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/xjc" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/annotations" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target/apidocs" />
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />
@@ -13,7 +14,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="centralFedoraClient" />
     <orderEntry type="library" name="Maven: dk.statsbiblioteket.doms.domsutil.surveyable:domsutil-logappender:0.0.20" level="project" />
     <orderEntry type="library" name="Maven: dk.statsbiblioteket.doms.domsutil:domsutil-webservice-common:0.0.20" level="project" />
     <orderEntry type="library" name="Maven: dk.statsbiblioteket.sbutil:sbutil:0.5.5" level="project" />
@@ -28,8 +28,6 @@
     <orderEntry type="library" name="Maven: commons-cli:commons-cli:1.1" level="project" />
     <orderEntry type="library" name="Maven: com.thoughtworks.xstream:xstream:1.2.2" level="project" />
     <orderEntry type="library" name="Maven: xpp3:xpp3_min:1.1.3.4.O" level="project" />
-    <orderEntry type="library" name="Maven: dk.statsbiblioteket.doms.authchecker:authchecker-authutils:0.0.11" level="project" />
-    <orderEntry type="library" name="Maven: dk.statsbiblioteket.doms.updatetracker:updatetracker-interface:0.0.14" level="project" />
   </component>
 </module>
 

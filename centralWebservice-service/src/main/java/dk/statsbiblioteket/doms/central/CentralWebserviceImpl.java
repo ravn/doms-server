@@ -29,20 +29,25 @@
 package dk.statsbiblioteket.doms.central;
 
 
+import com.sun.xml.ws.developer.servlet.HttpSessionScope;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.authchecker.AuthChecker;
 
-import dk.statsbiblioteket.doms.central.connectors.ecm.ECM;
+
 import dk.statsbiblioteket.doms.central.connectors.fedora.*;
+import dk.statsbiblioteket.doms.central.connectors.fedora.structures.FedoraRelation;
 import dk.statsbiblioteket.doms.central.connectors.updatetracker.UpdateTracker;
 import dk.statsbiblioteket.doms.central.connectors.updatetracker.UpdateTrackerRecord;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
 import dk.statsbiblioteket.doms.webservices.configuration.ConfigCollection;
+import dk.statsbiblioteket.util.xml.DOM;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Document;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.jws.WebParam;
 import javax.jws.WebService;
@@ -62,6 +67,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 @WebService(endpointInterface = "dk.statsbiblioteket.doms.central.CentralWebservice")
+@HttpSessionScope
 public class CentralWebserviceImpl implements CentralWebservice {
 
     @Resource
@@ -71,18 +77,17 @@ public class CentralWebserviceImpl implements CentralWebservice {
             CentralWebserviceImpl.class);
     private static Lock lock = new Lock();
 
-    private String fedoraLocation;
-    private String updateTrackerLocation;
-    private String authCheckerLocation;
-    private String pidgeneratorclassString;
-    private String fedoraconnectorclassstring;
+    private final String fedoraLocation;
+    private final String updateTrackerLocation;
+    private final String authCheckerLocation;
+    private final String pidgeneratorLocation;
+
+
 
 
     public CentralWebserviceImpl() {
-        pidgeneratorclassString = ConfigCollection.getProperties()
-                .getProperty("dk.statsbiblioteket.doms.ecm.pidGenerator.client");
-        fedoraconnectorclassstring =
-                ConfigCollection.getProperties().getProperty("dk.statsbiblioteket.doms.ecm.fedora.connector");
+        pidgeneratorLocation = ConfigCollection.getProperties()
+                .getProperty("dk.statsbiblioteket.doms.ecm.pidGeneratorLocation");
         fedoraLocation = ConfigCollection.getProperties().getProperty(
                 "dk.statsbiblioteket.doms.central.fedoraLocation");
         updateTrackerLocation = ConfigCollection.getProperties().getProperty(
@@ -90,6 +95,14 @@ public class CentralWebserviceImpl implements CentralWebservice {
         authCheckerLocation = ConfigCollection.getProperties().getProperty(
                 "dk.statsbiblioteket.doms.central.authCheckerLocation");
 
+    }
+
+    private EnhancedFedora fedora;
+
+    @PostConstruct
+    private void initialise(Credentials creds) throws MalformedURLException {
+        creds = getCredentials();
+        fedora = new EnhancedFedoraImpl(creds, fedoraLocation, pidgeneratorLocation);
     }
 
 
@@ -103,15 +116,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
             log.trace(
                     "Entering newObject with params pid=" + pid + " and oldIDs="
                     + oldID.toString());
-            Credentials creds = getCredentials();
-            ECM ecm = new ECM(creds,fedoraLocation,fedoraconnectorclassstring,pidgeneratorclassString);
-            return ecm.createNewObject(pid, oldID, comment);
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            throw new MethodFailedException("Webservice Config invalid",
-                                            "Webservice Config invalid",
-                                            e);
-        } catch (BackendMethodFailedException e) {
+            return fedora.cloneTemplate(pid,oldID,comment);
+        }  catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute",
                                             "Method failed to execute",
@@ -140,10 +146,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         try {
             log.trace("Entering getObjectProfile with params pid='" + pid+"'");
-            Credentials creds = getCredentials();
-            Fedora fedora = FedoraFactory.newInstance(creds,
-                                                      fedoraLocation);
-            dk.statsbiblioteket.doms.central.connectors.fedora.ObjectProfile fprofile = fedora.getObjectProfile(pid);
+            dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectProfile fprofile = fedora.getObjectProfile(pid);
             ObjectProfile wprofile = new ObjectProfile();
             wprofile.setTitle(fprofile.getLabel());
             wprofile.setPid(fprofile.getPid());
@@ -171,7 +174,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
             //Datastreams
             List<DatastreamProfile> datastreams = wprofile.getDatastreams();
-            for (dk.statsbiblioteket.doms.central.connectors.fedora.DatastreamProfile datastreamProfile : fprofile
+            for (dk.statsbiblioteket.doms.central.connectors.fedora.structures.DatastreamProfile datastreamProfile : fprofile
                     .getDatastreams()) {
                 DatastreamProfile wdprofile = new DatastreamProfile();
                 wdprofile.setId(datastreamProfile.getID());
@@ -196,12 +199,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
 
 
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            throw new MethodFailedException("Webservice Config invalid",
-                                            "Webservice Config invalid",
-                                            e);
-        } catch (BackendMethodFailedException e) {
+        }  catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute",
                                             "Method failed to execute",
@@ -232,16 +230,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
         try {
             log.trace("Entering setObjectLabel with params pid=" + pid
                       + " and name=" + name);
-            Credentials creds = getCredentials();
-            Fedora fedora = FedoraFactory.newInstance(creds,
-                                                      fedoraLocation);
             fedora.modifyObjectLabel(pid, name, comment);
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            throw new MethodFailedException("Webservice Config invalid",
-                                            "Webservice Config invalid",
-                                            e);
-        } catch (BackendMethodFailedException e) {
+        }  catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute",
                                             "Method failed to execute",
@@ -275,18 +265,10 @@ public class CentralWebserviceImpl implements CentralWebservice {
         long token = lock.getReadAndWritePerm();
         try {
             log.trace("Entering deleteObject with params pid=" + pids);
-            Credentials creds = getCredentials();
-            Fedora fedora = FedoraFactory.newInstance(creds,
-                                                      fedoraLocation);
             for (String pid : pids) {
                 fedora.modifyObjectState(pid, fedora.STATE_DELETED, comment);
             }
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            throw new MethodFailedException("Webservice Config invalid",
-                                            "Webservice Config invalid",
-                                            e);
-        } catch (BackendMethodFailedException e) {
+        }  catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute",
                                             "Method failed to execute",
@@ -319,9 +301,6 @@ public class CentralWebserviceImpl implements CentralWebservice {
         List<String> activated = new ArrayList<String>();
         try {
             log.trace("Entering markPublishedObject with params pids=" + pids);
-            Credentials creds = getCredentials();
-            Fedora fedora = FedoraFactory.newInstance(creds,
-                                                      fedoraLocation);
             for (String pid : pids) {
                 fedora.modifyObjectState(pid, fedora.STATE_ACTIVE, comment);
                 activated.add(pid);
@@ -341,15 +320,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throw new InvalidCredentialsException("Invalid Credentials Supplied",
                                                   "Invalid Credentials Supplied",
                                                   e);
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            comment = comment + ": Publishing failed, marking back to InProgress";
-            markInProgressObject(activated, comment);
-            throw new MethodFailedException("Webservice Config invalid",
-                                            "Webservice Config invalid",
-                                            e);
-
-        } catch (BackendInvalidResourceException e) {
+        }  catch (BackendInvalidResourceException e) {
             log.debug("Invalid resource requested", e);
 
             throw new InvalidResourceException("Invalid Resource Requested",
@@ -375,17 +346,9 @@ public class CentralWebserviceImpl implements CentralWebservice {
         long token = lock.getReadAndWritePerm();
         try {
             log.trace("Entering markInProgressObject with params pids=" + pids);
-            Credentials creds = getCredentials();
-            Fedora fedora = FedoraFactory.newInstance(creds,
-                                                      fedoraLocation);
             for (String pid : pids) {
                 fedora.modifyObjectState(pid, fedora.STATE_INACTIVE, comment);
             }
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            throw new MethodFailedException("Webservice Config invalid",
-                                            "Webservice Config invalid",
-                                            e);
         } catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute",
@@ -423,15 +386,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
             log.trace("Entering modifyDatastream with params pid=" + pid
                       + " and datastream=" + datastream + " and contents="
                       + contents);
-            Credentials creds = getCredentials();
-            Fedora fedora = FedoraFactory.newInstance(creds,
-                                                      fedoraLocation);
+
             fedora.modifyDatastreamByValue(pid, datastream, contents, comment);
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            throw new MethodFailedException("Webservice Config invalid",
-                                            "Webservice Config invalid",
-                                            e);
         } catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute",
@@ -466,15 +422,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
         try {
             log.trace("Entering getDatastreamContents with params pid=" + pid
                       + " and datastream=" + datastream);
-            Credentials creds = getCredentials();
-            Fedora fedora = FedoraFactory.newInstance(creds,
-                                                      fedoraLocation);
             return fedora.getXMLDatastreamContents(pid, datastream);
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            throw new MethodFailedException("Webservice Config invalid",
-                                            "Webservice Config invalid",
-                                            e);
         } catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute",
@@ -513,8 +461,6 @@ public class CentralWebserviceImpl implements CentralWebservice {
                       + " and filename=" + filename + " and md5sum=" + md5Sum
                       + " and permanentURL=" + permanentURL + " and formatURI="
                       + formatURI);
-            Credentials creds = getCredentials();
-            Fedora fedora = FedoraFactory.newInstance(creds,fedoraLocation);
 
 
             String existingObject = getFileObjectWithURL(permanentURL);
@@ -532,12 +478,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             fedora.addExternalDatastream(pid,"CONTENTS",filename,permanentURL,formatURI,"application/octet-stream",comment);
             setObjectLabel(pid,permanentURL,comment);
 
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            throw new MethodFailedException("Webservice Config invalid",
-                                            "Webservice Config invalid",
-                                            e);
-        } catch (BackendMethodFailedException e) {
+        }  catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute",
                                             "Method failed to execute",
@@ -568,9 +509,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throws MethodFailedException, InvalidCredentialsException, InvalidResourceException {
         try {
             log.trace("Entering getFileObjectWithURL with param url=" + url);
-            Credentials creds = getCredentials();
-            TripleStore tripleStore = new TripleStoreRest(creds,fedoraLocation);
-            List<String> objects = tripleStore.listObjectsWithThisLabel(url);
+            List<String> objects = fedora.listObjectsWithThisLabel(url);
 
             if (objects != null && !objects.isEmpty()) {
                 return objects.get(0);
@@ -578,11 +517,6 @@ public class CentralWebserviceImpl implements CentralWebservice {
                 return null;
             }
 
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            throw new MethodFailedException("Webservice Config invalid",
-                                            "Webservice Config invalid",
-                                            e);
         } catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute",
@@ -609,16 +543,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
             log.trace("Entering addRelation with params pid=" + pid
                       + " and subject=" + relation.getSubject() + " and predicate="
                       + relation.getPredicate() + " and object=" + relation.getObject());
-            Credentials creds = getCredentials();
-            Fedora fedora = FedoraFactory.newInstance(creds,
-                                                      fedoraLocation);
             fedora.addRelation(pid, relation.subject, relation.predicate, relation.object, relation.literal, comment);
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            throw new MethodFailedException("Webservice Config invalid",
-                                            "Webservice Config invalid",
-                                            e);
-        } catch (BackendMethodFailedException e) {
+        }  catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute",
                                             "Method failed to execute",
@@ -656,17 +582,9 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         try {
             log.trace("Entering getNamedRelations with params pid='" + pid + "'");
-            Credentials creds = getCredentials();
-            Fedora fedora = FedoraFactory.newInstance(creds,
-                                                      fedoraLocation);
             List<FedoraRelation> fedorarels = fedora.getNamedRelations(pid, predicate);
             return convertRelations(fedorarels);
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            throw new MethodFailedException("Webservice Config invalid",
-                                            "Webservice Config invalid",
-                                            e);
-        } catch (BackendMethodFailedException e) {
+        }  catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute",
                                             "Method failed to execute",
@@ -693,16 +611,9 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         try {
             log.trace("Entering getInverseRelations with params pid='" + pid + "'");
-            Credentials creds = getCredentials();
-            TripleStore tripleStore = new TripleStoreRest(creds,fedoraLocation);
-            List<FedoraRelation> fedorarels = tripleStore.getInverseRelations(pid, null);
+            List<FedoraRelation> fedorarels = fedora.getInverseRelations(pid, null);
             return convertRelations(fedorarels);
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            throw new MethodFailedException("Webservice Config invalid",
-                                            "Webservice Config invalid",
-                                            e);
-        } catch (BackendMethodFailedException e) {
+        }  catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute",
                                             "Method failed to execute",
@@ -730,15 +641,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         try {
             log.trace("Entering getInverseRelations with params pid='" + pid + "'");
-            Credentials creds = getCredentials();
-            TripleStore tripleStore = new TripleStoreRest(creds,fedoraLocation);
-            List<FedoraRelation> fedorarels = tripleStore.getInverseRelations(pid, predicate);
+            List<FedoraRelation> fedorarels = fedora.getInverseRelations(pid, predicate);
             return convertRelations(fedorarels);
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            throw new MethodFailedException("Webservice Config invalid",
-                                            "Webservice Config invalid",
-                                            e);
         } catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute",
@@ -771,16 +675,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
             log.trace("Entering deleteRelation with params pid=" + pid
                       + " and subject=" + relation.subject + " and predicate="
                       + relation.predicate + " and object=" + relation.object);
-            Credentials creds = getCredentials();
-            Fedora fedora = FedoraFactory.newInstance(creds,
-                                                      fedoraLocation);
             fedora.deleteRelation(pid, relation.subject, relation.predicate, relation.object, relation.literal, comment);
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            throw new MethodFailedException("Webservice Config invalid",
-                                            "Webservice Config invalid",
-                                            e);
-        } catch (BackendMethodFailedException e) {
+        }  catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute",
                                             "Method failed to execute",
@@ -821,9 +717,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
         * The type is the entry content model of the origin pid
         * */
 
-        Credentials creds = getCredentials();
+
         try {
-            ECM ecm = new ECM(creds,fedoraLocation,fedoraconnectorclassstring,pidgeneratorclassString);
 /*
             List<String> types = ecm.getEntryContentModelsForObject(pid,
                                                                     viewAngle);
@@ -831,18 +726,14 @@ public class CentralWebserviceImpl implements CentralWebservice {
                 throw new BackendInvalidResourceException("Pid '"+pid+"'is not an entry object for angle '"+viewAngle+"'");
             }
 */
-            String bundleContentsString = ecm.createBundle(pid, viewAngle);
+            Document bundleContents = fedora.createBundle(pid, viewAngle);
+            String bundleContentsString = DOM.domToString(bundleContents);
 
             ViewBundle viewBundle = new ViewBundle();
             viewBundle.setId(pid);
             viewBundle.setContents(bundleContentsString);
             return viewBundle;
 
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            throw new MethodFailedException("Webservice Config invalid",
-                                            "Webservice Config invalid",
-                                            e);
         } catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute",
@@ -964,9 +855,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throws InvalidCredentialsException, MethodFailedException {
         try {
             log.trace("Entering findObjectFromDCIdentifier with param string=" + string);
-            Credentials creds = getCredentials();
-            TripleStore tripleStore = new TripleStoreRest(creds,fedoraLocation);
-            List<String> objects = tripleStore.findObjectFromDCIdentifier(string);
+            List<String> objects = fedora.findObjectFromDCIdentifier(string);
 
 
             return objects;
@@ -978,11 +867,6 @@ public class CentralWebserviceImpl implements CentralWebservice {
             }
 */
 
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            throw new MethodFailedException("Webservice Config invalid",
-                                            "Webservice Config invalid",
-                                            e);
         } catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute",
@@ -1007,13 +891,10 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throws InvalidCredentialsException, MethodFailedException {
         try {
             log.trace("Entering findObjectsr with param query=" + query + ", offset="+offset+", pageSize="+pageSize);
-            Credentials creds = getCredentials();
-            Fedora fedora = FedoraFactory.newInstance(creds,
-                                                      fedoraLocation);
-            List<dk.statsbiblioteket.doms.central.connectors.fedora.SearchResult> fresults =
+            List<dk.statsbiblioteket.doms.central.connectors.fedora.structures.SearchResult> fresults =
                     fedora.fieldsearch(query, offset, pageSize);
             List<SearchResult> wresults = new ArrayList<SearchResult>();
-            for (dk.statsbiblioteket.doms.central.connectors.fedora.SearchResult fresult : fresults) {
+            for (dk.statsbiblioteket.doms.central.connectors.fedora.structures.SearchResult fresult : fresults) {
                 SearchResult wresult = new SearchResult();
                 wresult.setPid(fresult.getPid());
                 wresult.setTitle(fresult.getLabel());
@@ -1025,12 +906,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
             return wresults;
 
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            throw new MethodFailedException("Webservice Config invalid",
-                                            "Webservice Config invalid",
-                                            e);
-        } catch (BackendMethodFailedException e) {
+        }  catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute",
                                             "Method failed to execute",
@@ -1050,19 +926,13 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
     @Override
     public void lockForWriting() throws InvalidCredentialsException, MethodFailedException {
-        Credentials creds = getCredentials();
+
 
         lock.lockForWriting(); //DO the lock
 
 
         try { //Execute a command to flush the unflushed triple changes.
-            TripleStore tripleStore = new TripleStoreRest(creds,fedoraLocation);
-            tripleStore.flushTripples();
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            throw new MethodFailedException("Webservice Config invalid",
-                                            "Webservice Config invalid",
-                                            e);
+            fedora.flushTripples();
         } catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute",
@@ -1121,15 +991,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         try {
             log.trace("Entering getObjectsInCollection with param collectionPid=" + collectionPid + " and contentModelPid="+contentModelPid);
-            Credentials creds = getCredentials();
-            TripleStore tripleStore = new TripleStoreRest(creds,fedoraLocation);
-            List<String> objects = tripleStore.getObjectsInCollection(collectionPid,contentModelPid);
+            List<String> objects = fedora.getObjectsInCollection(collectionPid,contentModelPid);
             return objects;
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            throw new MethodFailedException("Webservice Config invalid",
-                                            "Webservice Config invalid",
-                                            e);
         } catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute",

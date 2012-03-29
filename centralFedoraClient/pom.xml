@@ -35,29 +35,38 @@
         <version>0.0.27-SNAPSHOT</version>
     </parent>
 
-    <artifactId>centralWebservice-lib</artifactId>
+    <artifactId>central-fedoraClient</artifactId>
 
     <packaging>jar</packaging>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jvnet.jaxb2.maven2</groupId>
+                <artifactId>maven-jaxb2-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <generatePackage>dk.statsbiblioteket.doms.central.connectors.fedora.generated</generatePackage>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
 
-        <dependency>
-            <groupId>dk.statsbiblioteket.doms.central</groupId>
-            <artifactId>central-fedoraClient</artifactId>
-            <version>0.0.27-SNAPSHOT</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>dk.statsbiblioteket.doms.authchecker</groupId>
-            <artifactId>authchecker-authutils</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>dk.statsbiblioteket.doms.domsutil</groupId>
             <artifactId>domsutil-bundle</artifactId>
             <type>pom</type>
         </dependency>
+
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
@@ -65,14 +74,26 @@
 
 
         <dependency>
-            <groupId>dk.statsbiblioteket.doms.updatetracker</groupId>
-            <artifactId>updatetracker-interface</artifactId>
-        </dependency>
-
-
-        <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-client</artifactId>
+        </dependency>
+<!--
+        <dependency>
+            <groupId>com.sun.jersey.contribs</groupId>
+            <artifactId>jersey-apache-client4</artifactId>
+            <version>1.9.1</version>
+        </dependency>
+-->
+        <dependency>
+            <groupId>net.sourceforge.saxon</groupId>
+            <artifactId>saxon</artifactId>
+            <classifier>dom</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>dk.statsbiblioteket.doms.pidgenerator</groupId>
+            <artifactId>pidgenerator-interface</artifactId>
+            <version>0.0.8</version>
         </dependency>
 
     </dependencies>
