@@ -35,7 +35,7 @@ public interface TripleStore {
             BackendMethodFailedException;
 
 
-    void flushTripples()
+    void flushTriples()
             throws
             BackendInvalidCredsException,
             BackendMethodFailedException;

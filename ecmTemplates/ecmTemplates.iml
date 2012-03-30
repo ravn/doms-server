@@ -12,7 +12,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="ecmTemplates" />
     <orderEntry type="module" module-name="ecmInheritance" />
     <orderEntry type="module" module-name="centralFedoraClient" />
     <orderEntry type="library" name="Maven: dk.statsbiblioteket.doms.domsutil.surveyable:domsutil-logappender:0.0.20" level="project" />
@@ -29,9 +28,6 @@
     <orderEntry type="library" name="Maven: commons-cli:commons-cli:1.1" level="project" />
     <orderEntry type="library" name="Maven: com.thoughtworks.xstream:xstream:1.2.2" level="project" />
     <orderEntry type="library" name="Maven: xpp3:xpp3_min:1.1.3.4.O" level="project" />
-    <orderEntry type="module" module-name="ecmViews" />
-    <orderEntry type="library" name="Maven: dk.statsbiblioteket.doms.authchecker:authchecker-authutils:0.0.11" level="project" />
-    <orderEntry type="library" name="Maven: dk.statsbiblioteket.doms.updatetracker:updatetracker-interface:0.0.14" level="project" />
   </component>
 </module>
 

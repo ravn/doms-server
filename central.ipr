@@ -31,6 +31,12 @@
             <element id="archive" name="centralWebservice-lib-0.0.27-SNAPSHOT.jar">
               <element id="module-output" name="centralWebservice-lib" />
             </element>
+            <element id="archive" name="ecmTemplates-0.0.27-SNAPSHOT.jar">
+              <element id="module-output" name="ecmTemplates" />
+            </element>
+            <element id="archive" name="ecmInheritance-0.0.27-SNAPSHOT.jar">
+              <element id="module-output" name="ecmInheritance" />
+            </element>
             <element id="archive" name="central-fedoraClient-0.0.27-SNAPSHOT.jar">
               <element id="module-output" name="centralFedoraClient" />
             </element>
@@ -42,6 +48,9 @@
             <element id="library" level="project" name="Maven: com.sun.jersey:jersey-core:1.9.1" />
             <element id="library" level="project" name="Maven: net.sourceforge.saxon:saxon:dom:9.1.0.8" />
             <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.pidgenerator:pidgenerator-interface:0.0.8" />
+            <element id="archive" name="ecmViews-0.0.27-SNAPSHOT.jar">
+              <element id="module-output" name="ecmViews" />
+            </element>
             <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.authchecker:authchecker-authutils:0.0.11" />
             <element id="library" level="project" name="Maven: dk.statsbiblioteket.doms.updatetracker:updatetracker-interface:0.0.14" />
             <element id="library" level="project" name="Maven: com.sun.xml.ws:jaxws-rt:2.1.7" />
@@ -332,6 +341,9 @@
       <module fileurl="file://$PROJECT_DIR$/centralWebservice-interface/centralWebservice-interface.iml" filepath="$PROJECT_DIR$/centralWebservice-interface/centralWebservice-interface.iml" />
       <module fileurl="file://$PROJECT_DIR$/centralWebservice-lib/centralWebservice-lib.iml" filepath="$PROJECT_DIR$/centralWebservice-lib/centralWebservice-lib.iml" />
       <module fileurl="file://$PROJECT_DIR$/centralWebservice-service/centralWebservice-service.iml" filepath="$PROJECT_DIR$/centralWebservice-service/centralWebservice-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ecmInheritance/ecmInheritance.iml" filepath="$PROJECT_DIR$/ecmInheritance/ecmInheritance.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ecmTemplates/ecmTemplates.iml" filepath="$PROJECT_DIR$/ecmTemplates/ecmTemplates.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ecmViews/ecmViews.iml" filepath="$PROJECT_DIR$/ecmViews/ecmViews.iml" />
     </modules>
   </component>
   <component name="ProjectReloadState">

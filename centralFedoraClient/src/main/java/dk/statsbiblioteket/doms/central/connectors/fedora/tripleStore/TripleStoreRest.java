@@ -127,7 +127,7 @@ public class TripleStoreRest  extends Connector implements TripleStore{
     }
 
     @Override
-    public void flushTripples() throws BackendInvalidCredsException, BackendMethodFailedException {
+    public void flushTriples() throws BackendInvalidCredsException, BackendMethodFailedException {
         findObjectFromDCIdentifier("doms:ContentModel_DOMS");
     }
 

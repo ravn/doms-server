@@ -1,8 +1,7 @@
-package dk.statsbiblioteket.doms.central.connectors.fedora;
+package dk.statsbiblioteket.doms.central.connectors;
 
-import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
-import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
-import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
+import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
+import dk.statsbiblioteket.doms.central.connectors.fedora.FedoraRest;
 import dk.statsbiblioteket.doms.central.connectors.fedora.inheritance.ContentModelInheritance;
 import dk.statsbiblioteket.doms.central.connectors.fedora.inheritance.ContentModelInheritanceImpl;
 import dk.statsbiblioteket.doms.central.connectors.fedora.pidGenerator.PIDGeneratorException;
@@ -41,7 +40,8 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
     ContentModelInheritance cmInher;
     PidGenerator pidGenerator;
 
-    public EnhancedFedoraImpl(Credentials creds, String fedoraLocation, String pidGenLocation) throws MalformedURLException {
+    public EnhancedFedoraImpl(Credentials creds, String fedoraLocation, String pidGenLocation)
+            throws MalformedURLException, PIDGeneratorException {
 
         //1.st level
         fedora = new FedoraRest(creds,fedoraLocation);
@@ -150,7 +150,7 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
 
     @Override
     public void flushTripples() throws BackendInvalidCredsException, BackendMethodFailedException {
-        ts.flushTripples();
+        ts.flushTriples();
     }
 
     @Override

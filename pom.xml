@@ -25,6 +25,9 @@
         <module>centralWebservice-service</module>
         <module>centralWebservice-lib</module>
         <module>centralFedoraClient</module>
+        <module>ecmInheritance</module>
+        <module>ecmTemplates</module>
+        <module>ecmViews</module>
         <!--<module>fedoraTrashPreventer</module>-->
     </modules>
 

@@ -30,13 +30,11 @@ package dk.statsbiblioteket.doms.central;
 
 
 import com.sun.xml.ws.developer.servlet.HttpSessionScope;
-import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
-import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
-import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
+import dk.statsbiblioteket.doms.central.connectors.*;
 import dk.statsbiblioteket.doms.central.connectors.authchecker.AuthChecker;
 
 
-import dk.statsbiblioteket.doms.central.connectors.fedora.*;
+import dk.statsbiblioteket.doms.central.connectors.fedora.pidGenerator.PIDGeneratorException;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.FedoraRelation;
 import dk.statsbiblioteket.doms.central.connectors.updatetracker.UpdateTracker;
 import dk.statsbiblioteket.doms.central.connectors.updatetracker.UpdateTrackerRecord;
@@ -100,7 +98,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
     private EnhancedFedora fedora;
 
     @PostConstruct
-    private void initialise(Credentials creds) throws MalformedURLException {
+    private void initialise(Credentials creds) throws MalformedURLException, PIDGeneratorException {
         creds = getCredentials();
         fedora = new EnhancedFedoraImpl(creds, fedoraLocation, pidgeneratorLocation);
     }
