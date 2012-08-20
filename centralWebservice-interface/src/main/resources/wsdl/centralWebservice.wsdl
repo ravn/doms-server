@@ -515,7 +515,7 @@
         <operation name="modifyDatastream">
             <documentation>Given a pid and a datastream name, replace the
                 contents of that datastream with the given content.
-                Will fail of datastream or the object does not exist.
+                Will fail if datastream or the object does not exist.
                 The content must be valid XML.
             </documentation>
             <input message="tns:modifyDatastream"/>
@@ -529,7 +529,7 @@
         </operation>
         <operation name="getDatastreamContents">
             <documentation>Given a pid and a datastream, return the datastream
-                content. Will fail of datastream or object does not exist. The
+                content. Will fail if datastream or object does not exist. The
                 datastream content is returned as a String, so only use this
                 method for getting xml content, not the binary files.
             </documentation>
@@ -545,7 +545,7 @@
         <!--
                 <operation name="getDatastreamProfile">
                     <documentation>Given a pid and a datastream, return the datastream
-                        profile. Will fail of datastream does not exist.
+                        profile. Will fail if datastream does not exist.
                     </documentation>
                     <input message="tns:getDatastreamProfile"/>
                     <output message="tns:getDatastreamProfileResponse"/>
