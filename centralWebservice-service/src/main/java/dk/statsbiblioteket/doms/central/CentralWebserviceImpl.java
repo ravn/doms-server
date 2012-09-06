@@ -40,21 +40,35 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.FedoraFactory;
 import dk.statsbiblioteket.doms.central.connectors.fedora.FedoraRelation;
 import dk.statsbiblioteket.doms.central.connectors.updatetracker.UpdateTracker;
 import dk.statsbiblioteket.doms.central.connectors.updatetracker.UpdateTrackerRecord;
+import dk.statsbiblioteket.doms.central.summasearch.SearchWS;
+import dk.statsbiblioteket.doms.central.summasearch.SearchWSService;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
 import dk.statsbiblioteket.doms.webservices.configuration.ConfigCollection;
+import dk.statsbiblioteket.util.xml.DOM;
+import net.sf.json.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.annotation.Resource;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.namespace.QName;
 import javax.xml.ws.Holder;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.lang.String;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -1010,51 +1024,63 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
     }
 
+
     @Override
     public List<SearchResult> findObjects(@WebParam(name = "query", targetNamespace = "") String query,
                                           @WebParam(name = "offset", targetNamespace = "") int offset,
                                           @WebParam(name = "pageSize", targetNamespace = "") int pageSize)
-            throws InvalidCredentialsException, MethodFailedException {
+            throws MethodFailedException {
         try {
-            log.trace("Entering findObjectsr with param query=" + query + ", offset="+offset+", pageSize="+pageSize);
-            Credentials creds = getCredentials();
-            Fedora fedora = FedoraFactory.newInstance(creds,
-                                                      fedoraLocation);
-            List<dk.statsbiblioteket.doms.central.connectors.fedora.SearchResult> fresults =
-                    fedora.fieldsearch(query, offset, pageSize);
-            List<SearchResult> wresults = new ArrayList<SearchResult>();
-            for (dk.statsbiblioteket.doms.central.connectors.fedora.SearchResult fresult : fresults) {
-                SearchResult wresult = new SearchResult();
-                wresult.setPid(fresult.getPid());
-                wresult.setTitle(fresult.getLabel());
-                wresult.setState(fresult.getState());
-                wresult.setCreatedDate(fresult.getcDate());
-                wresult.setModifiedDate(fresult.getmDate());
-                wresults.add(wresult);
+            log.trace("Entering findObjects with param query=" + query + ", offset="+offset+", pageSize="+pageSize);
+            SearchWS summaSearch = new SearchWSService(new java.net.URL("http://localhost:57608/domsgui/search/services/SearchWS?wsdl"),
+                                                       new QName("http://statsbiblioteket.dk/summa/search", "SearchWSService")).getSearchWS();
+
+            JSONObject jsonQuery = new JSONObject();
+            jsonQuery.put("search.document.resultfields", "domsshortrecord");
+            jsonQuery.put("search.document.query", query);
+            jsonQuery.put("search.document.startindex", offset);
+            jsonQuery.put("search.document.maxrecords", pageSize);
+
+            String searchResultString = summaSearch.directJSON(jsonQuery.toString());
+
+            Document searchResultDOM = DOM.stringToDOM(searchResultString);
+            XPath xPath = XPathFactory.newInstance().newXPath();
+
+            List<SearchResult> searchResults = new LinkedList<SearchResult>();
+
+            NodeList nodeList = (NodeList) xPath.evaluate(
+                    "//responsecollection/response/documentresult/record/field/shortrecord",
+                    searchResultDOM.getDocumentElement(), XPathConstants.NODESET);
+
+
+            for (int i=0; i<nodeList.getLength(); ++i) {
+                Node node = nodeList.item(i);
+
+                SearchResult searchResult = new SearchResult();
+
+                searchResult.setPid(xPath.evaluate("pid", node));
+                searchResult.setTitle(xPath.evaluate("title", node));
+                searchResult.setState(xPath.evaluate("state", node));
+                /* FIXME/TODO: Need to transform iso-dates into longs in the response
+                searchResult.setCreatedDate(java.lang.Long.parseLong(xPath.evaluate("//createdDate", node)));
+                searchResult.setModifiedDate(java.lang.Long.parseLong(xPath.evaluate("//modifiedDate", node))); */
+
+                searchResults.add(searchResult);
             }
 
-            return wresults;
+            return searchResults;
 
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
             throw new MethodFailedException("Webservice Config invalid",
                                             "Webservice Config invalid",
                                             e);
-        } catch (BackendMethodFailedException e) {
+        } catch (XPathExpressionException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute",
                                             "Method failed to execute",
-                                            e);
-        } catch (BackendInvalidCredsException e) {
-            log.debug("User supplied invalid credentials", e);
-            throw new InvalidCredentialsException("Invalid Credentials Supplied",
-                                                  "Invalid Credentials Supplied",
-                                                  e);
-        }  catch (Exception e) {
-            log.warn("Caught Unknown Exception", e);
-            throw new MethodFailedException("Server error", "Server error", e);
+                                             e);
         }
-
     }
 
 
