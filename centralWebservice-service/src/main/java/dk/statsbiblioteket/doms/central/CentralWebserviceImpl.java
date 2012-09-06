@@ -56,6 +56,7 @@ import javax.annotation.Resource;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.DatatypeConverter;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Holder;
 import javax.xml.ws.WebServiceContext;
@@ -67,7 +68,7 @@ import javax.xml.xpath.XPathFactory;
 import java.lang.String;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -1052,7 +1053,6 @@ public class CentralWebserviceImpl implements CentralWebservice {
                     "//responsecollection/response/documentresult/record/field/shortrecord",
                     searchResultDOM.getDocumentElement(), XPathConstants.NODESET);
 
-
             for (int i=0; i<nodeList.getLength(); ++i) {
                 Node node = nodeList.item(i);
 
@@ -1061,9 +1061,12 @@ public class CentralWebserviceImpl implements CentralWebservice {
                 searchResult.setPid(xPath.evaluate("pid", node));
                 searchResult.setTitle(xPath.evaluate("title", node));
                 searchResult.setState(xPath.evaluate("state", node));
-                /* FIXME/TODO: Need to transform iso-dates into longs in the response
-                searchResult.setCreatedDate(java.lang.Long.parseLong(xPath.evaluate("//createdDate", node)));
-                searchResult.setModifiedDate(java.lang.Long.parseLong(xPath.evaluate("//modifiedDate", node))); */
+
+                Calendar createdDate = DatatypeConverter.parseDateTime(xPath.evaluate("createdDate", node));
+                Calendar modifiedDate = DatatypeConverter.parseDateTime(xPath.evaluate("modifiedDate", node));
+
+                searchResult.setCreatedDate(createdDate.getTimeInMillis());
+                searchResult.setModifiedDate(modifiedDate.getTimeInMillis());
 
                 searchResults.add(searchResult);
             }
