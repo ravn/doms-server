@@ -99,7 +99,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
     public CentralWebserviceImpl() {
         pidgeneratorLocation = ConfigCollection.getProperties()
-                .getProperty("dk.statsbiblioteket.doms.ecm.pidGeneratorLocation");
+                .getProperty("dk.statsbiblioteket.doms.ecm.pidgenerator.client.wsdllocation");
         fedoraLocation = ConfigCollection.getProperties().getProperty(
                 "dk.statsbiblioteket.doms.central.fedoraLocation");
         updateTrackerLocation = ConfigCollection.getProperties().getProperty(
