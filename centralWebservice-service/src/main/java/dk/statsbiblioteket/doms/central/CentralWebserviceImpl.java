@@ -94,6 +94,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
     private String bitstorageLocation;
     private String updateTrackerLocation;
     private String authCheckerLocation;
+    private String summaLocation;
 
 
     public CentralWebserviceImpl() {
@@ -107,6 +108,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
                 "dk.statsbiblioteket.doms.central.updateTrackerLocation");
         authCheckerLocation = ConfigCollection.getProperties().getProperty(
                 "dk.statsbiblioteket.doms.central.authCheckerLocation");
+        summaLocation = ConfigCollection.getProperties().getProperty(
+                "dk.statsbiblioteket.doms.central.summaWSDL");
 
     }
 
@@ -1033,7 +1036,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throws MethodFailedException {
         try {
             log.trace("Entering findObjects with param query=" + query + ", offset="+offset+", pageSize="+pageSize);
-            SearchWS summaSearch = new SearchWSService(new java.net.URL("http://localhost:57608/domsgui/search/services/SearchWS?wsdl"),
+            SearchWS summaSearch = new SearchWSService(new java.net.URL(summaLocation),
                                                        new QName("http://statsbiblioteket.dk/summa/search", "SearchWSService")).getSearchWS();
 
             JSONObject jsonQuery = new JSONObject();
