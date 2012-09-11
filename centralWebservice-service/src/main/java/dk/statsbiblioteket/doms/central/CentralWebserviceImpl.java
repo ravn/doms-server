@@ -114,8 +114,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
     private EnhancedFedora fedora;
 
     @PostConstruct
-    private void initialise(Credentials creds) throws MalformedURLException, PIDGeneratorException {
-        creds = getCredentials();
+    private void initialise() throws MalformedURLException, PIDGeneratorException {
+        Credentials creds = getCredentials();
         fedora = new EnhancedFedoraImpl(creds, fedoraLocation, pidgeneratorLocation);
     }
 
