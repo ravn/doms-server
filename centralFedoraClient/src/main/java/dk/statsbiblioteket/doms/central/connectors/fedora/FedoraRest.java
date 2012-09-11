@@ -175,6 +175,7 @@ public class FedoraRest extends Connector implements Fedora {
         try {
 
             String pid = restApi.path("/").path(URLEncoder.encode("new", "UTF-8"))
+                    .type(MediaType.TEXT_XML_TYPE)
                     .post(String.class, payload);
             return pid;
         } catch (UnsupportedEncodingException e) {
