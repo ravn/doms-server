@@ -51,6 +51,11 @@
             <artifactId>ecmViews</artifactId>
             <version>0.0.27-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>dk.statsbiblioteket.doms.central</groupId>
+            <artifactId>ecmMethods</artifactId>
+            <version>0.0.27-SNAPSHOT</version>
+        </dependency>
 
 
         <dependency>

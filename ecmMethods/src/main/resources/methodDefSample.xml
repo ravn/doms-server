@@ -1,0 +1,16 @@
+<ns:methods xmlns:ns="http://ecm.sourceforge.net/types/methods/0/2/#"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://ecm.sourceforge.net/types/methods/0/2/# methodDef.xsd">
+    <ns:method>
+        <ns:name>Ole_Import</ns:name>
+        <ns:command>echo %%quality%%</ns:command>
+        <ns:parameters>
+            <ns:parameter>
+                <ns:name>quality</ns:name>
+                <ns:required>true</ns:required>
+                <ns:repeatable>false</ns:repeatable>
+                <ns:type>Integer</ns:type>
+            </ns:parameter>
+        </ns:parameters>
+    </ns:method>
+</ns:methods>

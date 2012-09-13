@@ -4,6 +4,9 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
 import dk.statsbiblioteket.doms.central.connectors.fedora.FedoraRest;
 import dk.statsbiblioteket.doms.central.connectors.fedora.inheritance.ContentModelInheritance;
 import dk.statsbiblioteket.doms.central.connectors.fedora.inheritance.ContentModelInheritanceImpl;
+import dk.statsbiblioteket.doms.central.connectors.fedora.methods.Methods;
+import dk.statsbiblioteket.doms.central.connectors.fedora.methods.MethodsImpl;
+import dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Method;
 import dk.statsbiblioteket.doms.central.connectors.fedora.pidGenerator.PIDGeneratorException;
 import dk.statsbiblioteket.doms.central.connectors.fedora.pidGenerator.PidGenerator;
 import dk.statsbiblioteket.doms.central.connectors.fedora.pidGenerator.PidGeneratorImpl;
@@ -18,9 +21,11 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.tripleStore.TripleStor
 import dk.statsbiblioteket.doms.central.connectors.fedora.views.Views;
 import dk.statsbiblioteket.doms.central.connectors.fedora.views.ViewsImpl;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
+import dk.statsbiblioteket.util.Pair;
 import org.w3c.dom.Document;
 
 
+import javax.xml.bind.JAXBException;
 import java.net.MalformedURLException;
 import java.util.List;
 
@@ -39,9 +44,10 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
     Views views;
     ContentModelInheritance cmInher;
     PidGenerator pidGenerator;
+    private Methods methods;
 
     public EnhancedFedoraImpl(Credentials creds, String fedoraLocation, String pidGenLocation)
-            throws MalformedURLException, PIDGeneratorException {
+            throws MalformedURLException, PIDGeneratorException, JAXBException {
 
         //1.st level
         fedora = new FedoraRest(creds,fedoraLocation);
@@ -54,6 +60,8 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
         //3. level
         templates = new TemplatesImpl(fedora,pidGenerator,ts,cmInher);
         views = new ViewsImpl(ts,cmInher,fedora);
+
+        methods = new MethodsImpl(fedora,ts,cmInher);
     }
 
     public String cloneTemplate(String templatepid, List<String> oldIDs, String logMessage)
@@ -157,6 +165,16 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
     public List<String> getObjectsInCollection(String collectionPid, String contentModelPid)
             throws BackendInvalidCredsException, BackendMethodFailedException {
         return ts.getObjectsInCollection(collectionPid,contentModelPid);
+    }
+
+    @Override
+    public List<Method> getMethods(String cmpid) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+        return methods.getMethods(cmpid);
+    }
+
+    @Override
+    public String invokeMethod(String cmpid, String methodName, List<Pair<String, String>> parameters, String logMessage) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+        return methods.invokeMethod(cmpid,methodName,parameters,logMessage);
     }
 
 }

@@ -323,6 +323,21 @@
     <message name="getObjectsInCollectionResponse">
         <part name="parameters" element="tns:getObjectsInCollectionResponse"/>
     </message>
+
+    <message name="getMethods">
+        <part name="parameters" element="tns:getMethods"/>
+    </message>
+    <message name="getMethodsResponse">
+        <part name="parameters" element="tns:getMethodsResponse"/>
+    </message>
+
+    <message name="invokeMethod">
+        <part name="parameters" element="tns:invokeMethod"/>
+    </message>
+    <message name="invokeMethodResponse">
+        <part name="parameters" element="tns:invokeMethodResponse"/>
+    </message>
+
     <!--
         <message name="getViewStructure">
             <part name="parameters" element="tns:getViewStructure"/>
@@ -869,6 +884,34 @@
             </documentation>
             <input message="tns:getObjectsInCollection"/>
             <output message="tns:getObjectsInCollectionResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+            <fault name="InvalidResourceException"
+                   message="tns:InvalidResourceException"/>
+
+        </operation>
+
+        <operation name="getMethods">
+            <documentation>Get the list of methods defined on a content model
+            </documentation>
+            <input message="tns:getMethods"/>
+            <output message="tns:getMethodsResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+            <fault name="InvalidResourceException"
+                   message="tns:InvalidResourceException"/>
+
+        </operation>
+
+        <operation name="invokeMethod">
+            <documentation>Invoke a method defined on a content model
+            </documentation>
+            <input message="tns:invokeMethod"/>
+            <output message="tns:invokeMethodResponse"/>
             <fault name="InvalidCredentialsException"
                    message="tns:InvalidCredentialsException"/>
             <fault name="MethodFailedException"
@@ -1469,6 +1512,46 @@
             </fault>
         </operation>
         <operation name="getObjectsInCollection">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
+            <fault name="InvalidResourceException">
+                <soap:fault name="InvalidResourceException" use="literal"/>
+            </fault>
+
+        </operation>
+
+        <operation name="getMethods">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
+            <fault name="InvalidResourceException">
+                <soap:fault name="InvalidResourceException" use="literal"/>
+            </fault>
+
+        </operation>
+
+        <operation name="invokeMethod">
             <soap:operation soapAction=""/>
             <input>
                 <soap:body use="literal"/>

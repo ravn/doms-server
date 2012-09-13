@@ -160,6 +160,12 @@
     <xs:element name="getObjectsInCollection" type="tns:getObjectsInCollection"/>
     <xs:element name="getObjectsInCollectionResponse" type="tns:Pidlist"/>
 
+    <xs:element name="getMethods" type="tns:singlePid"/>
+    <xs:element name="getMethodsResponse" type="tns:MethodList"/>
+
+    <xs:element name="invokeMethod" type="tns:MethodInvocation"/>
+    <xs:element name="invokeMethodResponse" type="tns:string"/>
+
 
     <!--Simple types-->
     <xs:complexType name="singlePid">
@@ -447,6 +453,62 @@
         <xs:sequence>
             <xs:element name="collectionPid" type="xs:string"/>
             <xs:element name="contentModelPid" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="MethodList">
+        <xs:sequence>
+            <xs:sequence>
+                <xs:element type="tns:method" name="method" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="parameters">
+        <xs:sequence>
+            <xs:element type="tns:parameter" name="parameter" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="method">
+        <xs:sequence>
+            <xs:element type="xs:ID" name="name"/>
+            <xs:element type="tns:parameters" name="parameters" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="parameter">
+        <xs:sequence>
+            <xs:element type="xs:NCName" name="name"/>
+            <xs:element type="xs:boolean" name="required"/>
+            <xs:element type="xs:boolean" name="repeatable"/>
+            <xs:element name="type">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="Text"/>
+                        <xs:enumeration value="TextBox"/>
+                        <xs:enumeration value="Integer"/>
+                        <xs:enumeration value="Float"/>
+                        <xs:enumeration value="Datetime"/>
+                        <xs:enumeration value="Date"/>
+                        <xs:enumeration value="Time"/>
+                        <xs:enumeration value="ServerFile"/>
+                        <xs:enumeration value="LocalFile"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element type="xs:string" name="config" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="MethodInvocation">
+        <xs:sequence>
+            <xs:element type="xs:string" name="cmpid"/>
+            <xs:element type="xs:string" name="methodName"/>
+            <xs:element type="tns:pair" name="parameters" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="pair">
+        <xs:sequence>
+            <xs:element type="xs:string" name="name"/>
+            <xs:element type="xs:string" name="value"/>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

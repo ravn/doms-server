@@ -4,6 +4,7 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.fedora.inheritance.ContentModelInheritance;
+import dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Method;
 import dk.statsbiblioteket.doms.central.connectors.fedora.pidGenerator.PIDGeneratorException;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.FedoraRelation;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectProfile;
@@ -12,6 +13,7 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.templates.ObjectIsWron
 import dk.statsbiblioteket.doms.central.connectors.fedora.templates.Templates;
 import dk.statsbiblioteket.doms.central.connectors.fedora.tripleStore.TripleStore;
 import dk.statsbiblioteket.doms.central.connectors.fedora.views.Views;
+import dk.statsbiblioteket.util.Pair;
 import org.w3c.dom.Document;
 
 import java.util.List;
@@ -81,4 +83,14 @@ public interface EnhancedFedora  {
 
     List<String> getObjectsInCollection(String collectionPid, String contentModelPid)
             throws BackendInvalidCredsException, BackendMethodFailedException;
+
+
+    public List<Method> getMethods(
+            String cmpid)
+            throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
+
+    public String invokeMethod(String cmpid,String methodName,List<Pair<String,String>> parameters, String logMessage)
+            throws BackendInvalidCredsException, BackendMethodFailedException,
+            BackendInvalidResourceException;
+
 }
