@@ -16,6 +16,7 @@ import javax.xml.bind.Unmarshaller;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created with IntelliJ IDEA.
@@ -66,6 +67,6 @@ public class MethodsImpl implements Methods{
         //If exit 0, return the std out
         //else return stdout+stderr
 
-        return "";  //To change body of implemented methods use File | Settings | File Templates.
+        return UUID.randomUUID().toString();  //To change body of implemented methods use File | Settings | File Templates.
     }
 }
