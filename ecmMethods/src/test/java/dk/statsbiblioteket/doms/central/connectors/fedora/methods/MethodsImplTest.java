@@ -18,13 +18,10 @@ import static org.junit.Assert.assertTrue;
 public class MethodsImplTest {
     @org.junit.Test
     public void testGetMethods() throws Exception {
-        MethodsImpl methods = new MethodsImpl(new FedoraRest(new Credentials("fedoraAdmin", "fedoraAdminPass"), "http://alhena:7880/fedora"), null, null);
+        MethodsImpl methods = new MethodsImpl(new FedoraRest(new Credentials("fedoraAdmin", "fedoraAdminPass"), "http://alhena:7780/fedora"), null, null);
         List<Method> methodList = methods.getMethods("doms:ContentModel_VHSFile");
         assertTrue("no methods!",methodList.size() > 0);
     }
 
-    @org.junit.Test
-    public void testInvokeMethod() throws Exception {
 
-    }
 }

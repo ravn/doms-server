@@ -8,13 +8,15 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.inheritance.ContentMod
 import dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Method;
 import dk.statsbiblioteket.doms.central.connectors.fedora.tripleStore.TripleStore;
 import dk.statsbiblioteket.util.Pair;
+import org.apache.commons.io.IOUtils;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import java.io.StringReader;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -59,14 +61,59 @@ public class MethodsImpl implements Methods{
     }
 
     @Override
-    public String invokeMethod(String cmpid,String methodName,List<Pair<String,String>> parameters, String logMessage){
+    public String invokeMethod(String cmpid,String methodName,List<Pair<String,String>> parameters, String logMessage) throws BackendInvalidResourceException, BackendInvalidCredsException, BackendMethodFailedException {
         //TODO figure out username and password used for this connection
         //TODO extract the command string from the method
         //TODO replace the parameter values into the command string
         //Run the command string
         //If exit 0, return the std out
         //else return stdout+stderr
+        List<Method> methods = getMethods(cmpid);
+        Method chosenMethod = null;
+        for (Method method : methods) {
+            if (method.getName().equals(methodName)) {
+                chosenMethod = method;
+                break;
+            }
+        }
+        if (chosenMethod == null){
+            throw new BackendInvalidResourceException("Failed to find specified method");
+        }
+        String command = chosenMethod.getCommand();
 
-        return UUID.randomUUID().toString();  //To change body of implemented methods use File | Settings | File Templates.
+        for (Pair<String, String> parameter : parameters) {
+            String name = parameter.getLeft();
+            name = name.replaceAll("\\s","");
+            String value = parameter.getRight();
+            value = value.replaceAll("[\"'`]","");
+            value = "\""+value+"\"";
+            command = command.replaceAll("%%"+name+"%%",value);
+
+
+        }
+        //TODO defaulted params, such as fedoraUser and fedoraPass
+
+        List<String> commandList = new ArrayList<String>();
+        commandList.add("/bin/bash");
+        commandList.add("-c");
+        commandList.add(command);
+
+        ProcessBuilder procesBuider = new ProcessBuilder(commandList);
+
+        try {
+            Process process = procesBuider.start();
+            int returnCode = process.waitFor();
+            StringWriter writer = new StringWriter();
+            IOUtils.copy(process.getInputStream(),writer);
+
+            if (returnCode == 0){
+            } else {
+                IOUtils.copy(process.getErrorStream(),writer);
+            }
+            String result = writer.toString();
+            return result;
+        } catch (Exception e){
+            throw new BackendMethodFailedException("Failed to run command "+commandList.toString(),e);
+        }
     }
 }
