@@ -45,9 +45,11 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
     ContentModelInheritance cmInher;
     PidGenerator pidGenerator;
     private Methods methods;
+    private String thisLocation;
 
-    public EnhancedFedoraImpl(Credentials creds, String fedoraLocation, String pidGenLocation)
+    public EnhancedFedoraImpl(Credentials creds, String fedoraLocation, String pidGenLocation, String thisLocation)
             throws MalformedURLException, PIDGeneratorException, JAXBException {
+        this.thisLocation = thisLocation;
 
         //1.st level
         fedora = new FedoraRest(creds,fedoraLocation);
@@ -61,7 +63,7 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
         templates = new TemplatesImpl(fedora,pidGenerator,ts,cmInher);
         views = new ViewsImpl(ts,cmInher,fedora);
 
-        methods = new MethodsImpl(fedora,ts,cmInher);
+        methods = new MethodsImpl(fedora,thisLocation);
     }
 
     public String cloneTemplate(String templatepid, List<String> oldIDs, String logMessage)

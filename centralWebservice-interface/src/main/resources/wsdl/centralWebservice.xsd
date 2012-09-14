@@ -496,6 +496,7 @@
                 </xs:simpleType>
             </xs:element>
             <xs:element type="xs:string" name="config" minOccurs="0"/>
+            <xs:element type="xs:string" name="default" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="MethodInvocation">

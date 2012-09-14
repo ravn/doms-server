@@ -1,6 +1,4 @@
-<ns:methods xmlns:ns="http://ecm.sourceforge.net/types/methods/0/2/#"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://ecm.sourceforge.net/types/methods/0/2/# methodDef.xsd">
+<ns:methods xmlns:ns="http://ecm.sourceforge.net/types/methods/0/2/#">
     <ns:method>
         <ns:name>Ole_Import</ns:name>
         <ns:command>echo %%quality%%</ns:command>

@@ -6,6 +6,7 @@ import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
 import dk.statsbiblioteket.doms.central.connectors.fedora.inheritance.ContentModelInheritance;
 import dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Method;
+import dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Parameter;
 import dk.statsbiblioteket.doms.central.connectors.fedora.tripleStore.TripleStore;
 import dk.statsbiblioteket.util.Pair;
 import org.apache.commons.io.IOUtils;
@@ -31,15 +32,14 @@ public class MethodsImpl implements Methods{
 
 
     Fedora fedora;
-    TripleStore ts;
-    ContentModelInheritance inheritance;
+    private String thisLocation;
     private Unmarshaller jaxb;
 
 
-    public MethodsImpl(Fedora fedora, TripleStore ts, ContentModelInheritance inheritance) throws JAXBException {
+
+    public MethodsImpl(Fedora fedora, String thisLocation) throws JAXBException {
         this.fedora = fedora;
-        this.ts = ts;
-        this.inheritance = inheritance;
+        this.thisLocation = thisLocation;
         jaxb = JAXBContext.newInstance("dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated").createUnmarshaller();
     }
 
@@ -81,6 +81,22 @@ public class MethodsImpl implements Methods{
         }
         String command = chosenMethod.getCommand();
 
+        parameters.add(new Pair<String, String>("domsUser",fedora.getUsername()));
+        parameters.add(new Pair<String, String>("domsPassword",fedora.getPassword()));
+        parameters.add(new Pair<String, String>("domsLocation",thisLocation));
+
+        for (Parameter declaredParameter : chosenMethod.getParameters().getParameter()) {
+            boolean set = false;
+            for (Pair<String, String> setParameter : parameters) {
+                if (setParameter.getLeft().equals(declaredParameter.getName())){
+                    set = true;
+                }
+            }
+            if (set){
+                continue;
+            }
+            parameters.add(new Pair<String, String>(declaredParameter.getName(),declaredParameter.getDefault()));
+        }
         for (Pair<String, String> parameter : parameters) {
             String name = parameter.getLeft();
             name = name.replaceAll("\\s","");
@@ -88,9 +104,10 @@ public class MethodsImpl implements Methods{
             value = value.replaceAll("[\"'`]","");
             value = "\""+value+"\"";
             command = command.replaceAll("%%"+name+"%%",value);
-
-
         }
+        //Remove all unused parameters
+        command = command.replaceAll("%%[^%%]*%%","");
+
         //TODO defaulted params, such as fedoraUser and fedoraPass
 
         List<String> commandList = new ArrayList<String>();

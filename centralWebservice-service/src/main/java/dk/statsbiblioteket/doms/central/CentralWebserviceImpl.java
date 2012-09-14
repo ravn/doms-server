@@ -97,7 +97,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
     private final String authCheckerLocation;
     private final String pidgeneratorLocation;
     private final String summaLocation;
-
+    public  String thisLocation;
 
 
     public CentralWebserviceImpl() {
@@ -112,6 +112,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
         summaLocation = ConfigCollection.getProperties().getProperty(
                 "dk.statsbiblioteket.doms.central.summaWSDL");
 
+
     }
 
     private EnhancedFedora fedora;
@@ -119,7 +120,12 @@ public class CentralWebserviceImpl implements CentralWebservice {
     @PostConstruct
     private void initialise() throws MalformedURLException, PIDGeneratorException, JAXBException {
         Credentials creds = getCredentials();
-        fedora = new EnhancedFedoraImpl(creds, fedoraLocation, pidgeneratorLocation);
+
+        HttpServletRequest request = (HttpServletRequest) context
+                .getMessageContext()
+                .get(MessageContext.SERVLET_REQUEST);
+        thisLocation = request.getRequestURL().toString();
+        fedora = new EnhancedFedoraImpl(creds, fedoraLocation, pidgeneratorLocation,thisLocation);
     }
 
 

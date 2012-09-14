@@ -127,4 +127,7 @@ public interface Fedora {
                                                                 BackendMethodFailedException,
                                                                 BackendInvalidCredsException,
                                                                 BackendInvalidResourceException;
+    public String getUsername();
+
+    public String getPassword();
 }
