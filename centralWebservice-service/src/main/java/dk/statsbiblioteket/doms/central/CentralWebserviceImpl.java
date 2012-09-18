@@ -968,6 +968,9 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throw new MethodFailedException("Method failed to execute",
                     "Method failed to execute",
                     e);
+        } catch (Exception e) {
+            log.warn("Caught Unknown Exception", e);
+            throw new MethodFailedException("Server error", "Server error", e);
         }
     }
 
