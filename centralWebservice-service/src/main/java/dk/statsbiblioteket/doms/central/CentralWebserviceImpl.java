@@ -940,7 +940,11 @@ public class CentralWebserviceImpl implements CentralWebservice {
                 SearchResult searchResult = new SearchResult();
 
                 searchResult.setPid(xPath.evaluate("pid", node));
+                searchResult.setType(xPath.evaluate("type", node));
+                searchResult.setSource(xPath.evaluate("source", node));
                 searchResult.setTitle(xPath.evaluate("title", node));
+                searchResult.setTime(xPath.evaluate("time", node));
+                searchResult.setDescription(xPath.evaluate("description", node));
                 searchResult.setState(xPath.evaluate("state", node));
 
                 Calendar createdDate = DatatypeConverter.parseDateTime(xPath.evaluate("createdDate", node));
