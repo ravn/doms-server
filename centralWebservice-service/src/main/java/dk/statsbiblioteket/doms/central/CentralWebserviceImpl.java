@@ -1063,6 +1063,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             for (dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Method internalmethod : internalMethodList) {
                 Method externalMethod = new Method();
                 externalMethod.setName(internalmethod.getName());
+                externalMethod.setType(internalmethod.getType());
                 Parameters externalParameters = new Parameters();
                 externalMethod.setParameters(externalParameters);
                 for (Parameter internalparameter : internalmethod.getParameters().getParameter()) {

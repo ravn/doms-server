@@ -2,6 +2,7 @@
     <ns:method>
         <ns:name>Ole_Import</ns:name>
         <ns:command>echo %%quality%%</ns:command>
+        <ns:type>dynamic</ns:type>
         <ns:parameters>
             <ns:parameter>
                 <ns:name>quality</ns:name>

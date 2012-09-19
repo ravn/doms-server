@@ -16,6 +16,14 @@
         <xs:sequence>
             <xs:element type="xs:ID" name="name"/>
             <xs:element type="xs:string" name="command"/>
+            <xs:element name="type">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="dynamic"/>
+                        <xs:enumeration value="static"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
             <xs:element type="tns:parameters" name="parameters" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
