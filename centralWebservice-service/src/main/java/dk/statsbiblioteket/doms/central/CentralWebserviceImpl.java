@@ -1065,7 +1065,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
     @Override
     public List<Method> getMethods(@WebParam(name = "pid", targetNamespace = "") String pid) throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         try {
-            List<dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Method> internalMethodList = fedora.getMethods(pid);
+            List<dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Method> internalMethodList = fedora.getStaticMethods(pid);
+            internalMethodList.addAll(fedora.getDynamicMethods(pid));
             List<Method> externalMethods = new ArrayList<Method>();
             for (dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Method internalmethod : internalMethodList) {
                 Method externalMethod = new Method();

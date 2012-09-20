@@ -17,9 +17,14 @@ import java.util.List;
  */
 public interface Methods {
 
-    public List<Method> getMethods(
+    public List<Method> getStaticMethods(
             String cmpid)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
+
+    public List<Method> getDynamicMethods(
+            String objpid)
+            throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
+
 
     public String invokeMethod(String cmpid,String methodName,List<Pair<String,String>> parameters, String logMessage)
             throws BackendInvalidCredsException, BackendMethodFailedException,

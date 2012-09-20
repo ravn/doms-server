@@ -170,9 +170,15 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
     }
 
     @Override
-    public List<Method> getMethods(String cmpid) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
-        return methods.getMethods(cmpid);
+    public List<Method> getStaticMethods(String cmpid) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+        return methods.getStaticMethods(cmpid);
     }
+
+    @Override
+    public List<Method> getDynamicMethods(String objpid) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+        return methods.getDynamicMethods(objpid);
+    }
+
 
     @Override
     public String invokeMethod(String cmpid, String methodName, List<Pair<String, String>> parameters, String logMessage) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {

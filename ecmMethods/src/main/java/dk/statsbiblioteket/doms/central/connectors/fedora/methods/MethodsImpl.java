@@ -7,6 +7,7 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
 import dk.statsbiblioteket.doms.central.connectors.fedora.inheritance.ContentModelInheritance;
 import dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Method;
 import dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Parameter;
+import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectProfile;
 import dk.statsbiblioteket.doms.central.connectors.fedora.tripleStore.TripleStore;
 import dk.statsbiblioteket.util.Pair;
 import org.apache.commons.io.IOUtils;
@@ -16,10 +17,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -44,31 +42,17 @@ public class MethodsImpl implements Methods{
     }
 
     @Override
-    public List<Method> getMethods(String cmpid) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
-        String methodsXml = null;
-        try {
-            methodsXml = fedora.getXMLDatastreamContents(cmpid, "METHODS");
-        } catch (BackendInvalidResourceException e) {
-            return new ArrayList<Method>();
-        }
-
-        try {
-            JAXBElement<dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Methods> parsed = (JAXBElement<dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Methods>) jaxb.unmarshal(new StringReader(methodsXml));
-            return parsed.getValue().getMethod();
-        } catch (JAXBException e) {
-            throw new BackendMethodFailedException("failed to parse Methods definition",e);
-        }
-    }
-
-    @Override
-    public String invokeMethod(String cmpid,String methodName,List<Pair<String,String>> parameters, String logMessage) throws BackendInvalidResourceException, BackendInvalidCredsException, BackendMethodFailedException {
+    public String invokeMethod(String pid,String methodName,List<Pair<String,String>> parameters, String logMessage) throws BackendInvalidResourceException, BackendInvalidCredsException, BackendMethodFailedException {
         //TODO figure out username and password used for this connection
         //TODO extract the command string from the method
         //TODO replace the parameter values into the command string
         //Run the command string
         //If exit 0, return the std out
         //else return stdout+stderr
-        List<Method> methods = getMethods(cmpid);
+        List<Method> methods = getStaticMethods(pid);
+
+        boolean staticMethod = true;
+
         Method chosenMethod = null;
         for (Method method : methods) {
             if (method.getName().equals(methodName)) {
@@ -76,14 +60,32 @@ public class MethodsImpl implements Methods{
                 break;
             }
         }
+
+
         if (chosenMethod == null){
+            staticMethod = false;
+            methods = getDynamicMethods(pid);
+            for (Method method : methods) {
+                if (method.getName().equals(methodName)) {
+                    chosenMethod = method;
+                    break;
+                }
+            }
+        }
+        if (chosenMethod == null){
+
             throw new BackendInvalidResourceException("Failed to find specified method");
+
         }
         String command = chosenMethod.getCommand();
 
         parameters.add(new Pair<String, String>("domsUser",fedora.getUsername()));
         parameters.add(new Pair<String, String>("domsPassword",fedora.getPassword()));
         parameters.add(new Pair<String, String>("domsLocation",thisLocation));
+
+        if (!staticMethod){
+            parameters.add(new Pair<String, String>("domsPid",pid));
+        }
 
         for (Parameter declaredParameter : chosenMethod.getParameters().getParameter()) {
             boolean set = false;
@@ -133,4 +135,51 @@ public class MethodsImpl implements Methods{
             throw new BackendMethodFailedException("Failed to run command "+commandList.toString(),e);
         }
     }
+
+    public List<Method> getDynamicMethods(String objpid) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+        ObjectProfile profile = fedora.getObjectProfile(objpid);
+        List<Method> result = new ArrayList<Method>();
+        for (String contentModelPid : profile.getContentModels()) {
+            List<Method> methods = getMethods(contentModelPid);
+            for (Method method : methods) {
+                if (method.getType().equals("dynamic")){
+                    result.add(method);
+                }
+            }
+        }
+        return result;
+    }
+
+
+    private List<Method> getMethods(String cmpid) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+        String methodsXml = null;
+        try {
+            //TODO check that the model is in fact a content model??
+            methodsXml = fedora.getXMLDatastreamContents(cmpid, "METHODS");
+        } catch (BackendInvalidResourceException e) {
+            return new ArrayList<Method>();
+        }
+
+        try {
+            JAXBElement<dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Methods> parsed = (JAXBElement<dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Methods>) jaxb.unmarshal(new StringReader(methodsXml));
+            return parsed.getValue().getMethod();
+        } catch (JAXBException e) {
+            throw new BackendMethodFailedException("failed to parse Methods definition",e);
+        }
+    }
+
+
+    @Override
+    public List<Method> getStaticMethods(String cmpid) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+        List<Method> result = new ArrayList<Method>();
+        List<Method> methods = getMethods(cmpid);
+        for (Method method : methods) {
+            if (method.getType().equals("static")){
+                result.add(method);
+            }
+        }
+        return result;
+
+    }
+
 }

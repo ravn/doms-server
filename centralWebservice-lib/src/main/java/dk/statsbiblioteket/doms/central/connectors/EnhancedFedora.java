@@ -85,12 +85,15 @@ public interface EnhancedFedora  {
             throws BackendInvalidCredsException, BackendMethodFailedException;
 
 
-    public List<Method> getMethods(
-            String cmpid)
-            throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
 
     public String invokeMethod(String cmpid,String methodName,List<Pair<String,String>> parameters, String logMessage)
             throws BackendInvalidCredsException, BackendMethodFailedException,
             BackendInvalidResourceException;
+
+
+    public List<Method> getStaticMethods(String cmpid) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
+
+    public List<Method> getDynamicMethods(String objpid) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
+
 
 }
