@@ -10,6 +10,7 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Para
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectProfile;
 import dk.statsbiblioteket.doms.central.connectors.fedora.tripleStore.TripleStore;
 import dk.statsbiblioteket.util.Pair;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 
 import javax.xml.bind.JAXBContext;
@@ -83,10 +84,13 @@ public class MethodsImpl implements Methods{
         parameters.add(new Pair<String, String>("domsPassword",fedora.getPassword()));
         parameters.add(new Pair<String, String>("domsLocation",thisLocation));
 
+        HashMap<String, Parameter> parameterMapping = new HashMap<String, Parameter>();
+
         if (!staticMethod){
             parameters.add(new Pair<String, String>("domsPid",pid));
         }
 
+        //Set defaults
         for (Parameter declaredParameter : chosenMethod.getParameters().getParameter()) {
             boolean set = false;
             for (Pair<String, String> setParameter : parameters) {
@@ -97,18 +101,38 @@ public class MethodsImpl implements Methods{
             if (set){
                 continue;
             }
-            parameters.add(new Pair<String, String>(declaredParameter.getName(),declaredParameter.getDefault()));
+            Pair<String, String> pair = new Pair<String, String>(
+                    declaredParameter.getName(),
+                    declaredParameter.getDefault());
+            parameters.add(pair);
+            parameterMapping.put(declaredParameter.getName(),declaredParameter);
         }
+        //replace values
         for (Pair<String, String> parameter : parameters) {
+
             String name = parameter.getLeft();
+            System.out.println(name);
             name = name.replaceAll("\\s","");
+            Parameter declared = parameterMapping.get(name);
+            if (declared != null){
+                if (declared.getType().equals("TextBox")){
+                    System.out.println(declared + " is textbox");
+                }
+            }
+
             String value = parameter.getRight();
-            value = value.replaceAll("[\"'`]","");
-            value = "\""+value+"\"";
+            System.out.println(value);
+            //value = value.replaceAll("[']","");
+            //value = "'"+value+"'";
+            value = Base64.encodeBase64String(value.getBytes());
+            System.out.println(name);
+            System.out.println(value);
             command = command.replaceAll("%%"+name+"%%",value);
         }
+        System.out.println(command);
         //Remove all unused parameters
         command = command.replaceAll("%%[^%%]*%%","");
+        System.out.println(command);
 
         //TODO defaulted params, such as fedoraUser and fedoraPass
 
