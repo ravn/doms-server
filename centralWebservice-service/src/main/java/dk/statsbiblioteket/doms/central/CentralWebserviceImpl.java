@@ -129,6 +129,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
     }
 
 
+    // TODO: rename pid to templatePid
     @Override
     public String newObject(@WebParam(name = "pid", targetNamespace = "") String pid,
                             @WebParam(name = "oldID", targetNamespace = "") List<String> oldID,
