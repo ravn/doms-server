@@ -43,7 +43,7 @@ public class TripleStoreRest  extends Connector implements TripleStore{
                 .queryParam("type", "tuples")
                 .queryParam("lang", "iTQL")
                 .queryParam("format", "CSV")
-                //.queryParam("flush", "true")
+                .queryParam("flush", "true")
                 .queryParam("stream", "on");
         restApi.addFilter(new HTTPBasicAuthFilter(creds.getUsername(),creds.getPassword()));
     }
