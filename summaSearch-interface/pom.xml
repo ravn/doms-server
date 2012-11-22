@@ -43,6 +43,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>jaxws-maven-plugin</artifactId>
+                <version>1.12</version>
                 <executions>
                     <execution>
                         <goals>
@@ -50,7 +51,7 @@
                         </goals>
                         <configuration>
                             <wsdlDirectory>src/main/resources/wsdl</wsdlDirectory>
-                            <packageName>${groupId}.summasearch</packageName>
+                            <packageName>${project.groupId}.summasearch</packageName>
                             <sourceDestDir>target/generated-sources/java</sourceDestDir>
                             <verbose>true</verbose>
                         </configuration>
