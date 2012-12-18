@@ -163,6 +163,11 @@ public class FedoraRest extends Connector implements Fedora {
         }
     }
 
+    private String modifyForDate(String xml, Long asOfTime) {
+        //TODO filter out all versions newer than asOfTime
+        return xml;
+    }
+
 
     private String StringOrNull(Long time) {
         if (time != null && time > 0){
