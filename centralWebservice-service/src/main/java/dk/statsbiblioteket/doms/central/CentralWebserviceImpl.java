@@ -34,7 +34,6 @@ import dk.statsbiblioteket.doms.central.connectors.*;
 import dk.statsbiblioteket.doms.central.connectors.authchecker.AuthChecker;
 
 
-import dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.*;
 import dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Parameter;
 import dk.statsbiblioteket.doms.central.connectors.fedora.pidGenerator.PIDGeneratorException;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.FedoraRelation;
@@ -60,13 +59,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
-import javax.xml.ws.Holder;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import java.lang.*;
 import java.lang.String;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -170,7 +169,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         try {
             log.trace("Entering getObjectProfile with params pid='" + pid+"'");
-            dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectProfile fprofile = fedora.getObjectProfile(pid);
+            dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectProfile fprofile = fedora.getObjectProfile(pid,null);
             ObjectProfile wprofile = new ObjectProfile();
             wprofile.setTitle(fprofile.getLabel());
             wprofile.setPid(fprofile.getPid());
@@ -446,7 +445,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
         try {
             log.trace("Entering getDatastreamContents with params pid=" + pid
                     + " and datastream=" + datastream);
-            return fedora.getXMLDatastreamContents(pid, datastream);
+            return fedora.getXMLDatastreamContents(pid, datastream,null);
         } catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute",
@@ -606,7 +605,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         try {
             log.trace("Entering getNamedRelations with params pid='" + pid + "'");
-            List<FedoraRelation> fedorarels = fedora.getNamedRelations(pid, predicate);
+            List<FedoraRelation> fedorarels = fedora.getNamedRelations(pid, predicate,null);
             return convertRelations(fedorarels);
         }  catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
@@ -725,58 +724,68 @@ public class CentralWebserviceImpl implements CentralWebservice {
     }
 
 
+
     public ViewBundle getViewBundle(
             @WebParam(name = "pid", targetNamespace = "") String pid,
             @WebParam(name = "name", targetNamespace = "")
             String viewAngle)
             throws InvalidCredentialsException, MethodFailedException, InvalidResourceException {
-        log.trace("Entering getViewBundle with params pid=" + pid
-                + " and viewAngle=" + viewAngle);
-        /*
-        * Pseudo kode here
-        * We need to figure two things out
-        * the bundle
-        * the type
-        * ECM generates the bundle
-        * The type is the entry content model of the origin pid
-        * */
+        return getViewBundleFromSpecificTime(pid,viewAngle,-1);
+    }
+
+    @Override
+    public ViewBundle getViewBundleFromSpecificTime(@WebParam(name = "pid", targetNamespace = "") String pid, @WebParam(name = "ViewAngle", targetNamespace = "") String viewAngle, @WebParam(name = "asOfTime", targetNamespace = "") long asOfTime) throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
+            log.trace("Entering getViewBundle with params pid=" + pid
+                    + " and viewAngle=" + viewAngle+" and timestamp="+asOfTime);
+            /*
+            * Pseudo kode here
+            * We need to figure two things out
+            * the bundle
+            * the type
+            * ECM generates the bundle
+            * The type is the entry content model of the origin pid
+            * */
 
 
-        try {
-/*
-            List<String> types = ecm.getEntryContentModelsForObject(pid,
-                                                                    viewAngle);
-            if (types.isEmpty()) {
-                throw new BackendInvalidResourceException("Pid '"+pid+"'is not an entry object for angle '"+viewAngle+"'");
+            try {
+    /*
+                List<String> types = ecm.getEntryContentModelsForObject(pid,
+                                                                        viewAngle);
+                if (types.isEmpty()) {
+                    throw new BackendInvalidResourceException("Pid '"+pid+"'is not an entry object for angle '"+viewAngle+"'");
+                }
+        */
+                java.lang.Long timestamp = null;
+                if (asOfTime > 0){
+                    timestamp = asOfTime;
+                }
+                Document bundleContents = fedora.createBundle(pid, viewAngle,timestamp);
+                String bundleContentsString = DOM.domToString(bundleContents);
+
+                ViewBundle viewBundle = new ViewBundle();
+                viewBundle.setId(pid);
+                viewBundle.setContents(bundleContentsString);
+                return viewBundle;
+
+            } catch (BackendMethodFailedException e) {
+                log.warn("Failed to execute method", e);
+                throw new MethodFailedException("Method failed to execute",
+                        "Method failed to execute",
+                        e);
+            } catch (BackendInvalidCredsException e) {
+                log.debug("User supplied invalid credentials", e);
+                throw new InvalidCredentialsException("Invalid Credentials Supplied",
+                        "Invalid Credentials Supplied",
+                        e);
+            } catch (BackendInvalidResourceException e) {
+                log.debug("Invalid resource requested", e);
+                throw new InvalidResourceException("Invalid Resource Requested",
+                        "Invalid Resource Requested",
+                        e);
+            } catch (Exception e) {
+                log.warn("Caught Unknown Exception", e);
+                throw new MethodFailedException("Server error", "Server error", e);
             }
-*/
-            Document bundleContents = fedora.createBundle(pid, viewAngle);
-            String bundleContentsString = DOM.domToString(bundleContents);
-
-            ViewBundle viewBundle = new ViewBundle();
-            viewBundle.setId(pid);
-            viewBundle.setContents(bundleContentsString);
-            return viewBundle;
-
-        } catch (BackendMethodFailedException e) {
-            log.warn("Failed to execute method", e);
-            throw new MethodFailedException("Method failed to execute",
-                    "Method failed to execute",
-                    e);
-        } catch (BackendInvalidCredsException e) {
-            log.debug("User supplied invalid credentials", e);
-            throw new InvalidCredentialsException("Invalid Credentials Supplied",
-                    "Invalid Credentials Supplied",
-                    e);
-        } catch (BackendInvalidResourceException e) {
-            log.debug("Invalid resource requested", e);
-            throw new InvalidResourceException("Invalid Resource Requested",
-                    "Invalid Resource Requested",
-                    e);
-        } catch (Exception e) {
-            log.warn("Caught Unknown Exception", e);
-            throw new MethodFailedException("Server error", "Server error", e);
-        }
     }
 
     public List<RecordDescription> getIDsModified(
@@ -1066,8 +1075,8 @@ public class CentralWebserviceImpl implements CentralWebservice {
     @Override
     public List<Method> getMethods(@WebParam(name = "pid", targetNamespace = "") String pid) throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         try {
-            List<dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Method> internalMethodList = fedora.getStaticMethods(pid);
-            internalMethodList.addAll(fedora.getDynamicMethods(pid));
+            List<dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Method> internalMethodList = fedora.getStaticMethods(pid,null);
+            internalMethodList.addAll(fedora.getDynamicMethods(pid,null));
             List<Method> externalMethods = new ArrayList<Method>();
             for (dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Method internalmethod : internalMethodList) {
                 Method externalMethod = new Method();
@@ -1115,7 +1124,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             for (Pair parameter : parameters) {
                 internalParameters.add(new dk.statsbiblioteket.util.Pair<String,String>(parameter.getName(),parameter.getValue()));
             }
-            return fedora.invokeMethod(cmpid,methodName,internalParameters,"");
+            return fedora.invokeMethod(cmpid,methodName,internalParameters,null,"");
         } catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute",

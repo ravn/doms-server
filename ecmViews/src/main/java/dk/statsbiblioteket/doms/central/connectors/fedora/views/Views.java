@@ -54,13 +54,15 @@ public interface Views {
     /**
      * Get a list of the objects in the view of a given object
      *
+     *
      * @param objpid          the object whose view we examine
      * @param viewAngle       The view angle
+     * @param asOfTime
      * @return the list of the pids in the view of objpid
      */
     public List<String> getViewObjectsListForObject(
             String objpid,
-            String viewAngle) throws BackendInvalidCredsException, BackendMethodFailedException,
+            String viewAngle, long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException,
                                      BackendInvalidResourceException;
 
     /**
@@ -68,14 +70,16 @@ public interface Views {
      * objects will be bundled under the supertag
      * dobundle:digitalObjectBundle, where dobundle is defined in Constants
      *
+     *
      * @param objpid          the object whose view we examine
      * @param viewAngle       The view angle
+     * @param asOfTime
      * @return The objects bundled under the supertag
      * @see dk.statsbiblioteket.doms.central.connectors.fedora.utils.Constants#NAMESPACE_DIGITAL_OBJECT_BUNDLE
      */
     public Document getViewObjectBundleForObject(
             String objpid,
-            String viewAngle) throws BackendInvalidCredsException, BackendMethodFailedException,
+            String viewAngle, long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException,
                                      BackendInvalidResourceException;
 
 

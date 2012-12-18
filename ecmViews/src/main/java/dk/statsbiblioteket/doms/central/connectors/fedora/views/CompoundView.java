@@ -79,11 +79,13 @@ public class CompoundView {
      * Get the compound view for an object. This method will generate
      * an abstract representation of the Compund view for an object.
      *
+     *
      * @param pid The pid for an object.
 
+     * @param asOfTime
      * @return The compound content model for the object or content model.
      */
-    public static CompoundView getView(String pid,Fedora fedora)
+    public static CompoundView getView(String pid, Fedora fedora, long asOfTime)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
 
 
@@ -107,7 +109,7 @@ public class CompoundView {
 */
 
         // Initialise list of base content models
-        ObjectProfile profile = fedora.getObjectProfile(pid);
+        ObjectProfile profile = fedora.getObjectProfile(pid, null);
         List<String> models = profile.getContentModels();
 
 
@@ -136,7 +138,7 @@ public class CompoundView {
                 String viewXml;
                 viewXml = fedora
                         .getXMLDatastreamContents(p,
-                                                  Constants.VIEW_DATASTREAM);
+                                                  Constants.VIEW_DATASTREAM,asOfTime);
 
                 viewDoc = DOM.stringToDOM(viewXml, true);
             } catch (BackendInvalidResourceException e) {
@@ -297,7 +299,7 @@ public class CompoundView {
 
 
         List<FedoraRelation> relations = fedoraConnector.getNamedRelations(
-                pid, Constants.ENTRY_RELATION);
+                pid, Constants.ENTRY_RELATION, null);
 
 
         for (FedoraRelation relation: relations) {

@@ -156,7 +156,7 @@ public class ViewsImpl implements Views{
         List<String> list = getEntryCMsForAngle(viewAngle);
         for (String pid : list) {
 
-            if (!fedora.exists(pid)){
+            if (!fedora.exists(pid,null)){
 
                 throw new BackendInvalidResourceException(
                         "Content model '" +
@@ -164,7 +164,7 @@ public class ViewsImpl implements Views{
                         "found is not found any more");
             }
 
-            if (!fedora.isContentModel(pid)){
+            if (!fedora.isContentModel(pid,null)){
                 throw new BackendInvalidResourceException(
                         "Content model '" +
                         pid + "' which was just" +
@@ -181,18 +181,20 @@ public class ViewsImpl implements Views{
     /**
      * Get a list of the objects in the view of a given object
      *
+     *
      * @param objpid          the object whose view we examine
      * @param viewAngle       The view angle
 
+     * @param asOfTime
      * @return the list of the pids in the view of objpid
      */
     public List<String> getViewObjectsListForObject(
             String objpid,
-            String viewAngle)
+            String viewAngle, long asOfTime)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
 
         LOG.trace("Entering getViewObjectsListForObject with params '" +
-                  objpid + "' and '" + viewAngle + "'");
+                  objpid + "' and '" + viewAngle + "'"+" and timestamp='"+asOfTime+"'");
 /*
 
         if (!fedoraConnector.exists(objpid)){
@@ -207,7 +209,7 @@ public class ViewsImpl implements Views{
 
         List<String> includedPids = new ArrayList<String>();
 
-        appendPids(viewAngle, includedPids, objpid);
+        appendPids(viewAngle, includedPids, objpid,asOfTime);
 
         return includedPids;
     }
@@ -217,18 +219,20 @@ public class ViewsImpl implements Views{
      * objects will be bundled under the supertag
      * dobundle:digitalObjectBundle, where dobundle is defined in Constants
      *
+     *
      * @param objpid          the object whose view we examine
      * @param viewAngle       The view angle
+     * @param asOfTime
      * @return The objects bundled under the supertag
      * @see Constants#NAMESPACE_DIGITAL_OBJECT_BUNDLE
      */
     public Document getViewObjectBundleForObject(
             String objpid,
-            String viewAngle)
+            String viewAngle, long asOfTime)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
 
 
-        List<String> pidlist = getViewObjectsListForObject(objpid, viewAngle);
+        List<String> pidlist = getViewObjectsListForObject(objpid, viewAngle,asOfTime);
 
         Document doc = DocumentUtils.DOCUMENT_BUILDER.newDocument();
 
@@ -245,7 +249,7 @@ public class ViewsImpl implements Views{
 
         for (String pid : pidlist) {
             //Get the object as a document
-            Document objectdoc = DOM.stringToDOM(fedora.getObjectXml(pid), true);
+            Document objectdoc = DOM.stringToDOM(fedora.getObjectXml(pid,asOfTime), true);
 
             //add it to the bundle we are creating
             Element objectdocelement = objectdoc.getDocumentElement();
@@ -259,10 +263,10 @@ public class ViewsImpl implements Views{
 
 
     private void appendPids(String viewname,
-                            List<String> includedPids, String pid)
+                            List<String> includedPids, String pid, long asOfTime)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
 
-        LOG.trace("Entering appendPids with params " + viewname + " and " + pid);
+        LOG.trace("Entering appendPids with params " + viewname + " and " + pid + " and timestamp "+asOfTime);
         pid = sanitizePid(pid);
         viewname = sanitizeLiteral(viewname);
 
@@ -278,7 +282,7 @@ public class ViewsImpl implements Views{
 
         // Find relations to follow
         // Get content model
-        CompoundView cm = CompoundView.getView(pid,fedora);
+        CompoundView cm = CompoundView.getView(pid,fedora,asOfTime);
         View view = cm.getView().get(viewname);
         if (view == null) {
             LOG.debug("View null, returning");
@@ -292,7 +296,7 @@ public class ViewsImpl implements Views{
             List<FedoraRelation> relations;
 
             relations = fedora.
-                    getNamedRelations(pid, property);
+                    getNamedRelations(pid, property,asOfTime);
 
 
             // Recursively add
@@ -300,7 +304,7 @@ public class ViewsImpl implements Views{
                 String newpid = relation.getObject();
                 appendPids(
                         viewname, includedPids,
-                        newpid);
+                        newpid, asOfTime);
 
             }
 
@@ -320,7 +324,7 @@ public class ViewsImpl implements Views{
             for (String newpid : objects) {
                 appendPids(
                         viewname, includedPids,
-                        newpid);
+                        newpid, asOfTime);
             }
 
 

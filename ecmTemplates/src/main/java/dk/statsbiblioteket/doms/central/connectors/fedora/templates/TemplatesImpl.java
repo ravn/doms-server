@@ -10,7 +10,6 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.pidGenerator.PidGenera
 import dk.statsbiblioteket.doms.central.connectors.fedora.tripleStore.TripleStore;
 import dk.statsbiblioteket.doms.central.connectors.fedora.utils.Constants;
 import dk.statsbiblioteket.doms.central.connectors.fedora.utils.FedoraUtil;
-import dk.statsbiblioteket.doms.central.connectors.fedora.utils.Names;
 import dk.statsbiblioteket.doms.central.connectors.fedora.utils.XpathUtils;
 import dk.statsbiblioteket.util.xml.DOM;
 import org.apache.commons.logging.Log;
@@ -87,11 +86,11 @@ public class TemplatesImpl implements Templates{
         //Working
 
 
-        if (!fedora.isContentModel(cmpid)) {
+        if (!fedora.isContentModel(cmpid,null)) {
             throw new ObjectIsWrongTypeException("The content model '" + cmpid +
                                                  "' is not a content model");
         }
-        if (!fedora.isDataObject(objpid)) {
+        if (!fedora.isDataObject(objpid,null)) {
             throw new ObjectIsWrongTypeException("The data object '" + objpid +
                                                  "' is not a data object");
         }
@@ -116,13 +115,13 @@ public class TemplatesImpl implements Templates{
         LOG.trace("Entering cloneTemplate with param '" + templatepid + "'");
 
 
-        if (!fedora.isTemplate(templatepid)) {
+        if (!fedora.isTemplate(templatepid,null)) {
             throw new ObjectIsWrongTypeException("The pid (" + templatepid +
                                                  ") is not a pid of a template");
         }
 
         // Get the document
-        String contents = fedora.getObjectXml(templatepid);
+        String contents = fedora.getObjectXml(templatepid, null);
         Document document = DOM.stringToDOM(contents, true);
 
         //document.normalize();

@@ -46,16 +46,16 @@ import java.util.List;
 public interface Fedora {
 
 
-    boolean exists(java.lang.String pid) throws BackendInvalidCredsException, BackendMethodFailedException;
+    boolean exists(java.lang.String pid, Long asOfDateTime) throws BackendInvalidCredsException, BackendMethodFailedException;
 
-    boolean isDataObject(java.lang.String pid) throws BackendInvalidCredsException, BackendMethodFailedException;
+    boolean isDataObject(java.lang.String pid, Long asOfDateTime) throws BackendInvalidCredsException, BackendMethodFailedException;
 
-    boolean isTemplate(java.lang.String pid) throws BackendInvalidCredsException, BackendMethodFailedException;
+    boolean isTemplate(java.lang.String pid, Long asOfDateTime) throws BackendInvalidCredsException, BackendMethodFailedException;
 
-    boolean isContentModel(java.lang.String pid) throws BackendInvalidCredsException, BackendMethodFailedException;
+    boolean isContentModel(java.lang.String pid, Long asOfDateTime) throws BackendInvalidCredsException, BackendMethodFailedException;
 
 
-    java.lang.String getObjectXml(java.lang.String pid)
+    java.lang.String getObjectXml(String pid, Long asOfTime)
             throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException;
 
     java.lang.String ingestDocument(org.w3c.dom.Document document, java.lang.String pid)
@@ -64,10 +64,10 @@ public interface Fedora {
 
 
 
-    ObjectProfile getObjectProfile(String pid) throws
-                                               BackendMethodFailedException,
-                                               BackendInvalidCredsException,
-                                               BackendInvalidResourceException;
+    public ObjectProfile getObjectProfile(String pid, Long asOfTime) throws
+                                                      BackendMethodFailedException,
+                                                      BackendInvalidCredsException,
+                                                      BackendInvalidResourceException;
 
     void modifyObjectState(String pid, String state, String comment)
             throws
@@ -83,7 +83,7 @@ public interface Fedora {
             BackendInvalidCredsException,
             BackendInvalidResourceException;
 
-    String getXMLDatastreamContents(String pid, String datastream)
+    String getXMLDatastreamContents(String pid, String datastream, Long asOfDateTime)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,
@@ -95,7 +95,7 @@ public interface Fedora {
             BackendInvalidCredsException,
             BackendInvalidResourceException;
 
-    List<FedoraRelation> getNamedRelations(String pid, String name)
+    List<FedoraRelation> getNamedRelations(String pid, String name, Long asOfTime)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,

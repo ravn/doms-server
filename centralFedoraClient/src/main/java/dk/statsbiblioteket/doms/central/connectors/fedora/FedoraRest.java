@@ -29,7 +29,6 @@
 package dk.statsbiblioteket.doms.central.connectors.fedora;
 
 import com.sun.jersey.api.client.*;
-import com.sun.jersey.api.client.filter.ClientFilter;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
@@ -48,17 +47,18 @@ import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
 
 
-import javax.security.auth.Subject;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.xml.transform.TransformerException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -75,6 +75,7 @@ public class FedoraRest extends Connector implements Fedora {
     private static Log log = LogFactory.getLog(
             FedoraRest.class);
     private String port;
+    private static final String AS_OF_DATE_TIME = "asOfDateTime";
 
 
     public FedoraRest(Credentials creds, String location)
@@ -93,9 +94,9 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     @Override
-    public boolean exists(String pid) throws BackendInvalidCredsException, BackendMethodFailedException {
+    public boolean exists(String pid, Long asOfDateTime) throws BackendInvalidCredsException, BackendMethodFailedException {
         try {
-            ObjectProfile profile = getObjectProfile(pid);
+            ObjectProfile profile = getObjectProfile(pid, asOfDateTime);
         } catch (BackendInvalidResourceException e) {
             return false;
         }
@@ -103,9 +104,9 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     @Override
-    public boolean isDataObject(String pid) throws BackendInvalidCredsException, BackendMethodFailedException {
+    public boolean isDataObject(String pid, Long asOfDateTime) throws BackendInvalidCredsException, BackendMethodFailedException {
         try {
-            ObjectProfile profile = getObjectProfile(pid);
+            ObjectProfile profile = getObjectProfile(pid, asOfDateTime);
             return profile.getType().equals(ObjectType.DATA_OBJECT);
         } catch (BackendInvalidResourceException e) {
             return false;
@@ -113,9 +114,9 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     @Override
-    public boolean isTemplate(String pid) throws BackendInvalidCredsException, BackendMethodFailedException {
+    public boolean isTemplate(String pid, Long asOfDateTime) throws BackendInvalidCredsException, BackendMethodFailedException {
         try {
-            ObjectProfile profile = getObjectProfile(pid);
+            ObjectProfile profile = getObjectProfile(pid, asOfDateTime);
             return profile.getType().equals(ObjectType.TEMPLATE);
         } catch (BackendInvalidResourceException e) {
             return false;
@@ -124,9 +125,9 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     @Override
-    public boolean isContentModel(String pid) throws BackendInvalidCredsException, BackendMethodFailedException {
+    public boolean isContentModel(String pid, Long asOfDateTime) throws BackendInvalidCredsException, BackendMethodFailedException {
         try {
-            ObjectProfile profile = getObjectProfile(pid);
+            ObjectProfile profile = getObjectProfile(pid, asOfDateTime);
             return profile.getType().equals(ObjectType.CONTENT_MODEL);
         } catch (BackendInvalidResourceException e) {
             return false;
@@ -135,7 +136,7 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     @Override
-    public String getObjectXml(String pid)
+    public String getObjectXml(String pid, Long asOfTime)
             throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
 
         try {
@@ -144,12 +145,13 @@ public class FedoraRest extends Connector implements Fedora {
                     .path("/objectXML")
                     .type(MediaType.TEXT_XML_TYPE)
                     .get(String.class);
+            xml = modifyForDate(xml,asOfTime);
             return xml;
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
         } catch (UniformInterfaceException e) {
             if (e.getResponse().getStatus()
-                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                    == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied",
                         e);
@@ -159,6 +161,15 @@ public class FedoraRest extends Connector implements Fedora {
                 throw new BackendMethodFailedException("Server error", e);
             }
         }
+    }
+
+
+    private String StringOrNull(Long time) {
+        if (time != null && time > 0){
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            return formatter.format(new Date(time));
+        }
+        return "";
     }
 
 
@@ -182,7 +193,7 @@ public class FedoraRest extends Connector implements Fedora {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
         } catch (UniformInterfaceException e) {
             if (e.getResponse().getStatus()
-                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                    == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied when ingesting document: \n'"+payload+"'",
                         e);
@@ -193,10 +204,10 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
 
-    public ObjectProfile getObjectProfile(String pid) throws
-                                                      BackendMethodFailedException,
-                                                      BackendInvalidCredsException,
-                                                      BackendInvalidResourceException {
+    public ObjectProfile getObjectProfile(String pid, Long asOfTime) throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException {
         try {
             //Get basic fedora profile
             dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectProfile profile =
@@ -220,7 +231,7 @@ public class FedoraRest extends Connector implements Fedora {
             prof.setContentModels(contentmodels);
 
             //Get relations
-            List<FedoraRelation> relations = getNamedRelations(pid, null);
+            List<FedoraRelation> relations = getNamedRelations(pid, null, asOfTime);
             prof.setRelations(relations);
 
             //get Datastream list
@@ -230,7 +241,7 @@ public class FedoraRest extends Connector implements Fedora {
                     .get(ObjectDatastreams.class);
             List<DatastreamProfile> pdatastreams = new ArrayList<DatastreamProfile>();
             for (DatastreamType datastreamType : datastreams.getDatastream()) {
-                pdatastreams.add(getDatastreamProfile(pid,datastreamType.getDsid()));
+                pdatastreams.add(getDatastreamProfile(pid,datastreamType.getDsid(),asOfTime));
             }
             prof.setDatastreams(pdatastreams);
 
@@ -262,7 +273,7 @@ public class FedoraRest extends Connector implements Fedora {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
         } catch (UniformInterfaceException e) {
             if (e.getResponse().getStatus()
-                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                    == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied: pid '"+pid+"'",
                         e);
@@ -275,13 +286,15 @@ public class FedoraRest extends Connector implements Fedora {
 
     }
 
-    public DatastreamProfile getDatastreamProfile(String pid, String dsid)
+    public DatastreamProfile getDatastreamProfile(String pid, String dsid, Long asOfTime)
             throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
         try {
+
             dk.statsbiblioteket.doms.central.connectors.fedora.generated.DatastreamProfile fdatastream =
                     restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
                             .path("/datastreams/")
                             .path(dsid)
+                            .queryParam(AS_OF_DATE_TIME, StringOrNull(asOfTime))
                             .queryParam("format", "text/xml")
                             .get(dk.statsbiblioteket.doms.central.connectors.fedora.generated.DatastreamProfile.class);
             DatastreamProfile profile = new DatastreamProfile();
@@ -310,7 +323,7 @@ public class FedoraRest extends Connector implements Fedora {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
         } catch (UniformInterfaceException e) {
             if (e.getResponse().getStatus()
-                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                    == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied: pid '"+pid+"'",
                         e);
@@ -340,7 +353,7 @@ public class FedoraRest extends Connector implements Fedora {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
         } catch (UniformInterfaceException e) {
             if (e.getResponse().getStatus()
-                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                    == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied: pid '"+pid+"'",
                         e);
@@ -375,7 +388,7 @@ public class FedoraRest extends Connector implements Fedora {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
         } catch (UniformInterfaceException e) {
             if (e.getResponse().getStatus()
-                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                    == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied: pid '"+pid+"'",
                         e);
@@ -387,23 +400,25 @@ public class FedoraRest extends Connector implements Fedora {
         }
     }
 
-    public String getXMLDatastreamContents(String pid, String datastream)
+    public String getXMLDatastreamContents(String pid, String datastream, Long asOfTime)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,
             BackendInvalidResourceException {
         try {
+
             String contents = restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
                     .path("/datastreams/")
                     .path(URLEncoder.encode(datastream, "UTF-8"))
                     .path("/content")
+                    .queryParam(AS_OF_DATE_TIME, StringOrNull(asOfTime))
                     .get(String.class);
             return contents;
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
         } catch (UniformInterfaceException e) {
             if (e.getResponse().getStatus()
-                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                    == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied: pid '"+pid+"'",
                         e);
@@ -452,7 +467,7 @@ public class FedoraRest extends Connector implements Fedora {
                 restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
                         .path("/datastreams/POLICY")
                         .queryParam("dsLocation", "http://localhost:"+port+
-                                                  "/fedora/objects/" + object + "/datastreams/LICENSE/content")
+                                "/fedora/objects/" + object + "/datastreams/LICENSE/content")
                         .queryParam("mimeType", "application/rdf+xml")
                         .queryParam("ignoreContent", "true")
                         .put();
@@ -461,7 +476,7 @@ public class FedoraRest extends Connector implements Fedora {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
         } catch (UniformInterfaceException e) {
             if (e.getResponse().getStatus()
-                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                    == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied: pid '"+pid+"'",
                         e);
@@ -477,9 +492,11 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     @Override
-    public List<FedoraRelation> getNamedRelations(String pid, String name)
+    public List<FedoraRelation> getNamedRelations(String pid, String name, Long asOfTime)
             throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
         try {
+            //TODO use asOfTime here, when fedora supports it
+
             String subject = pid;
             if (!subject.startsWith("info:fedora/")) {
                 subject = "info:fedora/" + subject;
@@ -516,7 +533,7 @@ public class FedoraRest extends Connector implements Fedora {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
         } catch (UniformInterfaceException e) {
             if (e.getResponse().getStatus()
-                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                    == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied: pid '"+pid+"'",
                         e);
@@ -577,7 +594,7 @@ public class FedoraRest extends Connector implements Fedora {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
         } catch (UniformInterfaceException e) {
             if (e.getResponse().getStatus()
-                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                    == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied: pid '"+pid+"'",
                         e);
@@ -611,7 +628,7 @@ public class FedoraRest extends Connector implements Fedora {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
         } catch (UniformInterfaceException e) {
             if (e.getResponse().getStatus()
-                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                    == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied",
                         e);
@@ -628,8 +645,8 @@ public class FedoraRest extends Connector implements Fedora {
     public List<SearchResult> fieldsearch(String query,
                                           int offset,
                                           int pageLength) throws
-                                                          BackendMethodFailedException,
-                                                          BackendInvalidCredsException
+            BackendMethodFailedException,
+            BackendInvalidCredsException
     {
         try {
 
@@ -657,16 +674,16 @@ public class FedoraRest extends Connector implements Fedora {
             for (ObjectFieldsType objectFieldsType : searchResult.getResultList().getObjectFields()) {
 
                 outputResults.add(new SearchResult(objectFieldsType.getPid(),
-                                                   objectFieldsType.getLabel(),
-                                                   objectFieldsType.getState(),
-                                                   DateUtils.parseDateStrict(objectFieldsType.getCDate()).getTime(),
-                                                   DateUtils.parseDateStrict(objectFieldsType.getMDate()).getTime()));
+                        objectFieldsType.getLabel(),
+                        objectFieldsType.getState(),
+                        DateUtils.parseDateStrict(objectFieldsType.getCDate()).getTime(),
+                        DateUtils.parseDateStrict(objectFieldsType.getMDate()).getTime()));
             }
             return outputResults;
 
         } catch (UniformInterfaceException e) {
             if (e.getResponse().getStatus()
-                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                    == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied",
                         e);
@@ -718,7 +735,7 @@ public class FedoraRest extends Connector implements Fedora {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
         } catch (UniformInterfaceException e) {
             if (e.getResponse().getStatus()
-                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                    == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException(
                         "Invalid Credentials Supplied: pid '"+pid+"'",
                         e);

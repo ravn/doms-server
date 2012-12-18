@@ -276,6 +276,14 @@
         <part name="body" element="tns:getViewBundleResponse"/>
     </message>
 
+    <message name="getViewBundleFromSpecificTime">
+        <part name="parameters" element="tns:getViewBundleFromSpecificTime"/>
+    </message>
+    <message name="getViewBundleFromSpecificTimeResponse">
+        <part name="body" element="tns:getViewBundleFromSpecificTimeResponse"/>
+    </message>
+
+
     <message name="getIDsModified">
         <part name="parameters" element="tns:getIDsModified"/>
     </message>
@@ -811,6 +819,19 @@
             </documentation>
             <input message="tns:getViewBundle"/>
             <output message="tns:getViewBundleResponse"/>
+            <fault name="InvalidCredentialsException"
+                   message="tns:InvalidCredentialsException"/>
+            <fault name="MethodFailedException"
+                   message="tns:MethodFailedException"/>
+            <fault name="InvalidResourceException"
+                   message="tns:InvalidResourceException"/>
+        </operation>
+
+        <operation name="getViewBundleFromSpecificTime">
+            <documentation>Given an entry PID and a view angle name, return a bundle
+            </documentation>
+            <input message="tns:getViewBundleFromSpecificTime"/>
+            <output message="tns:getViewBundleFromSpecificTimeResponse"/>
             <fault name="InvalidCredentialsException"
                    message="tns:InvalidCredentialsException"/>
             <fault name="MethodFailedException"
@@ -1399,6 +1420,25 @@
                 <soap:fault name="InvalidResourceException" use="literal"/>
             </fault>
         </operation>
+        <operation name="getViewBundleFromSpecificTime">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="MethodFailedException">
+                <soap:fault name="MethodFailedException" use="literal"/>
+            </fault>
+            <fault name="InvalidCredentialsException">
+                <soap:fault name="InvalidCredentialsException" use="literal"/>
+            </fault>
+            <fault name="InvalidResourceException">
+                <soap:fault name="InvalidResourceException" use="literal"/>
+            </fault>
+        </operation>
+
         <operation name="getIDsModified">
             <soap:operation soapAction=""/>
             <input>

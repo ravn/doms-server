@@ -35,7 +35,7 @@ public interface EnhancedFedora  {
             throws BackendInvalidCredsException, BackendMethodFailedException, ObjectIsWrongTypeException,
                    BackendInvalidResourceException, PIDGeneratorException;
 
-    public ObjectProfile getObjectProfile(String pid)
+    public ObjectProfile getObjectProfile(String pid, Long asOfTime)
             throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException;
 
     void modifyObjectLabel(String pid, String name, String comment)
@@ -47,7 +47,7 @@ public interface EnhancedFedora  {
     void modifyDatastreamByValue(String pid, String datastream, String contents, String comment)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
 
-    String getXMLDatastreamContents(String pid, String datastream)
+    String getXMLDatastreamContents(String pid, String datastream, Long asOfTime)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
 
     void addExternalDatastream(String pid, String contents, String filename, String permanentURL, String formatURI,
@@ -60,7 +60,7 @@ public interface EnhancedFedora  {
     void addRelation(String pid, String subject, String predicate, String object, boolean literal, String comment)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
 
-    List<FedoraRelation> getNamedRelations(String pid, String predicate)
+    List<FedoraRelation> getNamedRelations(String pid, String predicate, Long asOfTime)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
 
     List<FedoraRelation> getInverseRelations(String pid, String predicate) throws BackendInvalidCredsException,
@@ -70,7 +70,7 @@ public interface EnhancedFedora  {
     void deleteRelation(String pid, String subject, String predicate, String object, boolean literal, String comment)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
 
-    Document createBundle(String pid, String viewAngle)
+    Document createBundle(String pid, String viewAngle, Long asOfTime)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
 
     List<String> findObjectFromDCIdentifier(String string)
@@ -86,14 +86,14 @@ public interface EnhancedFedora  {
 
 
 
-    public String invokeMethod(String cmpid,String methodName,List<Pair<String,String>> parameters, String logMessage)
+    public String invokeMethod(String cmpid,String methodName,List<Pair<String,String>> parameters, Long asOfTime,String logMessage)
             throws BackendInvalidCredsException, BackendMethodFailedException,
             BackendInvalidResourceException;
 
 
-    public List<Method> getStaticMethods(String cmpid) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
+    public List<Method> getStaticMethods(String cmpid, Long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
 
-    public List<Method> getDynamicMethods(String objpid) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
+    public List<Method> getDynamicMethods(String objpid, Long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
 
 
 }

@@ -13,7 +13,7 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public interface ContentModelInheritance {
-    List<String> getInheritedContentModels(String cmpid)
+    List<String> getInheritedContentModels(String cmpid, Long asOfDateTime)
             throws BackendInvalidCredsException, BackendMethodFailedException;
 
     /**

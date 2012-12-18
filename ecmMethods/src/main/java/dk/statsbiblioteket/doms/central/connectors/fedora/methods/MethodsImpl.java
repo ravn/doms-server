@@ -4,11 +4,9 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
-import dk.statsbiblioteket.doms.central.connectors.fedora.inheritance.ContentModelInheritance;
 import dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Method;
 import dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Parameter;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectProfile;
-import dk.statsbiblioteket.doms.central.connectors.fedora.tripleStore.TripleStore;
 import dk.statsbiblioteket.util.Pair;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
@@ -43,14 +41,14 @@ public class MethodsImpl implements Methods{
     }
 
     @Override
-    public String invokeMethod(String pid,String methodName,List<Pair<String,String>> parameters, String logMessage) throws BackendInvalidResourceException, BackendInvalidCredsException, BackendMethodFailedException {
+    public String invokeMethod(String pid,String methodName,List<Pair<String,String>> parameters, Long asOfTime, String logMessage) throws BackendInvalidResourceException, BackendInvalidCredsException, BackendMethodFailedException {
         //TODO figure out username and password used for this connection
         //TODO extract the command string from the method
         //TODO replace the parameter values into the command string
         //Run the command string
         //If exit 0, return the std out
         //else return stdout+stderr
-        List<Method> methods = getStaticMethods(pid);
+        List<Method> methods = getStaticMethods(pid,asOfTime);
 
         boolean staticMethod = true;
 
@@ -65,7 +63,7 @@ public class MethodsImpl implements Methods{
 
         if (chosenMethod == null){
             staticMethod = false;
-            methods = getDynamicMethods(pid);
+            methods = getDynamicMethods(pid,asOfTime);
             for (Method method : methods) {
                 if (method.getName().equals(methodName)) {
                     chosenMethod = method;
@@ -160,11 +158,11 @@ public class MethodsImpl implements Methods{
         }
     }
 
-    public List<Method> getDynamicMethods(String objpid) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
-        ObjectProfile profile = fedora.getObjectProfile(objpid);
+    public List<Method> getDynamicMethods(String objpid, Long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+        ObjectProfile profile = fedora.getObjectProfile(objpid, null);
         List<Method> result = new ArrayList<Method>();
         for (String contentModelPid : profile.getContentModels()) {
-            List<Method> methods = getMethods(contentModelPid);
+            List<Method> methods = getMethods(contentModelPid,asOfTime);
             for (Method method : methods) {
                 if (method.getType().equals("dynamic")){
                     result.add(method);
@@ -175,11 +173,11 @@ public class MethodsImpl implements Methods{
     }
 
 
-    private List<Method> getMethods(String cmpid) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+    private List<Method> getMethods(String cmpid, Long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
         String methodsXml = null;
         try {
             //TODO check that the model is in fact a content model??
-            methodsXml = fedora.getXMLDatastreamContents(cmpid, "METHODS");
+            methodsXml = fedora.getXMLDatastreamContents(cmpid, "METHODS",asOfTime);
         } catch (BackendInvalidResourceException e) {
             return new ArrayList<Method>();
         }
@@ -194,9 +192,9 @@ public class MethodsImpl implements Methods{
 
 
     @Override
-    public List<Method> getStaticMethods(String cmpid) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+    public List<Method> getStaticMethods(String cmpid, Long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
         List<Method> result = new ArrayList<Method>();
-        List<Method> methods = getMethods(cmpid);
+        List<Method> methods = getMethods(cmpid,asOfTime);
         for (Method method : methods) {
             if (method.getType().equals("static")){
                 result.add(method);

@@ -140,6 +140,10 @@
     <xs:element name="getViewBundle" type="tns:pidAndViewAngle"/>
     <xs:element name="getViewBundleResponse" type="tns:viewBundleWrapper"/>
 
+    <xs:element name="getViewBundleFromSpecificTime" type="tns:pidAndViewAngleAndTimestamp"/>
+    <xs:element name="getViewBundleFromSpecificTimeResponse" type="tns:viewBundleWrapper"/>
+
+
 
     <xs:element name="getIDsModified" type="tns:IdsModified"/>
     <xs:element name="getIDsModifiedResponse" type="tns:ListRecordDescription"/>
@@ -227,6 +231,15 @@
 
         </xs:sequence>
     </xs:complexType>
+
+    <xs:complexType name="pidAndViewAngleAndTimestamp">
+        <xs:sequence>
+            <xs:element name="pid" type="xs:string"/>
+            <xs:element name="ViewAngle" type="xs:string"/>
+            <xs:element name="asOfTime" type="xs:long"/>
+        </xs:sequence>
+    </xs:complexType>
+
 
     <xs:complexType name="pidAndPredicate">
         <xs:sequence>

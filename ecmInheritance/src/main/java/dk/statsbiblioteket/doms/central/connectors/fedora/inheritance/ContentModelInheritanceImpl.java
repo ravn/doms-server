@@ -29,7 +29,7 @@ public class ContentModelInheritanceImpl implements ContentModelInheritance {
         this.ts = ts;
     }
 
-    private List<String> getInheritedContentModelsBreadthFirst(List<String> contentmodels)
+    private List<String> getInheritedContentModelsBreadthFirst(List<String> contentmodels, Long asOfDateTime)
             throws BackendInvalidCredsException, BackendMethodFailedException {
 
 
@@ -70,7 +70,7 @@ public class ContentModelInheritanceImpl implements ContentModelInheritance {
             String u = queue.poll();
 
             //    for all white successors v of u {
-            List<String> successor_of_u = getAncestors(u);
+            List<String> successor_of_u = getAncestors(u,asOfDateTime);
             for (String v : successor_of_u) {
                 if (grey.contains(v) || black.contains(v)) {
                     continue;
@@ -87,12 +87,12 @@ public class ContentModelInheritanceImpl implements ContentModelInheritance {
         return black;
     }
 
-    private List<String> getAncestors(String s) throws BackendInvalidCredsException, BackendMethodFailedException {
+    private List<String> getAncestors(String s, Long asOfDateTime) throws BackendInvalidCredsException, BackendMethodFailedException {
         List<String> temp = new ArrayList<String>();
 
         List<FedoraRelation> ancestors = null;
         try {
-            ancestors = fedora.getNamedRelations(s, Names.RELATION_EXTENDS_MODEL);
+            ancestors = fedora.getNamedRelations(s, Names.RELATION_EXTENDS_MODEL, asOfDateTime);
         } catch (BackendInvalidResourceException e) {
             //Content model does not exist, but that is not a problem. It just
             //does not have ancestors
@@ -111,10 +111,10 @@ public class ContentModelInheritanceImpl implements ContentModelInheritance {
 
 
     @Override
-    public List<String> getInheritedContentModels(String cmpid)
+    public List<String> getInheritedContentModels(String cmpid, Long asOfDateTime)
             throws BackendInvalidCredsException, BackendMethodFailedException {
         cmpid = FedoraUtil.ensurePID(cmpid);
-        return getInheritedContentModelsBreadthFirst(Arrays.asList(new String[]{cmpid}));
+        return getInheritedContentModelsBreadthFirst(Arrays.asList(new String[]{cmpid}),asOfDateTime);
     }
 
     /**

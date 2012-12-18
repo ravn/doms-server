@@ -72,9 +72,9 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
         return templates.cloneTemplate(templatepid, oldIDs, logMessage);
     }
 
-    public ObjectProfile getObjectProfile(String pid)
+    public ObjectProfile getObjectProfile(String pid, Long asOfTime)
             throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
-        return fedora.getObjectProfile(pid);
+        return fedora.getObjectProfile(pid, asOfTime);
     }
 
     @Override
@@ -96,9 +96,9 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
     }
 
     @Override
-    public String getXMLDatastreamContents(String pid, String datastream)
+    public String getXMLDatastreamContents(String pid, String datastream,Long asOfDateTime)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
-        return fedora.getXMLDatastreamContents(pid,datastream);
+        return fedora.getXMLDatastreamContents(pid,datastream,asOfDateTime);
     }
 
     @Override
@@ -122,9 +122,9 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
     }
 
     @Override
-    public List<FedoraRelation> getNamedRelations(String pid, String predicate)
+    public List<FedoraRelation> getNamedRelations(String pid, String predicate, Long asOfTime)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
-        return  fedora.getNamedRelations(pid,predicate);
+        return  fedora.getNamedRelations(pid,predicate, asOfTime);
     }
 
     @Override
@@ -141,9 +141,9 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
     }
 
     @Override
-    public Document createBundle(String pid, String viewAngle)
+    public Document createBundle(String pid, String viewAngle, Long asOfTime)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
-        return views.getViewObjectBundleForObject(pid,viewAngle);
+        return views.getViewObjectBundleForObject(pid,viewAngle,asOfTime);
     }
 
     @Override
@@ -170,19 +170,19 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
     }
 
     @Override
-    public List<Method> getStaticMethods(String cmpid) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
-        return methods.getStaticMethods(cmpid);
+    public List<Method> getStaticMethods(String cmpid, Long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+        return methods.getStaticMethods(cmpid,asOfTime);
     }
 
     @Override
-    public List<Method> getDynamicMethods(String objpid) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
-        return methods.getDynamicMethods(objpid);
+    public List<Method> getDynamicMethods(String objpid, Long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+        return methods.getDynamicMethods(objpid,asOfTime);
     }
 
 
     @Override
-    public String invokeMethod(String cmpid, String methodName, List<Pair<String, String>> parameters, String logMessage) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
-        return methods.invokeMethod(cmpid,methodName,parameters,logMessage);
+    public String invokeMethod(String cmpid, String methodName, List<Pair<String, String>> parameters, Long asOfTime,String logMessage) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+        return methods.invokeMethod(cmpid,methodName,parameters,asOfTime,logMessage);
     }
 
 }
