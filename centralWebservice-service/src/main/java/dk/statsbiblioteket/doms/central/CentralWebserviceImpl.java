@@ -34,7 +34,6 @@ import dk.statsbiblioteket.doms.central.connectors.*;
 import dk.statsbiblioteket.doms.central.connectors.authchecker.AuthChecker;
 
 
-import dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.*;
 import dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Parameter;
 import dk.statsbiblioteket.doms.central.connectors.fedora.pidGenerator.PIDGeneratorException;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.FedoraRelation;
@@ -60,7 +59,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
-import javax.xml.ws.Holder;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.xpath.XPath;
@@ -909,7 +907,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
     }
 
     @Override
-    public List<SearchResult> findObjects(@WebParam(name = "query", targetNamespace = "") String query,
+    public SearchResultList findObjects(@WebParam(name = "query", targetNamespace = "") String query,
                                           @WebParam(name = "offset", targetNamespace = "") int offset,
                                           @WebParam(name = "pageSize", targetNamespace = "") int pageSize)
             throws MethodFailedException {
@@ -929,11 +927,17 @@ public class CentralWebserviceImpl implements CentralWebservice {
             Document searchResultDOM = DOM.stringToDOM(searchResultString);
             XPath xPath = XPathFactory.newInstance().newXPath();
 
-            List<SearchResult> searchResults = new LinkedList<SearchResult>();
 
             NodeList nodeList = (NodeList) xPath.evaluate(
                     "//responsecollection/response/documentresult/record/field/shortrecord",
                     searchResultDOM.getDocumentElement(), XPathConstants.NODESET);
+
+            java.lang.Long hitCount = java.lang.Long.parseLong((String) (xPath.evaluate(
+                    "//responsecollection/response/documentresult/@hitCount",
+                    searchResultDOM.getDocumentElement(), XPathConstants.STRING)));
+
+            SearchResultList searchResultList = new SearchResultList();
+            searchResultList.setHitCount(hitCount);
 
             for (int i=0; i<nodeList.getLength(); ++i) {
                 Node node = nodeList.item(i);
@@ -954,10 +958,12 @@ public class CentralWebserviceImpl implements CentralWebservice {
                 searchResult.setCreatedDate(createdDate.getTimeInMillis());
                 searchResult.setModifiedDate(modifiedDate.getTimeInMillis());
 
-                searchResults.add(searchResult);
+                searchResultList.getSearchResult().add(searchResult);
             }
 
-            return searchResults;
+
+
+            return searchResultList;
 
         } catch (MalformedURLException e) {
             log.error("caught problemException", e);
