@@ -21,7 +21,7 @@ public class MethodsImplTest {
     @Ignore
     public void testGetMethods() throws Exception {
         MethodsImpl methods = new MethodsImpl(new FedoraRest(new Credentials("fedoraAdmin", "fedoraAdminPass"), "http://alhena:7880/fedora"),"");
-        List<Method> methodList = methods.getStaticMethods("doms:ContentModel_VHSFile");
+        List<Method> methodList = methods.getStaticMethods("doms:ContentModel_VHSFile",0l);
         assertTrue("no methods!",methodList.size() > 0);
     }
 
