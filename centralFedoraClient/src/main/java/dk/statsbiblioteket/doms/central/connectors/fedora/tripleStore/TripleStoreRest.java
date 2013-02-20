@@ -18,6 +18,8 @@ import org.apache.commons.logging.LogFactory;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by IntelliJ IDEA.
@@ -117,10 +119,9 @@ public class TripleStoreRest  extends Connector implements TripleStore{
     public List<String> findObjectFromDCIdentifier(String string)
             throws BackendInvalidCredsException, BackendMethodFailedException {
 
-        //TODO sanitize label
         String query = "select $object\n"
                        + "from <#ri>\n"
-                       + "where $object <dc:identifier> '" + string + "'"
+                       + "where $object <dc:identifier> '" + string.replaceAll(Pattern.quote("'"), Matcher.quoteReplacement("\\'")) + "' "
                        + "and ($object <fedora-model:state> <fedora-model:Active>\n" +
                        "or $object <fedora-model:state> <fedora-model:Inactive>)";
         return genericQuery(query);

@@ -44,17 +44,17 @@
         <dependency>
             <groupId>dk.statsbiblioteket.doms.central</groupId>
             <artifactId>ecmTemplates</artifactId>
-            <version>0.0.27-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>dk.statsbiblioteket.doms.central</groupId>
             <artifactId>ecmViews</artifactId>
-            <version>0.0.27-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>dk.statsbiblioteket.doms.central</groupId>
             <artifactId>ecmMethods</artifactId>
-            <version>0.0.27-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
 
@@ -79,6 +79,10 @@
             <artifactId>updatetracker-interface</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>dk.statsbiblioteket.doms.updatetracker</groupId>
+            <artifactId>updatetracker-lib</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>com.sun.jersey</groupId>

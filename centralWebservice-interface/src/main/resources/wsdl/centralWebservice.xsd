@@ -156,7 +156,7 @@
     <xs:element name="findObjectFromDCIdentifierResponse" type="tns:Pidlist"/>
 
     <xs:element name="findObjects" type="tns:SearchQuery"/>
-    <xs:element name="findObjectsResponse" type="tns:SearchResultList"/>
+    <xs:element name="findObjectsResponse" type="tns:SearchResultListWrapper"/>
 
     <xs:element name="createTempAdminUser" type="tns:newUser"/>
     <xs:element name="createTempAdminUserResponse" type="tns:UserWrapper"/>
@@ -406,8 +406,16 @@
             <xs:element name="pageSize" type="xs:int"/>
         </xs:sequence>
     </xs:complexType>
+
+    <xs:complexType name="SearchResultListWrapper">
+        <xs:sequence>
+            <xs:element name="searchResult" type="tns:SearchResultList"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:complexType name="SearchResultList">
         <xs:sequence>
+            <xs:element name="hitCount" type="xs:long" minOccurs="1" maxOccurs="1"/>
             <xs:element name="searchResult" type="tns:SearchResult" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
