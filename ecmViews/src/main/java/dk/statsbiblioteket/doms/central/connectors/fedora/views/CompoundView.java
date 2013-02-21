@@ -85,7 +85,7 @@ public class CompoundView {
      * @param asOfTime
      * @return The compound content model for the object or content model.
      */
-    public static CompoundView getView(String pid, Fedora fedora, long asOfTime)
+    public static CompoundView getView(String pid, Fedora fedora, Long asOfTime)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
 
 
@@ -109,7 +109,7 @@ public class CompoundView {
 */
 
         // Initialise list of base content models
-        ObjectProfile profile = fedora.getObjectProfile(pid, null);
+        ObjectProfile profile = fedora.getObjectProfile(pid, asOfTime);
         List<String> models = profile.getContentModels();
 
 

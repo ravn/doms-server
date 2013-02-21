@@ -62,7 +62,7 @@ public interface Views {
      */
     public List<String> getViewObjectsListForObject(
             String objpid,
-            String viewAngle, long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException,
+            String viewAngle, Long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException,
                                      BackendInvalidResourceException;
 
     /**
@@ -79,7 +79,7 @@ public interface Views {
      */
     public Document getViewObjectBundleForObject(
             String objpid,
-            String viewAngle, long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException,
+            String viewAngle, Long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException,
                                      BackendInvalidResourceException;
 
 

@@ -190,7 +190,7 @@ public class ViewsImpl implements Views{
      */
     public List<String> getViewObjectsListForObject(
             String objpid,
-            String viewAngle, long asOfTime)
+            String viewAngle, Long asOfTime)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
 
         LOG.trace("Entering getViewObjectsListForObject with params '" +
@@ -228,7 +228,7 @@ public class ViewsImpl implements Views{
      */
     public Document getViewObjectBundleForObject(
             String objpid,
-            String viewAngle, long asOfTime)
+            String viewAngle, Long asOfTime)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
 
 
@@ -263,7 +263,7 @@ public class ViewsImpl implements Views{
 
 
     private void appendPids(String viewname,
-                            List<String> includedPids, String pid, long asOfTime)
+                            List<String> includedPids, String pid, Long asOfTime)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
 
         LOG.trace("Entering appendPids with params " + viewname + " and " + pid + " and timestamp "+asOfTime);
