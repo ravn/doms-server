@@ -80,6 +80,11 @@
         </dependency>
 
         <dependency>
+            <groupId>dk.statsbiblioteket.doms.updatetracker</groupId>
+            <artifactId>updatetracker-lib</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-client</artifactId>
         </dependency>
