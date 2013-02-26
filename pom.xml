@@ -48,12 +48,7 @@
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.updatetracker</groupId>
                 <artifactId>updatetracker-interface</artifactId>
-                <version>0.0.15-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>dk.statsbiblioteket.doms.updatetracker</groupId>
-                <artifactId>updatetracker-lib</artifactId>
-                <version>0.0.15-SNAPSHOT</version>
+                <version>0.0.14.2</version>
             </dependency>
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.domsutil</groupId>

@@ -31,7 +31,6 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.Connector;
-import dk.statsbiblioteket.doms.updatetracker.UpdateTrackerWebserviceLib;
 import dk.statsbiblioteket.doms.updatetracker.webservice.*;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
 
@@ -64,7 +63,12 @@ public class UpdateTracker extends Connector {
             throws MalformedURLException {
         super(creds, location);
         URL wsdlLocation = new URL(location);
-        service = new UpdateTrackerWebserviceLib(new TrivialCredentialsGenerator(creds));
+        service = new UpdateTrackerWebserviceService(wsdlLocation,
+                                                     QNAME).getUpdateTrackerWebservicePort();
+        ((BindingProvider)service).getRequestContext().put(BindingProvider.USERNAME_PROPERTY,creds.getUsername());
+        ((BindingProvider)service).getRequestContext().put(BindingProvider.PASSWORD_PROPERTY,creds.getPassword());
+
+
     }
 
     public List<UpdateTrackerRecord> listObjectsChangedSince(String collectionPid,
