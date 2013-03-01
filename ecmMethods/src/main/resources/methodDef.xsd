@@ -30,6 +30,7 @@
     <xs:complexType name="parameter">
         <xs:sequence>
             <xs:element type="xs:NCName" name="name"/>
+            <xs:element type="xs:string" name="parameterprefix" minOccurs="0"/>
             <xs:element type="xs:boolean" name="required"/>
             <xs:element type="xs:boolean" name="repeatable"/>
             <xs:element name="type">

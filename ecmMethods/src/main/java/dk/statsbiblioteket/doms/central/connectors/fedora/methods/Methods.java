@@ -7,6 +7,7 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Meth
 import dk.statsbiblioteket.util.Pair;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,16 +18,54 @@ import java.util.List;
  */
 public interface Methods {
 
+    /**
+     * List all static methods for a given content model.
+     *
+     * @param cmpid Pid of the content model.
+     * @param asOfTime Use the methods defined at this time (unix time in ms), or null for now.
+     *
+     * @return List of methods defined.
+     *
+     * @throws BackendInvalidCredsException If current credentials provided are invalid.
+     * @throws BackendMethodFailedException If communicating with Fedora failed.
+     * @throws BackendInvalidResourceException If content model doesn't exist.
+     */
     public List<Method> getStaticMethods(
             String cmpid, Long asOfTime)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
 
+    /**
+     * List all dynamic methods for a given object.
+     *
+     * @param objpid Pid of the object.
+     * @param asOfTime Use the methods defined at this time (unix time in ms), or null for now.
+     *
+     * @return List of methods defined.
+     *
+     * @throws BackendInvalidCredsException If current credentials provided are invalid.
+     * @throws BackendMethodFailedException If communicating with Fedora failed.
+     * @throws BackendInvalidResourceException If object doesn't exist.
+     */
     public List<Method> getDynamicMethods(
             String objpid, Long asOfTime)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
 
-
-    public String invokeMethod(String cmpid,String methodName,List<Pair<String,String>> parameters, Long asOfTime, String logMessage)
+    /**
+     * Invoke a given method with the given parameters.
+     *
+     * @param pid The pid of the content model or object defining the method.
+     * @param methodName The name of the method.
+     * @param parameters Parameters for the method, as a map from name list of values.
+     * @param asOfTime Use the methods defined at this time (unix time in ms), or null for now.
+     * @param logMessage Message to log to Fedora audit trail when invoking the method.
+     *
+     * @return Result of calling method.
+     *
+     * @throws BackendInvalidCredsException If current credentials provided are invalid.
+     * @throws BackendMethodFailedException If communicating with Fedora failed.
+     * @throws BackendInvalidResourceException If object, content model or method doesn't exist.
+     */
+    public String invokeMethod(String pid,String methodName,Map<String,List<String>> parameters, Long asOfTime, String logMessage)
             throws BackendInvalidCredsException, BackendMethodFailedException,
             BackendInvalidResourceException;
 }

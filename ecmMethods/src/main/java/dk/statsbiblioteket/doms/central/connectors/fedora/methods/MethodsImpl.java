@@ -41,17 +41,12 @@ public class MethodsImpl implements Methods{
     }
 
     @Override
-    public String invokeMethod(String pid,String methodName,List<Pair<String,String>> parameters, Long asOfTime, String logMessage) throws BackendInvalidResourceException, BackendInvalidCredsException, BackendMethodFailedException {
-        //TODO figure out username and password used for this connection
-        //TODO extract the command string from the method
-        //TODO replace the parameter values into the command string
-        //Run the command string
-        //If exit 0, return the std out
-        //else return stdout+stderr
+    public String invokeMethod(String pid,String methodName,Map<String,List<String>> parameters, Long asOfTime, String logMessage) throws BackendInvalidResourceException, BackendInvalidCredsException, BackendMethodFailedException {
         List<Method> methods = getStaticMethods(pid,asOfTime);
 
         boolean staticMethod = true;
 
+        // Find method
         Method chosenMethod = null;
         for (Method method : methods) {
             if (method.getName().equals(methodName)) {
@@ -59,8 +54,6 @@ public class MethodsImpl implements Methods{
                 break;
             }
         }
-
-
         if (chosenMethod == null){
             staticMethod = false;
             methods = getDynamicMethods(pid,asOfTime);
@@ -72,89 +65,64 @@ public class MethodsImpl implements Methods{
             }
         }
         if (chosenMethod == null){
-
             throw new BackendInvalidResourceException("Failed to find specified method");
-
         }
+
         String command = chosenMethod.getCommand();
 
-        parameters.add(new Pair<String, String>("domsUser",fedora.getUsername()));
-        parameters.add(new Pair<String, String>("domsPassword",fedora.getPassword()));
-        parameters.add(new Pair<String, String>("domsLocation",thisLocation));
-
-        HashMap<String, Parameter> parameterMapping = new HashMap<String, Parameter>();
-
+        // Set default parameters
+        parameters.put("domsUser", Arrays.asList(fedora.getUsername()));
+        parameters.put("domsPassword", Arrays.asList(fedora.getPassword()));
+        parameters.put("domsLocation", Arrays.asList(thisLocation));
         if (!staticMethod){
-            parameters.add(new Pair<String, String>("domsPid",pid));
+            parameters.put("domsPid", Arrays.asList(pid));
         }
 
-        //Set defaults
+        //replace parameter values
         for (Parameter declaredParameter : chosenMethod.getParameters().getParameter()) {
-            boolean set = false;
-            for (Pair<String, String> setParameter : parameters) {
-                if (setParameter.getLeft().equals(declaredParameter.getName())){
-                    set = true;
+            String name = declaredParameter.getName();
+            List<String> values = parameters.get(declaredParameter.getName());
+            //Get defaults
+            if (values == null) {
+                parameters.put(declaredParameter.getName(), Arrays.asList(declaredParameter.getDefault()));
+            }
+
+            String parameterString = "";
+            String parameterprefix = declaredParameter.getParameterprefix();
+            if (parameterprefix == null) {
+                parameterprefix = "";
+            }
+            for (Iterator<String> iterator = values.iterator(); iterator.hasNext(); ) {
+                String value = iterator.next();
+                //shellescape value and prepend parameter prefix
+                value = parameterprefix + "'" + value.replaceAll("\'", "\'\\\\\'\'") + "'";
+                parameterString = parameterString + value;
+                if (iterator.hasNext()) {
+                    parameterString = parameterString + " ";
                 }
             }
-            if (set){
-                continue;
-            }
-            Pair<String, String> pair = new Pair<String, String>(
-                    declaredParameter.getName(),
-                    declaredParameter.getDefault());
-            parameters.add(pair);
-            parameterMapping.put(declaredParameter.getName(),declaredParameter);
+            command = command.replaceAll("%%" + name + "%%", parameterString);
         }
-        //replace values
-        for (Pair<String, String> parameter : parameters) {
 
-            String name = parameter.getLeft();
-            System.out.println(name);
-            name = name.replaceAll("\\s","");
-            Parameter declared = parameterMapping.get(name);
-            if (declared != null){
-                if (declared.getType().equals("TextBox")){
-                    System.out.println(declared + " is textbox");
-                }
-            }
-
-            String value = parameter.getRight();
-            System.out.println(value);
-            //value = value.replaceAll("[']","");
-            //value = "'"+value+"'";
-            value = Base64.encodeBase64String(value.getBytes());
-            System.out.println(name);
-            System.out.println(value);
-            command = command.replaceAll("%%"+name+"%%",value);
-        }
-        System.out.println(command);
-        //Remove all unused parameters
-        command = command.replaceAll("%%[^%%]*%%","");
-        System.out.println(command);
-
-        //TODO defaulted params, such as fedoraUser and fedoraPass
-
+        // Run command
         List<String> commandList = new ArrayList<String>();
         commandList.add("/bin/bash");
         commandList.add("-c");
         commandList.add(command);
-
-        ProcessBuilder procesBuider = new ProcessBuilder(commandList);
-
+        ProcessBuilder procesBuilder = new ProcessBuilder(commandList);
         try {
-            Process process = procesBuider.start();
+            Process process = procesBuilder.start();
             int returnCode = process.waitFor();
             StringWriter writer = new StringWriter();
             IOUtils.copy(process.getInputStream(),writer);
 
-            if (returnCode == 0){
+            if (returnCode == 0) {
             } else {
                 IOUtils.copy(process.getErrorStream(),writer);
             }
-            String result = writer.toString();
-            return result;
+            return writer.toString();
         } catch (Exception e){
-            throw new BackendMethodFailedException("Failed to run command "+commandList.toString(),e);
+            throw new BackendMethodFailedException("Failed to run command " + commandList.toString(), e);
         }
     }
 
