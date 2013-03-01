@@ -70,8 +70,10 @@ import java.lang.String;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -1128,11 +1130,14 @@ public class CentralWebserviceImpl implements CentralWebservice {
     @Override
     public String invokeMethod(@WebParam(name = "cmpid", targetNamespace = "") String cmpid, @WebParam(name = "methodName", targetNamespace = "") String methodName, @WebParam(name = "parameters", targetNamespace = "") List<Pair> parameters) throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         try {
-            List<dk.statsbiblioteket.util.Pair<String,String>> internalParameters = new ArrayList<dk.statsbiblioteket.util.Pair<String,String>>();
+            Map<String,List<String>> parameterMap = new HashMap<String, List<String>>();
             for (Pair parameter : parameters) {
-                internalParameters.add(new dk.statsbiblioteket.util.Pair<String,String>(parameter.getName(),parameter.getValue()));
+                if (parameterMap.containsKey(parameter.getName())) {
+                    parameterMap.put(parameter.getName(), new ArrayList<String>());
+                }
+                parameterMap.get(parameter.getName()).add(parameter.getValue());
             }
-            return fedora.invokeMethod(cmpid,methodName,internalParameters,null,"");
+            return fedora.invokeMethod(cmpid,methodName,parameterMap,null,"");
         } catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute",

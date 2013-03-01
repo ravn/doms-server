@@ -17,6 +17,7 @@ import dk.statsbiblioteket.util.Pair;
 import org.w3c.dom.Document;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -86,7 +87,7 @@ public interface EnhancedFedora  {
 
 
 
-    public String invokeMethod(String cmpid,String methodName,List<Pair<String,String>> parameters, Long asOfTime,String logMessage)
+    public String invokeMethod(String cmpid,String methodName,Map<String,List<String>> parameters, Long asOfTime,String logMessage)
             throws BackendInvalidCredsException, BackendMethodFailedException,
             BackendInvalidResourceException;
 

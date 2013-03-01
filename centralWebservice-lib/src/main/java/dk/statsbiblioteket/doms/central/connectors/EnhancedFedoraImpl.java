@@ -28,6 +28,7 @@ import org.w3c.dom.Document;
 import javax.xml.bind.JAXBException;
 import java.net.MalformedURLException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -181,7 +182,7 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
 
 
     @Override
-    public String invokeMethod(String cmpid, String methodName, List<Pair<String, String>> parameters, Long asOfTime,String logMessage) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+    public String invokeMethod(String cmpid, String methodName, Map<String, List<String>> parameters, Long asOfTime,String logMessage) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
         return methods.invokeMethod(cmpid,methodName,parameters,asOfTime,logMessage);
     }
 
