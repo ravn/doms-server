@@ -1132,7 +1132,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
         try {
             Map<String,List<String>> parameterMap = new HashMap<String, List<String>>();
             for (Pair parameter : parameters) {
-                if (parameterMap.containsKey(parameter.getName())) {
+                if (!parameterMap.containsKey(parameter.getName())) {
                     parameterMap.put(parameter.getName(), new ArrayList<String>());
                 }
                 parameterMap.get(parameter.getName()).add(parameter.getValue());
