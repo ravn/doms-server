@@ -7,8 +7,7 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
 import dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Method;
 import dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Parameter;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectProfile;
-import dk.statsbiblioteket.util.Pair;
-import org.apache.commons.codec.binary.Base64;
+
 import org.apache.commons.io.IOUtils;
 
 import javax.xml.bind.JAXBContext;
@@ -71,15 +70,16 @@ public class MethodsImpl implements Methods{
         String command = chosenMethod.getCommand();
 
         // Set default parameters
-        parameters.put("domsUser", Arrays.asList(fedora.getUsername()));
-        parameters.put("domsPassword", Arrays.asList(fedora.getPassword()));
-        parameters.put("domsLocation", Arrays.asList(thisLocation));
+        List<Parameter> declaredParameters = chosenMethod.getParameters().getParameter();
+        setDefaultParameter("domsUser", fedora.getUsername(), parameters, declaredParameters);
+        setDefaultParameter("domsPassword", fedora.getPassword(), parameters, declaredParameters);
+        setDefaultParameter("domsLocation", thisLocation, parameters, declaredParameters);
         if (!staticMethod){
-            parameters.put("domsPid", Arrays.asList(pid));
+            setDefaultParameter("domsPid", pid, parameters, declaredParameters);
         }
 
         //replace parameter values
-        for (Parameter declaredParameter : chosenMethod.getParameters().getParameter()) {
+        for (Parameter declaredParameter : declaredParameters) {
             String name = declaredParameter.getName();
             List<String> values = parameters.get(declaredParameter.getName());
             //Get defaults
@@ -124,6 +124,14 @@ public class MethodsImpl implements Methods{
         } catch (Exception e){
             throw new BackendMethodFailedException("Failed to run command " + commandList.toString(), e);
         }
+    }
+
+    private void setDefaultParameter(String parameterName, String parameterValue, Map<String, List<String>> parameters,
+                                     List<Parameter> declaredParameters) {
+        parameters.put(parameterName, Arrays.asList(parameterValue));
+        Parameter parameter = new Parameter();
+        parameter.setName(parameterName);
+        declaredParameters.add(parameter);
     }
 
     public List<Method> getDynamicMethods(String objpid, Long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
