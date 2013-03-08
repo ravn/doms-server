@@ -1618,7 +1618,7 @@
               binding="tns:CentralWebservicePortBinding">
 
             <soap:address
-                    location="http://localhost:7910/lowlevelbitstorage/lowlevel/"/>
+                    location="http://localhost:7880/centralWebservice-service/"/>
         </port>
     </service>
 </definitions>
