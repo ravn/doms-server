@@ -56,6 +56,12 @@ import javax.annotation.Resource;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
@@ -71,7 +77,6 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -82,12 +87,17 @@ import java.util.Map;
  * Time: 2:01:51 PM
  * To change this template use File | Settings | File Templates.
  */
+
+@Path("/")
 @WebService(endpointInterface = "dk.statsbiblioteket.doms.central.CentralWebservice")
 @HttpSessionScope
 public class CentralWebserviceImpl implements CentralWebservice {
 
     @Resource
     WebServiceContext context;
+
+    @Context
+    HttpServletRequest restRequest;
 
     private static Log log = LogFactory.getLog(
             CentralWebserviceImpl.class);
@@ -122,13 +132,10 @@ public class CentralWebserviceImpl implements CentralWebservice {
     private void initialise() throws MalformedURLException, PIDGeneratorException, JAXBException {
         Credentials creds = getCredentials();
 
-        HttpServletRequest request = (HttpServletRequest) context
-                .getMessageContext()
-                .get(MessageContext.SERVLET_REQUEST);
+        HttpServletRequest request = getServletRequest();
         thisLocation = request.getRequestURL().toString();
         fedora = new EnhancedFedoraImpl(creds, fedoraLocation, pidgeneratorLocation,thisLocation);
     }
-
 
     // TODO: rename pid to templatePid
     @Override
@@ -438,11 +445,13 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
     }
 
-
+    @Override
+    @GET
+    @Path("objects/{pid}/datastreams/{datastream}")
+    @Produces("text/xml")
     public String getDatastreamContents(
-            @WebParam(name = "pid", targetNamespace = "") String pid,
-            @WebParam(name = "datastream", targetNamespace = "")
-            String datastream)
+            @PathParam("pid") @WebParam(name = "pid", targetNamespace = "") String pid,
+            @PathParam("datastream") @WebParam(name = "datastream", targetNamespace = "") String datastream)
             throws MethodFailedException, InvalidCredentialsException, InvalidResourceException {
         try {
             log.trace("Entering getDatastreamContents with params pid=" + pid
@@ -1177,9 +1186,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
     }
 
     private Credentials getCredentials() {
-        HttpServletRequest request = (HttpServletRequest) context
-                .getMessageContext()
-                .get(MessageContext.SERVLET_REQUEST);
+        HttpServletRequest request = getServletRequest();
         Credentials creds = (Credentials) request.getAttribute("Credentials");
         if (creds == null) {
             log.warn("Attempted call at Central without credentials");
@@ -1187,6 +1194,16 @@ public class CentralWebserviceImpl implements CentralWebservice {
         }
         return creds;
 
+    }
+
+    private HttpServletRequest getServletRequest() {
+        if (context != null) {
+            return (HttpServletRequest) context
+                    .getMessageContext()
+                    .get(MessageContext.SERVLET_REQUEST);
+        } else {
+            return restRequest;
+        }
     }
 
     private void logEntering(String method, String... params) {

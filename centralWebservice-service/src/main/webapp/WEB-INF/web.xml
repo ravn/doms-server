@@ -57,6 +57,10 @@
         <filter-name>AuthFilter</filter-name>
         <servlet-name>WSServlet</servlet-name>
     </filter-mapping>
+    <filter-mapping>
+        <filter-name>AuthFilter</filter-name>
+        <servlet-name>REST</servlet-name>
+    </filter-mapping>
 
     <!--This is the real servlet, the one doing the work. It is configured through sun-jaxws.xml-->
     <servlet>
@@ -123,6 +127,20 @@
         <param-value>20</param-value>
     </context-param>
 
+    <servlet>
+        <description>REST endpoint</description>
+        <servlet-name>REST</servlet-name>
+        <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer
+        </servlet-class>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <param-value>dk.statsbiblioteket.doms.central</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>REST</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
+    </servlet-mapping>
 
 <!--This is the surveyable servlet, the one that initialialises the surveyable classes-->
     <servlet>
