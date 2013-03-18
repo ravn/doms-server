@@ -29,6 +29,7 @@
         <module>ecmTemplates</module>
         <module>ecmViews</module>
         <module>ecmMethods</module>
+        <module>ecmLinks</module>
         <!--<module>fedoraTrashPreventer</module>-->
         <module>summaSearch-interface</module>
     </modules>

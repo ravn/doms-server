@@ -53,19 +53,18 @@ public interface Methods {
     /**
      * Invoke a given method with the given parameters.
      *
+     *
      * @param pid The pid of the content model or object defining the method.
      * @param methodName The name of the method.
      * @param parameters Parameters for the method, as a map from name list of values.
      * @param asOfTime Use the methods defined at this time (unix time in ms), or null for now.
-     * @param logMessage Message to log to Fedora audit trail when invoking the method.
-     *
      * @return Result of calling method.
      *
      * @throws BackendInvalidCredsException If current credentials provided are invalid.
      * @throws BackendMethodFailedException If communicating with Fedora failed.
      * @throws BackendInvalidResourceException If object, content model or method doesn't exist.
      */
-    public String invokeMethod(String pid,String methodName,Map<String,List<String>> parameters, Long asOfTime, String logMessage)
+    public String invokeMethod(String pid, String methodName, Map<String, List<String>> parameters, Long asOfTime)
             throws BackendInvalidCredsException, BackendMethodFailedException,
             BackendInvalidResourceException;
 }

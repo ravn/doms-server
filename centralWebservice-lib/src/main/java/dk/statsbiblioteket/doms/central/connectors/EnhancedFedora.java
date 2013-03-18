@@ -4,6 +4,7 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.fedora.inheritance.ContentModelInheritance;
+import dk.statsbiblioteket.doms.central.connectors.fedora.linkpatterns.LinkPattern;
 import dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Method;
 import dk.statsbiblioteket.doms.central.connectors.fedora.pidGenerator.PIDGeneratorException;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.FedoraRelation;
@@ -87,7 +88,7 @@ public interface EnhancedFedora  {
 
 
 
-    public String invokeMethod(String cmpid,String methodName,Map<String,List<String>> parameters, Long asOfTime,String logMessage)
+    public String invokeMethod(String cmpid, String methodName, Map<String, List<String>> parameters, Long asOfTime)
             throws BackendInvalidCredsException, BackendMethodFailedException,
             BackendInvalidResourceException;
 
@@ -96,5 +97,6 @@ public interface EnhancedFedora  {
 
     public List<Method> getDynamicMethods(String objpid, Long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
 
+    public List<LinkPattern> getLinks(String pid, Long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
 
 }

@@ -56,6 +56,11 @@
             <artifactId>ecmMethods</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>dk.statsbiblioteket.doms.central</groupId>
+            <artifactId>ecmLinks</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
 
         <dependency>

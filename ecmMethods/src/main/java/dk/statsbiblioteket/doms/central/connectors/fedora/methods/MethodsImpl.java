@@ -40,7 +40,7 @@ public class MethodsImpl implements Methods{
     }
 
     @Override
-    public String invokeMethod(String pid,String methodName,Map<String,List<String>> parameters, Long asOfTime, String logMessage) throws BackendInvalidResourceException, BackendInvalidCredsException, BackendMethodFailedException {
+    public String invokeMethod(String pid, String methodName, Map<String, List<String>> parameters, Long asOfTime) throws BackendInvalidResourceException, BackendInvalidCredsException, BackendMethodFailedException {
         List<Method> methods = getStaticMethods(pid,asOfTime);
 
         boolean staticMethod = true;

@@ -4,6 +4,8 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
 import dk.statsbiblioteket.doms.central.connectors.fedora.FedoraRest;
 import dk.statsbiblioteket.doms.central.connectors.fedora.inheritance.ContentModelInheritance;
 import dk.statsbiblioteket.doms.central.connectors.fedora.inheritance.ContentModelInheritanceImpl;
+import dk.statsbiblioteket.doms.central.connectors.fedora.linkpatterns.LinkPattern;
+import dk.statsbiblioteket.doms.central.connectors.fedora.linkpatterns.LinkPatternsImpl;
 import dk.statsbiblioteket.doms.central.connectors.fedora.methods.Methods;
 import dk.statsbiblioteket.doms.central.connectors.fedora.methods.MethodsImpl;
 import dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Method;
@@ -21,7 +23,6 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.tripleStore.TripleStor
 import dk.statsbiblioteket.doms.central.connectors.fedora.views.Views;
 import dk.statsbiblioteket.doms.central.connectors.fedora.views.ViewsImpl;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
-import dk.statsbiblioteket.util.Pair;
 import org.w3c.dom.Document;
 
 
@@ -47,6 +48,7 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
     PidGenerator pidGenerator;
     private Methods methods;
     private String thisLocation;
+    private final LinkPatternsImpl linkPatterns;
 
     public EnhancedFedoraImpl(Credentials creds, String fedoraLocation, String pidGenLocation, String thisLocation)
             throws MalformedURLException, PIDGeneratorException, JAXBException {
@@ -65,6 +67,8 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
         views = new ViewsImpl(ts,cmInher,fedora);
 
         methods = new MethodsImpl(fedora,thisLocation);
+
+        linkPatterns = new LinkPatternsImpl(fedora,fedoraLocation);
     }
 
     public String cloneTemplate(String templatepid, List<String> oldIDs, String logMessage)
@@ -175,6 +179,13 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
         return methods.getStaticMethods(cmpid,asOfTime);
     }
 
+
+    @Override
+    public List<LinkPattern> getLinks(String pid, Long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+        return linkPatterns.getLinkPatterns(pid,asOfTime);
+
+    }
+
     @Override
     public List<Method> getDynamicMethods(String objpid, Long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
         return methods.getDynamicMethods(objpid,asOfTime);
@@ -182,8 +193,8 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
 
 
     @Override
-    public String invokeMethod(String cmpid, String methodName, Map<String, List<String>> parameters, Long asOfTime,String logMessage) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
-        return methods.invokeMethod(cmpid,methodName,parameters,asOfTime,logMessage);
+    public String invokeMethod(String cmpid, String methodName, Map<String, List<String>> parameters, Long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+        return methods.invokeMethod(cmpid,methodName,parameters,asOfTime);
     }
 
 }

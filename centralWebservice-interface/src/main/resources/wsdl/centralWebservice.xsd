@@ -170,6 +170,10 @@
     <xs:element name="invokeMethod" type="tns:MethodInvocation"/>
     <xs:element name="invokeMethodResponse" type="tns:string"/>
 
+    <xs:element name="getObjectLinks" type="tns:getObjectLinks"/>
+    <xs:element name="getObjectLinksResponse" type="tns:LinkList"/>
+
+
 
     <!--Simple types-->
     <xs:complexType name="singlePid">
@@ -544,4 +548,24 @@
             <xs:element type="xs:string" name="value"/>
         </xs:sequence>
     </xs:complexType>
+    <xs:complexType name="getObjectLinks">
+        <xs:sequence>
+            <xs:element type="xs:string" name="pid"/>
+            <xs:element name="asOfTime" type="xs:long"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="LinkList">
+        <xs:sequence>
+            <xs:element name="Link" type="tns:Link" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Link">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="description" type="xs:string"/>
+            <xs:element name="value" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
 </xs:schema>
