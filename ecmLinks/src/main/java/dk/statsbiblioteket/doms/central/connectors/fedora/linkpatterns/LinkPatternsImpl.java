@@ -14,6 +14,8 @@ import org.w3c.dom.NodeList;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -82,19 +84,20 @@ public class LinkPatternsImpl implements LinkPatterns {
     private String replaceStandardValues(String value, ObjectProfile profile) {
         DateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
-        value = value.replaceAll(Pattern.quote("{objectPid}"),profile.getPid());
-        value = value.replaceAll(Pattern.quote("{domsPid}"),profile.getPid());
-        value = value.replaceAll(Pattern.quote("{domsUser}"),fedora.getUsername());
-        value = value.replaceAll(Pattern.quote("{domsPassword}"),fedora.getPassword());
-        value = value.replaceAll(Pattern.quote("{domsLocation}"),fedoraLocation);
+        value = value.replaceAll(Pattern.quote("{objectId}"),encode(profile.getPid().replaceAll("^.*:","")));
+        value = value.replaceAll(Pattern.quote("{domsPid}"),encode(profile.getPid()));
+        value = value.replaceAll(Pattern.quote("{domsUser}"),encode(fedora.getUsername()));
+        value = value.replaceAll(Pattern.quote("{domsPassword}"),encode(fedora.getPassword()));
+        value = value.replaceAll(Pattern.quote("{domsLocation}"),encode(fedoraLocation));
+        value = value.replaceAll(Pattern.quote("{domsLocationRaw}"),fedoraLocation);
 
-        value = value.replaceAll(Pattern.quote("{label}"),profile.getLabel());
-        value = value.replaceAll(Pattern.quote("{owner}"),profile.getOwnerID());
-        value = value.replaceAll(Pattern.quote("{state}"),profile.getState());
-        value = value.replaceAll(Pattern.quote("{createdISO}"),isoFormat.format(profile.getObjectCreatedDate()));
-        value = value.replaceAll(Pattern.quote("{lastModifiedISO}"),isoFormat.format(profile.getObjectLastModifiedDate()));
-        value = value.replaceAll(Pattern.quote("{createdUnixMillis}"),""+profile.getObjectCreatedDate().getTime());
-        value = value.replaceAll(Pattern.quote("{lastModifiedUnixMillis}"),""+profile.getObjectLastModifiedDate().getTime());
+        value = value.replaceAll(Pattern.quote("{label}"),encode(profile.getLabel()));
+        value = value.replaceAll(Pattern.quote("{owner}"),encode(profile.getOwnerID()));
+        value = value.replaceAll(Pattern.quote("{state}"),encode(profile.getState()));
+        value = value.replaceAll(Pattern.quote("{createdISO}"),encode(isoFormat.format(profile.getObjectCreatedDate())));
+        value = value.replaceAll(Pattern.quote("{lastModifiedISO}"),encode(isoFormat.format(profile.getObjectLastModifiedDate())));
+        value = value.replaceAll(Pattern.quote("{createdUnixMillis}"),encode(""+profile.getObjectCreatedDate().getTime()));
+        value = value.replaceAll(Pattern.quote("{lastModifiedUnixMillis}"),encode(""+profile.getObjectLastModifiedDate().getTime()));
 
         return value;
     }
@@ -122,8 +125,16 @@ public class LinkPatternsImpl implements LinkPatterns {
         Document doc = DOM.stringToDOM(datastreamContents);
         XPathSelector xpathSelector = DOM.createXPathSelector();
         String value = xpathSelector.selectString(doc, xpathValue);
-        link = link.replaceAll(Pattern.quote(key),value);
+        link = link.replaceAll(Pattern.quote(key), encode(value));
         return link;
+    }
+
+    private String encode(String value){
+        try {
+            return URLEncoder.encode(value,"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new Error("UTF-8 not known");
+        }
     }
 
 

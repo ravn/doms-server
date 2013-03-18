@@ -15,7 +15,10 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Created with IntelliJ IDEA.
@@ -41,6 +44,9 @@ public class MethodsImpl implements Methods{
 
     @Override
     public String invokeMethod(String pid, String methodName, Map<String, List<String>> parameters, Long asOfTime) throws BackendInvalidResourceException, BackendInvalidCredsException, BackendMethodFailedException {
+
+
+
         List<Method> methods = getStaticMethods(pid,asOfTime);
 
         boolean staticMethod = true;
@@ -53,9 +59,11 @@ public class MethodsImpl implements Methods{
                 break;
             }
         }
+        ObjectProfile profile = fedora.getObjectProfile(pid, asOfTime);
+
         if (chosenMethod == null){
             staticMethod = false;
-            methods = getDynamicMethods(pid,asOfTime);
+            methods = getDynamicMethods(profile,asOfTime);
             for (Method method : methods) {
                 if (method.getName().equals(methodName)) {
                     chosenMethod = method;
@@ -71,12 +79,8 @@ public class MethodsImpl implements Methods{
 
         // Set default parameters
         List<Parameter> declaredParameters = chosenMethod.getParameters().getParameter();
-        setDefaultParameter("domsUser", fedora.getUsername(), parameters, declaredParameters);
-        setDefaultParameter("domsPassword", fedora.getPassword(), parameters, declaredParameters);
-        setDefaultParameter("domsLocation", thisLocation, parameters, declaredParameters);
-        if (!staticMethod){
-            setDefaultParameter("domsPid", pid, parameters, declaredParameters);
-        }
+        setDefaultParameters(declaredParameters,parameters,profile);
+
 
         //replace parameter values
         for (Parameter declaredParameter : declaredParameters) {
@@ -126,6 +130,25 @@ public class MethodsImpl implements Methods{
         }
     }
 
+    private void setDefaultParameters(List<Parameter> declaredParameters,
+                                      Map<String, List<String>> parameters,
+                                      ObjectProfile profile) {
+        DateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        setDefaultParameter("objectId", profile.getPid().replaceAll("^.*:",""), parameters, declaredParameters);
+        setDefaultParameter("domsPid", profile.getPid(), parameters, declaredParameters);
+        setDefaultParameter("domsUser", fedora.getUsername(), parameters, declaredParameters);
+        setDefaultParameter("domsPassword", fedora.getPassword(), parameters, declaredParameters);
+        setDefaultParameter("domsLocation", thisLocation, parameters, declaredParameters);
+
+        setDefaultParameter("label", profile.getLabel(), parameters, declaredParameters);
+        setDefaultParameter("owner", profile.getOwnerID(), parameters, declaredParameters);
+        setDefaultParameter("state", profile.getState(), parameters, declaredParameters);
+        setDefaultParameter("createdISO", isoFormat.format(profile.getObjectCreatedDate()), parameters, declaredParameters);
+        setDefaultParameter("lastModifiedISO", isoFormat.format(profile.getObjectLastModifiedDate()), parameters, declaredParameters);
+        setDefaultParameter("createdUnixMillis", ""+profile.getObjectCreatedDate().getTime(), parameters, declaredParameters);
+        setDefaultParameter("lastModifiedUnixMillis", ""+profile.getObjectLastModifiedDate().getTime(), parameters, declaredParameters);
+    }
+
     private void setDefaultParameter(String parameterName, String parameterValue, Map<String, List<String>> parameters,
                                      List<Parameter> declaredParameters) {
         parameters.put(parameterName, Arrays.asList(parameterValue));
@@ -136,6 +159,10 @@ public class MethodsImpl implements Methods{
 
     public List<Method> getDynamicMethods(String objpid, Long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
         ObjectProfile profile = fedora.getObjectProfile(objpid, null);
+        return getDynamicMethods(profile,asOfTime);
+    }
+
+    public List<Method> getDynamicMethods(ObjectProfile profile, Long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
         List<Method> result = new ArrayList<Method>();
         for (String contentModelPid : profile.getContentModels()) {
             List<Method> methods = getMethods(contentModelPid,asOfTime);
