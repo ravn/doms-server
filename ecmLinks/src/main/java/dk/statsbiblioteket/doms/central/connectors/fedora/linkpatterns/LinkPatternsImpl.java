@@ -5,6 +5,7 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceExcepti
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectProfile;
+import dk.statsbiblioteket.doms.webservices.configuration.ConfigCollection;
 import dk.statsbiblioteket.util.xml.DOM;
 import dk.statsbiblioteket.util.xml.XPathSelector;
 import org.w3c.dom.Document;
@@ -20,6 +21,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.regex.Pattern;
 
 /**
@@ -61,13 +63,11 @@ public class LinkPatternsImpl implements LinkPatterns {
                     String alt_text = xpath.selectString(linkPatternNode, "lp:description");
                     String value = xpath.selectString(linkPatternNode, "lp:value");
 
-                    value = replaceStandardValues(value,profile);
-                    NodeList replacements = xpath.selectNodeList(linkPatternNode, "lp:replacements/lp:replacement");
 
-                    for (int j = 0; j < replacements.getLength(); j++) {
-                        Node replacement = replacements.item(j);
-                        value = linkReplace(value,replacement, pid,asOfDate);
-                    }
+                    value = replaceStandardValues(value,profile);
+                    value = replaceXpathExpressions(pid, asOfDate, linkPatternNode, value);
+                    value = replaceContextParams(value);
+
 
                     LinkPattern linkPattern = new LinkPattern(name, alt_text, value);
                     linkPatterns.add(linkPattern);
@@ -79,6 +79,24 @@ public class LinkPatternsImpl implements LinkPatterns {
         return linkPatterns;
 
 
+    }
+
+    private String replaceContextParams(String value) {
+        Properties properties = ConfigCollection.getProperties();
+        for (String key : properties.stringPropertyNames()) {
+            value = value.replaceAll(Pattern.quote("{"+key+"}"),properties.getProperty(key));
+        }
+        return value;
+    }
+
+    private String replaceXpathExpressions(String pid, Long asOfDate, Node linkPatternNode, String value) throws BackendInvalidResourceException, BackendInvalidCredsException, BackendMethodFailedException {
+        //xpath
+        NodeList replacements = xpath.selectNodeList(linkPatternNode, "lp:replacements/lp:replacement");
+        for (int j = 0; j < replacements.getLength(); j++) {
+            Node replacement = replacements.item(j);
+            value = linkReplace(value,replacement, pid,asOfDate);
+        }
+        return value;
     }
 
     private String replaceStandardValues(String value, ObjectProfile profile) {
