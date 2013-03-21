@@ -31,6 +31,7 @@ public class LinkPatternsImplTest {
 
         List<LinkPattern> patterns = lp.getLinkPatterns("uuid:199a400f-1c5a-41b1-9be1-d448e8cb3c50", null);
         assertTrue(patterns.size()>0);
+        System.out.println(patterns.get(0).getValue());
 
 
     }

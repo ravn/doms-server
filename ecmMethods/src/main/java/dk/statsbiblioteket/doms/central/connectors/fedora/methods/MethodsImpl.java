@@ -5,9 +5,11 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceExcepti
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
 import dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Method;
-import dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Parameter;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectProfile;
 
+import dk.statsbiblioteket.doms.util.EncodingType;
+import dk.statsbiblioteket.doms.util.Parameter;
+import dk.statsbiblioteket.doms.util.ReplaceTools;
 import org.apache.commons.io.IOUtils;
 
 import javax.xml.bind.JAXBContext;
@@ -15,10 +17,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.regex.Pattern;
 
 /**
  * Created with IntelliJ IDEA.
@@ -42,8 +41,21 @@ public class MethodsImpl implements Methods{
         jaxb = JAXBContext.newInstance("dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated").createUnmarshaller();
     }
 
+    /**
+     * Invoke the method
+     * @param pid The pid of the content model or object defining the method.
+     * @param methodName The name of the method.
+     * @param parameters Parameters for the method, as a map from name list of values.
+     * @param asOfTime Use the methods defined at this time (unix time in ms), or null for now.
+     * @return
+     * @throws BackendInvalidResourceException
+     * @throws BackendInvalidCredsException
+     * @throws BackendMethodFailedException
+     */
     @Override
-    public String invokeMethod(String pid, String methodName, Map<String, List<String>> parameters, Long asOfTime) throws BackendInvalidResourceException, BackendInvalidCredsException, BackendMethodFailedException {
+    public String invokeMethod(String pid, String methodName,
+                               Map<String, List<String>> parameters,
+                               Long asOfTime) throws BackendInvalidResourceException, BackendInvalidCredsException, BackendMethodFailedException {
 
 
 
@@ -77,36 +89,18 @@ public class MethodsImpl implements Methods{
 
         String command = chosenMethod.getCommand();
 
-        // Set default parameters
-        List<Parameter> declaredParameters = chosenMethod.getParameters().getParameter();
-        setDefaultParameters(declaredParameters,parameters,profile);
+
+        List<Parameter> declaredParameters = new ArrayList<Parameter>();
+
+        //Get the parameters declared in the method def
+        declaredParameters = convertFromJaxB(chosenMethod.getParameters().getParameter());
 
 
-        //replace parameter values
-        for (Parameter declaredParameter : declaredParameters) {
-            String name = declaredParameter.getName();
-            List<String> values = parameters.get(declaredParameter.getName());
-            //Get defaults
-            if (values == null) {
-                parameters.put(declaredParameter.getName(), Arrays.asList(declaredParameter.getDefault()));
-            }
+        Map<Parameter, List<String>> actualParameters = ReplaceTools.constructValuesMap(declaredParameters, parameters);
+        ReplaceTools.setDefaultParameters(declaredParameters, actualParameters, profile,fedora,thisLocation);
+        ReplaceTools.setContextParameters(declaredParameters,actualParameters);
+        command = ReplaceTools.fillInParameters(actualParameters, command, declaredParameters, EncodingType.SHELL);
 
-            String parameterString = "";
-            String parameterprefix = declaredParameter.getParameterprefix();
-            if (parameterprefix == null) {
-                parameterprefix = "";
-            }
-            for (Iterator<String> iterator = values.iterator(); iterator.hasNext(); ) {
-                String value = iterator.next();
-                //shellescape value and prepend parameter prefix
-                value = parameterprefix + "'" + value.replaceAll("\'", "\'\\\\\'\'") + "'";
-                parameterString = parameterString + value;
-                if (iterator.hasNext()) {
-                    parameterString = parameterString + " ";
-                }
-            }
-            command = command.replaceAll("%%" + name + "%%", parameterString);
-        }
 
         // Run command
         List<String> commandList = new ArrayList<String>();
@@ -130,32 +124,21 @@ public class MethodsImpl implements Methods{
         }
     }
 
-    private void setDefaultParameters(List<Parameter> declaredParameters,
-                                      Map<String, List<String>> parameters,
-                                      ObjectProfile profile) {
-        DateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-        setDefaultParameter("objectId", profile.getPid().replaceAll("^.*:",""), parameters, declaredParameters);
-        setDefaultParameter("domsPid", profile.getPid(), parameters, declaredParameters);
-        setDefaultParameter("domsUser", fedora.getUsername(), parameters, declaredParameters);
-        setDefaultParameter("domsPassword", fedora.getPassword(), parameters, declaredParameters);
-        setDefaultParameter("domsLocation", thisLocation, parameters, declaredParameters);
+    private static List<Parameter> convertFromJaxB(List<dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Parameter> methodDefParams){
+        List<Parameter> declaredParameters = new ArrayList<Parameter>();
 
-        setDefaultParameter("label", profile.getLabel(), parameters, declaredParameters);
-        setDefaultParameter("owner", profile.getOwnerID(), parameters, declaredParameters);
-        setDefaultParameter("state", profile.getState(), parameters, declaredParameters);
-        setDefaultParameter("createdISO", isoFormat.format(profile.getObjectCreatedDate()), parameters, declaredParameters);
-        setDefaultParameter("lastModifiedISO", isoFormat.format(profile.getObjectLastModifiedDate()), parameters, declaredParameters);
-        setDefaultParameter("createdUnixMillis", ""+profile.getObjectCreatedDate().getTime(), parameters, declaredParameters);
-        setDefaultParameter("lastModifiedUnixMillis", ""+profile.getObjectLastModifiedDate().getTime(), parameters, declaredParameters);
+        for (dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Parameter methodDefParam : methodDefParams) {
+            declaredParameters.add(new Parameter(methodDefParam.getName(),
+                    methodDefParam.getParameterprefix(),
+                    methodDefParam.isRequired(),
+                    methodDefParam.isRepeatable(),
+                    methodDefParam.getType(),
+                    methodDefParam.getConfig()
+            ));
+        }
+        return declaredParameters;
     }
 
-    private void setDefaultParameter(String parameterName, String parameterValue, Map<String, List<String>> parameters,
-                                     List<Parameter> declaredParameters) {
-        parameters.put(parameterName, Arrays.asList(parameterValue));
-        Parameter parameter = new Parameter();
-        parameter.setName(parameterName);
-        declaredParameters.add(parameter);
-    }
 
     public List<Method> getDynamicMethods(String objpid, Long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
         ObjectProfile profile = fedora.getObjectProfile(objpid, null);

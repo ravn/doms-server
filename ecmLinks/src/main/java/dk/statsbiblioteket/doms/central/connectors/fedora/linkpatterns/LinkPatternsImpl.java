@@ -5,6 +5,9 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceExcepti
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectProfile;
+import dk.statsbiblioteket.doms.util.EncodingType;
+import dk.statsbiblioteket.doms.util.Parameter;
+import dk.statsbiblioteket.doms.util.ReplaceTools;
 import dk.statsbiblioteket.doms.webservices.configuration.ConfigCollection;
 import dk.statsbiblioteket.util.xml.DOM;
 import dk.statsbiblioteket.util.xml.XPathSelector;
@@ -19,9 +22,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -64,10 +65,14 @@ public class LinkPatternsImpl implements LinkPatterns {
                     String value = xpath.selectString(linkPatternNode, "lp:value");
 
 
-                    value = replaceStandardValues(value,profile);
-                    value = replaceXpathExpressions(pid, asOfDate, linkPatternNode, value);
-                    value = replaceContextParams(value);
+                    Map<Parameter,List<String>> parameters =  getParametersFromXpath(pid,asOfDate,linkPatternNode);
 
+                    List<Parameter> declaredParameters = new ArrayList<Parameter>(parameters.keySet());
+
+                    //Add in the default parameters
+                    ReplaceTools.setDefaultParameters(declaredParameters, parameters, profile,fedora,fedoraLocation);
+                    ReplaceTools.setContextParameters(declaredParameters,parameters);
+                    value = ReplaceTools.fillInParameters(parameters, value, declaredParameters, EncodingType.URL);
 
                     LinkPattern linkPattern = new LinkPattern(name, alt_text, value);
                     linkPatterns.add(linkPattern);
@@ -81,78 +86,65 @@ public class LinkPatternsImpl implements LinkPatterns {
 
     }
 
-    private String replaceContextParams(String value) {
-        Properties properties = ConfigCollection.getProperties();
-        for (String key : properties.stringPropertyNames()) {
-            value = value.replaceAll(Pattern.quote("{"+key+"}"),properties.getProperty(key));
+
+
+    private Map<Parameter, List<String>> getParametersFromXpath(String pid, Long asOfDate, Node node) throws BackendInvalidResourceException, BackendInvalidCredsException, BackendMethodFailedException {
+
+        Map<Parameter, List<String>> result = new HashMap<Parameter, List<String>>();
+
+        NodeList replacements = xpath.selectNodeList(node, "lp:replacements/lp:replacement");
+        for (int i = 0; i < replacements.getLength(); i++) {
+            Node replacementNode = replacements.item(i);
+
+
+            String key = null;
+            String datastream = null;
+            String xpathValue = null;
+
+            key = xpath.selectString(replacementNode,"lp:key");
+            datastream = xpath.selectString(replacementNode,"lp:datastream");
+            xpathValue = xpath.selectString(replacementNode,"lp:xpath");
+            Boolean repeatable = xpath.selectBoolean(replacementNode, "lp:repeatable", false);
+
+            if (key == null || datastream == null || xpathValue == null) {
+                continue;
+            }
+
+
+            String datastreamContents = fedora.getXMLDatastreamContents(pid, datastream, asOfDate);
+            Document doc = DOM.stringToDOM(datastreamContents);
+            XPathSelector xpathSelector = DOM.createXPathSelector();
+
+            Parameter parameter = new Parameter(key, "", true, repeatable,"" , "");
+
+            if (repeatable){
+                NodeList values = xpathSelector.selectNodeList(doc, xpathValue);
+                for (int j = 0; j < values.getLength(); j++) {
+                    Node value;
+                    value = values.item(j);
+                    List<String> foundValues = result.get(parameter);
+                    if (foundValues == null){
+                        foundValues = Arrays.asList(value.getTextContent());
+                    } else {
+                        foundValues.add(value.getTextContent());
+                    }
+                    result.put(parameter,foundValues);
+                }
+
+            } else {
+                String value = xpathSelector.selectString(doc, xpathValue);
+                List<String> values = result.get(parameter);
+                if (values == null){
+                    values = Arrays.asList(value);
+                } else {
+                    values.add(value);
+                }
+                result.put(parameter,values);
+
+
+            }
         }
-        return value;
-    }
-
-    private String replaceXpathExpressions(String pid, Long asOfDate, Node linkPatternNode, String value) throws BackendInvalidResourceException, BackendInvalidCredsException, BackendMethodFailedException {
-        //xpath
-        NodeList replacements = xpath.selectNodeList(linkPatternNode, "lp:replacements/lp:replacement");
-        for (int j = 0; j < replacements.getLength(); j++) {
-            Node replacement = replacements.item(j);
-            value = linkReplace(value,replacement, pid,asOfDate);
-        }
-        return value;
-    }
-
-    private String replaceStandardValues(String value, ObjectProfile profile) {
-        DateFormat isoFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-
-        value = value.replaceAll(Pattern.quote("{objectId}"),encode(profile.getPid().replaceAll("^.*:","")));
-        value = value.replaceAll(Pattern.quote("{domsPid}"),encode(profile.getPid()));
-        value = value.replaceAll(Pattern.quote("{domsUser}"),encode(fedora.getUsername()));
-        value = value.replaceAll(Pattern.quote("{domsPassword}"),encode(fedora.getPassword()));
-        value = value.replaceAll(Pattern.quote("{domsLocation}"),encode(fedoraLocation));
-        value = value.replaceAll(Pattern.quote("{domsLocationRaw}"),fedoraLocation);
-
-        value = value.replaceAll(Pattern.quote("{label}"),encode(profile.getLabel()));
-        value = value.replaceAll(Pattern.quote("{owner}"),encode(profile.getOwnerID()));
-        value = value.replaceAll(Pattern.quote("{state}"),encode(profile.getState()));
-        value = value.replaceAll(Pattern.quote("{createdISO}"),encode(isoFormat.format(profile.getObjectCreatedDate())));
-        value = value.replaceAll(Pattern.quote("{lastModifiedISO}"),encode(isoFormat.format(profile.getObjectLastModifiedDate())));
-        value = value.replaceAll(Pattern.quote("{createdUnixMillis}"),encode(""+profile.getObjectCreatedDate().getTime()));
-        value = value.replaceAll(Pattern.quote("{lastModifiedUnixMillis}"),encode(""+profile.getObjectLastModifiedDate().getTime()));
-
-        return value;
-    }
-
-    private String linkReplace(String link, Node replacement, String pid, Long asOfDateTime) throws BackendInvalidResourceException, BackendInvalidCredsException, BackendMethodFailedException {
-        String key = null;
-        String datastream = null;
-        String xpathValue = null;
-
-        key = xpath.selectString(replacement,"lp:key");
-        datastream = xpath.selectString(replacement,"lp:datastream");
-        xpathValue = xpath.selectString(replacement,"lp:xpath");
-
-        if (key == null || datastream == null || xpathValue == null) {
-            //TODO log
-            return link;
-        }
-        key = "{" + key + "}";
-
-        if (!link.contains(key)) {
-            return link;
-        }
-
-        String datastreamContents = fedora.getXMLDatastreamContents(pid, datastream, asOfDateTime);
-        Document doc = DOM.stringToDOM(datastreamContents);
-        XPathSelector xpathSelector = DOM.createXPathSelector();
-        String value = xpathSelector.selectString(doc, xpathValue);
-        link = link.replaceAll(Pattern.quote(key), encode(value));
-        return link;
-    }
-
-    private String encode(String value){
-        try {
-            return URLEncoder.encode(value,"UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new Error("UTF-8 not known");
-        }
+        return result;
     }
 
 
