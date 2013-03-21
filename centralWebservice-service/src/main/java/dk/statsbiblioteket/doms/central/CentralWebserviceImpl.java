@@ -746,7 +746,11 @@ public class CentralWebserviceImpl implements CentralWebservice {
     }
 
     @Override
-    public ViewBundle getViewBundleFromSpecificTime(@WebParam(name = "pid", targetNamespace = "") String pid, @WebParam(name = "ViewAngle", targetNamespace = "") String viewAngle, @WebParam(name = "asOfTime", targetNamespace = "") long asOfTime) throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
+    public ViewBundle getViewBundleFromSpecificTime(
+            @WebParam(name = "pid", targetNamespace = "") String pid,
+            @WebParam(name = "ViewAngle", targetNamespace = "") String viewAngle,
+            @WebParam(name = "asOfTime", targetNamespace = "") long asOfTime)
+            throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
             log.trace("Entering getViewBundle with params pid=" + pid
                     + " and viewAngle=" + viewAngle+" and timestamp="+asOfTime);
             /*
@@ -768,7 +772,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                 }
         */
                 java.lang.Long timestamp = null;
-                if (asOfTime > 0){
+                if (asOfTime >= 0){
                     timestamp = asOfTime;
                 }
                 Document bundleContents = fedora.createBundle(pid, viewAngle,timestamp);
@@ -1172,9 +1176,12 @@ public class CentralWebserviceImpl implements CentralWebservice {
     }
 
     @Override
-    public List<Link> getObjectLinks(@WebParam(name = "pid", targetNamespace = "") String pid, @WebParam(name = "asOfTime", targetNamespace = "") long asOfTime) throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
+    public List<Link> getObjectLinks(
+            @WebParam(name = "pid", targetNamespace = "") String pid,
+            @WebParam(name = "asOfTime", targetNamespace = "") long asOfTime)
+            throws InvalidCredentialsException, InvalidResourceException, MethodFailedException {
         try {
-            List<LinkPattern> internalLinkList = fedora.getLinks(pid, asOfTime);
+            List<LinkPattern> internalLinkList = fedora.getLinks(pid, (asOfTime>=0? asOfTime: null));
             List<Link> externalMethods = new ArrayList<Link>();
             for (LinkPattern linkPattern : internalLinkList) {
                 Link externalLink = new Link();
