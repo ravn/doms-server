@@ -11,90 +11,79 @@ import javax.xml.bind.annotation.XmlElement;
  */
 public class Parameter {
 
-    protected String name;
-    protected String parameterprefix;
-    protected boolean required;
-    protected boolean repeatable;
-    protected String type;
-    protected String config;
-    protected String defaultValue;
-    protected boolean encode = true;
+    protected final String name;
+    protected final String parameterprefix;
+    protected final boolean required;
+    protected final boolean repeatable;
+    protected final String type;
+    protected final String config;
+    protected final String defaultValue;
+    protected final boolean encode;
 
     public String getDefaultValue() {
         return defaultValue;
     }
 
-    public void setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
-    }
-
     public Parameter(String name) {
         this.name = name;
+        parameterprefix = "";
+        required = false;
+        repeatable = false;
+        type = "";
+        config = "";
+        defaultValue = "";
+        encode = true;
+    }
+    public Parameter(String name, boolean encode) {
+        this.name = name;
+        parameterprefix = "";
+        required = false;
+        repeatable = false;
+        type = "";
+        config = "";
+        defaultValue = "";
+        this.encode = encode;
     }
 
-    public Parameter(String name, String parameterprefix, boolean required, boolean repeatable, String type, String config) {
+    public Parameter(String name,
+                     String parameterprefix,
+                     boolean required, boolean repeatable, String type, String config, String defaultValue, boolean encode) {
         this.name = name;
         this.parameterprefix = parameterprefix;
         this.required = required;
         this.repeatable = repeatable;
         this.type = type;
         this.config = config;
+        this.defaultValue = defaultValue;
+        this.encode = encode;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getParameterprefix() {
         return parameterprefix;
-    }
-
-    public void setParameterprefix(String parameterprefix) {
-        this.parameterprefix = parameterprefix;
     }
 
     public boolean isRequired() {
         return required;
     }
 
-    public void setRequired(boolean required) {
-        this.required = required;
-    }
-
     public boolean isRepeatable() {
         return repeatable;
-    }
-
-    public void setRepeatable(boolean repeatable) {
-        this.repeatable = repeatable;
     }
 
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
     public String getConfig() {
         return config;
     }
 
-    public void setConfig(String config) {
-        this.config = config;
-    }
-
     public boolean isEncode() {
         return encode;
-    }
-
-    public void setEncode(boolean encode) {
-        this.encode = encode;
     }
 
     @Override

@@ -133,7 +133,9 @@ public class MethodsImpl implements Methods{
                     methodDefParam.isRequired(),
                     methodDefParam.isRepeatable(),
                     methodDefParam.getType(),
-                    methodDefParam.getConfig()
+                    methodDefParam.getConfig(),
+                    methodDefParam.getDefault(),
+                    true
             ));
         }
         return declaredParameters;

@@ -105,6 +105,7 @@ public class LinkPatternsImpl implements LinkPatterns {
             datastream = xpath.selectString(replacementNode,"lp:datastream");
             xpathValue = xpath.selectString(replacementNode,"lp:xpath");
             Boolean repeatable = xpath.selectBoolean(replacementNode, "lp:repeatable", false);
+            String prefix = xpath.selectString(replacementNode, "lp:prefix", "");
 
             if (key == null || datastream == null || xpathValue == null) {
                 continue;
@@ -115,7 +116,7 @@ public class LinkPatternsImpl implements LinkPatterns {
             Document doc = DOM.stringToDOM(datastreamContents);
             XPathSelector xpathSelector = DOM.createXPathSelector();
 
-            Parameter parameter = new Parameter(key, "", true, repeatable,"" , "");
+            Parameter parameter = new Parameter(key, prefix, true, repeatable,"" , "", "", true);
 
             if (repeatable){
                 NodeList values = xpathSelector.selectNodeList(doc, xpathValue);

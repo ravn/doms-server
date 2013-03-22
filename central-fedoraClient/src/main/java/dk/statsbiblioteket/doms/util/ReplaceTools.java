@@ -92,8 +92,7 @@ public class ReplaceTools {
 
         Properties properties = ConfigCollection.getProperties();
         for (String key : properties.stringPropertyNames()) {
-            Parameter parameter = new Parameter(key);
-            parameter.setEncode(false);
+            Parameter parameter = new Parameter(key,false);
             setDefaultParameter(parameter,
                     properties.getProperty(key),
                     parameters,declaredParameters);
