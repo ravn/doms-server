@@ -1,10 +1,12 @@
 package dk.statsbiblioteket.doms.central.connectors.fedora.pidGenerator;
 
+import com.sun.jersey.api.client.Client;
 import dk.statsbiblioteket.doms.pidgenerator.CommunicationException;
 import dk.statsbiblioteket.doms.pidgenerator.PidGeneratorSoapWebservice;
 import dk.statsbiblioteket.doms.pidgenerator.PidGeneratorSoapWebserviceService;
 import dk.statsbiblioteket.doms.webservices.configuration.ConfigCollection;
 
+import javax.ws.rs.core.MediaType;
 import javax.xml.namespace.QName;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -18,25 +20,16 @@ import java.net.URL;
  */
 public class PidGeneratorImpl implements PidGenerator {
 
-    private PidGeneratorSoapWebservice pidgen;
+    private final Client restClient;
+    private String pidGenLocation;
 
 
     public PidGeneratorImpl(String pidGenLocation) throws PIDGeneratorException {
+        this.pidGenLocation = pidGenLocation;
 
 
-        URL WSDLLOCATION = null;
-        try {
-            WSDLLOCATION = new URL(pidGenLocation);
-        } catch (MalformedURLException e) {
-            throw new PIDGeneratorException("Failed to parse the location of the pidgenerator service",e);
-        }
+        restClient = Client.create();
 
-        PidGeneratorSoapWebserviceService service
-                = new PidGeneratorSoapWebserviceService(WSDLLOCATION,
-                                                        new QName(
-                                                                "http://pidgenerator.doms.statsbiblioteket.dk/",
-                                                                "PidGeneratorSoapWebserviceService"));
-        pidgen = service.getPort(PidGeneratorSoapWebservice.class);
     }
 
     /**
@@ -47,14 +40,18 @@ public class PidGeneratorImpl implements PidGenerator {
      * @return The next available (unique) PID, possibly including (part of) the
      * requested infix.
      */
-    public String generateNextAvailablePID(String infix)
-            throws PIDGeneratorException {
+    public String generateNextAvailablePID(String infix){
 
-        try {
-            return pidgen.generatePidWithInfix(infix);
-        } catch (CommunicationException e) {
-            throw new PIDGeneratorException("Encountered a communication problem with the pidgenerator webservice",e);
+        if (infix == null){
+            infix = "";
         }
-    }
 
+        return restClient
+                .resource(pidGenLocation)
+                .path("rest/pids/generatePid/")
+                .path(infix)
+                .accept(MediaType.TEXT_PLAIN)
+                .get(String.class);
+
+    }
 }

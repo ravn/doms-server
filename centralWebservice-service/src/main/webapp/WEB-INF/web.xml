@@ -97,13 +97,12 @@
     </context-param>
 
     <context-param>
-        <description>the location of the fedora instance</description>
         <param-name>dk.statsbiblioteket.doms.central.updateTrackerLocation</param-name>
         <param-value>http://localhost:8080/updatetrackerWebservice/updatetracker/?wsdl</param-value>
     </context-param>
     <context-param>
         <param-name>dk.statsbiblioteket.doms.ecm.pidGeneratorLocation</param-name>
-        <param-value>http://localhost:8080/pidgenerator/pidGenerator/?wsdl</param-value>
+        <param-value>http://localhost:8080/pidgenerator</param-value>
     </context-param>
 
     <context-param>
