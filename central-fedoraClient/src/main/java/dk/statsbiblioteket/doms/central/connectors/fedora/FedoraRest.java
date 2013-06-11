@@ -457,7 +457,7 @@ public class FedoraRest extends Connector implements Fedora {
             }
 
 
-            restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
+            restApi.path("/").path(pid)
                     .path("/relationships/new")
                     .queryParam("predicate", predicate)
                     .queryParam("object", object)
@@ -506,7 +506,7 @@ public class FedoraRest extends Connector implements Fedora {
             if (!subject.startsWith("info:fedora/")) {
                 subject = "info:fedora/" + subject;
             }
-            WebResource temp = restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
+            WebResource temp = restApi.path("/").path(pid)
                     .path("/relationships/")
                     .queryParam("subject", subject)
                     .queryParam("format", "n-triples");
@@ -532,10 +532,6 @@ public class FedoraRest extends Connector implements Fedora {
                 }
             }
             return relations;
-
-
-        } catch (UnsupportedEncodingException e) {
-            throw new BackendMethodFailedException("UTF-8 not known....", e);
         } catch (UniformInterfaceException e) {
             if (e.getResponse().getStatus()
                     == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
@@ -589,14 +585,13 @@ public class FedoraRest extends Connector implements Fedora {
                 predicate = "info:fedora/"+predicate;
             }
 
-            restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
+            restApi.path("/").path(pid)
                     .path("/relationships/")
                     .queryParam("predicate", predicate)
                     .queryParam("object", object)
                     .queryParam("isLiteral",""+literal)
                     .delete();
-        } catch (UnsupportedEncodingException e) {
-            throw new BackendMethodFailedException("UTF-8 not known....", e);
+
         } catch (UniformInterfaceException e) {
             if (e.getResponse().getStatus()
                     == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
