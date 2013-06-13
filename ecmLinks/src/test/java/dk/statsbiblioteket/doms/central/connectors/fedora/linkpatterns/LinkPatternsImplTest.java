@@ -2,6 +2,7 @@ package dk.statsbiblioteket.doms.central.connectors.fedora.linkpatterns;
 
 import dk.statsbiblioteket.doms.central.connectors.fedora.FedoraRest;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class LinkPatternsImplTest {
     @Test
+    @Ignore
     public void testGetLinkPatterns() throws Exception {
         String fedoraLocation = "http://alhena:7880/fedora";
 
