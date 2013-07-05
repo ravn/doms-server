@@ -37,8 +37,8 @@ public class XpathUtils {
             {"fedora-model", Constants.NAMESPACE_FEDORA_MODEL},
             {"foxml", Constants.NAMESPACE_FOXML},
             {"ds", Constants.NAMESPACE_DS_COMPOSITE},
-            {"doms", Constants.NAMESPACE_RELATIONS},//TODO, this should be deprecated
-            {"ecm", Constants.NAMESPACE_RELATIONS},//To shorthands for same namespace
+            {"doms", Constants.NAMESPACE_RELATIONS},
+            {"ecm", Constants.NAMESPACE_RELATIONS},
             {"schema", Constants.NAMESPACE_SCHEMA},
             {"dobundle", Constants.NAMESPACE_DIGITAL_OBJECT_BUNDLE}
     };

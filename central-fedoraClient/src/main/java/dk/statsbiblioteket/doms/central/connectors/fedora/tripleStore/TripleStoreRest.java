@@ -8,8 +8,7 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.Connector;
-import dk.statsbiblioteket.doms.central.connectors.fedora.utils.FedoraUtil;
-import dk.statsbiblioteket.doms.central.connectors.fedora.utils.Names;
+import dk.statsbiblioteket.doms.central.connectors.fedora.utils.Constants;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.FedoraRelation;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
 import org.apache.commons.logging.Log;
@@ -145,7 +144,7 @@ public class TripleStoreRest  extends Connector implements TripleStore{
         }
         String query = "select $object\n"
                        + "from <#ri>\n"
-                       + "where $object <"+ Names.COLLECTION_RELATION+"> <"+collectionPid+">\n"
+                       + "where $object <"+ Constants.RELATION_COLLECTION+"> <"+collectionPid+">\n"
                        + "and $object <fedora-model:hasModel> <"+contentModel+">\n"
                        + "and ($object <fedora-model:state> <fedora-model:Active>\n" +
                        "or $object <fedora-model:state> <fedora-model:Inactive>)";

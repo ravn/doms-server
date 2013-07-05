@@ -8,12 +8,12 @@ public class Constants {
     /**
      * The major ecm version
      */
-    public static final String MAJORVERSION = "0";
+    public static final String MAJORVERSION = "default/0";
 
     /**
      * The minor ecm version
      */
-    public static final String MINORVERSION = "2";//This is wrong for some of the namespaces
+    public static final String MINORVERSION = "1";//This is wrong for some of the namespaces
 
     /**
      * The ECM version
@@ -23,19 +23,21 @@ public class Constants {
      */
     private static final String VERSION = MAJORVERSION +"/"+ MINORVERSION;
 
-    // Our namespace
+
+        // Our namespace
     /**
      * The ECM namespace
      */
-    public static final String NAMESPACE_ECM
-            = "http://ecm.sourceforge.net/";
+    public static final String NAMESPACE_DOMS
+            = "http://doms.statsbiblioteket.dk/";
+
 
     /** The view namespace
      * @see #NAMESPACE_ECM
      * @see #VERSION
      */
     public static final String NAMESPACE_VIEW
-            = NAMESPACE_ECM+"types/view/"+ VERSION +"/#";
+            = NAMESPACE_DOMS+"types/view/"+ VERSION +"/#";
 
     /**
      * The schema DSCOMPOSITEMODEL extension namespace
@@ -43,7 +45,7 @@ public class Constants {
      * @see #VERSION
      */
     public static final String NAMESPACE_SCHEMA
-            = NAMESPACE_ECM+"types/dscompositeschema/"+ VERSION +"/#";
+            = NAMESPACE_DOMS+"types/dscompositeschema/"+ VERSION +"/#";
 
     /**
      * The digital object bundle namespace
@@ -51,12 +53,14 @@ public class Constants {
      * @see #VERSION
      */
     public static final String NAMESPACE_DIGITAL_OBJECT_BUNDLE
-            = NAMESPACE_ECM+"types/digitalobjectbundle/"+ VERSION +"/#";//Our relation namespace
+            = NAMESPACE_DOMS+"types/digitalobjectbundle/"+ VERSION +"/#";//Our relation namespace
 
 
     //our relations
     public static final String NAMESPACE_RELATIONS
-            = NAMESPACE_ECM+"relations/"+ VERSION +"/#";
+            = NAMESPACE_DOMS+"relations/"+ VERSION +"/#";
+
+    public static final Object RELATION_COLLECTION = NAMESPACE_RELATIONS+"#isPartOfCollection";
 
     public static final String TEMPLATE_REL
             = NAMESPACE_RELATIONS +"isTemplateFor";
@@ -153,6 +157,5 @@ public class Constants {
             = "VIEW";
 
 
-    public static final String ONTOLOGY_URI = "http://ecm.sourceforge.net/" +
-    "relations/0/2/#";
+
 }

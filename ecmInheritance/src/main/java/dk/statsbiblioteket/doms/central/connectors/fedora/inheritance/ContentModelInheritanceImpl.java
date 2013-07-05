@@ -6,8 +6,8 @@ import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.FedoraRelation;
 import dk.statsbiblioteket.doms.central.connectors.fedora.tripleStore.TripleStore;
+import dk.statsbiblioteket.doms.central.connectors.fedora.utils.Constants;
 import dk.statsbiblioteket.doms.central.connectors.fedora.utils.FedoraUtil;
-import dk.statsbiblioteket.doms.central.connectors.fedora.utils.Names;
 
 import java.util.*;
 
@@ -92,7 +92,7 @@ public class ContentModelInheritanceImpl implements ContentModelInheritance {
 
         List<FedoraRelation> ancestors = null;
         try {
-            ancestors = fedora.getNamedRelations(s, Names.RELATION_EXTENDS_MODEL, asOfDateTime);
+            ancestors = fedora.getNamedRelations(s, Constants.RELATION_EXTENDS_MODEL, asOfDateTime);
         } catch (BackendInvalidResourceException e) {
             //Content model does not exist, but that is not a problem. It just
             //does not have ancestors
@@ -130,9 +130,9 @@ public class ContentModelInheritanceImpl implements ContentModelInheritance {
                        + "from <#ri>\n"
                        + "where \n"
                        + "walk(\n"
-                       + "$object <" + Names.RELATION_EXTENDS_MODEL + "> <" + cmpid + ">\n"
+                       + "$object <" + Constants.RELATION_EXTENDS_MODEL + "> <" + cmpid + ">\n"
                        + "and\n"
-                       + "$object <" + Names.RELATION_EXTENDS_MODEL + "> $temp\n"
+                       + "$object <" + Constants.RELATION_EXTENDS_MODEL + "> $temp\n"
                        + ");";
         return ts.genericQuery(query);
     }

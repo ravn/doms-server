@@ -39,6 +39,7 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectDatast
 import dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectFieldsType;
 import dk.statsbiblioteket.doms.central.connectors.fedora.generated.ResultType;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.*;
+import dk.statsbiblioteket.doms.central.connectors.fedora.utils.Constants;
 import dk.statsbiblioteket.doms.central.connectors.fedora.utils.DateUtils;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
 import dk.statsbiblioteket.util.xml.DOM;
@@ -264,7 +265,7 @@ public class FedoraRest extends Connector implements Fedora {
 
             for (FedoraRelation fedoraRelation : prof.getRelations()) {
                 String predicate = fedoraRelation.getPredicate();
-                if ("http://ecm.sourceforge.net/relations/0/2/#isTemplateFor".equals(predicate)){
+                if (Constants.TEMPLATE_REL.equals(predicate)){
                     prof.setType(ObjectType.TEMPLATE);
                     break;
                 }
