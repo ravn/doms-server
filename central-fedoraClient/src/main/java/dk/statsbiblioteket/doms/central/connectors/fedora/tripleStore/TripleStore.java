@@ -22,19 +22,6 @@ public interface TripleStore {
                                                                                    BackendMethodFailedException;
 
 
-    List<String> listObjectsWithThisLabel(String label)
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException;
-
-
-
-    List<String> findObjectFromDCIdentifier(String string)
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException;
-
-
     void flushTriples()
             throws
             BackendInvalidCredsException,

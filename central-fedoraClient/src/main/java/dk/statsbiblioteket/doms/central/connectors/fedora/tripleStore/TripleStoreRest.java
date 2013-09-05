@@ -8,8 +8,8 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.Connector;
-import dk.statsbiblioteket.doms.central.connectors.fedora.utils.Constants;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.FedoraRelation;
+import dk.statsbiblioteket.doms.central.connectors.fedora.utils.Constants;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,8 +17,6 @@ import org.apache.commons.logging.LogFactory;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by IntelliJ IDEA.
@@ -44,7 +42,6 @@ public class TripleStoreRest  extends Connector implements TripleStore{
                 .queryParam("type", "tuples")
                 .queryParam("lang", "iTQL")
                 .queryParam("format", "CSV")
-                .queryParam("flush", "true")
                 .queryParam("stream", "on");
         restApi.addFilter(new HTTPBasicAuthFilter(creds.getUsername(),creds.getPassword()));
     }
@@ -114,21 +111,10 @@ public class TripleStoreRest  extends Connector implements TripleStore{
     }
 
 
-    @Override
-    public List<String> findObjectFromDCIdentifier(String string)
-            throws BackendInvalidCredsException, BackendMethodFailedException {
 
-        String query = "select $object\n"
-                       + "from <#ri>\n"
-                       + "where $object <dc:identifier> '" + string.replaceAll(Pattern.quote("'"), Matcher.quoteReplacement("\\'")) + "' "
-                       + "and ($object <fedora-model:state> <fedora-model:Active>\n" +
-                       "or $object <fedora-model:state> <fedora-model:Inactive>)";
-        return genericQuery(query);
-    }
 
     @Override
     public void flushTriples() throws BackendInvalidCredsException, BackendMethodFailedException {
-        findObjectFromDCIdentifier("doms:ContentModel_DOMS");
     }
 
 
@@ -150,18 +136,6 @@ public class TripleStoreRest  extends Connector implements TripleStore{
                        "or $object <fedora-model:state> <fedora-model:Inactive>)";
         return genericQuery(query);
 
-    }
-
-    public List<String> listObjectsWithThisLabel(String label)
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException {
-        //TODO sanitize label
-
-        String query = "select $object\n"
-                       + "from <#ri>\n"
-                       + "where $object <fedora-model:label> '" + label + "'";
-        return genericQuery(query);
     }
 
 

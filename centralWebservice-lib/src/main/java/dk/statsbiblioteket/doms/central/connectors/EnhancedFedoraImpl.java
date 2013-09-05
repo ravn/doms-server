@@ -2,6 +2,7 @@ package dk.statsbiblioteket.doms.central.connectors;
 
 import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
 import dk.statsbiblioteket.doms.central.connectors.fedora.FedoraRest;
+import dk.statsbiblioteket.doms.central.connectors.fedora.fedoraDBsearch.DBSearchRest;
 import dk.statsbiblioteket.doms.central.connectors.fedora.inheritance.ContentModelInheritance;
 import dk.statsbiblioteket.doms.central.connectors.fedora.inheritance.ContentModelInheritanceImpl;
 import dk.statsbiblioteket.doms.central.connectors.fedora.linkpatterns.LinkPattern;
@@ -40,6 +41,7 @@ import java.util.Map;
  */
 public class EnhancedFedoraImpl implements EnhancedFedora{
 
+    DBSearchRest db;
     Fedora fedora;
     TripleStore ts;
     Templates templates;
@@ -57,6 +59,7 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
         //1.st level
         fedora = new FedoraRest(creds,fedoraLocation);
         ts = new TripleStoreRest(creds,fedoraLocation);
+        db = new DBSearchRest(creds,fedoraLocation);
         pidGenerator = new PidGeneratorImpl(pidGenLocation);
 
         //2. level
@@ -116,7 +119,7 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
     @Override
     public List<String> listObjectsWithThisLabel(String label)
             throws BackendInvalidCredsException, BackendMethodFailedException {
-        return  ts.listObjectsWithThisLabel(label);
+        return  db.listObjectsWithThisLabel(label);
     }
 
     @Override
@@ -154,7 +157,7 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
     @Override
     public List<String> findObjectFromDCIdentifier(String string)
             throws BackendInvalidCredsException, BackendMethodFailedException {
-        return ts.findObjectFromDCIdentifier(string);
+        return db.findObjectFromDCIdentifier(string);
     }
 
     @Override
