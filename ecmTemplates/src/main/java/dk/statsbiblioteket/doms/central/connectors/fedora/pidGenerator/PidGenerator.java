@@ -14,7 +14,7 @@ public interface PidGenerator {
 
     /**
      * Get the next available pid with the prefix s
-     * @param s the prefix
+     * @param infix the prefix
      * @return the next available pid
      * @throws PIDGeneratorException Catch-all exception for everything that
      * can go wrong.
