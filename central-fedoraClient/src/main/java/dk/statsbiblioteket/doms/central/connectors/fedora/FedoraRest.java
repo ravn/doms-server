@@ -371,18 +371,11 @@ public class FedoraRest extends Connector implements Fedora {
         }
     }
 
-    public void modifyDatastreamByValue(String pid,
-                                        String datastream,
-                                        String contents, String comment)
-            throws
-            BackendMethodFailedException,
-            BackendInvalidCredsException,
-            BackendInvalidResourceException {
+    private void createDatastreamByValue(String pid, String datastream, String contents, String comment) throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
         try {
             if (comment == null || comment.isEmpty()) {
                 comment = "No message supplied";
             }
-
             restApi.path("/")
                     .path(URLEncoder.encode(pid, "UTF-8"))
                     .path("/datastreams/")
@@ -403,6 +396,51 @@ public class FedoraRest extends Connector implements Fedora {
             } else {
                 throw new BackendMethodFailedException("Server error for '"+pid+"'", e);
             }
+        }
+
+
+    }
+    private void updateExistingDatastreamByValue(String pid, String datastream, String contents, String comment) throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
+        try {
+            if (comment == null || comment.isEmpty()) {
+                comment = "No message supplied";
+            }
+            restApi.path("/")
+                    .path(URLEncoder.encode(pid, "UTF-8"))
+                    .path("/datastreams/")
+                    .path(URLEncoder.encode(datastream, "UTF-8"))
+                    .queryParam("mimeType", "text/xml")
+                    .queryParam("logMessage", comment)
+                    .put(contents);
+        } catch (UnsupportedEncodingException e) {
+            throw new BackendMethodFailedException("UTF-8 not known....", e);
+        } catch (UniformInterfaceException e) {
+            if (e.getResponse().getStatus()
+                    == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                throw new BackendInvalidCredsException(
+                        "Invalid Credentials Supplied: pid '"+pid+"'",
+                        e);
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
+                throw new BackendInvalidResourceException("Resource '"+pid+"'not found", e);
+            } else {
+                throw new BackendMethodFailedException("Server error for '"+pid+"'", e);
+            }
+        }
+
+    }
+
+    public void modifyDatastreamByValue(String pid,
+                                        String datastream,
+                                        String contents, String comment)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException {
+        try {
+            updateExistingDatastreamByValue(pid, datastream, contents, comment);
+        } catch (BackendInvalidResourceException e){
+            //perhaps the datastream did not exist
+            createDatastreamByValue(pid, datastream, contents, comment);
         }
     }
 
