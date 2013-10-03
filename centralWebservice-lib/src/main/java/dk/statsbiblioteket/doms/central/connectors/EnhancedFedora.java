@@ -45,12 +45,28 @@ public interface EnhancedFedora  {
     void modifyDatastreamByValue(String pid, String datastream, String contents, String comment)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
 
+    void modifyDatastreamByValue(String pid, String datastream, String contents, String md5sum, String comment)
+            throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
+
+    void modifyDatastreamByValue(String pid, String datastream, String contents, String checksumType, String checksum, String comment)
+            throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
+
+
     String getXMLDatastreamContents(String pid, String datastream, Long asOfTime)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
 
-    void addExternalDatastream(String pid, String contents, String filename, String permanentURL, String formatURI,
-                               String s, String comment)
+      void addExternalDatastream(String pid, String datastream, String filename, String permanentURL, String formatURI,
+                               String mimetype, String comment)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
+
+    void addExternalDatastream(String pid, String datastream, String filename, String permanentURL, String formatURI,
+                               String mimetype, String checksumType, String checksum, String comment)
+            throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
+
+    void addExternalDatastream(String pid, String datastream, String filename, String permanentURL, String formatURI,
+                               String mimetype, String md5sum, String comment)
+            throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
+
 
     List<String> listObjectsWithThisLabel(String label)
             throws BackendInvalidCredsException, BackendMethodFailedException;

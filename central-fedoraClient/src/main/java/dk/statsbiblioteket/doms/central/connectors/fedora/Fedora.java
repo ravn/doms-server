@@ -75,8 +75,8 @@ public interface Fedora {
             BackendInvalidCredsException,
             BackendInvalidResourceException;
 
-    void modifyDatastreamByValue(String pid,
-                                 String datastream,
+    void modifyDatastreamByValue(String pid, String datastream, String checksumType,
+                                 String checksum,
                                  String contents, String comment)
             throws
             BackendMethodFailedException,
@@ -124,6 +124,18 @@ public interface Fedora {
 
     void addExternalDatastream(String pid, String datastream, String label, String url, String formatURI,
                                String mimeType, String comment) throws
+                                                                BackendMethodFailedException,
+                                                                BackendInvalidCredsException,
+                                                                BackendInvalidResourceException;
+
+    void addExternalDatastream(String pid, String datastream, String label, String url, String formatURI,
+                               String mimeType, String md5sum, String comment) throws
+                                                                BackendMethodFailedException,
+                                                                BackendInvalidCredsException,
+                                                                BackendInvalidResourceException;
+
+    void addExternalDatastream(String pid, String datastream, String label, String url, String formatURI,
+                               String mimeType, String checksumType, String checksum, String comment) throws
                                                                 BackendMethodFailedException,
                                                                 BackendInvalidCredsException,
                                                                 BackendInvalidResourceException;

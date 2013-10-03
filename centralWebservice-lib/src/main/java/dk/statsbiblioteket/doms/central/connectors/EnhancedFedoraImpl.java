@@ -41,6 +41,7 @@ import java.util.Map;
  */
 public class EnhancedFedoraImpl implements EnhancedFedora{
 
+    private final LinkPatternsImpl linkPatterns;
     DBSearchRest db;
     Fedora fedora;
     TripleStore ts;
@@ -50,7 +51,6 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
     PidGenerator pidGenerator;
     private Methods methods;
     private String thisLocation;
-    private final LinkPatternsImpl linkPatterns;
 
     public EnhancedFedoraImpl(Credentials creds, String fedoraLocation, String pidGenLocation, String thisLocation)
             throws MalformedURLException, PIDGeneratorException, JAXBException {
@@ -106,7 +106,17 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
     @Override
     public void modifyDatastreamByValue(String pid, String datastream, String contents, String comment)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
-        fedora.modifyDatastreamByValue(pid,datastream,contents,comment);
+        fedora.modifyDatastreamByValue(pid,datastream,contents,null,null,comment);
+    }
+
+    @Override
+    public void modifyDatastreamByValue(String pid, String datastream, String contents, String md5sum, String comment) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+        fedora.modifyDatastreamByValue(pid,datastream,contents,"MD5",md5sum,comment);
+    }
+
+    @Override
+    public void modifyDatastreamByValue(String pid, String datastream, String contents, String checksumType, String checksum, String comment) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+        fedora.modifyDatastreamByValue(pid,datastream,contents,checksumType,checksum,comment);
     }
 
     @Override
@@ -115,11 +125,38 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
         return fedora.getXMLDatastreamContents(pid,datastream,asOfDateTime);
     }
 
-    @Override
-    public void addExternalDatastream(String pid, String contents, String filename, String permanentURL,
+       @Override
+    public void addExternalDatastream(String pid, String datastream, String filename, String permanentURL,
                                       String formatURI, String mimetype, String comment)
             throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
-        fedora.addExternalDatastream(pid,contents,filename,permanentURL,formatURI,mimetype,comment);
+        fedora.addExternalDatastream(pid,datastream,filename,permanentURL,formatURI,mimetype,comment);
+    }
+
+    @Override
+    public void addExternalDatastream(String pid,
+                                      String datastream,
+                                      String filename,
+                                      String permanentURL,
+                                      String formatURI,
+                                      String mimetype,
+                                      String checksumType,
+                                      String checksum,
+                                      String comment)
+            throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+        fedora.addExternalDatastream(pid, datastream, filename, permanentURL, formatURI, mimetype, comment);
+    }
+
+    @Override
+    public void addExternalDatastream(String pid,
+                                      String datastream,
+                                      String filename,
+                                      String permanentURL,
+                                      String formatURI,
+                                      String mimetype,
+                                      String md5sum,
+                                      String comment)
+            throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+        fedora.addExternalDatastream(pid, datastream, filename, permanentURL, formatURI, mimetype, comment);
     }
 
     @Override
@@ -188,7 +225,6 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
         return methods.getStaticMethods(cmpid,asOfTime);
     }
 
-
     @Override
     public List<LinkPattern> getLinks(String pid, Long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
         return linkPatterns.getLinkPatterns(pid,asOfTime);
@@ -199,7 +235,6 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
     public List<Method> getDynamicMethods(String objpid, Long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
         return methods.getDynamicMethods(objpid,asOfTime);
     }
-
 
     @Override
     public String invokeMethod(String cmpid, String methodName, Map<String, List<String>> parameters, Long asOfTime) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
