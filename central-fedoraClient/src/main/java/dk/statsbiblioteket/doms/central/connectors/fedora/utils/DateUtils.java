@@ -6,25 +6,23 @@ import java.util.Date;
 import java.util.TimeZone;
 
 /**
- * Created by IntelliJ IDEA.
- * User: abr
- * Date: 8/26/11
- * Time: 4:07 PM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: abr Date: 8/26/11 Time: 4:07 PM To change this template use File | Settings | File
+ * Templates.
  */
 public class DateUtils {
 
 
     /**
-     * Attempt to parse the given string of form: yyyy-MM-dd[THH:mm:ss[.SSS][Z]]
-     * as a Date.
+     * Attempt to parse the given string of form: yyyy-MM-dd[THH:mm:ss[.SSS][Z]] as a Date.
      *
      * @param dateString the date string to parse
+     *
      * @return a Date representation of the dateString
-     * @throws java.text.ParseException if dateString is null, empty or is otherwise
-     * unable to be parsed.
+     * @throws java.text.ParseException if dateString is null, empty or is otherwise unable to be parsed.
      */
-    public static Date parseDateStrict(String dateString) throws ParseException {
+    public static Date parseDateStrict(String dateString)
+            throws
+            ParseException {
         if (dateString == null) {
             throw new ParseException("Argument cannot be null.", 0);
         } else if (dateString.isEmpty()) {

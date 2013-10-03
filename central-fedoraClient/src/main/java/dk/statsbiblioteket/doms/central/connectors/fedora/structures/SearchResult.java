@@ -1,14 +1,8 @@
 package dk.statsbiblioteket.doms.central.connectors.fedora.structures;
 
-import java.util.Date;
-import java.util.List;
-
 /**
- * Created by IntelliJ IDEA.
- * User: abr
- * Date: 8/26/11
- * Time: 2:18 PM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: abr Date: 8/26/11 Time: 2:18 PM To change this template use File | Settings | File
+ * Templates.
  */
 public class SearchResult {
 
@@ -19,7 +13,11 @@ public class SearchResult {
     private long cDate;
     private long mDate;
 
-    public SearchResult(String pid, String label, String state, long cDate, long mDate) {
+    public SearchResult(String pid,
+                        String label,
+                        String state,
+                        long cDate,
+                        long mDate) {
         //To change body of created methods use File | Settings | File Templates.
         this.pid = pid;
         this.label = label;

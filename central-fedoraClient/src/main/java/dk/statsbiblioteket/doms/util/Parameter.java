@@ -1,13 +1,8 @@
 package dk.statsbiblioteket.doms.util;
 
-import javax.xml.bind.annotation.XmlElement;
-
 /**
- * Created with IntelliJ IDEA.
- * User: abr
- * Date: 3/21/13
- * Time: 1:04 PM
- * To change this template use File | Settings | File Templates.
+ * Created with IntelliJ IDEA. User: abr Date: 3/21/13 Time: 1:04 PM To change this template use File | Settings | File
+ * Templates.
  */
 public class Parameter {
 
@@ -34,7 +29,9 @@ public class Parameter {
         defaultValue = "";
         encode = true;
     }
-    public Parameter(String name, boolean encode) {
+
+    public Parameter(String name,
+                     boolean encode) {
         this.name = name;
         parameterprefix = "";
         required = false;
@@ -47,7 +44,12 @@ public class Parameter {
 
     public Parameter(String name,
                      String parameterprefix,
-                     boolean required, boolean repeatable, String type, String config, String defaultValue, boolean encode) {
+                     boolean required,
+                     boolean repeatable,
+                     String type,
+                     String config,
+                     String defaultValue,
+                     boolean encode) {
         this.name = name;
         this.parameterprefix = parameterprefix;
         this.required = required;
@@ -88,12 +90,18 @@ public class Parameter {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Parameter)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Parameter)) {
+            return false;
+        }
 
         Parameter parameter = (Parameter) o;
 
-        if (!name.equals(parameter.name)) return false;
+        if (!name.equals(parameter.name)) {
+            return false;
+        }
 
         return true;
     }

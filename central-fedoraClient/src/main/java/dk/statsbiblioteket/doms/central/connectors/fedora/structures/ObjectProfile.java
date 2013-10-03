@@ -1,20 +1,12 @@
 package dk.statsbiblioteket.doms.central.connectors.fedora.structures;
 
 
-
-import dk.statsbiblioteket.doms.central.connectors.fedora.structures.DatastreamProfile;
-import dk.statsbiblioteket.doms.central.connectors.fedora.structures.FedoraRelation;
-import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectType;
-
 import java.util.Date;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: abr
- * Date: 9/9/11
- * Time: 2:25 PM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: abr Date: 9/9/11 Time: 2:25 PM To change this template use File | Settings | File
+ * Templates.
  */
 public class ObjectProfile {
 

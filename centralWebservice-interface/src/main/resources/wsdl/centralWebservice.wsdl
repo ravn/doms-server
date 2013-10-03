@@ -219,7 +219,6 @@
     </message>
 
 
-
     <message name="getNamedRelations">
         <part name="parameters" element="tns:getNamedRelations"/>
     </message>
@@ -314,7 +313,6 @@
     <message name="unlockForWritingResponse">
         <part name="parameters" element="tns:unlockForWritingResponse"/>
     </message>
-
 
 
     <message name="createTempAdminUser">
@@ -426,7 +424,7 @@
         <operation name="getObjectProfile">
             <documentation>Get a profile representation of the object
             </documentation>
-            <input  message="tns:getObjectProfile"/>
+            <input message="tns:getObjectProfile"/>
             <output message="tns:getObjectProfileResponse"/>
             <fault name="InvalidCredentialsException"
                    message="tns:InvalidCredentialsException"/>
@@ -766,7 +764,6 @@
         <!--Search Operations-->
 
 
-
         <operation name="findObjects">
             <documentation>Given a query string, return list of objects matching
                 /!\ TODO: Should we return more than pids?
@@ -909,7 +906,8 @@
         </operation>
 
         <operation name="getObjectsInCollection">
-            <documentation>Get a subset of a collection, with a given content model. Used for getting the content models in a collection
+            <documentation>Get a subset of a collection, with a given content model. Used for getting the content models
+                in a collection
             </documentation>
             <input message="tns:getObjectsInCollection"/>
             <output message="tns:getObjectsInCollectionResponse"/>
@@ -1523,7 +1521,6 @@
                 <soap:fault name="InvalidCredentialsException" use="literal"/>
             </fault>
         </operation>
-
 
 
         <operation name="lockForWriting">

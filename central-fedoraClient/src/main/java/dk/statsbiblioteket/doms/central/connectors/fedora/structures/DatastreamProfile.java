@@ -1,11 +1,8 @@
 package dk.statsbiblioteket.doms.central.connectors.fedora.structures;
 
 /**
- * Created by IntelliJ IDEA.
- * User: abr
- * Date: 9/14/11
- * Time: 11:51 AM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: abr Date: 9/14/11 Time: 11:51 AM To change this template use File | Settings | File
+ * Templates.
  */
 public class DatastreamProfile {
     private String ID;

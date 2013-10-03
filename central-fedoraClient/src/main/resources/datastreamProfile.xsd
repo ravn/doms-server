@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema
-    targetNamespace="http://www.fedora.info/definitions/1/0/management/"
-    xmlns:xs="http://www.w3.org/2001/XMLSchema"
-	elementFormDefault="qualified">
-	<xs:element name="datastreamProfile">
-		<xs:complexType>
-			<xs:sequence>
-				<xs:element name="dsLabel" type="xs:string" />
-				<xs:element name="dsVersionID" type="xs:string" />
-				<xs:element name="dsCreateDate" type="xs:dateTime" />
-				<xs:element name="dsState">
+        targetNamespace="http://www.fedora.info/definitions/1/0/management/"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        elementFormDefault="qualified">
+    <xs:element name="datastreamProfile">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="dsLabel" type="xs:string"/>
+                <xs:element name="dsVersionID" type="xs:string"/>
+                <xs:element name="dsCreateDate" type="xs:dateTime"/>
+                <xs:element name="dsState">
                     <xs:simpleType>
                         <xs:restriction base="xs:string">
                             <xs:enumeration value="A"/>
@@ -17,10 +17,10 @@
                             <xs:enumeration value="I"/>
                         </xs:restriction>
                     </xs:simpleType>
-				</xs:element>
-				<xs:element name="dsMIME" type="xs:string" />
-				<xs:element name="dsFormatURI" type="xs:anyURI" />
-				<xs:element name="dsControlGroup" >
+                </xs:element>
+                <xs:element name="dsMIME" type="xs:string"/>
+                <xs:element name="dsFormatURI" type="xs:anyURI"/>
+                <xs:element name="dsControlGroup">
                     <xs:simpleType>
                         <xs:restriction base="xs:string">
                             <xs:enumeration value="X"/>
@@ -29,9 +29,9 @@
                             <xs:enumeration value="E"/>
                         </xs:restriction>
                     </xs:simpleType>
-				</xs:element>
-                <xs:element name="dsSize" type="xs:integer" />
-                <xs:element name="dsVersionable" >
+                </xs:element>
+                <xs:element name="dsSize" type="xs:integer"/>
+                <xs:element name="dsVersionable">
                     <xs:simpleType>
                         <xs:restriction base="xs:string">
                             <xs:enumeration value="true"/>
@@ -39,10 +39,10 @@
                         </xs:restriction>
                     </xs:simpleType>
                 </xs:element>
-                <xs:element name="dsInfoType" type="xs:string" />
-                <xs:element name="dsLocation" type="xs:string" />
-                <xs:element name="dsLocationType" type="xs:string" />
-                <xs:element name="dsChecksumType" >
+                <xs:element name="dsInfoType" type="xs:string"/>
+                <xs:element name="dsLocation" type="xs:string"/>
+                <xs:element name="dsLocationType" type="xs:string"/>
+                <xs:element name="dsChecksumType">
                     <xs:simpleType>
                         <xs:restriction base="xs:string">
                             <xs:enumeration value="DEFAULT"/>
@@ -58,7 +58,7 @@
                         </xs:restriction>
                     </xs:simpleType>
                 </xs:element>
-                <xs:element name="dsChecksum" type="xs:string" />
+                <xs:element name="dsChecksum" type="xs:string"/>
                 <xs:element name="dsChecksumValid" minOccurs="0">
                     <xs:simpleType>
                         <xs:restriction base="xs:string">
@@ -67,23 +67,23 @@
                         </xs:restriction>
                     </xs:simpleType>
                 </xs:element>
-                <xs:element name="dsAltID" minOccurs="0" maxOccurs="unbounded" type="xs:string" />
-			</xs:sequence>
-			<xs:attribute name="pid" use="required">
-				<xs:simpleType>
-					<xs:restriction base="xs:string" />
-				</xs:simpleType>
-			</xs:attribute>
+                <xs:element name="dsAltID" minOccurs="0" maxOccurs="unbounded" type="xs:string"/>
+            </xs:sequence>
+            <xs:attribute name="pid" use="required">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string"/>
+                </xs:simpleType>
+            </xs:attribute>
             <xs:attribute name="dsID" use="required">
                 <xs:simpleType>
-                    <xs:restriction base="xs:string" />
+                    <xs:restriction base="xs:string"/>
                 </xs:simpleType>
             </xs:attribute>
             <xs:attribute name="dateTime" use="optional">
                 <xs:simpleType>
-                    <xs:restriction base="xs:dateTime" />
+                    <xs:restriction base="xs:dateTime"/>
                 </xs:simpleType>
             </xs:attribute>
-		</xs:complexType>
-	</xs:element>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>

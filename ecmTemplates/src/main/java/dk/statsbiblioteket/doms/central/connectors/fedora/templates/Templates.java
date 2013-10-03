@@ -8,26 +8,32 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.pidGenerator.PIDGenera
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: abr
- * Date: 3/29/12
- * Time: 2:31 PM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: abr Date: 3/29/12 Time: 2:31 PM To change this template use File | Settings | File
+ * Templates.
  */
 public interface Templates {
 
 
+    public void markObjectAsTemplate(String objpid,
+                                     String cmpid,
+                                     String logMessage)
+            throws
+            BackendInvalidCredsException,
+            BackendMethodFailedException,
+            ObjectIsWrongTypeException;
 
-    public void markObjectAsTemplate(
-            String objpid,
-            String cmpid,
-            String logMessage)
-            throws BackendInvalidCredsException, BackendMethodFailedException, ObjectIsWrongTypeException;
-
-    public String cloneTemplate(String templatepid, List<String> oldIDs, String logMessage)
-            throws BackendInvalidCredsException, BackendMethodFailedException, ObjectIsWrongTypeException,
-                   BackendInvalidResourceException, PIDGeneratorException;
+    public String cloneTemplate(String templatepid,
+                                List<String> oldIDs,
+                                String logMessage)
+            throws
+            BackendInvalidCredsException,
+            BackendMethodFailedException,
+            ObjectIsWrongTypeException,
+            BackendInvalidResourceException,
+            PIDGeneratorException;
 
     public List<String> findTemplatesFor(String cmpid)
-            throws BackendInvalidCredsException, BackendMethodFailedException;
+            throws
+            BackendInvalidCredsException,
+            BackendMethodFailedException;
 }

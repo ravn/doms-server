@@ -37,111 +37,182 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.structures.SearchResul
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: abr
- * Date: Oct 25, 2010
- * Time: 11:51:52 AM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: abr Date: Oct 25, 2010 Time: 11:51:52 AM To change this template use File | Settings
+ * | File Templates.
  */
 public interface Fedora {
 
 
-    boolean exists(java.lang.String pid, Long asOfDateTime) throws BackendInvalidCredsException, BackendMethodFailedException;
+    boolean exists(java.lang.String pid,
+                   Long asOfDateTime)
+            throws
+            BackendInvalidCredsException,
+            BackendMethodFailedException;
 
-    boolean isDataObject(java.lang.String pid, Long asOfDateTime) throws BackendInvalidCredsException, BackendMethodFailedException;
+    boolean isDataObject(java.lang.String pid,
+                         Long asOfDateTime)
+            throws
+            BackendInvalidCredsException,
+            BackendMethodFailedException;
 
-    boolean isTemplate(java.lang.String pid, Long asOfDateTime) throws BackendInvalidCredsException, BackendMethodFailedException;
+    boolean isTemplate(java.lang.String pid,
+                       Long asOfDateTime)
+            throws
+            BackendInvalidCredsException,
+            BackendMethodFailedException;
 
-    boolean isContentModel(java.lang.String pid, Long asOfDateTime) throws BackendInvalidCredsException, BackendMethodFailedException;
+    boolean isContentModel(java.lang.String pid,
+                           Long asOfDateTime)
+            throws
+            BackendInvalidCredsException,
+            BackendMethodFailedException;
 
 
-    java.lang.String getObjectXml(String pid, Long asOfTime)
-            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException;
-
-    java.lang.String ingestDocument(org.w3c.dom.Document document, java.lang.String pid)
-            throws BackendMethodFailedException, BackendInvalidCredsException;
-
-
-
-
-    public ObjectProfile getObjectProfile(String pid, Long asOfTime) throws
-                                                      BackendMethodFailedException,
-                                                      BackendInvalidCredsException,
-                                                      BackendInvalidResourceException;
-
-    void modifyObjectState(String pid, String state, String comment)
+    java.lang.String getObjectXml(String pid,
+                                  Long asOfTime)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,
             BackendInvalidResourceException;
 
-    void modifyDatastreamByValue(String pid, String datastream, String checksumType,
+    java.lang.String ingestDocument(org.w3c.dom.Document document,
+                                    java.lang.String pid)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException;
+
+
+    public ObjectProfile getObjectProfile(String pid,
+                                          Long asOfTime)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException;
+
+    void modifyObjectState(String pid,
+                           String state,
+                           String comment)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException;
+
+    void modifyDatastreamByValue(String pid,
+                                 String datastream,
+                                 String checksumType,
                                  String checksum,
-                                 String contents, String comment)
+                                 String contents,
+                                 String comment)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,
             BackendInvalidResourceException;
 
-    String getXMLDatastreamContents(String pid, String datastream, Long asOfDateTime)
+    String getXMLDatastreamContents(String pid,
+                                    String datastream,
+                                    Long asOfDateTime)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,
             BackendInvalidResourceException;
 
-    void addRelation(String pid, String subject, String property, String object, boolean literal, String comment)
+    void addRelation(String pid,
+                     String subject,
+                     String property,
+                     String object,
+                     boolean literal,
+                     String comment)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,
             BackendInvalidResourceException;
 
-    List<FedoraRelation> getNamedRelations(String pid, String name, Long asOfTime)
-            throws
-            BackendMethodFailedException,
-            BackendInvalidCredsException,
-            BackendInvalidResourceException;
-
-
-    void deleteRelation(String pid, String subject, String predicate, String object, boolean literal, String comment)
-            throws
-            BackendMethodFailedException,
-            BackendInvalidCredsException,
-            BackendInvalidResourceException;
-
-
-
-    void modifyObjectLabel(String pid, String name, String comment)
+    List<FedoraRelation> getNamedRelations(String pid,
+                                           String name,
+                                           Long asOfTime)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,
             BackendInvalidResourceException;
 
 
-    List<SearchResult> fieldsearch(String query, int offset, int pageLength) throws BackendMethodFailedException,
-                                                                                    BackendInvalidCredsException;
+    void deleteRelation(String pid,
+                        String subject,
+                        String predicate,
+                        String object,
+                        boolean literal,
+                        String comment)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException;
 
 
+    void modifyObjectLabel(String pid,
+                           String name,
+                           String comment)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException;
 
-    void addExternalDatastream(String pid, String datastream, String label, String url, String formatURI,
-                               String mimeType, String comment) throws
-                                                                BackendMethodFailedException,
-                                                                BackendInvalidCredsException,
-                                                                BackendInvalidResourceException;
 
-    void addExternalDatastream(String pid, String datastream, String label, String url, String formatURI,
-                               String mimeType, String md5sum, String comment) throws
-                                                                BackendMethodFailedException,
-                                                                BackendInvalidCredsException,
-                                                                BackendInvalidResourceException;
+    List<SearchResult> fieldsearch(String query,
+                                   int offset,
+                                   int pageLength)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException;
 
-    void addExternalDatastream(String pid, String datastream, String label, String url, String formatURI,
-                               String mimeType, String checksumType, String checksum, String comment) throws
-                                                                BackendMethodFailedException,
-                                                                BackendInvalidCredsException,
-                                                                BackendInvalidResourceException;
+
+    void addExternalDatastream(String pid,
+                               String datastream,
+                               String label,
+                               String url,
+                               String formatURI,
+                               String mimeType,
+                               String comment)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException;
+
+    void addExternalDatastream(String pid,
+                               String datastream,
+                               String label,
+                               String url,
+                               String formatURI,
+                               String mimeType,
+                               String md5sum,
+                               String comment)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException;
+
+    void addExternalDatastream(String pid,
+                               String datastream,
+                               String label,
+                               String url,
+                               String formatURI,
+                               String mimeType,
+                               String checksumType,
+                               String checksum,
+                               String comment)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException;
+
     public String getUsername();
 
     public String getPassword();
 
-    String newEmptyObject(String pid, List<String> oldIDs, List<String> collections, String logMessage) throws BackendMethodFailedException, BackendInvalidCredsException;
+    String newEmptyObject(String pid,
+                          List<String> oldIDs,
+                          List<String> collections,
+                          String logMessage)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException;
 }

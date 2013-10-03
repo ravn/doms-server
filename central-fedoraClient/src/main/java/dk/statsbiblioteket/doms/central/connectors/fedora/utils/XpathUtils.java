@@ -15,38 +15,39 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Utilities for performing Xpath operations in the ECM context. Already defines
- * all the relevant namespaces, so proper shorthands can be used.
+ * Utilities for performing Xpath operations in the ECM context. Already defines all the relevant namespaces, so proper
+ * shorthands can be used.
  */
 public class XpathUtils {
 
 
-    private static final String[][] NAMESPACE_TABLE
-            = {{XMLConstants.XML_NS_PREFIX, XMLConstants.XML_NS_URI},
-            {XMLConstants.XMLNS_ATTRIBUTE, XMLConstants.XMLNS_ATTRIBUTE_NS_URI},
-            {XMLConstants.DEFAULT_NS_PREFIX, XMLConstants.NULL_NS_URI},
-            {"rdf", Constants.NAMESPACE_RDF},
-            {"rdfs", Constants.NAMESPACE_RDFS},
-            {"owl", Constants.NAMESPACE_OWL},
-            {"xsi", Constants.NAMESPACE_XML_SCHEMA_INSTANCE},
-            {"dc", Constants.NAMESPACE_DC},
-            {"dcterms", Constants.NAMESPACE_DCTERMS},
-            {"oai", Constants.NAMESPACE_OAI},
-            {"oai_dc", Constants.NAMESPACE_OAIDC},
-            {"view", Constants.NAMESPACE_VIEW},
-            {"fedora-model", Constants.NAMESPACE_FEDORA_MODEL},
-            {"foxml", Constants.NAMESPACE_FOXML},
-            {"ds", Constants.NAMESPACE_DS_COMPOSITE},
-            {"doms", Constants.NAMESPACE_RELATIONS},
-            {"ecm", Constants.NAMESPACE_RELATIONS},
-            {"schema", Constants.NAMESPACE_SCHEMA},
-            {"dobundle", Constants.NAMESPACE_DIGITAL_OBJECT_BUNDLE}
-    };
+    private static final
+    String[][]
+            NAMESPACE_TABLE =
+            {{XMLConstants.XML_NS_PREFIX, XMLConstants.XML_NS_URI},
+             {XMLConstants.XMLNS_ATTRIBUTE, XMLConstants.XMLNS_ATTRIBUTE_NS_URI},
+             {XMLConstants.DEFAULT_NS_PREFIX, XMLConstants.NULL_NS_URI},
+             {"rdf", Constants.NAMESPACE_RDF},
+             {"rdfs", Constants.NAMESPACE_RDFS},
+             {"owl", Constants.NAMESPACE_OWL},
+             {"xsi", Constants.NAMESPACE_XML_SCHEMA_INSTANCE},
+             {"dc", Constants.NAMESPACE_DC},
+             {"dcterms", Constants.NAMESPACE_DCTERMS},
+             {"oai", Constants.NAMESPACE_OAI},
+             {"oai_dc", Constants.NAMESPACE_OAIDC},
+             {"view", Constants.NAMESPACE_VIEW},
+             {"fedora-model", Constants.NAMESPACE_FEDORA_MODEL},
+             {"foxml", Constants.NAMESPACE_FOXML},
+             {"ds", Constants.NAMESPACE_DS_COMPOSITE},
+             {"doms", Constants.NAMESPACE_RELATIONS},
+             {"ecm", Constants.NAMESPACE_RELATIONS},
+             {"schema", Constants.NAMESPACE_SCHEMA},
+             {"dobundle", Constants.NAMESPACE_DIGITAL_OBJECT_BUNDLE}};
 
-    private static final NamespaceContext ECM_NAMESPACE_CONTEXT
-            = new NamespaceContext() {
+    private static final NamespaceContext ECM_NAMESPACE_CONTEXT = new NamespaceContext() {
         Map<String, String> nsPrefixMap = new HashMap<String, String>(NAMESPACE_TABLE.length);
         Map<String, String> inverseNsPrefixMap = new HashMap<String, String>(NAMESPACE_TABLE.length);
+
         {
             for (String[] pair : NAMESPACE_TABLE) {
                 nsPrefixMap.put(pair[0], pair[1]);
@@ -68,23 +69,20 @@ public class XpathUtils {
 
         public String getPrefix(String namespaceURI) {
             if (namespaceURI == null) {
-                throw new IllegalArgumentException(
-                        "namespaceURI is null");
+                throw new IllegalArgumentException("namespaceURI is null");
             }
             return inverseNsPrefixMap.get(namespaceURI);
         }
 
         public Iterator getPrefixes(String namespaceURI) {
             if (namespaceURI == null) {
-                throw new IllegalArgumentException(
-                        "namespaceURI is null");
+                throw new IllegalArgumentException("namespaceURI is null");
             }
             String prefix = getPrefix(namespaceURI);
             if (prefix == null) {
                 return Collections.emptyList().iterator();
             } else {
-                return Collections.singletonList(prefix)
-                        .iterator();
+                return Collections.singletonList(prefix).iterator();
             }
         }
     };
@@ -93,39 +91,39 @@ public class XpathUtils {
      * Helper method for doing an XPath query using ECM namespaces.
      *
      * @param node            The node to start XPath query on.
-     * @param xpathExpression The XPath expression, using default DOMS
-     *                        namespace prefixes.
-     * @return The result, as a node list.
+     * @param xpathExpression The XPath expression, using default DOMS namespace prefixes.
      *
-     * @throws javax.xml.xpath.XPathExpressionException On trouble parsing or evaluating the
-     *                                  expression.
+     * @return The result, as a node list.
+     * @throws javax.xml.xpath.XPathExpressionException
+     *          On trouble parsing or evaluating the expression.
      */
-    public static NodeList xpathQuery(Node node, String xpathExpression)
-            throws XPathExpressionException {
+    public static NodeList xpathQuery(Node node,
+                                      String xpathExpression)
+            throws
+            XPathExpressionException {
         XPath xPath = XPathFactory.newInstance().newXPath();
         xPath.setNamespaceContext(ECM_NAMESPACE_CONTEXT);
 
-        return (NodeList) xPath
-                .evaluate(xpathExpression, node, XPathConstants.NODESET);
+        return (NodeList) xPath.evaluate(xpathExpression, node, XPathConstants.NODESET);
     }
 
-      /**
+    /**
      * Helper method for doing an XPath query using ECM namespaces.
      *
      * @param node            The node to start XPath query on.
-     * @param xpathExpression The XPath expression, using default DOMS
-     *                        namespace prefixes.
-     * @return The result, as a node
+     * @param xpathExpression The XPath expression, using default DOMS namespace prefixes.
      *
-     * @throws javax.xml.xpath.XPathExpressionException On trouble parsing or evaluating the
-     *                                  expression.
+     * @return The result, as a node
+     * @throws javax.xml.xpath.XPathExpressionException
+     *          On trouble parsing or evaluating the expression.
      */
-    public static Node xpathQuerySingle(Node node, String xpathExpression)
-            throws XPathExpressionException {
+    public static Node xpathQuerySingle(Node node,
+                                        String xpathExpression)
+            throws
+            XPathExpressionException {
         XPath xPath = XPathFactory.newInstance().newXPath();
         xPath.setNamespaceContext(ECM_NAMESPACE_CONTEXT);
 
-        return (Node) xPath
-                .evaluate(xpathExpression, node, XPathConstants.NODE);
+        return (Node) xPath.evaluate(xpathExpression, node, XPathConstants.NODE);
     }
 }

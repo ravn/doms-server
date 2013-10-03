@@ -39,7 +39,7 @@
             url-pattern='/central/'
             />
 
-     <endpoint
+    <endpoint
             name='SurveyableService'
             interface='dk.statsbiblioteket.doms.domsutil.surveyable.Surveyable'
             implementation='dk.statsbiblioteket.doms.domsutil.surveyable.SurveyableWebservice'

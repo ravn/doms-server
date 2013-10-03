@@ -28,11 +28,8 @@
 package dk.statsbiblioteket.doms.central.connectors;
 
 /**
- * Created by IntelliJ IDEA.
- * User: abr
- * Date: Sep 21, 2010
- * Time: 2:52:58 PM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: abr Date: Sep 21, 2010 Time: 2:52:58 PM To change this template use File | Settings |
+ * File Templates.
  */
 public class BackendInvalidResourceException extends Exception {
 
@@ -40,7 +37,8 @@ public class BackendInvalidResourceException extends Exception {
         super(message);
     }
 
-    public BackendInvalidResourceException(String message, Throwable cause) {
+    public BackendInvalidResourceException(String message,
+                                           Throwable cause) {
         super(message, cause);
     }
 }

@@ -1,1034 +1,1050 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions targetNamespace="http://statsbiblioteket.dk/summa/search" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://statsbiblioteket.dk/summa/search" xmlns:intf="http://statsbiblioteket.dk/summa/search" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-<!--WSDL created by Apache Axis version: 1.4
-Built on Apr 22, 2006 (06:55:48 PDT)-->
- <wsdl:types>
-  <schema elementFormDefault="qualified" targetNamespace="http://statsbiblioteket.dk/summa/search" xmlns="http://www.w3.org/2001/XMLSchema">
-   <element name="didYouMean">
-    <complexType>
-     <sequence>
-      <element name="query" type="xsd:string"/>
-      <element name="maxSuggestions" type="xsd:int"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="didYouMeanResponse">
-    <complexType>
-     <sequence>
-      <element name="didYouMeanReturn" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="deleteSuggestion">
-    <complexType>
-     <sequence>
-      <element name="suggestion" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="deleteSuggestionResponse">
-    <complexType/>
-   </element>
-   <element name="getSuggestions">
-    <complexType>
-     <sequence>
-      <element name="prefix" type="xsd:string"/>
-      <element name="maxSuggestions" type="xsd:int"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="getSuggestionsResponse">
-    <complexType>
-     <sequence>
-      <element name="getSuggestionsReturn" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="getRecentSuggestions">
-    <complexType>
-     <sequence>
-      <element name="ageSeconds" type="xsd:int"/>
-      <element name="maxSuggestions" type="xsd:int"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="getRecentSuggestionsResponse">
-    <complexType>
-     <sequence>
-      <element name="getRecentSuggestionsReturn" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="commitQuery">
-    <complexType>
-     <sequence>
-      <element name="query" type="xsd:string"/>
-      <element name="hitCount" type="xsd:long"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="commitQueryResponse">
-    <complexType/>
-   </element>
-   <element name="getField">
-    <complexType>
-     <sequence>
-      <element name="id" type="xsd:string"/>
-      <element name="fieldName" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="getFieldResponse">
-    <complexType>
-     <sequence>
-      <element name="getFieldReturn" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="getMoreLikeThis">
-    <complexType>
-     <sequence>
-      <element name="id" type="xsd:string"/>
-      <element name="numberOfRecords" type="xsd:int"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="getMoreLikeThisResponse">
-    <complexType>
-     <sequence>
-      <element name="getMoreLikeThisReturn" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="indexLookup">
-    <complexType>
-     <sequence>
-      <element name="field" type="xsd:string"/>
-      <element name="term" type="xsd:string"/>
-      <element name="delta" type="xsd:int"/>
-      <element name="length" type="xsd:int"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="indexLookupResponse">
-    <complexType>
-     <sequence>
-      <element name="indexLookupReturn" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="extendedIndexLookup">
-    <complexType>
-     <sequence>
-      <element name="query" type="xsd:string"/>
-      <element name="field" type="xsd:string"/>
-      <element name="term" type="xsd:string"/>
-      <element name="delta" type="xsd:int"/>
-      <element name="length" type="xsd:int"/>
-      <element name="minCount" type="xsd:int"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="extendedIndexLookupResponse">
-    <complexType>
-     <sequence>
-      <element name="extendedIndexLookupReturn" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="simpleSearch">
-    <complexType>
-     <sequence>
-      <element name="query" type="xsd:string"/>
-      <element name="numberOfRecords" type="xsd:int"/>
-      <element name="startIndex" type="xsd:int"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="simpleSearchResponse">
-    <complexType>
-     <sequence>
-      <element name="simpleSearchReturn" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="directJSON">
-    <complexType>
-     <sequence>
-      <element name="json" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="directJSONResponse">
-    <complexType>
-     <sequence>
-      <element name="directJSONReturn" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="simpleSearchSorted">
-    <complexType>
-     <sequence>
-      <element name="query" type="xsd:string"/>
-      <element name="numberOfRecords" type="xsd:int"/>
-      <element name="startIndex" type="xsd:int"/>
-      <element name="sortKey" type="xsd:string"/>
-      <element name="reverse" type="xsd:boolean"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="simpleSearchSortedResponse">
-    <complexType>
-     <sequence>
-      <element name="simpleSearchSortedReturn" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="filterSearchSorted">
-    <complexType>
-     <sequence>
-      <element name="filter" type="xsd:string"/>
-      <element name="query" type="xsd:string"/>
-      <element name="numberOfRecords" type="xsd:int"/>
-      <element name="startIndex" type="xsd:int"/>
-      <element name="sortKey" type="xsd:string"/>
-      <element name="reverse" type="xsd:boolean"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="filterSearchSortedResponse">
-    <complexType>
-     <sequence>
-      <element name="filterSearchSortedReturn" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="simpleFacet">
-    <complexType>
-     <sequence>
-      <element name="query" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="simpleFacetResponse">
-    <complexType>
-     <sequence>
-      <element name="simpleFacetReturn" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="exposedFacet">
-    <complexType>
-     <sequence>
-      <element name="request" type="xsd:string"/>
-      <element name="format" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="exposedFacetResponse">
-    <complexType>
-     <sequence>
-      <element name="exposedFacetReturn" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="advancedFacet">
-    <complexType>
-     <sequence>
-      <element name="query" type="xsd:string"/>
-      <element name="facetKeys" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="advancedFacetResponse">
-    <complexType>
-     <sequence>
-      <element name="advancedFacetReturn" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="ping">
-    <complexType>
-     <sequence>
-      <element name="message" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-   <element name="pingResponse">
-    <complexType>
-     <sequence>
-      <element name="pingReturn" type="xsd:string"/>
-     </sequence>
-    </complexType>
-   </element>
-  </schema>
- </wsdl:types>
-
-   <wsdl:message name="directJSONResponse">
-
-      <wsdl:part element="impl:directJSONResponse" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="extendedIndexLookupResponse">
-
-      <wsdl:part element="impl:extendedIndexLookupResponse" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="getSuggestionsRequest">
-
-      <wsdl:part element="impl:getSuggestions" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="filterSearchSortedRequest">
-
-      <wsdl:part element="impl:filterSearchSorted" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="simpleSearchSortedRequest">
-
-      <wsdl:part element="impl:simpleSearchSorted" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="simpleSearchRequest">
-
-      <wsdl:part element="impl:simpleSearch" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="simpleFacetRequest">
-
-      <wsdl:part element="impl:simpleFacet" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="getMoreLikeThisResponse">
-
-      <wsdl:part element="impl:getMoreLikeThisResponse" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="indexLookupResponse">
-
-      <wsdl:part element="impl:indexLookupResponse" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="exposedFacetRequest">
-
-      <wsdl:part element="impl:exposedFacet" name="parameters"/>
-
-   </wsdl:message>
-
-   <wsdl:message name="simpleSearchResponse">
-
-      <wsdl:part element="impl:simpleSearchResponse" name="parameters"/>
+<wsdl:definitions targetNamespace="http://statsbiblioteket.dk/summa/search"
+                  xmlns:impl="http://statsbiblioteket.dk/summa/search"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <!--WSDL created by Apache Axis version: 1.4
+    Built on Apr 22, 2006 (06:55:48 PDT)-->
+    <wsdl:types>
+        <schema elementFormDefault="qualified"
+                targetNamespace="http://statsbiblioteket.dk/summa/search"
+                xmlns="http://www.w3.org/2001/XMLSchema">
+            <element name="didYouMean">
+                <complexType>
+                    <sequence>
+                        <element name="query" type="xsd:string"/>
+                        <element name="maxSuggestions" type="xsd:int"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="didYouMeanResponse">
+                <complexType>
+                    <sequence>
+                        <element name="didYouMeanReturn" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="deleteSuggestion">
+                <complexType>
+                    <sequence>
+                        <element name="suggestion" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="deleteSuggestionResponse">
+                <complexType/>
+            </element>
+            <element name="getSuggestions">
+                <complexType>
+                    <sequence>
+                        <element name="prefix" type="xsd:string"/>
+                        <element name="maxSuggestions" type="xsd:int"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getSuggestionsResponse">
+                <complexType>
+                    <sequence>
+                        <element name="getSuggestionsReturn" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getRecentSuggestions">
+                <complexType>
+                    <sequence>
+                        <element name="ageSeconds" type="xsd:int"/>
+                        <element name="maxSuggestions" type="xsd:int"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getRecentSuggestionsResponse">
+                <complexType>
+                    <sequence>
+                        <element name="getRecentSuggestionsReturn" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="commitQuery">
+                <complexType>
+                    <sequence>
+                        <element name="query" type="xsd:string"/>
+                        <element name="hitCount" type="xsd:long"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="commitQueryResponse">
+                <complexType/>
+            </element>
+            <element name="getField">
+                <complexType>
+                    <sequence>
+                        <element name="id" type="xsd:string"/>
+                        <element name="fieldName" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getFieldResponse">
+                <complexType>
+                    <sequence>
+                        <element name="getFieldReturn" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getMoreLikeThis">
+                <complexType>
+                    <sequence>
+                        <element name="id" type="xsd:string"/>
+                        <element name="numberOfRecords" type="xsd:int"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="getMoreLikeThisResponse">
+                <complexType>
+                    <sequence>
+                        <element name="getMoreLikeThisReturn" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="indexLookup">
+                <complexType>
+                    <sequence>
+                        <element name="field" type="xsd:string"/>
+                        <element name="term" type="xsd:string"/>
+                        <element name="delta" type="xsd:int"/>
+                        <element name="length" type="xsd:int"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="indexLookupResponse">
+                <complexType>
+                    <sequence>
+                        <element name="indexLookupReturn" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="extendedIndexLookup">
+                <complexType>
+                    <sequence>
+                        <element name="query" type="xsd:string"/>
+                        <element name="field" type="xsd:string"/>
+                        <element name="term" type="xsd:string"/>
+                        <element name="delta" type="xsd:int"/>
+                        <element name="length" type="xsd:int"/>
+                        <element name="minCount" type="xsd:int"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="extendedIndexLookupResponse">
+                <complexType>
+                    <sequence>
+                        <element name="extendedIndexLookupReturn" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="simpleSearch">
+                <complexType>
+                    <sequence>
+                        <element name="query" type="xsd:string"/>
+                        <element name="numberOfRecords" type="xsd:int"/>
+                        <element name="startIndex" type="xsd:int"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="simpleSearchResponse">
+                <complexType>
+                    <sequence>
+                        <element name="simpleSearchReturn" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="directJSON">
+                <complexType>
+                    <sequence>
+                        <element name="json" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="directJSONResponse">
+                <complexType>
+                    <sequence>
+                        <element name="directJSONReturn" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="simpleSearchSorted">
+                <complexType>
+                    <sequence>
+                        <element name="query" type="xsd:string"/>
+                        <element name="numberOfRecords" type="xsd:int"/>
+                        <element name="startIndex" type="xsd:int"/>
+                        <element name="sortKey" type="xsd:string"/>
+                        <element name="reverse" type="xsd:boolean"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="simpleSearchSortedResponse">
+                <complexType>
+                    <sequence>
+                        <element name="simpleSearchSortedReturn" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="filterSearchSorted">
+                <complexType>
+                    <sequence>
+                        <element name="filter" type="xsd:string"/>
+                        <element name="query" type="xsd:string"/>
+                        <element name="numberOfRecords" type="xsd:int"/>
+                        <element name="startIndex" type="xsd:int"/>
+                        <element name="sortKey" type="xsd:string"/>
+                        <element name="reverse" type="xsd:boolean"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="filterSearchSortedResponse">
+                <complexType>
+                    <sequence>
+                        <element name="filterSearchSortedReturn" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="simpleFacet">
+                <complexType>
+                    <sequence>
+                        <element name="query" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="simpleFacetResponse">
+                <complexType>
+                    <sequence>
+                        <element name="simpleFacetReturn" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="exposedFacet">
+                <complexType>
+                    <sequence>
+                        <element name="request" type="xsd:string"/>
+                        <element name="format" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="exposedFacetResponse">
+                <complexType>
+                    <sequence>
+                        <element name="exposedFacetReturn" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="advancedFacet">
+                <complexType>
+                    <sequence>
+                        <element name="query" type="xsd:string"/>
+                        <element name="facetKeys" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="advancedFacetResponse">
+                <complexType>
+                    <sequence>
+                        <element name="advancedFacetReturn" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="ping">
+                <complexType>
+                    <sequence>
+                        <element name="message" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+            <element name="pingResponse">
+                <complexType>
+                    <sequence>
+                        <element name="pingReturn" type="xsd:string"/>
+                    </sequence>
+                </complexType>
+            </element>
+        </schema>
+    </wsdl:types>
+
+    <wsdl:message name="directJSONResponse">
+
+        <wsdl:part element="impl:directJSONResponse" name="parameters"/>
+
+    </wsdl:message>
+
+    <wsdl:message name="extendedIndexLookupResponse">
+
+        <wsdl:part element="impl:extendedIndexLookupResponse" name="parameters"/>
+
+    </wsdl:message>
+
+    <wsdl:message name="getSuggestionsRequest">
+
+        <wsdl:part element="impl:getSuggestions" name="parameters"/>
+
+    </wsdl:message>
+
+    <wsdl:message name="filterSearchSortedRequest">
+
+        <wsdl:part element="impl:filterSearchSorted" name="parameters"/>
+
+    </wsdl:message>
+
+    <wsdl:message name="simpleSearchSortedRequest">
+
+        <wsdl:part element="impl:simpleSearchSorted" name="parameters"/>
+
+    </wsdl:message>
+
+    <wsdl:message name="simpleSearchRequest">
+
+        <wsdl:part element="impl:simpleSearch" name="parameters"/>
+
+    </wsdl:message>
+
+    <wsdl:message name="simpleFacetRequest">
+
+        <wsdl:part element="impl:simpleFacet" name="parameters"/>
+
+    </wsdl:message>
+
+    <wsdl:message name="getMoreLikeThisResponse">
+
+        <wsdl:part element="impl:getMoreLikeThisResponse" name="parameters"/>
+
+    </wsdl:message>
+
+    <wsdl:message name="indexLookupResponse">
+
+        <wsdl:part element="impl:indexLookupResponse" name="parameters"/>
+
+    </wsdl:message>
+
+    <wsdl:message name="exposedFacetRequest">
+
+        <wsdl:part element="impl:exposedFacet" name="parameters"/>
+
+    </wsdl:message>
+
+    <wsdl:message name="simpleSearchResponse">
+
+        <wsdl:part element="impl:simpleSearchResponse" name="parameters"/>
+
+    </wsdl:message>
+
+    <wsdl:message name="directJSONRequest">
+
+        <wsdl:part element="impl:directJSON" name="parameters"/>
 
-   </wsdl:message>
+    </wsdl:message>
 
-   <wsdl:message name="directJSONRequest">
+    <wsdl:message name="extendedIndexLookupRequest">
 
-      <wsdl:part element="impl:directJSON" name="parameters"/>
+        <wsdl:part element="impl:extendedIndexLookup" name="parameters"/>
 
-   </wsdl:message>
+    </wsdl:message>
 
-   <wsdl:message name="extendedIndexLookupRequest">
+    <wsdl:message name="advancedFacetResponse">
 
-      <wsdl:part element="impl:extendedIndexLookup" name="parameters"/>
+        <wsdl:part element="impl:advancedFacetResponse" name="parameters"/>
 
-   </wsdl:message>
+    </wsdl:message>
 
-   <wsdl:message name="advancedFacetResponse">
+    <wsdl:message name="commitQueryRequest">
 
-      <wsdl:part element="impl:advancedFacetResponse" name="parameters"/>
+        <wsdl:part element="impl:commitQuery" name="parameters"/>
 
-   </wsdl:message>
+    </wsdl:message>
 
-   <wsdl:message name="commitQueryRequest">
+    <wsdl:message name="exposedFacetResponse">
 
-      <wsdl:part element="impl:commitQuery" name="parameters"/>
+        <wsdl:part element="impl:exposedFacetResponse" name="parameters"/>
 
-   </wsdl:message>
+    </wsdl:message>
 
-   <wsdl:message name="exposedFacetResponse">
+    <wsdl:message name="filterSearchSortedResponse">
 
-      <wsdl:part element="impl:exposedFacetResponse" name="parameters"/>
+        <wsdl:part element="impl:filterSearchSortedResponse" name="parameters"/>
 
-   </wsdl:message>
+    </wsdl:message>
 
-   <wsdl:message name="filterSearchSortedResponse">
+    <wsdl:message name="getFieldRequest">
 
-      <wsdl:part element="impl:filterSearchSortedResponse" name="parameters"/>
+        <wsdl:part element="impl:getField" name="parameters"/>
 
-   </wsdl:message>
+    </wsdl:message>
 
-   <wsdl:message name="getFieldRequest">
+    <wsdl:message name="didYouMeanRequest">
 
-      <wsdl:part element="impl:getField" name="parameters"/>
+        <wsdl:part element="impl:didYouMean" name="parameters"/>
 
-   </wsdl:message>
+    </wsdl:message>
 
-   <wsdl:message name="didYouMeanRequest">
+    <wsdl:message name="getFieldResponse">
 
-      <wsdl:part element="impl:didYouMean" name="parameters"/>
+        <wsdl:part element="impl:getFieldResponse" name="parameters"/>
 
-   </wsdl:message>
+    </wsdl:message>
 
-   <wsdl:message name="getFieldResponse">
+    <wsdl:message name="simpleFacetResponse">
 
-      <wsdl:part element="impl:getFieldResponse" name="parameters"/>
+        <wsdl:part element="impl:simpleFacetResponse" name="parameters"/>
 
-   </wsdl:message>
+    </wsdl:message>
 
-   <wsdl:message name="simpleFacetResponse">
+    <wsdl:message name="deleteSuggestionRequest">
 
-      <wsdl:part element="impl:simpleFacetResponse" name="parameters"/>
+        <wsdl:part element="impl:deleteSuggestion" name="parameters"/>
 
-   </wsdl:message>
+    </wsdl:message>
 
-   <wsdl:message name="deleteSuggestionRequest">
+    <wsdl:message name="simpleSearchSortedResponse">
 
-      <wsdl:part element="impl:deleteSuggestion" name="parameters"/>
+        <wsdl:part element="impl:simpleSearchSortedResponse" name="parameters"/>
 
-   </wsdl:message>
+    </wsdl:message>
 
-   <wsdl:message name="simpleSearchSortedResponse">
+    <wsdl:message name="didYouMeanResponse">
 
-      <wsdl:part element="impl:simpleSearchSortedResponse" name="parameters"/>
+        <wsdl:part element="impl:didYouMeanResponse" name="parameters"/>
 
-   </wsdl:message>
+    </wsdl:message>
 
-   <wsdl:message name="didYouMeanResponse">
+    <wsdl:message name="indexLookupRequest">
 
-      <wsdl:part element="impl:didYouMeanResponse" name="parameters"/>
+        <wsdl:part element="impl:indexLookup" name="parameters"/>
 
-   </wsdl:message>
+    </wsdl:message>
 
-   <wsdl:message name="indexLookupRequest">
+    <wsdl:message name="pingResponse">
 
-      <wsdl:part element="impl:indexLookup" name="parameters"/>
+        <wsdl:part element="impl:pingResponse" name="parameters"/>
 
-   </wsdl:message>
+    </wsdl:message>
 
-   <wsdl:message name="pingResponse">
+    <wsdl:message name="getRecentSuggestionsRequest">
 
-      <wsdl:part element="impl:pingResponse" name="parameters"/>
+        <wsdl:part element="impl:getRecentSuggestions" name="parameters"/>
 
-   </wsdl:message>
+    </wsdl:message>
 
-   <wsdl:message name="getRecentSuggestionsRequest">
+    <wsdl:message name="pingRequest">
 
-      <wsdl:part element="impl:getRecentSuggestions" name="parameters"/>
+        <wsdl:part element="impl:ping" name="parameters"/>
 
-   </wsdl:message>
+    </wsdl:message>
 
-   <wsdl:message name="pingRequest">
+    <wsdl:message name="getMoreLikeThisRequest">
 
-      <wsdl:part element="impl:ping" name="parameters"/>
+        <wsdl:part element="impl:getMoreLikeThis" name="parameters"/>
 
-   </wsdl:message>
+    </wsdl:message>
 
-   <wsdl:message name="getMoreLikeThisRequest">
+    <wsdl:message name="deleteSuggestionResponse">
 
-      <wsdl:part element="impl:getMoreLikeThis" name="parameters"/>
+        <wsdl:part element="impl:deleteSuggestionResponse" name="parameters"/>
 
-   </wsdl:message>
+    </wsdl:message>
 
-   <wsdl:message name="deleteSuggestionResponse">
+    <wsdl:message name="advancedFacetRequest">
 
-      <wsdl:part element="impl:deleteSuggestionResponse" name="parameters"/>
+        <wsdl:part element="impl:advancedFacet" name="parameters"/>
 
-   </wsdl:message>
+    </wsdl:message>
 
-   <wsdl:message name="advancedFacetRequest">
+    <wsdl:message name="getRecentSuggestionsResponse">
 
-      <wsdl:part element="impl:advancedFacet" name="parameters"/>
+        <wsdl:part element="impl:getRecentSuggestionsResponse" name="parameters"/>
 
-   </wsdl:message>
+    </wsdl:message>
 
-   <wsdl:message name="getRecentSuggestionsResponse">
+    <wsdl:message name="getSuggestionsResponse">
 
-      <wsdl:part element="impl:getRecentSuggestionsResponse" name="parameters"/>
+        <wsdl:part element="impl:getSuggestionsResponse" name="parameters"/>
 
-   </wsdl:message>
+    </wsdl:message>
 
-   <wsdl:message name="getSuggestionsResponse">
+    <wsdl:message name="commitQueryResponse">
 
-      <wsdl:part element="impl:getSuggestionsResponse" name="parameters"/>
+        <wsdl:part element="impl:commitQueryResponse" name="parameters"/>
 
-   </wsdl:message>
+    </wsdl:message>
 
-   <wsdl:message name="commitQueryResponse">
+    <wsdl:portType name="SearchWS">
 
-      <wsdl:part element="impl:commitQueryResponse" name="parameters"/>
+        <wsdl:operation name="didYouMean">
 
-   </wsdl:message>
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
 
-   <wsdl:portType name="SearchWS">
+                Given a search query, this method returns one or more alternatives queries. The suggestions are based on
+                an apriori index.
+            </wsdl:documentation>
 
-      <wsdl:operation name="didYouMean">
+            <wsdl:input message="impl:didYouMeanRequest" name="didYouMeanRequest"/>
 
-   <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+            <wsdl:output message="impl:didYouMeanResponse" name="didYouMeanResponse"/>
 
-                Given a search query, this method returns one or more alternatives queries. The suggestions are based on an apriori index.
-               </wsdl:documentation>
+        </wsdl:operation>
 
-         <wsdl:input message="impl:didYouMeanRequest" name="didYouMeanRequest"/>
+        <wsdl:operation name="deleteSuggestion">
 
-         <wsdl:output message="impl:didYouMeanResponse" name="didYouMeanResponse"/>
-
-      </wsdl:operation>
-
-      <wsdl:operation name="deleteSuggestion">
-
-   <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
 
                 Given a suggestion which exists in storage, this or these (case is ignored) are removed.
-                </wsdl:documentation>
+            </wsdl:documentation>
 
-         <wsdl:input message="impl:deleteSuggestionRequest" name="deleteSuggestionRequest"/>
+            <wsdl:input message="impl:deleteSuggestionRequest" name="deleteSuggestionRequest"/>
 
-         <wsdl:output message="impl:deleteSuggestionResponse" name="deleteSuggestionResponse"/>
+            <wsdl:output message="impl:deleteSuggestionResponse" name="deleteSuggestionResponse"/>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="getSuggestions">
+        <wsdl:operation name="getSuggestions">
 
-   <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
 
                 Given a prefix this method returns other queries that start with the same prefix.
-                </wsdl:documentation>
+            </wsdl:documentation>
 
-         <wsdl:input message="impl:getSuggestionsRequest" name="getSuggestionsRequest"/>
+            <wsdl:input message="impl:getSuggestionsRequest" name="getSuggestionsRequest"/>
 
-         <wsdl:output message="impl:getSuggestionsResponse" name="getSuggestionsResponse"/>
+            <wsdl:output message="impl:getSuggestionsResponse" name="getSuggestionsResponse"/>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="getRecentSuggestions">
+        <wsdl:operation name="getRecentSuggestions">
 
-   <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
 
                 Get the most recently added or updated suggestions within a given timeframe
-                </wsdl:documentation>
+            </wsdl:documentation>
 
-         <wsdl:input message="impl:getRecentSuggestionsRequest" name="getRecentSuggestionsRequest"/>
+            <wsdl:input message="impl:getRecentSuggestionsRequest" name="getRecentSuggestionsRequest"/>
 
-         <wsdl:output message="impl:getRecentSuggestionsResponse" name="getRecentSuggestionsResponse"/>
+            <wsdl:output message="impl:getRecentSuggestionsResponse" name="getRecentSuggestionsResponse"/>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="commitQuery">
+        <wsdl:operation name="commitQuery">
 
-   <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
 
-                Commits a query to the Suggestion database. This enables this query to be returned in the result from getSuggestions. It is recommended that only query that the user actually enters are committed - ie. it might not be a good idea to commit queries that come from the user clicking facets, etc.                </wsdl:documentation>
+                Commits a query to the Suggestion database. This enables this query to be returned in the result from
+                getSuggestions. It is recommended that only query that the user actually enters are committed - ie. it
+                might not be a good idea to commit queries that come from the user clicking facets, etc.
+            </wsdl:documentation>
 
-         <wsdl:input message="impl:commitQueryRequest" name="commitQueryRequest"/>
+            <wsdl:input message="impl:commitQueryRequest" name="commitQueryRequest"/>
 
-         <wsdl:output message="impl:commitQueryResponse" name="commitQueryResponse"/>
+            <wsdl:output message="impl:commitQueryResponse" name="commitQueryResponse"/>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="getField">
+        <wsdl:operation name="getField">
 
-   <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
 
-                Returns a given field from the search index for a specific recordId. This could for instance be used to get the shortformat for a specific record.
-               </wsdl:documentation>
+                Returns a given field from the search index for a specific recordId. This could for instance be used to
+                get the shortformat for a specific record.
+            </wsdl:documentation>
 
-         <wsdl:input message="impl:getFieldRequest" name="getFieldRequest"/>
+            <wsdl:input message="impl:getFieldRequest" name="getFieldRequest"/>
 
-         <wsdl:output message="impl:getFieldResponse" name="getFieldResponse"/>
+            <wsdl:output message="impl:getFieldResponse" name="getFieldResponse"/>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="getMoreLikeThis">
+        <wsdl:operation name="getMoreLikeThis">
 
-   <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
 
                 Gives a search result of records that &quot;are similar to&quot; a given record.
-               </wsdl:documentation>
+            </wsdl:documentation>
 
-         <wsdl:input message="impl:getMoreLikeThisRequest" name="getMoreLikeThisRequest"/>
+            <wsdl:input message="impl:getMoreLikeThisRequest" name="getMoreLikeThisRequest"/>
 
-         <wsdl:output message="impl:getMoreLikeThisResponse" name="getMoreLikeThisResponse"/>
+            <wsdl:output message="impl:getMoreLikeThisResponse" name="getMoreLikeThisResponse"/>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="indexLookup">
+        <wsdl:operation name="indexLookup">
 
-   <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
 
                 Perform a lookup for a given term on a given field and returns a list of terms surrounding it.
-               </wsdl:documentation>
+            </wsdl:documentation>
 
-         <wsdl:input message="impl:indexLookupRequest" name="indexLookupRequest"/>
+            <wsdl:input message="impl:indexLookupRequest" name="indexLookupRequest"/>
 
-         <wsdl:output message="impl:indexLookupResponse" name="indexLookupResponse"/>
+            <wsdl:output message="impl:indexLookupResponse" name="indexLookupResponse"/>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="extendedIndexLookup">
+        <wsdl:operation name="extendedIndexLookup">
 
-   <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
 
                 Perform a lookup for a given term on a given field and returns a list of terms surrounding it.
                 The lookup is limited by the given query.
-               </wsdl:documentation>
+            </wsdl:documentation>
 
-         <wsdl:input message="impl:extendedIndexLookupRequest" name="extendedIndexLookupRequest"/>
+            <wsdl:input message="impl:extendedIndexLookupRequest" name="extendedIndexLookupRequest"/>
 
-         <wsdl:output message="impl:extendedIndexLookupResponse" name="extendedIndexLookupResponse"/>
+            <wsdl:output message="impl:extendedIndexLookupResponse" name="extendedIndexLookupResponse"/>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="simpleSearch">
+        <wsdl:operation name="simpleSearch">
 
-   <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
 
                 This method executes the given query and returns a search result ranked by relevancy.
-               </wsdl:documentation>
+            </wsdl:documentation>
 
-         <wsdl:input message="impl:simpleSearchRequest" name="simpleSearchRequest"/>
+            <wsdl:input message="impl:simpleSearchRequest" name="simpleSearchRequest"/>
 
-         <wsdl:output message="impl:simpleSearchResponse" name="simpleSearchResponse"/>
+            <wsdl:output message="impl:simpleSearchResponse" name="simpleSearchResponse"/>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="directJSON">
+        <wsdl:operation name="directJSON">
 
-   <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
 
-                A do-all method that takes a JSON list of key-value pairs as input and returns an XML structure representing document responses.
+                A do-all method that takes a JSON list of key-value pairs as input and returns an XML structure
+                representing document responses.
 
-                Sample: {&quot;search.document.query&quot;:&quot;foo bar&quot;, &quot;search.document.sortkey&quot;:&quot;sort_title&quot;, &quot;search.document.startindex&quot;:100}
+                Sample: {&quot;search.document.query&quot;:&quot;foo bar&quot;, &quot;search.document.sortkey&quot;:&quot;sort_title&quot;,
+                &quot;search.document.startindex&quot;:100}
 
                 Warning: Here be dragons. It is not recommended to expose this method
-                         directly to uncontrolled parties, as there is no contract
-                         in place that limit Searcher behaviour to be non-destructive.
-                         E.g. one Searcher could expose a method for performing rollback
-                         to an earlier index. Another could expose a delete document
-                         feature.
-               </wsdl:documentation>
+                directly to uncontrolled parties, as there is no contract
+                in place that limit Searcher behaviour to be non-destructive.
+                E.g. one Searcher could expose a method for performing rollback
+                to an earlier index. Another could expose a delete document
+                feature.
+            </wsdl:documentation>
 
-         <wsdl:input message="impl:directJSONRequest" name="directJSONRequest"/>
+            <wsdl:input message="impl:directJSONRequest" name="directJSONRequest"/>
 
-         <wsdl:output message="impl:directJSONResponse" name="directJSONResponse"/>
+            <wsdl:output message="impl:directJSONResponse" name="directJSONResponse"/>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="simpleSearchSorted">
+        <wsdl:operation name="simpleSearchSorted">
 
-   <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
 
                 This method executes the given query and returns a search result ranked by the given sort key.
-               </wsdl:documentation>
+            </wsdl:documentation>
 
-         <wsdl:input message="impl:simpleSearchSortedRequest" name="simpleSearchSortedRequest"/>
+            <wsdl:input message="impl:simpleSearchSortedRequest" name="simpleSearchSortedRequest"/>
 
-         <wsdl:output message="impl:simpleSearchSortedResponse" name="simpleSearchSortedResponse"/>
+            <wsdl:output message="impl:simpleSearchSortedResponse" name="simpleSearchSortedResponse"/>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="filterSearchSorted">
+        <wsdl:operation name="filterSearchSorted">
 
-   <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
 
-                This method executes the given query on the documents defined by the filter and returns a search result ranked by the given sort key.
-               </wsdl:documentation>
+                This method executes the given query on the documents defined by the filter and returns a search result
+                ranked by the given sort key.
+            </wsdl:documentation>
 
-         <wsdl:input message="impl:filterSearchSortedRequest" name="filterSearchSortedRequest"/>
+            <wsdl:input message="impl:filterSearchSortedRequest" name="filterSearchSortedRequest"/>
 
-         <wsdl:output message="impl:filterSearchSortedResponse" name="filterSearchSortedResponse"/>
+            <wsdl:output message="impl:filterSearchSortedResponse" name="filterSearchSortedResponse"/>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="simpleFacet">
+        <wsdl:operation name="simpleFacet">
 
-   <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
 
                 This method executes the given query and returns a facet result.
-               </wsdl:documentation>
+            </wsdl:documentation>
 
-         <wsdl:input message="impl:simpleFacetRequest" name="simpleFacetRequest"/>
+            <wsdl:input message="impl:simpleFacetRequest" name="simpleFacetRequest"/>
 
-         <wsdl:output message="impl:simpleFacetResponse" name="simpleFacetResponse"/>
+            <wsdl:output message="impl:simpleFacetResponse" name="simpleFacetResponse"/>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="exposedFacet">
+        <wsdl:operation name="exposedFacet">
 
-   <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
 
                 provides direct access to the exposed facet handler. Allows for
                 faceting on user-selected grouped field and hierarchical
                 faceting.
-               </wsdl:documentation>
+            </wsdl:documentation>
 
-         <wsdl:input message="impl:exposedFacetRequest" name="exposedFacetRequest"/>
+            <wsdl:input message="impl:exposedFacetRequest" name="exposedFacetRequest"/>
 
-         <wsdl:output message="impl:exposedFacetResponse" name="exposedFacetResponse"/>
+            <wsdl:output message="impl:exposedFacetResponse" name="exposedFacetResponse"/>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="advancedFacet">
+        <wsdl:operation name="advancedFacet">
 
-   <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
 
-                A more advanced way to query the facet browser giving the caller control over the individual facets and tags.
-               </wsdl:documentation>
+                A more advanced way to query the facet browser giving the caller control over the individual facets and
+                tags.
+            </wsdl:documentation>
 
-         <wsdl:input message="impl:advancedFacetRequest" name="advancedFacetRequest"/>
+            <wsdl:input message="impl:advancedFacetRequest" name="advancedFacetRequest"/>
 
-         <wsdl:output message="impl:advancedFacetResponse" name="advancedFacetResponse"/>
+            <wsdl:output message="impl:advancedFacetResponse" name="advancedFacetResponse"/>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="ping">
+        <wsdl:operation name="ping">
 
-   <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+            <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
 
                 Performs a pseudo-search without any keys and returns the time it took
                 to call the searcher. In order to measure properly, the caller should
                 measure the total call time including webservice overhead.
-               </wsdl:documentation>
+            </wsdl:documentation>
 
-         <wsdl:input message="impl:pingRequest" name="pingRequest"/>
+            <wsdl:input message="impl:pingRequest" name="pingRequest"/>
 
-         <wsdl:output message="impl:pingResponse" name="pingResponse"/>
+            <wsdl:output message="impl:pingResponse" name="pingResponse"/>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-   </wsdl:portType>
+    </wsdl:portType>
 
-   <wsdl:binding name="SearchWSSoapBinding" type="impl:SearchWS">
+    <wsdl:binding name="SearchWSSoapBinding" type="impl:SearchWS">
 
-      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
 
-      <wsdl:operation name="didYouMean">
+        <wsdl:operation name="didYouMean">
 
-         <wsdlsoap:operation soapAction=""/>
+            <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="didYouMeanRequest">
+            <wsdl:input name="didYouMeanRequest">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:input>
+            </wsdl:input>
 
-         <wsdl:output name="didYouMeanResponse">
+            <wsdl:output name="didYouMeanResponse">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:output>
+            </wsdl:output>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="deleteSuggestion">
+        <wsdl:operation name="deleteSuggestion">
 
-         <wsdlsoap:operation soapAction=""/>
+            <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="deleteSuggestionRequest">
+            <wsdl:input name="deleteSuggestionRequest">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:input>
+            </wsdl:input>
 
-         <wsdl:output name="deleteSuggestionResponse">
+            <wsdl:output name="deleteSuggestionResponse">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:output>
+            </wsdl:output>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="getSuggestions">
+        <wsdl:operation name="getSuggestions">
 
-         <wsdlsoap:operation soapAction=""/>
+            <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="getSuggestionsRequest">
+            <wsdl:input name="getSuggestionsRequest">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:input>
+            </wsdl:input>
 
-         <wsdl:output name="getSuggestionsResponse">
+            <wsdl:output name="getSuggestionsResponse">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:output>
+            </wsdl:output>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="getRecentSuggestions">
+        <wsdl:operation name="getRecentSuggestions">
 
-         <wsdlsoap:operation soapAction=""/>
+            <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="getRecentSuggestionsRequest">
+            <wsdl:input name="getRecentSuggestionsRequest">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:input>
+            </wsdl:input>
 
-         <wsdl:output name="getRecentSuggestionsResponse">
+            <wsdl:output name="getRecentSuggestionsResponse">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:output>
+            </wsdl:output>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="commitQuery">
+        <wsdl:operation name="commitQuery">
 
-         <wsdlsoap:operation soapAction=""/>
+            <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="commitQueryRequest">
+            <wsdl:input name="commitQueryRequest">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:input>
+            </wsdl:input>
 
-         <wsdl:output name="commitQueryResponse">
+            <wsdl:output name="commitQueryResponse">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:output>
+            </wsdl:output>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="getField">
+        <wsdl:operation name="getField">
 
-         <wsdlsoap:operation soapAction=""/>
+            <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="getFieldRequest">
+            <wsdl:input name="getFieldRequest">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:input>
+            </wsdl:input>
 
-         <wsdl:output name="getFieldResponse">
+            <wsdl:output name="getFieldResponse">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:output>
+            </wsdl:output>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="getMoreLikeThis">
+        <wsdl:operation name="getMoreLikeThis">
 
-         <wsdlsoap:operation soapAction=""/>
+            <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="getMoreLikeThisRequest">
+            <wsdl:input name="getMoreLikeThisRequest">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:input>
+            </wsdl:input>
 
-         <wsdl:output name="getMoreLikeThisResponse">
+            <wsdl:output name="getMoreLikeThisResponse">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:output>
+            </wsdl:output>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="indexLookup">
+        <wsdl:operation name="indexLookup">
 
-         <wsdlsoap:operation soapAction=""/>
+            <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="indexLookupRequest">
+            <wsdl:input name="indexLookupRequest">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:input>
+            </wsdl:input>
 
-         <wsdl:output name="indexLookupResponse">
+            <wsdl:output name="indexLookupResponse">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:output>
+            </wsdl:output>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="extendedIndexLookup">
+        <wsdl:operation name="extendedIndexLookup">
 
-         <wsdlsoap:operation soapAction=""/>
+            <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="extendedIndexLookupRequest">
+            <wsdl:input name="extendedIndexLookupRequest">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:input>
+            </wsdl:input>
 
-         <wsdl:output name="extendedIndexLookupResponse">
+            <wsdl:output name="extendedIndexLookupResponse">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:output>
+            </wsdl:output>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="simpleSearch">
+        <wsdl:operation name="simpleSearch">
 
-         <wsdlsoap:operation soapAction=""/>
+            <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="simpleSearchRequest">
+            <wsdl:input name="simpleSearchRequest">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:input>
+            </wsdl:input>
 
-         <wsdl:output name="simpleSearchResponse">
+            <wsdl:output name="simpleSearchResponse">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:output>
+            </wsdl:output>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="directJSON">
+        <wsdl:operation name="directJSON">
 
-         <wsdlsoap:operation soapAction=""/>
+            <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="directJSONRequest">
+            <wsdl:input name="directJSONRequest">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:input>
+            </wsdl:input>
 
-         <wsdl:output name="directJSONResponse">
+            <wsdl:output name="directJSONResponse">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:output>
+            </wsdl:output>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="simpleSearchSorted">
+        <wsdl:operation name="simpleSearchSorted">
 
-         <wsdlsoap:operation soapAction=""/>
+            <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="simpleSearchSortedRequest">
+            <wsdl:input name="simpleSearchSortedRequest">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:input>
+            </wsdl:input>
 
-         <wsdl:output name="simpleSearchSortedResponse">
+            <wsdl:output name="simpleSearchSortedResponse">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:output>
+            </wsdl:output>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="filterSearchSorted">
+        <wsdl:operation name="filterSearchSorted">
 
-         <wsdlsoap:operation soapAction=""/>
+            <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="filterSearchSortedRequest">
+            <wsdl:input name="filterSearchSortedRequest">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:input>
+            </wsdl:input>
 
-         <wsdl:output name="filterSearchSortedResponse">
+            <wsdl:output name="filterSearchSortedResponse">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:output>
+            </wsdl:output>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="simpleFacet">
+        <wsdl:operation name="simpleFacet">
 
-         <wsdlsoap:operation soapAction=""/>
+            <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="simpleFacetRequest">
+            <wsdl:input name="simpleFacetRequest">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:input>
+            </wsdl:input>
 
-         <wsdl:output name="simpleFacetResponse">
+            <wsdl:output name="simpleFacetResponse">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:output>
+            </wsdl:output>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="exposedFacet">
+        <wsdl:operation name="exposedFacet">
 
-         <wsdlsoap:operation soapAction=""/>
+            <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="exposedFacetRequest">
+            <wsdl:input name="exposedFacetRequest">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:input>
+            </wsdl:input>
 
-         <wsdl:output name="exposedFacetResponse">
+            <wsdl:output name="exposedFacetResponse">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:output>
+            </wsdl:output>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="advancedFacet">
+        <wsdl:operation name="advancedFacet">
 
-         <wsdlsoap:operation soapAction=""/>
+            <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="advancedFacetRequest">
+            <wsdl:input name="advancedFacetRequest">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:input>
+            </wsdl:input>
 
-         <wsdl:output name="advancedFacetResponse">
+            <wsdl:output name="advancedFacetResponse">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:output>
+            </wsdl:output>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-      <wsdl:operation name="ping">
+        <wsdl:operation name="ping">
 
-         <wsdlsoap:operation soapAction=""/>
+            <wsdlsoap:operation soapAction=""/>
 
-         <wsdl:input name="pingRequest">
+            <wsdl:input name="pingRequest">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:input>
+            </wsdl:input>
 
-         <wsdl:output name="pingResponse">
+            <wsdl:output name="pingResponse">
 
-            <wsdlsoap:body use="literal"/>
+                <wsdlsoap:body use="literal"/>
 
-         </wsdl:output>
+            </wsdl:output>
 
-      </wsdl:operation>
+        </wsdl:operation>
 
-   </wsdl:binding>
+    </wsdl:binding>
 
-   <wsdl:service name="SearchWSService">
+    <wsdl:service name="SearchWSService">
 
-  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
-Search web service for the Summa system  </wsdl:documentation>
+        <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+            Search web service for the Summa system
+        </wsdl:documentation>
 
-      <wsdl:port binding="impl:SearchWSSoapBinding" name="SearchWS">
+        <wsdl:port binding="impl:SearchWSSoapBinding" name="SearchWS">
 
-         <wsdlsoap:address location="http://localhost:57608/domsgui/search/services/SearchWS"/>
+            <wsdlsoap:address location="http://localhost:57608/domsgui/search/services/SearchWS"/>
 
-      </wsdl:port>
+        </wsdl:port>
 
-   </wsdl:service>
+    </wsdl:service>
 
 </wsdl:definitions>

@@ -19,37 +19,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: abr
- * Date: 3/15/12
- * Time: 12:49 PM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: abr Date: 3/15/12 Time: 12:49 PM To change this template use File | Settings | File
+ * Templates.
  */
-public class TripleStoreRest  extends Connector implements TripleStore{
-
+public class TripleStoreRest extends Connector implements TripleStore {
 
 
     private WebResource restApi;
 
-    private static Log log = LogFactory.getLog(
-            TripleStoreRest.class);
+    private static Log log = LogFactory.getLog(TripleStoreRest.class);
 
 
-    public TripleStoreRest(Credentials creds, String location)
-            throws MalformedURLException {
+    public TripleStoreRest(Credentials creds,
+                           String location)
+            throws
+            MalformedURLException {
         super(creds, location);
-        restApi = client.resource(location + "/risearch")
-                .queryParam("type", "tuples")
-                .queryParam("lang", "iTQL")
-                .queryParam("format", "CSV")
-                .queryParam("stream", "on");
-        restApi.addFilter(new HTTPBasicAuthFilter(creds.getUsername(),creds.getPassword()));
+        restApi =
+                client.resource(location + "/risearch")
+                      .queryParam("type", "tuples")
+                      .queryParam("lang", "iTQL")
+                      .queryParam("format", "CSV")
+                      .queryParam("stream", "on");
+        restApi.addFilter(new HTTPBasicAuthFilter(creds.getUsername(), creds.getPassword()));
     }
 
 
     @Override
-    public List<FedoraRelation> getInverseRelations(String pid, String predicate)
-            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
+    public List<FedoraRelation> getInverseRelations(String pid,
+                                                    String predicate)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException {
         try {
 
 
@@ -59,22 +61,28 @@ public class TripleStoreRest  extends Connector implements TripleStore{
             }
             String predicateOrig = predicate;
             String queryStart = "select $object";
-            if (predicate == null || predicate.isEmpty()){
-                queryStart+= " $predicate";
+            if (predicate == null || predicate.isEmpty()) {
+                queryStart += " $predicate";
                 predicate = "$predicate";
                 predicateOrig = null;
             } else {
-                predicate = "<"+predicate+">";
+                predicate = "<" + predicate + ">";
             }
 
-            String query = queryStart+"\n"
-                           + "from <#ri>\n"
-                           + "where $object "+predicate+" <" + subject + ">\n"
-                           + "and ($object <fedora-model:state> <fedora-model:Active>\n" +
-                           "or $object <fedora-model:state> <fedora-model:Inactive>)";
-            String objects = restApi
-                    .queryParam("query", query)
-                    .post(String.class);
+            String
+                    query =
+                    queryStart
+                    + "\n"
+                    + "from <#ri>\n"
+                    + "where $object "
+                    + predicate
+                    + " <"
+                    + subject
+                    + ">\n"
+                    + "and ($object <fedora-model:state> <fedora-model:Active>\n"
+                    +
+                    "or $object <fedora-model:state> <fedora-model:Inactive>)";
+            String objects = restApi.queryParam("query", query).post(String.class);
             String[] lines = objects.split("\n");
             List<FedoraRelation> relations = new ArrayList<FedoraRelation>();
 
@@ -87,21 +95,18 @@ public class TripleStoreRest  extends Connector implements TripleStore{
                 }
                 String[] components = line.split(",");
 
-                if (predicate.equals("$predicate")){
-                    relations.add(new FedoraRelation(components[0],components[1],pid));
+                if (predicate.equals("$predicate")) {
+                    relations.add(new FedoraRelation(components[0], components[1], pid));
                 } else {
-                    relations.add(new FedoraRelation(components[0],predicateOrig,pid));
+                    relations.add(new FedoraRelation(components[0], predicateOrig, pid));
                 }
 
 
             }
             return relations;
         } catch (UniformInterfaceException e) {
-            if (e.getResponse().getStatus()
-                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
-                throw new BackendInvalidCredsException(
-                        "Invalid Credentials Supplied",
-                        e);
+            if (e.getResponse().getStatus() == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                throw new BackendInvalidCredsException("Invalid Credentials Supplied", e);
             } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
                 throw new BackendInvalidResourceException("Resource not found", e);
             } else {
@@ -111,46 +116,60 @@ public class TripleStoreRest  extends Connector implements TripleStore{
     }
 
 
-
-
     @Override
-    public void flushTriples() throws BackendInvalidCredsException, BackendMethodFailedException {
+    public void flushTriples()
+            throws
+            BackendInvalidCredsException,
+            BackendMethodFailedException {
     }
 
 
     @Override
-    public List<String> getObjectsInCollection(String collectionPid, String contentModel)
-            throws BackendInvalidCredsException, BackendMethodFailedException {
+    public List<String> getObjectsInCollection(String collectionPid,
+                                               String contentModel)
+            throws
+            BackendInvalidCredsException,
+            BackendMethodFailedException {
 
-        if (!collectionPid.startsWith("info:fedora/")){
-            collectionPid = "info:fedora/"+collectionPid.trim();
+        if (!collectionPid.startsWith("info:fedora/")) {
+            collectionPid = "info:fedora/" + collectionPid.trim();
         }
-        if (!contentModel.startsWith("info:fedora/")){
-            contentModel = "info:fedora/"+contentModel.trim();
+        if (!contentModel.startsWith("info:fedora/")) {
+            contentModel = "info:fedora/" + contentModel.trim();
         }
-        String query = "select $object\n"
-                       + "from <#ri>\n"
-                       + "where $object <"+ Constants.RELATION_COLLECTION+"> <"+collectionPid+">\n"
-                       + "and $object <fedora-model:hasModel> <"+contentModel+">\n"
-                       + "and ($object <fedora-model:state> <fedora-model:Active>\n" +
-                       "or $object <fedora-model:state> <fedora-model:Inactive>)";
+        String
+                query =
+                "select $object\n"
+                + "from <#ri>\n"
+                + "where $object <"
+                + Constants.RELATION_COLLECTION
+                + "> <"
+                + collectionPid
+                + ">\n"
+                + "and $object <fedora-model:hasModel> <"
+                + contentModel
+                + ">\n"
+                + "and ($object <fedora-model:state> <fedora-model:Active>\n"
+                +
+                "or $object <fedora-model:state> <fedora-model:Inactive>)";
         return genericQuery(query);
 
     }
 
 
-
     /**
      * Runs any query, that produces one column of results, and return each line as a string
+     *
      * @param query The query to execute
+     *
      * @return an empty list
      */
     public List<String> genericQuery(String query)
-            throws BackendInvalidCredsException, BackendMethodFailedException {
+            throws
+            BackendInvalidCredsException,
+            BackendMethodFailedException {
         try {
-            String objects = restApi
-                    .queryParam("query", query)
-                    .post(String.class);
+            String objects = restApi.queryParam("query", query).post(String.class);
             String[] lines = objects.split("\n");
             List<String> foundobjects = new ArrayList<String>();
             for (String line : lines) {
@@ -164,16 +183,12 @@ public class TripleStoreRest  extends Connector implements TripleStore{
             }
             return foundobjects;
         } catch (UniformInterfaceException e) {
-            if (e.getResponse().getStatus()
-                == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
-                throw new BackendInvalidCredsException(
-                        "Invalid Credentials Supplied",
-                        e);
-            }  else {
+            if (e.getResponse().getStatus() == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                throw new BackendInvalidCredsException("Invalid Credentials Supplied", e);
+            } else {
                 throw new BackendMethodFailedException("Server error", e);
             }
         }
-
 
 
     }

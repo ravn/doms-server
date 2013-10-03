@@ -1,11 +1,8 @@
 package dk.statsbiblioteket.doms.central.connectors.fedora.utils;
 
 /**
- * Created by IntelliJ IDEA.
- * User: abr
- * Date: Nov 12, 2009
- * Time: 4:30:39 PM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: abr Date: Nov 12, 2009 Time: 4:30:39 PM To change this template use File | Settings |
+ * File Templates.
  */
 public class FedoraUtil {
 
@@ -14,6 +11,7 @@ public class FedoraUtil {
      * If the given string starts with "info:fedora/", remove it.
      *
      * @param pid A pid, possibly as a URI
+     *
      * @return The pid, with the possible URI prefix removed.
      */
     public static String ensurePID(String pid) {
@@ -27,6 +25,7 @@ public class FedoraUtil {
      * If the given string does not start with "info:fedora/", add it.
      *
      * @param uri An URI, possibly as a PID
+     *
      * @return The uri, with the possible URI prefix prepended.
      */
     public static String ensureURI(String uri) {

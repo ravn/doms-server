@@ -30,11 +30,8 @@ package dk.statsbiblioteket.doms.central.connectors.updatetracker;
 import java.util.Date;
 
 /**
- * Created by IntelliJ IDEA.
- * User: abr
- * Date: Sep 21, 2010
- * Time: 5:04:46 PM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: abr Date: Sep 21, 2010 Time: 5:04:46 PM To change this template use File | Settings |
+ * File Templates.
  */
 public class UpdateTrackerRecord {
 

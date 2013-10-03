@@ -19,30 +19,39 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathExpressionException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
- * A class describing a compound view, that is the result of combining
- * information in all content models for an object.
+ * A class describing a compound view, that is the result of combining information in all content models for an object.
  */
 public class CompoundView {
     /**
-     * A list of content model pids used to generate the compound view
-     * , in the order they were resolved.
+     * A list of content model pids used to generate the compound view , in the order they were resolved.
      */
     List<String> pids;
     private static final Log LOG = LogFactory.getLog(CompoundView.class);
 
-    /** The view defined by the model. */
+    /**
+     * The view defined by the model.
+     */
     Map<String, View> view;
 
 
-    private static TimeSensitiveCache<String,CompoundView> longTermStorage
-            = new TimeSensitiveCache<String,CompoundView>(1000*60*30,true,20);//TODO
+    private static
+    TimeSensitiveCache<String, CompoundView>
+            longTermStorage =
+            new TimeSensitiveCache<String, CompoundView>(1000 * 60 * 30, true, 20);
+//TODO
 
     private static final String VIEWS_VIEWANGLE = "/view:views/view:viewangle";
     private static final String NAME_ATTRIBUTE = "name";
-    private static final String VIEWS_VIEWANGLE_NAME = VIEWS_VIEWANGLE+"[@name='";
+    private static final String VIEWS_VIEWANGLE_NAME = VIEWS_VIEWANGLE + "[@name='";
     private static final String VIEW_RELATIONS = "']/view:relations/*";
     private static final String VIEW_INVERSE_RELATIONS = "']/view:inverseRelations/*";
     ///view:views/view:viewangle"
@@ -58,8 +67,8 @@ public class CompoundView {
     }
 
     /**
-     * Get the list of content model pids used to generate the compound view,
-     * in the order they were resolved.
+     * Get the list of content model pids used to generate the compound view, in the order they were resolved.
+     *
      * @return A list of pids.
      */
     public List<String> getPids() {
@@ -69,6 +78,7 @@ public class CompoundView {
 
     /**
      * Get the view defined by the model.
+     *
      * @return The view defined by the model.
      */
     public Map<String, View> getView() {
@@ -76,26 +86,24 @@ public class CompoundView {
     }
 
     /**
-     * Get the compound view for an object. This method will generate
-     * an abstract representation of the Compund view for an object.
+     * Get the compound view for an object. This method will generate an abstract representation of the Compund view for
+     * an object.
      *
-     *
-     * @param pid The pid for an object.
-
+     * @param pid      The pid for an object.
      * @param asOfTime
+     *
      * @return The compound content model for the object or content model.
      */
-    public static CompoundView getView(String pid, Fedora fedora, Long asOfTime)
-            throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
-
+    public static CompoundView getView(String pid,
+                                       Fedora fedora,
+                                       Long asOfTime)
+            throws
+            BackendInvalidCredsException,
+            BackendMethodFailedException,
+            BackendInvalidResourceException {
 
 
         LOG.trace("Entering getView with string '" + pid + "'");
-
-
-
-
-
 
 
         // Get starting point
@@ -113,16 +121,13 @@ public class CompoundView {
         List<String> models = profile.getContentModels();
 
 
-
-
-
         //Reduce the list to unique content models
         Set<String> pids1 = new TreeSet<String>();
         pids1.addAll(models);
 
         ArrayList<String> pids = new ArrayList<String>(pids1);
         CompoundView model = longTermStorage.get(pids.toString());
-        if (model != null){
+        if (model != null) {
             return model;
         }
 
@@ -136,14 +141,16 @@ public class CompoundView {
             Document viewDoc;
             try {
                 String viewXml;
-                viewXml = fedora
-                        .getXMLDatastreamContents(p,
-                                                  Constants.VIEW_DATASTREAM,asOfTime);
+                viewXml = fedora.getXMLDatastreamContents(p, Constants.VIEW_DATASTREAM, asOfTime);
 
                 viewDoc = DOM.stringToDOM(viewXml, true);
             } catch (BackendInvalidResourceException e) {
                 //TODO logging
-                LOG.warn("Object '"+p+"' is declared as a content model for object '"+pid+"' but does not exist",e);
+                LOG.warn("Object '"
+                         + p
+                         + "' is declared as a content model for object '"
+                         + pid
+                         + "' but does not exist", e);
                 LOG.warn("No VIEW datastream in content model '" + p + "'");
                 continue;
             }
@@ -151,9 +158,9 @@ public class CompoundView {
             updateView(model.getView(), viewDoc);
 
             // Check if this is the content model for a main object in some view
-            setMainView(p, model.getView(),fedora);
+            setMainView(p, model.getView(), fedora);
         }
-        longTermStorage.put(pids.toString(),model);
+        longTermStorage.put(pids.toString(), model);
 
         LOG.trace("Got all views, returning");
         model.pids = pids;
@@ -161,31 +168,29 @@ public class CompoundView {
     }
 
 
-
-
     /**
-     * Update the view with information from parsed viewdatastream. This
-     * includes properties and inverseProperties which should be followed to
-     * generate the view. It is all added under the view with the given name.
+     * Update the view with information from parsed viewdatastream. This includes properties and inverseProperties which
+     * should be followed to generate the view. It is all added under the view with the given name.
      *
      * @param views   The map of views to update.
      * @param viewXml The datastream with information to add.
      */
     private static void updateView(Map<String, View> views,
-                                   Document viewXml) throws BackendMethodFailedException {
+                                   Document viewXml)
+            throws
+            BackendMethodFailedException {
         NodeList xpathResult;
         // Get all views.
         LOG.trace("Entering updateview with params");
 
         try {
-            xpathResult = XpathUtils
-                    .xpathQuery(viewXml, VIEWS_VIEWANGLE);
+            xpathResult = XpathUtils.xpathQuery(viewXml, VIEWS_VIEWANGLE);
 
 
         } catch (XPathExpressionException e) {
             throw new Error("XPath expression did not evaluate", e);
         }
-        LOG.debug("Found "+xpathResult.getLength()+" view angles");
+        LOG.debug("Found " + xpathResult.getLength() + " view angles");
 
         for (int v = 0; v < xpathResult.getLength(); v++) {
             Node viewAngle = xpathResult.item(v);
@@ -203,10 +208,10 @@ public class CompoundView {
                 //TODO Really restrict them to normal A-Z here.
                 // Views may not have names containing '
                 if (name.contains("'")) {
-                    throw new BackendMethodFailedException(
-                            "Views may not have names containing ',"
-                            + " but view name was \""
-                            + name + "\"");
+                    throw new BackendMethodFailedException("Views may not have names containing ',"
+                                                           + " but view name was \""
+                                                           + name
+                                                           + "\"");
                 }
 
                 // Get or generate view for that name.
@@ -233,15 +238,15 @@ public class CompoundView {
      */
     private static void addViewRelations(View view,
                                          Document viewXml,
-                                         String name) throws BackendMethodFailedException {
+                                         String name)
+            throws
+            BackendMethodFailedException {
         NodeList xpathResult;
         try {
             // FIXME: Names with ' will throw errors
-            xpathResult = XpathUtils.xpathQuery(
-                    viewXml, VIEWS_VIEWANGLE_NAME + name
-                             + VIEW_RELATIONS);
+            xpathResult = XpathUtils.xpathQuery(viewXml, VIEWS_VIEWANGLE_NAME + name + VIEW_RELATIONS);
         } catch (XPathExpressionException e) {
-            throw new BackendMethodFailedException("XPath expression failed",e);
+            throw new BackendMethodFailedException("XPath expression failed", e);
         }
         for (int l = 0; l < xpathResult.getLength(); l++) {
             Node n = xpathResult.item(l);
@@ -268,9 +273,7 @@ public class CompoundView {
         NodeList xpathResult;
         try {
             // FIXME: Names with ' will throw errors
-            xpathResult = XpathUtils.xpathQuery(
-                    viewXml, VIEWS_VIEWANGLE_NAME + name
-                             + VIEW_INVERSE_RELATIONS);
+            xpathResult = XpathUtils.xpathQuery(viewXml, VIEWS_VIEWANGLE_NAME + name + VIEW_INVERSE_RELATIONS);
         } catch (XPathExpressionException e) {
             throw new Error("XPath expression did not evaluate", e);
         }
@@ -288,21 +291,24 @@ public class CompoundView {
 
     /**
      * Set whether this is a main view, by parsing the relations defining this.
-     * @param pid The pid to parse relations for
-     * @param views The views in the content model to update.
+     *
+     * @param pid             The pid to parse relations for
+     * @param views           The views in the content model to update.
      * @param fedoraConnector
      */
-    private static void setMainView(
-            String pid,
-            Map<String, View> views, Fedora fedoraConnector)
-            throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+    private static void setMainView(String pid,
+                                    Map<String, View> views,
+                                    Fedora fedoraConnector)
+            throws
+            BackendInvalidCredsException,
+            BackendMethodFailedException,
+            BackendInvalidResourceException {
 
 
-        List<FedoraRelation> relations = fedoraConnector.getNamedRelations(
-                pid, Constants.ENTRY_RELATION, null);
+        List<FedoraRelation> relations = fedoraConnector.getNamedRelations(pid, Constants.ENTRY_RELATION, null);
 
 
-        for (FedoraRelation relation: relations) {
+        for (FedoraRelation relation : relations) {
             String viewname = relation.getObject();
             View view = views.get(viewname);
             if (view == null) {

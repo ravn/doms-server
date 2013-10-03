@@ -141,7 +141,7 @@
         <url-pattern>/rest/*</url-pattern>
     </servlet-mapping>
 
-<!--This is the surveyable servlet, the one that initialialises the surveyable classes-->
+    <!--This is the surveyable servlet, the one that initialialises the surveyable classes-->
     <servlet>
         <description>JAX-WS endpoint</description>
         <display-name>WSServletSurveyable</display-name>
@@ -171,14 +171,13 @@
         <description>The name of the service for surveillance purposes
         </description>
         <param-name>
-                dk.statsbiblioteket.doms.surveillance.logappender.LoggerName
+            dk.statsbiblioteket.doms.surveillance.logappender.LoggerName
         </param-name>
         <param-value>
             DomsCentral
         </param-value>
     </context-param>
 
-    
 
     <!--This servlet is used only to load on startup, and configure the logging framework.-->
     <servlet>

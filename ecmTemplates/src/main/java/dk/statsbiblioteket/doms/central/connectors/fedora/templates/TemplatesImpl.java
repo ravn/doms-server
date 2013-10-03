@@ -3,7 +3,7 @@ package dk.statsbiblioteket.doms.central.connectors.fedora.templates;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
-import dk.statsbiblioteket.doms.central.connectors.fedora.*;
+import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
 import dk.statsbiblioteket.doms.central.connectors.fedora.inheritance.ContentModelInheritance;
 import dk.statsbiblioteket.doms.central.connectors.fedora.pidGenerator.PIDGeneratorException;
 import dk.statsbiblioteket.doms.central.connectors.fedora.pidGenerator.PidGenerator;
@@ -14,19 +14,20 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.utils.XpathUtils;
 import dk.statsbiblioteket.util.xml.DOM;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.xpath.XPathExpressionException;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: abr
- * Date: 3/29/12
- * Time: 2:46 PM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: abr Date: 3/29/12 Time: 2:46 PM To change this template use File | Settings | File
+ * Templates.
  */
-public class TemplatesImpl implements Templates{
+public class TemplatesImpl implements Templates {
 
     Fedora fedora;
     TripleStore ts;
@@ -35,31 +36,50 @@ public class TemplatesImpl implements Templates{
     private static final Log LOG = LogFactory.getLog(TemplatesImpl.class);
 
     private static final String FOXML_DIGITAL_OBJECT_PID = "/foxml:digitalObject/@PID";
-    private static final String RELSEXT_ABOUT = "/foxml:digitalObject/foxml:datastream[@ID='RELS-EXT']/"
-                                                + "foxml:datastreamVersion[position()=last()]/"
-                                                + "foxml:xmlContent/rdf:RDF/"
-                                                + "rdf:Description/@rdf:about";
-    private static final String DCIDENTIFIER = "/foxml:digitalObject/foxml:datastream[@ID='DC']/"
-                                               + "foxml:datastreamVersion[position()=last()]/"
-                                               + "foxml:xmlContent/oai_dc:dc/dc:identifier";
-    private static final String OAIDC = "/foxml:digitalObject/foxml:datastream[@ID='DC']/"
-                                        + "foxml:datastreamVersion[position()=last()]/"
-                                        + "foxml:xmlContent/oai_dc:dc";
-    private static final String ISTEMPLATEFOR = "/foxml:digitalObject/foxml:datastream[@ID='RELS-EXT']/"
-                                                + "foxml:datastreamVersion[position()=last()]/"
-                                                + "foxml:xmlContent/rdf:RDF/"
-                                                + "rdf:Description/doms:isTemplateFor";
+    private static final
+    String
+            RELSEXT_ABOUT =
+            "/foxml:digitalObject/foxml:datastream[@ID='RELS-EXT']/"
+            + "foxml:datastreamVersion[position()=last()]/"
+            + "foxml:xmlContent/rdf:RDF/"
+            + "rdf:Description/@rdf:about";
+    private static final
+    String
+            DCIDENTIFIER =
+            "/foxml:digitalObject/foxml:datastream[@ID='DC']/"
+            + "foxml:datastreamVersion[position()=last()]/"
+            + "foxml:xmlContent/oai_dc:dc/dc:identifier";
+    private static final
+    String
+            OAIDC =
+            "/foxml:digitalObject/foxml:datastream[@ID='DC']/"
+            + "foxml:datastreamVersion[position()=last()]/"
+            + "foxml:xmlContent/oai_dc:dc";
+    private static final
+    String
+            ISTEMPLATEFOR =
+            "/foxml:digitalObject/foxml:datastream[@ID='RELS-EXT']/"
+            + "foxml:datastreamVersion[position()=last()]/"
+            + "foxml:xmlContent/rdf:RDF/"
+            + "rdf:Description/doms:isTemplateFor";
     private static final String DATASTREAM_AUDIT = "/foxml:digitalObject/foxml:datastream[@ID='AUDIT']";
     private static final String DATASTREAM_NODES = "/foxml:digitalObject/foxml:datastream";
 
     private static final String DATASTREAM_CREATED = "/foxml:digitalObject/foxml:datastream/foxml:datastreamVersion";
-    private static final String OBJECTPROPERTY_CREATED =
+    private static final
+    String
+            OBJECTPROPERTY_CREATED =
             "/foxml:digitalObject/foxml:objectProperties/foxml:property[@NAME='info:fedora/fedora-system:def/model#createdDate']";
-    private static final String OBJECTPROPERTIES_LSTMODIFIED =
+    private static final
+    String
+            OBJECTPROPERTIES_LSTMODIFIED =
             "/foxml:digitalObject/foxml:objectProperties/foxml:property[@NAME='info:fedora/fedora-system:def/view#lastModifiedDate']";
     private PidGenerator pidGenerator;
 
-    public TemplatesImpl(Fedora fedora, PidGenerator pidGenerator, TripleStore ts, ContentModelInheritance inheritance) {
+    public TemplatesImpl(Fedora fedora,
+                         PidGenerator pidGenerator,
+                         TripleStore ts,
+                         ContentModelInheritance inheritance) {
         this.fedora = fedora;
         this.pidGenerator = pidGenerator;
         this.ts = ts;
@@ -69,16 +89,20 @@ public class TemplatesImpl implements Templates{
     /**
      * Mark the objpid object as a template for the cmpid object
      *
-     * @param objpid          the object to mark
-     * @param cmpid           the content model to make objpid a template for
+     * @param objpid     the object to mark
+     * @param cmpid      the content model to make objpid a template for
      * @param logMessage
-     * @throws ObjectIsWrongTypeException if the object is not a data object or the content model is not a content model
+     *
+     * @throws ObjectIsWrongTypeException if the object is not a data object or the content model is not a content
+     *                                    model
      */
-    public void markObjectAsTemplate(
-            String objpid,
-            String cmpid,
-            String logMessage)
-            throws BackendInvalidCredsException, BackendMethodFailedException, ObjectIsWrongTypeException
+    public void markObjectAsTemplate(String objpid,
+                                     String cmpid,
+                                     String logMessage)
+            throws
+            BackendInvalidCredsException,
+            BackendMethodFailedException,
+            ObjectIsWrongTypeException
 
 
     {
@@ -86,11 +110,11 @@ public class TemplatesImpl implements Templates{
         //Working
 
 
-        if (!fedora.isContentModel(cmpid,null)) {
+        if (!fedora.isContentModel(cmpid, null)) {
             throw new ObjectIsWrongTypeException("The content model '" + cmpid +
                                                  "' is not a content model");
         }
-        if (!fedora.isDataObject(objpid,null)) {
+        if (!fedora.isDataObject(objpid, null)) {
             throw new ObjectIsWrongTypeException("The data object '" + objpid +
                                                  "' is not a data object");
         }
@@ -99,7 +123,9 @@ public class TemplatesImpl implements Templates{
         try {
             fedora.addRelation(objpid, objpid, Constants.TEMPLATE_REL, cmpid, false, logMessage);
         } catch (BackendInvalidResourceException e) {
-            throw new BackendMethodFailedException("This should not be possible, the object '"+objpid+"' was just tested to exist",e);
+            throw new BackendMethodFailedException("This should not be possible, the object '"
+                                                   + objpid
+                                                   + "' was just tested to exist", e);
         }
         LOG.info("Marked object '" + objpid + "' as template for '" + cmpid + "'");
 
@@ -107,15 +133,21 @@ public class TemplatesImpl implements Templates{
 
 
     @Override
-    public String cloneTemplate(String templatepid, List<String> oldIDs, String logMessage)
-            throws BackendInvalidCredsException, BackendMethodFailedException, ObjectIsWrongTypeException,
-                   BackendInvalidResourceException, PIDGeneratorException {
+    public String cloneTemplate(String templatepid,
+                                List<String> oldIDs,
+                                String logMessage)
+            throws
+            BackendInvalidCredsException,
+            BackendMethodFailedException,
+            ObjectIsWrongTypeException,
+            BackendInvalidResourceException,
+            PIDGeneratorException {
         //working
         templatepid = FedoraUtil.ensurePID(templatepid);
         LOG.trace("Entering cloneTemplate with param '" + templatepid + "'");
 
 
-        if (!fedora.isTemplate(templatepid,null)) {
+        if (!fedora.isTemplate(templatepid, null)) {
             throw new ObjectIsWrongTypeException("The pid (" + templatepid +
                                                  ") is not a pid of a template");
         }
@@ -159,32 +191,29 @@ public class TemplatesImpl implements Templates{
             removeTemplateRelation(document);
             LOG.trace("Template relation removed");
         } catch (XPathExpressionException e) {
-            throw new BackendMethodFailedException(
-                    "Template object '"+templatepid+"' did not contain the correct structure", e);
+            throw new BackendMethodFailedException("Template object '"
+                                                   + templatepid
+                                                   + "' did not contain the correct structure", e);
         }
 
         //reingest the object
-        return fedora.ingestDocument(
-                document,
-                logMessage + "; " + "Cloned from template '" + templatepid
-        );
+        return fedora.ingestDocument(document, logMessage + "; " + "Cloned from template '" + templatepid);
 
     }
 
 
-
     public List<String> findTemplatesFor(String cmpid)
-            throws BackendInvalidCredsException, BackendMethodFailedException {
+            throws
+            BackendInvalidCredsException,
+            BackendMethodFailedException {
         //Working
         LOG.trace("Entering findTemplatesFor with param '" + cmpid + "'");
 
-        List<String> childcms
-                = inheritance.getInheritingContentModels(cmpid);
+        List<String> childcms = inheritance.getInheritingContentModels(cmpid);
 
-        String contentModel
-                = "<" +
-                  FedoraUtil.ensureURI(cmpid) +
-                  ">\n";
+        String contentModel = "<" +
+                              FedoraUtil.ensureURI(cmpid) +
+                              ">\n";
 
         String query = "select $object\n" +
                        "from <#ri>\n" +
@@ -208,22 +237,20 @@ public class TemplatesImpl implements Templates{
     }
 
 
-    private void addOldIdentifiers(Document document, List<String> oldIDs)
-            throws XPathExpressionException {
+    private void addOldIdentifiers(Document document,
+                                   List<String> oldIDs)
+            throws
+            XPathExpressionException {
 
         if (oldIDs != null && !oldIDs.isEmpty()) {
 
-            Node dcNode = XpathUtils.xpathQuerySingle(
-                    document,
-                    OAIDC);
+            Node dcNode = XpathUtils.xpathQuerySingle(document, OAIDC);
             if (dcNode != null) {
                 String namespace = dcNode.getNamespaceURI();
                 String prefix = dcNode.getPrefix();
 
                 for (String oldID : oldIDs) {
-                    Element element = document.createElementNS(namespace,
-                                                               prefix
-                                                               + ":identifier");
+                    Element element = document.createElementNS(namespace, prefix + ":identifier");
                     element.setTextContent(oldID);
                     dcNode.appendChild(element);
                 }
@@ -231,28 +258,31 @@ public class TemplatesImpl implements Templates{
         }
     }
 
-    private void removeXSI_DC(Document document) throws
-                                                 XPathExpressionException {
+    private void removeXSI_DC(Document document)
+            throws
+            XPathExpressionException {
 /*        removeExpathList(document, XSI_TAGS1);*/
         removeAttribute(document, OAIDC, "xsi:schemaLocation");
     }
 
     /**
-     * Private helper method for cloneTemplate. In a document, replaces the
-     * mention of oldpid with newpid
+     * Private helper method for cloneTemplate. In a document, replaces the mention of oldpid with newpid
      *
      * @param doc    the document to work on
      * @param oldpid the old pid
      * @param newpid the new pid
+     *
      * @throws javax.xml.xpath.XPathExpressionException
-     *                                       if there was
+     *          if there was
      */
-    private void replacePid(Document doc, String oldpid, String newpid)
-            throws XPathExpressionException {
+    private void replacePid(Document doc,
+                            String oldpid,
+                            String newpid)
+            throws
+            XPathExpressionException {
 
         LOG.trace("Entering replacepid");
-        replateAttribute(doc, FOXML_DIGITAL_OBJECT_PID,
-                         FedoraUtil.ensurePID(newpid));
+        replateAttribute(doc, FOXML_DIGITAL_OBJECT_PID, FedoraUtil.ensurePID(newpid));
 
 
         replateAttribute(doc, RELSEXT_ABOUT, FedoraUtil.ensureURI(newpid));
@@ -261,18 +291,19 @@ public class TemplatesImpl implements Templates{
     }
 
     /**
-     * Utility method for removing all nodes from a query. Does not work
-     * for attributes
+     * Utility method for removing all nodes from a query. Does not work for attributes
      *
      * @param doc   the object
      * @param query the adress of the nodes
+     *
      * @throws XPathExpressionException if a xpath expression did not evaluate
      */
-    private void removeExpathList(Document doc, String query)
-            throws XPathExpressionException {
+    private void removeExpathList(Document doc,
+                                  String query)
+            throws
+            XPathExpressionException {
         NodeList nodes = XpathUtils.
-                xpathQuery(doc,
-                           query);
+                                           xpathQuery(doc, query);
         if (nodes != null) {
             for (int i = 0; i < nodes.getLength(); i++) {
                 Node node = nodes.item(i);
@@ -288,13 +319,16 @@ public class TemplatesImpl implements Templates{
      * @param doc   the object
      * @param query the location of the Attribute
      * @param value the new value
+     *
      * @throws XPathExpressionException if a xpath expression did not evaluate
      */
-    private void replateAttribute(Document doc, String query, String value)
-            throws XPathExpressionException {
+    private void replateAttribute(Document doc,
+                                  String query,
+                                  String value)
+            throws
+            XPathExpressionException {
         NodeList nodes = XpathUtils.
-                xpathQuery(doc,
-                           query);
+                                           xpathQuery(doc, query);
         for (int i = 0; i < nodes.getLength(); i++) {
             Node node = nodes.item(i);
             node.setNodeValue(value);
@@ -308,15 +342,17 @@ public class TemplatesImpl implements Templates{
      * @param doc       the object
      * @param query     the adress of the node element
      * @param attribute the name of the attribute
+     *
      * @throws XPathExpressionException if a xpath expression did not evaluate
      */
-    private void removeAttribute(Document doc, String query, String attribute)
-            throws XPathExpressionException {
+    private void removeAttribute(Document doc,
+                                 String query,
+                                 String attribute)
+            throws
+            XPathExpressionException {
         NodeList nodes;
 
-        nodes = XpathUtils.xpathQuery(
-                doc,
-                query);
+        nodes = XpathUtils.xpathQuery(doc, query);
 
         for (int i = 0; i < nodes.getLength(); i++) {
             Node node = nodes.item(i);
@@ -334,10 +370,12 @@ public class TemplatesImpl implements Templates{
      * Removes the DC identifier from the DC datastream
      *
      * @param doc the object
+     *
      * @throws XPathExpressionException if a xpath expression did not evaluate
      */
     private void removeDCidentifier(Document doc)
-            throws XPathExpressionException {
+            throws
+            XPathExpressionException {
         //Then remove the pid in dc identifier
         removeExpathList(doc, DCIDENTIFIER);
     }
@@ -347,10 +385,12 @@ public class TemplatesImpl implements Templates{
      * Removes all template relations
      *
      * @param doc the object
+     *
      * @throws XPathExpressionException if a xpath expression did not evaluate
      */
-    private void removeTemplateRelation(Document doc) throws
-                                                      XPathExpressionException {
+    private void removeTemplateRelation(Document doc)
+            throws
+            XPathExpressionException {
         // Remove template relation
 
         //TODO Constant for template relation
@@ -363,10 +403,12 @@ public class TemplatesImpl implements Templates{
      * Removes the AUDIT datastream
      *
      * @param doc the object
+     *
      * @throws XPathExpressionException if a xpath expression did not evaluate
      */
-    private void removeAudit(Document doc) throws
-                                           XPathExpressionException {
+    private void removeAudit(Document doc)
+            throws
+            XPathExpressionException {
 
         removeExpathList(doc, DATASTREAM_AUDIT);
 
@@ -376,14 +418,15 @@ public class TemplatesImpl implements Templates{
      * Removes all datastream versions, except the newest
      *
      * @param doc the object
+     *
      * @throws XPathExpressionException if a xpath expression did not evaluate
      */
-    private void removeDatastreamVersions(Document doc) throws
-                                                        XPathExpressionException {
+    private void removeDatastreamVersions(Document doc)
+            throws
+            XPathExpressionException {
         NodeList relationNodes;
 
-        NodeList datastreamNodes = XpathUtils.xpathQuery(
-                doc, DATASTREAM_NODES);
+        NodeList datastreamNodes = XpathUtils.xpathQuery(doc, DATASTREAM_NODES);
 
         for (int i = 0; i < datastreamNodes.getLength(); i++) {
             Node datastreamNode = datastreamNodes.item(i);
@@ -402,9 +445,12 @@ public class TemplatesImpl implements Templates{
      * Removes the CREATED attribute on datastreamVersion and the createdDate objectProperty
      *
      * @param doc the object
+     *
      * @throws XPathExpressionException if a xpath expression did not evaluate
      */
-    private void removeCreated(Document doc) throws XPathExpressionException {
+    private void removeCreated(Document doc)
+            throws
+            XPathExpressionException {
         LOG.trace("Entering removeCreated");
         removeAttribute(doc, DATASTREAM_CREATED, "CREATED");
 
@@ -417,10 +463,12 @@ public class TemplatesImpl implements Templates{
      * Removes the lastModifiedDate objectDate
      *
      * @param doc the object
+     *
      * @throws XPathExpressionException if a xpath expression did not evaluate
      */
-    private void removeLastModified(Document doc) throws
-                                                  XPathExpressionException {
+    private void removeLastModified(Document doc)
+            throws
+            XPathExpressionException {
 
         removeExpathList(doc, OBJECTPROPERTIES_LSTMODIFIED);
 

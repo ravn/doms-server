@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.fedora.info/definitions/1/0/types/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema attributeFormDefault="unqualified"
+           elementFormDefault="qualified"
+           targetNamespace="http://www.fedora.info/definitions/1/0/types/"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
     <xs:element name="result" type="typ:resultType" xmlns:typ="http://www.fedora.info/definitions/1/0/types/"/>
     <xs:complexType name="objectFieldsType">
         <xs:sequence>
@@ -19,13 +22,21 @@
     </xs:complexType>
     <xs:complexType name="resultListType">
         <xs:sequence>
-            <xs:element type="typ:objectFieldsType" name="objectFields" maxOccurs="unbounded" minOccurs="0" xmlns:typ="http://www.fedora.info/definitions/1/0/types/"/>
+            <xs:element type="typ:objectFieldsType"
+                        name="objectFields"
+                        maxOccurs="unbounded"
+                        minOccurs="0"
+                        xmlns:typ="http://www.fedora.info/definitions/1/0/types/"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="resultType">
         <xs:sequence>
-            <xs:element type="typ:listSessionType" name="listSession" xmlns:typ="http://www.fedora.info/definitions/1/0/types/"/>
-            <xs:element type="typ:resultListType" name="resultList" xmlns:typ="http://www.fedora.info/definitions/1/0/types/"/>
+            <xs:element type="typ:listSessionType"
+                        name="listSession"
+                        xmlns:typ="http://www.fedora.info/definitions/1/0/types/"/>
+            <xs:element type="typ:resultListType"
+                        name="resultList"
+                        xmlns:typ="http://www.fedora.info/definitions/1/0/types/"/>
         </xs:sequence>
     </xs:complexType>
 </xs:schema>

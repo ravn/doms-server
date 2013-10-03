@@ -144,7 +144,6 @@
     <xs:element name="getViewBundleFromSpecificTimeResponse" type="tns:viewBundleWrapper"/>
 
 
-
     <xs:element name="getIDsModified" type="tns:IdsModified"/>
     <xs:element name="getIDsModifiedResponse" type="tns:ListRecordDescription"/>
 
@@ -172,7 +171,6 @@
 
     <xs:element name="getObjectLinks" type="tns:getObjectLinks"/>
     <xs:element name="getObjectLinksResponse" type="tns:LinkList"/>
-
 
 
     <!--Simple types-->

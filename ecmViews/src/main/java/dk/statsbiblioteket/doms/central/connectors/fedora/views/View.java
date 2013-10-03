@@ -1,8 +1,8 @@
 package dk.statsbiblioteket.doms.central.connectors.fedora.views;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * A representation of a ECM View.
@@ -33,6 +33,7 @@ public class View {
 
     /**
      * Get the list of names of properties to follow to define the view.
+     *
      * @return A list of names of properties to follow to define the view.
      */
     public List<String> getProperties() {
@@ -41,8 +42,8 @@ public class View {
 
     /**
      * Set the list of names of properties to follow to define the view.
-     * @param properties A list of names of properties to follow to define the
-     * view.
+     *
+     * @param properties A list of names of properties to follow to define the view.
      */
     public void setProperties(List<String> properties) {
         this.properties = properties;
@@ -59,6 +60,7 @@ public class View {
 
     /**
      * Get the list of names of properties into this view defining the view.
+     *
      * @return A list of names of properties into this view defining the view.
      */
     public List<String> getInverseProperties() {
@@ -67,8 +69,8 @@ public class View {
 
     /**
      * Set the list of names of properties into this view defining the view.
-     * @param inverseProperties A list of names of properties into this view
-     * defining the view.
+     *
+     * @param inverseProperties A list of names of properties into this view defining the view.
      */
     public void setInverseProperties(List<String> inverseProperties) {
         this.inverseProperties = inverseProperties;
@@ -76,6 +78,7 @@ public class View {
 
     /**
      * Get whether this is the main object in this view.
+     *
      * @return Whether this is the main object in this view.
      */
     public boolean isMain() {
@@ -84,6 +87,7 @@ public class View {
 
     /**
      * Set whether this is the main object in this view.
+     *
      * @param main Whether this is the main object in this view.
      */
     public void setMain(boolean main) {

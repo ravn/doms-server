@@ -8,7 +8,6 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectProfi
 import dk.statsbiblioteket.doms.util.EncodingType;
 import dk.statsbiblioteket.doms.util.Parameter;
 import dk.statsbiblioteket.doms.util.ReplaceTools;
-import dk.statsbiblioteket.doms.webservices.configuration.ConfigCollection;
 import dk.statsbiblioteket.util.xml.DOM;
 import dk.statsbiblioteket.util.xml.XPathSelector;
 import org.w3c.dom.Document;
@@ -18,19 +17,15 @@ import org.w3c.dom.NodeList;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
- * User: abr
- * Date: 3/15/13
- * Time: 2:17 PM
- * To change this template use File | Settings | File Templates.
+ * Created with IntelliJ IDEA. User: abr Date: 3/15/13 Time: 2:17 PM To change this template use File | Settings | File
+ * Templates.
  */
 public class LinkPatternsImpl implements LinkPatterns {
 
@@ -40,14 +35,24 @@ public class LinkPatternsImpl implements LinkPatterns {
     private Unmarshaller jaxb;
     XPathSelector xpath = DOM.createXPathSelector("lp", "http://doms.statsbiblioteket.dk/types/linkpattern/0/1/#");
 
-    public LinkPatternsImpl(Fedora fedora, String fedoraLocation) throws JAXBException {
+    public LinkPatternsImpl(Fedora fedora,
+                            String fedoraLocation)
+            throws
+            JAXBException {
         this.fedora = fedora;
         this.fedoraLocation = fedoraLocation;
-        jaxb = JAXBContext.newInstance("dk.statsbiblioteket.doms.central.connectors.fedora.linkpatterns.generated").createUnmarshaller();
+        jaxb =
+                JAXBContext.newInstance("dk.statsbiblioteket.doms.central.connectors.fedora.linkpatterns.generated")
+                           .createUnmarshaller();
     }
 
     @Override
-    public List<LinkPattern> getLinkPatterns(String pid, Long asOfDate) throws BackendInvalidResourceException, BackendInvalidCredsException, BackendMethodFailedException {
+    public List<LinkPattern> getLinkPatterns(String pid,
+                                             Long asOfDate)
+            throws
+            BackendInvalidResourceException,
+            BackendInvalidCredsException,
+            BackendMethodFailedException {
 
         List<LinkPattern> linkPatterns = new ArrayList<LinkPattern>();
 
@@ -56,7 +61,7 @@ public class LinkPatternsImpl implements LinkPatterns {
         for (String contentmodel : contentmodels) {
             try {
                 String linkPatternStream = fedora.getXMLDatastreamContents(contentmodel, "LINK_PATTERN", asOfDate);
-                Document doc = DOM.stringToDOM(linkPatternStream,true);
+                Document doc = DOM.stringToDOM(linkPatternStream, true);
                 NodeList linkPatternNodes = xpath.selectNodeList(doc, "/lp:linkPatterns/lp:linkPattern");
                 for (int i = 0; i < linkPatternNodes.getLength(); i++) {
                     Node linkPatternNode = linkPatternNodes.item(i);
@@ -65,13 +70,13 @@ public class LinkPatternsImpl implements LinkPatterns {
                     String value = xpath.selectString(linkPatternNode, "lp:value");
 
 
-                    Map<Parameter,List<String>> parameters =  getParametersFromXpath(pid,asOfDate,linkPatternNode);
+                    Map<Parameter, List<String>> parameters = getParametersFromXpath(pid, asOfDate, linkPatternNode);
 
                     List<Parameter> declaredParameters = new ArrayList<Parameter>(parameters.keySet());
 
                     //Add in the default parameters
-                    ReplaceTools.setDefaultParameters(declaredParameters, parameters, profile,fedora,fedoraLocation);
-                    ReplaceTools.setContextParameters(declaredParameters,parameters);
+                    ReplaceTools.setDefaultParameters(declaredParameters, parameters, profile, fedora, fedoraLocation);
+                    ReplaceTools.setContextParameters(declaredParameters, parameters);
                     value = ReplaceTools.fillInParameters(parameters, value, declaredParameters, EncodingType.URL);
 
                     LinkPattern linkPattern = new LinkPattern(name, alt_text, value);
@@ -87,8 +92,13 @@ public class LinkPatternsImpl implements LinkPatterns {
     }
 
 
-
-    private Map<Parameter, List<String>> getParametersFromXpath(String pid, Long asOfDate, Node node) throws BackendInvalidResourceException, BackendInvalidCredsException, BackendMethodFailedException {
+    private Map<Parameter, List<String>> getParametersFromXpath(String pid,
+                                                                Long asOfDate,
+                                                                Node node)
+            throws
+            BackendInvalidResourceException,
+            BackendInvalidCredsException,
+            BackendMethodFailedException {
 
         Map<Parameter, List<String>> result = new HashMap<Parameter, List<String>>();
 
@@ -101,9 +111,9 @@ public class LinkPatternsImpl implements LinkPatterns {
             String datastream = null;
             String xpathValue = null;
 
-            key = xpath.selectString(replacementNode,"lp:key");
-            datastream = xpath.selectString(replacementNode,"lp:datastream");
-            xpathValue = xpath.selectString(replacementNode,"lp:xpath");
+            key = xpath.selectString(replacementNode, "lp:key");
+            datastream = xpath.selectString(replacementNode, "lp:datastream");
+            xpathValue = xpath.selectString(replacementNode, "lp:xpath");
             Boolean repeatable = xpath.selectBoolean(replacementNode, "lp:repeatable", false);
             String prefix = xpath.selectString(replacementNode, "lp:prefix", "");
 
@@ -116,31 +126,31 @@ public class LinkPatternsImpl implements LinkPatterns {
             Document doc = DOM.stringToDOM(datastreamContents);
             XPathSelector xpathSelector = DOM.createXPathSelector();
 
-            Parameter parameter = new Parameter(key, prefix, true, repeatable,"" , "", "", true);
+            Parameter parameter = new Parameter(key, prefix, true, repeatable, "", "", "", true);
 
-            if (repeatable){
+            if (repeatable) {
                 NodeList values = xpathSelector.selectNodeList(doc, xpathValue);
                 for (int j = 0; j < values.getLength(); j++) {
                     Node value;
                     value = values.item(j);
                     List<String> foundValues = result.get(parameter);
-                    if (foundValues == null){
+                    if (foundValues == null) {
                         foundValues = Arrays.asList(value.getTextContent());
                     } else {
                         foundValues.add(value.getTextContent());
                     }
-                    result.put(parameter,foundValues);
+                    result.put(parameter, foundValues);
                 }
 
             } else {
                 String value = xpathSelector.selectString(doc, xpathValue);
                 List<String> values = result.get(parameter);
-                if (values == null){
+                if (values == null) {
                     values = Arrays.asList(value);
                 } else {
                     values.add(value);
                 }
-                result.put(parameter,values);
+                result.put(parameter, values);
 
 
             }

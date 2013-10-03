@@ -29,17 +29,13 @@
 package dk.statsbiblioteket.doms.central.connectors;
 
 import com.sun.jersey.api.client.Client;
-import dk.statsbiblioteket.doms.webservices.authentication.Base64;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
 
 import java.net.MalformedURLException;
 
 /**
- * Created by IntelliJ IDEA.
- * User: abr
- * Date: Aug 27, 2010
- * Time: 1:07:43 PM
- * To change this template use File | Settings | File Templates.
+ * Created by IntelliJ IDEA. User: abr Date: Aug 27, 2010 Time: 1:07:43 PM To change this template use File | Settings |
+ * File Templates.
  */
 public abstract class Connector {
 
@@ -48,14 +44,16 @@ public abstract class Connector {
     private Credentials creds;
     protected String location;
 
-    protected Connector(Credentials creds, String location) throws
-                                                                           MalformedURLException {
+    protected Connector(Credentials creds,
+                        String location)
+            throws
+            MalformedURLException {
         this.creds = creds;
 
         this.location = location;
     }
 
-    public String getUsername(){
+    public String getUsername() {
         return creds.getUsername();
     }
 
