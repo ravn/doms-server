@@ -130,4 +130,6 @@ public interface Fedora {
     public String getUsername();
 
     public String getPassword();
+
+    String newEmptyObject(String pid, List<String> oldIDs, List<String> collections, String logMessage) throws BackendMethodFailedException, BackendInvalidCredsException;
 }

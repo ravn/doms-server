@@ -33,7 +33,7 @@ public class Constants {
 
 
     /** The view namespace
-     * @see #NAMESPACE_ECM
+     * @see #NAMESPACE_DOMS
      * @see #VERSION
      */
     public static final String NAMESPACE_VIEW
@@ -41,7 +41,7 @@ public class Constants {
 
     /**
      * The schema DSCOMPOSITEMODEL extension namespace
-     * @see #NAMESPACE_ECM
+     * @see #NAMESPACE_DOMS
      * @see #VERSION
      */
     public static final String NAMESPACE_SCHEMA
@@ -49,7 +49,7 @@ public class Constants {
 
     /**
      * The digital object bundle namespace
-     * @see #NAMESPACE_ECM
+     * @see #NAMESPACE_DOMS
      * @see #VERSION
      */
     public static final String NAMESPACE_DIGITAL_OBJECT_BUNDLE
@@ -60,7 +60,7 @@ public class Constants {
     public static final String NAMESPACE_RELATIONS
             = NAMESPACE_DOMS+"relations/"+ VERSION +"/#";
 
-    public static final Object RELATION_COLLECTION = NAMESPACE_RELATIONS+"#isPartOfCollection";
+    public static final String RELATION_COLLECTION = NAMESPACE_RELATIONS+"#isPartOfCollection";
 
     public static final String TEMPLATE_REL
             = NAMESPACE_RELATIONS +"isTemplateFor";

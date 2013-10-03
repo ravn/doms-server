@@ -1,9 +1,5 @@
 package dk.statsbiblioteket.doms.central.connectors;
 
-import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
-import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
-import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
-import dk.statsbiblioteket.doms.central.connectors.fedora.inheritance.ContentModelInheritance;
 import dk.statsbiblioteket.doms.central.connectors.fedora.linkpatterns.LinkPattern;
 import dk.statsbiblioteket.doms.central.connectors.fedora.methods.generated.Method;
 import dk.statsbiblioteket.doms.central.connectors.fedora.pidGenerator.PIDGeneratorException;
@@ -11,10 +7,6 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.structures.FedoraRelat
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectProfile;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.SearchResult;
 import dk.statsbiblioteket.doms.central.connectors.fedora.templates.ObjectIsWrongTypeException;
-import dk.statsbiblioteket.doms.central.connectors.fedora.templates.Templates;
-import dk.statsbiblioteket.doms.central.connectors.fedora.tripleStore.TripleStore;
-import dk.statsbiblioteket.doms.central.connectors.fedora.views.Views;
-import dk.statsbiblioteket.util.Pair;
 import org.w3c.dom.Document;
 
 import java.util.List;
@@ -36,6 +28,10 @@ public interface EnhancedFedora  {
     public String cloneTemplate(String templatepid, List<String> oldIDs, String logMessage)
             throws BackendInvalidCredsException, BackendMethodFailedException, ObjectIsWrongTypeException,
                    BackendInvalidResourceException, PIDGeneratorException;
+
+    public String newEmptyObject(List<String> oldIDs, List<String> collections, String logMessage)
+            throws BackendInvalidCredsException, BackendMethodFailedException, PIDGeneratorException;
+
 
     public ObjectProfile getObjectProfile(String pid, Long asOfTime)
             throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException;

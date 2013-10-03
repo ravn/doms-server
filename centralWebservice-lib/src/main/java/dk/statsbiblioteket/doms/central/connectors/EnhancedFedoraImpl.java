@@ -80,6 +80,12 @@ public class EnhancedFedoraImpl implements EnhancedFedora{
         return templates.cloneTemplate(templatepid, oldIDs, logMessage);
     }
 
+    @Override
+    public String newEmptyObject(List<String> oldIDs, List<String> collections, String logMessage) throws BackendInvalidCredsException, BackendMethodFailedException, PIDGeneratorException {
+        String pid = pidGenerator.generateNextAvailablePID("new_");
+        return fedora.newEmptyObject(pid,oldIDs,collections,logMessage);
+    }
+
     public ObjectProfile getObjectProfile(String pid, Long asOfTime)
             throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
         return fedora.getObjectProfile(pid, asOfTime);

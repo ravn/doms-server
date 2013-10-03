@@ -28,7 +28,9 @@
 
 package dk.statsbiblioteket.doms.central.connectors.fedora;
 
-import com.sun.jersey.api.client.*;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.UniformInterfaceException;
+import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
@@ -38,15 +40,21 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.generated.DatastreamTy
 import dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectDatastreams;
 import dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectFieldsType;
 import dk.statsbiblioteket.doms.central.connectors.fedora.generated.ResultType;
-import dk.statsbiblioteket.doms.central.connectors.fedora.structures.*;
+import dk.statsbiblioteket.doms.central.connectors.fedora.structures.DatastreamProfile;
+import dk.statsbiblioteket.doms.central.connectors.fedora.structures.FedoraRelation;
+import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectProfile;
+import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectType;
+import dk.statsbiblioteket.doms.central.connectors.fedora.structures.SearchResult;
 import dk.statsbiblioteket.doms.central.connectors.fedora.utils.Constants;
 import dk.statsbiblioteket.doms.central.connectors.fedora.utils.DateUtils;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
 import dk.statsbiblioteket.util.xml.DOM;
+import dk.statsbiblioteket.util.xml.XPathSelector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
-
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import javax.ws.rs.core.MediaType;
 import javax.xml.transform.TransformerException;
@@ -783,6 +791,52 @@ public class FedoraRest extends Connector implements Fedora {
             } else {
                 throw new BackendMethodFailedException("Server error for '"+pid+"'", e);
             }
+        }
+
+    }
+
+    @Override
+    public String newEmptyObject(String pid, List<String> oldIDs, List<String> collections, String logMessage)
+            throws BackendMethodFailedException, BackendInvalidCredsException {
+
+        try {
+
+            String createdPid = restApi.path("/").path(URLEncoder.encode(pid, "UTF-8"))
+                    .type(MediaType.TEXT_XML_TYPE)
+                    .post(String.class);
+            if (!oldIDs.isEmpty()){
+                String dublinCore = getXMLDatastreamContents(createdPid, "DC", null);
+                Document dcDoc = DOM.stringToDOM(dublinCore);
+                XPathSelector xpath = DOM.createXPathSelector(
+                        "dc", Constants.NAMESPACE_DC,
+                        "oai_dc",Constants.NAMESPACE_OAIDC);
+                Node existingIdentifier = xpath.selectNode(dcDoc, "/oai_dc:dc/dc:identifier");
+                for (String oldID : oldIDs) {
+                    Element identifierNode = dcDoc.createElementNS(existingIdentifier.getNamespaceURI(), existingIdentifier.getNodeName());
+                    identifierNode.appendChild(dcDoc.createTextNode(oldID));
+                    existingIdentifier.getParentNode().appendChild(identifierNode);
+                }
+                modifyDatastreamByValue(createdPid,"DC",DOM.domToString(dcDoc),logMessage);
+            }
+            for (String collection : collections) {
+                addRelation(createdPid,createdPid,Constants.RELATION_COLLECTION,collection,false,logMessage);
+            }
+            return pid;
+        } catch (UnsupportedEncodingException e) {
+            throw new BackendMethodFailedException("UTF-8 not known....", e);
+        } catch (UniformInterfaceException e) {
+            if (e.getResponse().getStatus()
+                    == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                throw new BackendInvalidCredsException(
+                        "Invalid Credentials Supplied",
+                        e);
+            } else {
+                throw new BackendMethodFailedException("Server error", e);
+            }
+        } catch (TransformerException e) {
+            throw new BackendMethodFailedException("Failed to convert DC back to string",e);
+        } catch (BackendInvalidResourceException e) {
+            throw new BackendMethodFailedException("Failed to retrieve from the just created object",e);
         }
 
     }
