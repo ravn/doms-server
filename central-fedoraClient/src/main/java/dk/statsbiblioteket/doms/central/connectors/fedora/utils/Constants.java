@@ -63,7 +63,7 @@ public class Constants {
     //our relations
     public static final String NAMESPACE_RELATIONS = NAMESPACE_DOMS + "relations/" + VERSION + "/#";
 
-    public static final String RELATION_COLLECTION = NAMESPACE_RELATIONS + "#isPartOfCollection";
+    public static final String RELATION_COLLECTION = NAMESPACE_RELATIONS + "isPartOfCollection";
 
     public static final String TEMPLATE_REL = NAMESPACE_RELATIONS + "isTemplateFor";
 

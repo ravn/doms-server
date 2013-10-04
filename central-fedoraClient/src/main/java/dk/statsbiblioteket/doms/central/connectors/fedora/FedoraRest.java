@@ -519,7 +519,7 @@ public class FedoraRest extends Connector implements Fedora {
             updateExistingDatastreamByValue(pid, datastream, checksumType, checksum, contents, comment);
         } catch (BackendInvalidResourceException e) {
             //perhaps the datastream did not exist
-            createDatastreamByValue(pid, datastream, checksumType, checksum, contents, comment);
+            createDatastreamByValue        (pid, datastream, checksumType, checksum, contents, comment);
         }
     }
 
@@ -946,11 +946,14 @@ public class FedoraRest extends Connector implements Fedora {
                     createdPid =
                     restApi.path("/")
                            .path(URLEncoder.encode(pid, "UTF-8"))
+                           .queryParam("state","I")
                            .type(MediaType.TEXT_XML_TYPE)
                            .post(String.class);
+            //Because fedora ignores the state param in the new object.....
+            modifyObjectState(createdPid,"I",logMessage);
             if (!oldIDs.isEmpty()) {
                 String dublinCore = getXMLDatastreamContents(createdPid, "DC", null);
-                Document dcDoc = DOM.stringToDOM(dublinCore);
+                Document dcDoc = DOM.stringToDOM(dublinCore,true);
                 XPathSelector
                         xpath =
                         DOM.createXPathSelector("dc", Constants.NAMESPACE_DC, "oai_dc", Constants.NAMESPACE_OAIDC);
@@ -963,7 +966,7 @@ public class FedoraRest extends Connector implements Fedora {
                     identifierNode.appendChild(dcDoc.createTextNode(oldID));
                     existingIdentifier.getParentNode().appendChild(identifierNode);
                 }
-                modifyDatastreamByValue(pid, null, null, "DC", DOM.domToString(dcDoc), logMessage);
+                modifyDatastreamByValue(pid, "DC",null,null, DOM.domToString(dcDoc), logMessage);
             }
             for (String collection : collections) {
                 addRelation(createdPid, createdPid, Constants.RELATION_COLLECTION, collection, false, logMessage);
