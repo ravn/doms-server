@@ -140,7 +140,7 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
             BackendInvalidCredsException,
             BackendMethodFailedException,
             BackendInvalidResourceException {
-        fedora.modifyDatastreamByValue(pid, datastream, contents, null, null, comment);
+        fedora.modifyDatastreamByValue(pid, datastream,  null, null,contents, comment);
     }
 
     @Override
