@@ -153,7 +153,7 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
             BackendInvalidCredsException,
             BackendMethodFailedException,
             BackendInvalidResourceException {
-        fedora.modifyDatastreamByValue(pid, datastream, contents, "MD5", md5sum, comment);
+        fedora.modifyDatastreamByValue(pid, datastream, "MD5", md5sum, contents, comment);
     }
 
     @Override
@@ -167,7 +167,7 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
             BackendInvalidCredsException,
             BackendMethodFailedException,
             BackendInvalidResourceException {
-        fedora.modifyDatastreamByValue(pid, datastream, contents, checksumType, checksum, comment);
+        fedora.modifyDatastreamByValue(pid, datastream, checksumType, checksum, contents, comment);
     }
 
     @Override
