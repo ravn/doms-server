@@ -76,11 +76,10 @@ import java.util.List;
  */
 public class FedoraRest extends Connector implements Fedora {
 
-    private WebResource restApi;
-
-    private static Log log = LogFactory.getLog(FedoraRest.class);
-    private String port;
     private static final String AS_OF_DATE_TIME = "asOfDateTime";
+    private static Log log = LogFactory.getLog(FedoraRest.class);
+    private WebResource restApi;
+    private String port;
 
 
     public FedoraRest(Credentials creds,
@@ -196,7 +195,6 @@ public class FedoraRest extends Connector implements Fedora {
         return xml;
     }
 
-
     private String StringOrNull(Long time) {
         if (time != null && time > 0) {
             DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -204,7 +202,6 @@ public class FedoraRest extends Connector implements Fedora {
         }
         return "";
     }
-
 
     @Override
     public String ingestDocument(Document document,
@@ -240,7 +237,6 @@ public class FedoraRest extends Connector implements Fedora {
             }
         }
     }
-
 
     public ObjectProfile getObjectProfile(String pid,
                                           Long asOfTime)
@@ -430,6 +426,7 @@ public class FedoraRest extends Connector implements Fedora {
                            .path(URLEncoder.encode(pid, "UTF-8"))
                            .path("/datastreams/")
                            .path(URLEncoder.encode(datastream, "UTF-8"))
+                           .queryParam("controlGroup","M")
                            .queryParam("mimeType", "text/xml")
                            .queryParam("logMessage", comment);
 
@@ -519,7 +516,7 @@ public class FedoraRest extends Connector implements Fedora {
             updateExistingDatastreamByValue(pid, datastream, checksumType, checksum, contents, comment);
         } catch (BackendInvalidResourceException e) {
             //perhaps the datastream did not exist
-            createDatastreamByValue        (pid, datastream, checksumType, checksum, contents, comment);
+            createDatastreamByValue(pid, datastream, checksumType, checksum, contents, comment);
         }
     }
 
@@ -695,7 +692,6 @@ public class FedoraRest extends Connector implements Fedora {
         //To change body of created methods use File | Settings | File Templates.
     }
 
-
     @Override
     public void deleteRelation(String pid,
                                String subject,
@@ -744,7 +740,6 @@ public class FedoraRest extends Connector implements Fedora {
         }
     }
 
-
     public void modifyObjectLabel(String pid,
                                   String name,
                                   String comment)
@@ -774,7 +769,6 @@ public class FedoraRest extends Connector implements Fedora {
             }
         }
     }
-
 
     @Override
     public List<SearchResult> fieldsearch(String query,
@@ -831,7 +825,6 @@ public class FedoraRest extends Connector implements Fedora {
             throw new BackendMethodFailedException("Failed to parse date from search result", e);
         }
     }
-
 
     @Override
     public void addExternalDatastream(String pid,
@@ -946,14 +939,14 @@ public class FedoraRest extends Connector implements Fedora {
                     createdPid =
                     restApi.path("/")
                            .path(URLEncoder.encode(pid, "UTF-8"))
-                           .queryParam("state","I")
+                           .queryParam("state", "I")
                            .type(MediaType.TEXT_XML_TYPE)
                            .post(String.class);
             //Because fedora ignores the state param in the new object.....
-            modifyObjectState(createdPid,"I",logMessage);
+            modifyObjectState(createdPid, "I", logMessage);
             if (!oldIDs.isEmpty()) {
                 String dublinCore = getXMLDatastreamContents(createdPid, "DC", null);
-                Document dcDoc = DOM.stringToDOM(dublinCore,true);
+                Document dcDoc = DOM.stringToDOM(dublinCore, true);
                 XPathSelector
                         xpath =
                         DOM.createXPathSelector("dc", Constants.NAMESPACE_DC, "oai_dc", Constants.NAMESPACE_OAIDC);
@@ -966,7 +959,7 @@ public class FedoraRest extends Connector implements Fedora {
                     identifierNode.appendChild(dcDoc.createTextNode(oldID));
                     existingIdentifier.getParentNode().appendChild(identifierNode);
                 }
-                modifyDatastreamByValue(pid, "DC",null,null, DOM.domToString(dcDoc), logMessage);
+                modifyDatastreamByValue(pid, "DC", null, null, DOM.domToString(dcDoc), logMessage);
             }
             for (String collection : collections) {
                 addRelation(createdPid, createdPid, Constants.RELATION_COLLECTION, collection, false, logMessage);
