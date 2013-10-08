@@ -28,6 +28,9 @@ import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
 import org.w3c.dom.Document;
 
 import javax.xml.bind.JAXBException;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Map;
@@ -146,12 +149,27 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
     public void modifyDatastreamByValue(String pid,
                                         String datastream,
                                         String contents,
+                                        List<String> alternativeIdentifiers,
                                         String comment)
             throws
             BackendInvalidCredsException,
             BackendMethodFailedException,
             BackendInvalidResourceException {
-        fedora.modifyDatastreamByValue(pid, datastream,  null, null,contents, comment);
+        fedora.modifyDatastreamByValue(pid,
+                                       datastream,
+                                       null,
+                                       null,
+                                       asInputStream(contents),
+                                       alternativeIdentifiers,
+                                       comment);
+    }
+
+    private InputStream asInputStream(String contents) {
+        try {
+            return new ByteArrayInputStream(contents.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new Error("UTF-8 not known");
+        }
     }
 
     @Override
@@ -159,12 +177,19 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
                                         String datastream,
                                         String contents,
                                         String md5sum,
+                                        List<String> alternativeIdentifiers,
                                         String comment)
             throws
             BackendInvalidCredsException,
             BackendMethodFailedException,
             BackendInvalidResourceException {
-        fedora.modifyDatastreamByValue(pid, datastream, ChecksumType.MD5, md5sum, contents, comment);
+        fedora.modifyDatastreamByValue(pid,
+                                       datastream,
+                                       ChecksumType.MD5,
+                                       md5sum,
+                                       asInputStream(contents),
+                                       alternativeIdentifiers,
+                                       comment);
     }
 
     @Override
@@ -173,13 +198,14 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
                                         String contents,
                                         String checksumType,
                                         String checksum,
+                                        List<String> alternativeIdentifiers,
                                         String comment)
             throws
             BackendInvalidCredsException,
             BackendMethodFailedException,
             BackendInvalidResourceException {
         ChecksumType properChecksumType = null;
-        if (checksumType != null){
+        if (checksumType != null) {
             try {
                 properChecksumType = ChecksumType.valueOf(checksumType);
             } catch (IllegalArgumentException e) {
@@ -187,8 +213,17 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
             }
         }
 
-        fedora.modifyDatastreamByValue(pid, datastream, properChecksumType, checksum, contents, comment);
+        fedora.modifyDatastreamByValue(pid,
+                                       datastream,
+                                       properChecksumType,
+                                       checksum,
+                                       asInputStream(contents),
+                                       alternativeIdentifiers,
+                                       comment);
     }
+
+
+
 
     @Override
     public void deleteDatastream(String pid,
@@ -219,12 +254,13 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
                                       String permanentURL,
                                       String formatURI,
                                       String mimetype,
+                                      List<String> alternativeIdentifiers,
                                       String comment)
             throws
             BackendInvalidCredsException,
             BackendMethodFailedException,
             BackendInvalidResourceException {
-        fedora.addExternalDatastream(pid, datastream, filename, permanentURL, formatURI, mimetype, null,null,comment);
+        fedora.addExternalDatastream(pid,datastream,filename,permanentURL,formatURI,mimetype,null,null,comment);
     }
 
     @Override
@@ -236,12 +272,13 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
                                       String mimetype,
                                       String checksumType,
                                       String checksum,
+                                      List<String> alternativeIdentifiers,
                                       String comment)
             throws
             BackendInvalidCredsException,
             BackendMethodFailedException,
             BackendInvalidResourceException {
-        fedora.addExternalDatastream(pid, datastream, filename, permanentURL, formatURI, mimetype,checksumType,checksum, comment);
+        fedora.addExternalDatastream(pid,datastream,filename,permanentURL,formatURI,mimetype,checksumType,checksum,comment);
     }
 
     @Override
@@ -252,13 +289,16 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
                                       String formatURI,
                                       String mimetype,
                                       String md5sum,
+                                      List<String> alternativeIdentifiers,
                                       String comment)
             throws
             BackendInvalidCredsException,
             BackendMethodFailedException,
             BackendInvalidResourceException {
-        fedora.addExternalDatastream(pid, datastream, filename, permanentURL, formatURI, mimetype,"MD5",md5sum.toLowerCase(), comment);
+        fedora.addExternalDatastream(pid, datastream, filename, permanentURL, formatURI, mimetype, ChecksumType.MD5.name(), md5sum, comment);
     }
+
+
 
     @Override
     public List<String> listObjectsWithThisLabel(String label)

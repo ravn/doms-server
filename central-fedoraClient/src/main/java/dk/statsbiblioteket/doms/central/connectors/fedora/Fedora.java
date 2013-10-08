@@ -98,22 +98,13 @@ public interface Fedora {
             BackendInvalidCredsException,
             BackendInvalidResourceException;
 
-    void modifyDatastreamByValue(String pid,
-                                 String datastream,
-                                 ChecksumType checksumType,
-                                 String checksum,
-                                 String contents,
-                                 String comment)
-            throws
-            BackendMethodFailedException,
-            BackendInvalidCredsException,
-            BackendInvalidResourceException;
 
     void modifyDatastreamByValue(String pid,
                                  String datastream,
                                  ChecksumType checksumType,
                                  String checksum,
                                  InputStream contents,
+                                 List<String> alternativeIdentifiers,
                                  String comment)
             throws
             BackendMethodFailedException,

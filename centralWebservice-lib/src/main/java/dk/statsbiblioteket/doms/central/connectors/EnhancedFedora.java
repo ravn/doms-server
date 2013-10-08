@@ -73,6 +73,7 @@ public interface EnhancedFedora {
     void modifyDatastreamByValue(String pid,
                                  String datastream,
                                  String contents,
+                                 List<String> alternativeIdentifiers,
                                  String comment)
             throws
             BackendInvalidCredsException,
@@ -83,6 +84,7 @@ public interface EnhancedFedora {
                                  String datastream,
                                  String contents,
                                  String md5sum,
+                                 List<String> alternativeIdentifiers,
                                  String comment)
             throws
             BackendInvalidCredsException,
@@ -94,6 +96,7 @@ public interface EnhancedFedora {
                                  String contents,
                                  String checksumType,
                                  String checksum,
+                                 List<String> alternativeIdentifiers,
                                  String comment)
             throws
             BackendInvalidCredsException,
@@ -122,6 +125,7 @@ public interface EnhancedFedora {
                                String permanentURL,
                                String formatURI,
                                String mimetype,
+                               List<String> alternativeIdentifiers,
                                String comment)
             throws
             BackendInvalidCredsException,
@@ -136,6 +140,7 @@ public interface EnhancedFedora {
                                String mimetype,
                                String checksumType,
                                String checksum,
+                               List<String> alternativeIdentifiers,
                                String comment)
             throws
             BackendInvalidCredsException,
@@ -149,6 +154,7 @@ public interface EnhancedFedora {
                                String formatURI,
                                String mimetype,
                                String md5sum,
+                               List<String> alternativeIdentifiers,
                                String comment)
             throws
             BackendInvalidCredsException,

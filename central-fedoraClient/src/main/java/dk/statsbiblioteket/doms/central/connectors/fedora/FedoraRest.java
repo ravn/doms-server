@@ -415,21 +415,24 @@ public class FedoraRest extends Connector implements Fedora {
                                         String datastream,
                                         ChecksumType checksumType,
                                         String checksum,
-                                        String contents,
+                                        InputStream contents,
+                                        List<String> alternativeIdentifiers,
                                         String comment)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,
             BackendInvalidResourceException {
         try {
-            modifyDatastreamByValue(pid,
-                                    datastream,
-                                    checksumType,
-                                    checksum,
-                                    new ByteArrayInputStream(contents.getBytes("UTF-8")),
-                                    comment);
-        } catch (UnsupportedEncodingException e) {
-            throw new BackendMethodFailedException("UTF-=8 not known", e);
+            updateExistingDatastreamByValue(pid,
+                                            datastream,
+                                            checksumType,
+                                            checksum,
+                                            contents,
+                                            alternativeIdentifiers,
+                                            comment);
+        } catch (BackendInvalidResourceException e) {
+            //perhaps the datastream did not exist
+            createDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, comment);
         }
     }
 
@@ -438,13 +441,21 @@ public class FedoraRest extends Connector implements Fedora {
                                          ChecksumType checksumType,
                                          String checksum,
                                          InputStream contents,
+                                         List<String> alternativeIdentifiers,
                                          String comment)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,
             BackendInvalidResourceException {
         try {
-            WebResource resource = getModifyDatastreamWebResource(pid, datastream, checksumType, checksum, comment);
+            WebResource
+                    resource =
+                    getModifyDatastreamWebResource(pid,
+                                                   datastream,
+                                                   checksumType,
+                                                   checksum,
+                                                   alternativeIdentifiers,
+                                                   comment);
 
             resource.queryParam("controlGroup", "M").post(contents);
         } catch (UnsupportedEncodingException e) {
@@ -467,6 +478,7 @@ public class FedoraRest extends Connector implements Fedora {
                                                        String datastream,
                                                        ChecksumType checksumType,
                                                        String checksum,
+                                                       List<String> alternativeIdentifiers,
                                                        String comment)
             throws
             UnsupportedEncodingException {
@@ -483,6 +495,11 @@ public class FedoraRest extends Connector implements Fedora {
                        .queryParam("mimeType", "text/xml")
                        .queryParam("logMessage", comment);
 
+        if (alternativeIdentifiers != null) {
+            for (String alternativeIdentifier : alternativeIdentifiers) {
+                resource = resource.queryParam("altIDs", alternativeIdentifier);
+            }
+        }
         if (checksumType != null) {
             resource = resource.queryParam("checksumType", checksumType.toString());
 
@@ -499,13 +516,21 @@ public class FedoraRest extends Connector implements Fedora {
                                                  ChecksumType checksumType,
                                                  String checksum,
                                                  InputStream contents,
+                                                 List<String> alternativeIdentifiers,
                                                  String comment)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,
             BackendInvalidResourceException {
         try {
-            WebResource resource = getModifyDatastreamWebResource(pid, datastream, checksumType, checksum, comment);
+            WebResource
+                    resource =
+                    getModifyDatastreamWebResource(pid,
+                                                   datastream,
+                                                   checksumType,
+                                                   checksum,
+                                                   alternativeIdentifiers,
+                                                   comment);
             resource.put(contents);
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
@@ -519,25 +544,6 @@ public class FedoraRest extends Connector implements Fedora {
             }
         }
 
-    }
-
-    @Override
-    public void modifyDatastreamByValue(String pid,
-                                        String datastream,
-                                        ChecksumType checksumType,
-                                        String checksum,
-                                        InputStream contents,
-                                        String comment)
-            throws
-            BackendMethodFailedException,
-            BackendInvalidCredsException,
-            BackendInvalidResourceException {
-        try {
-            updateExistingDatastreamByValue(pid, datastream, checksumType, checksum, contents, comment);
-        } catch (BackendInvalidResourceException e) {
-            //perhaps the datastream did not exist
-            createDatastreamByValue(pid, datastream, checksumType, checksum, contents, comment);
-        }
     }
 
     @Override
@@ -572,12 +578,12 @@ public class FedoraRest extends Connector implements Fedora {
             BackendInvalidCredsException,
             BackendInvalidResourceException {
         try {
-            restApi
-                    .path("/")
-                    .path(URLEncoder.encode(pid, "UTF-8"))
-                    .path("/datastreams/")
-                    .path(URLEncoder.encode(datastream, "UTF-8"))
-                    .queryParam("logMessage", comment).delete();
+            restApi.path("/")
+                   .path(URLEncoder.encode(pid, "UTF-8"))
+                   .path("/datastreams/")
+                   .path(URLEncoder.encode(datastream, "UTF-8"))
+                   .queryParam("logMessage", comment)
+                   .delete();
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
         } catch (UniformInterfaceException e) {
@@ -1007,6 +1013,7 @@ public class FedoraRest extends Connector implements Fedora {
                                         null,
                                         null,
                                         new ByteArrayInputStream(DOM.domToString(dcDoc).getBytes("UTF-8")),
+                                        null,
                                         logMessage);
             }
             for (String collection : collections) {

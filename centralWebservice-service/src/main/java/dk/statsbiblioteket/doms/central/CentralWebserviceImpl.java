@@ -404,7 +404,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                       + " and contents="
                       + contents);
 
-            fedora.modifyDatastreamByValue(pid, datastream, contents, comment);
+            fedora.modifyDatastreamByValue(pid, datastream, contents, null,comment);
         } catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute", "Method failed to execute", e);
@@ -493,6 +493,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                                          permanentURL,
                                          formatURI,
                                          "application/octet-stream",
+                                         null,
                                          comment);
             setObjectLabel(pid, permanentURL, comment);
 
