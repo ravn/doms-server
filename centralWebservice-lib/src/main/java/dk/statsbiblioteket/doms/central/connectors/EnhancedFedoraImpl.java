@@ -28,8 +28,6 @@ import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
 import org.w3c.dom.Document;
 
 import javax.xml.bind.JAXBException;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.util.List;
@@ -159,14 +157,14 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
                                        datastream,
                                        null,
                                        null,
-                                       asInputStream(contents),
+                                       asByteArray(contents),
                                        alternativeIdentifiers,
                                        comment);
     }
 
-    private InputStream asInputStream(String contents) {
+    private byte[] asByteArray(String contents) {
         try {
-            return new ByteArrayInputStream(contents.getBytes("UTF-8"));
+            return contents.getBytes("UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new Error("UTF-8 not known");
         }
@@ -187,7 +185,7 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
                                        datastream,
                                        ChecksumType.MD5,
                                        md5sum,
-                                       asInputStream(contents),
+                                       asByteArray(contents),
                                        alternativeIdentifiers,
                                        comment);
     }
@@ -217,7 +215,7 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
                                        datastream,
                                        properChecksumType,
                                        checksum,
-                                       asInputStream(contents),
+                                       asByteArray(contents),
                                        alternativeIdentifiers,
                                        comment);
     }

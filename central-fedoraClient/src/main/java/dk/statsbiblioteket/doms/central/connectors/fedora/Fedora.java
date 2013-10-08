@@ -34,7 +34,6 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.structures.FedoraRelat
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectProfile;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.SearchResult;
 
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -103,7 +102,7 @@ public interface Fedora {
                                  String datastream,
                                  ChecksumType checksumType,
                                  String checksum,
-                                 InputStream contents,
+                                 byte[] contents,
                                  List<String> alternativeIdentifiers,
                                  String comment)
             throws
