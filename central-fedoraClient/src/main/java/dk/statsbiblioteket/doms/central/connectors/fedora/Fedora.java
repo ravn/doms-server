@@ -34,6 +34,7 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.structures.FedoraRelat
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectProfile;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.SearchResult;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -99,10 +100,34 @@ public interface Fedora {
 
     void modifyDatastreamByValue(String pid,
                                  String datastream,
-                                 String checksumType,
+                                 ChecksumType checksumType,
                                  String checksum,
                                  String contents,
                                  String comment)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException;
+
+    void modifyDatastreamByValue(String pid,
+                                 String datastream,
+                                 ChecksumType checksumType,
+                                 String checksum,
+                                 InputStream contents,
+                                 String comment)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException;
+
+
+    void deleteObject(String pid, String comment)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException;
+
+    void deleteDatastream(String pid, String datastream, String comment)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,
@@ -165,30 +190,6 @@ public interface Fedora {
             BackendInvalidCredsException;
 
 
-    void addExternalDatastream(String pid,
-                               String datastream,
-                               String label,
-                               String url,
-                               String formatURI,
-                               String mimeType,
-                               String comment)
-            throws
-            BackendMethodFailedException,
-            BackendInvalidCredsException,
-            BackendInvalidResourceException;
-
-    void addExternalDatastream(String pid,
-                               String datastream,
-                               String label,
-                               String url,
-                               String formatURI,
-                               String mimeType,
-                               String md5sum,
-                               String comment)
-            throws
-            BackendMethodFailedException,
-            BackendInvalidCredsException,
-            BackendInvalidResourceException;
 
     void addExternalDatastream(String pid,
                                String datastream,

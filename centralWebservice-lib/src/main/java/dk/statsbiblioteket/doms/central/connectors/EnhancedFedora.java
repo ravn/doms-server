@@ -40,7 +40,6 @@ public interface EnhancedFedora {
             BackendMethodFailedException,
             PIDGeneratorException;
 
-
     public ObjectProfile getObjectProfile(String pid,
                                           Long asOfTime)
             throws
@@ -57,8 +56,15 @@ public interface EnhancedFedora {
             BackendInvalidResourceException;
 
     void modifyObjectState(String pid,
-                           String stateDeleted,
+                           String newState,
                            String comment)
+            throws
+            BackendInvalidCredsException,
+            BackendMethodFailedException,
+            BackendInvalidResourceException;
+
+    void deleteObject(String pid,
+                      String comment)
             throws
             BackendInvalidCredsException,
             BackendMethodFailedException,
@@ -94,6 +100,13 @@ public interface EnhancedFedora {
             BackendMethodFailedException,
             BackendInvalidResourceException;
 
+    void deleteDatastream(String pid,
+                          String datastream,
+                          String comment)
+            throws
+            BackendInvalidCredsException,
+            BackendMethodFailedException,
+            BackendInvalidResourceException;
 
     String getXMLDatastreamContents(String pid,
                                     String datastream,
@@ -141,7 +154,6 @@ public interface EnhancedFedora {
             BackendInvalidCredsException,
             BackendMethodFailedException,
             BackendInvalidResourceException;
-
 
     List<String> listObjectsWithThisLabel(String label)
             throws
@@ -216,7 +228,6 @@ public interface EnhancedFedora {
             BackendInvalidCredsException,
             BackendMethodFailedException;
 
-
     public String invokeMethod(String cmpid,
                                String methodName,
                                Map<String, List<String>> parameters,
@@ -225,7 +236,6 @@ public interface EnhancedFedora {
             BackendInvalidCredsException,
             BackendMethodFailedException,
             BackendInvalidResourceException;
-
 
     public List<Method> getStaticMethods(String cmpid,
                                          Long asOfTime)

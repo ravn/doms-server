@@ -58,6 +58,8 @@ import org.w3c.dom.Node;
 
 import javax.ws.rs.core.MediaType;
 import javax.xml.transform.TransformerException;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -238,6 +240,7 @@ public class FedoraRest extends Connector implements Fedora {
         }
     }
 
+    @Override
     public ObjectProfile getObjectProfile(String pid,
                                           Long asOfTime)
             throws
@@ -377,6 +380,7 @@ public class FedoraRest extends Connector implements Fedora {
 
     }
 
+    @Override
     public void modifyObjectState(String pid,
                                   String state,
                                   String comment)
@@ -406,43 +410,47 @@ public class FedoraRest extends Connector implements Fedora {
         }
     }
 
+    @Override
+    public void modifyDatastreamByValue(String pid,
+                                        String datastream,
+                                        ChecksumType checksumType,
+                                        String checksum,
+                                        String contents,
+                                        String comment)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException {
+        try {
+            modifyDatastreamByValue(pid,
+                                    datastream,
+                                    checksumType,
+                                    checksum,
+                                    new ByteArrayInputStream(contents.getBytes("UTF-8")),
+                                    comment);
+        } catch (UnsupportedEncodingException e) {
+            throw new BackendMethodFailedException("UTF-=8 not known", e);
+        }
+    }
+
     private void createDatastreamByValue(String pid,
                                          String datastream,
-                                         String checksumType,
+                                         ChecksumType checksumType,
                                          String checksum,
-                                         String contents,
+                                         InputStream contents,
                                          String comment)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,
             BackendInvalidResourceException {
         try {
-            if (comment == null || comment.isEmpty()) {
-                comment = "No message supplied";
-            }
-            WebResource
-                    resource =
-                    restApi.path("/")
-                           .path(URLEncoder.encode(pid, "UTF-8"))
-                           .path("/datastreams/")
-                           .path(URLEncoder.encode(datastream, "UTF-8"))
-                           .queryParam("controlGroup","M")
-                           .queryParam("mimeType", "text/xml")
-                           .queryParam("logMessage", comment);
+            WebResource resource = getModifyDatastreamWebResource(pid, datastream, checksumType, checksum, comment);
 
-            if (checksumType != null) {
-                resource = resource.queryParam("checksumType", checksumType);
-
-            }
-            if (checksum != null) {
-                resource = resource.queryParam("checksum", checksum);
-
-            }
-
-            resource.post(contents);
+            resource.queryParam("controlGroup", "M").post(contents);
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
         } catch (UniformInterfaceException e) {
+
             if (e.getResponse().getStatus() == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
                 throw new BackendInvalidCredsException("Invalid Credentials Supplied: pid '" + pid + "'", e);
             } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
@@ -455,38 +463,49 @@ public class FedoraRest extends Connector implements Fedora {
 
     }
 
+    private WebResource getModifyDatastreamWebResource(String pid,
+                                                       String datastream,
+                                                       ChecksumType checksumType,
+                                                       String checksum,
+                                                       String comment)
+            throws
+            UnsupportedEncodingException {
+        if (comment == null || comment.isEmpty()) {
+            comment = "No message supplied";
+        }
+
+        WebResource
+                resource =
+                restApi.path("/")
+                       .path(URLEncoder.encode(pid, "UTF-8"))
+                       .path("/datastreams/")
+                       .path(URLEncoder.encode(datastream, "UTF-8"))
+                       .queryParam("mimeType", "text/xml")
+                       .queryParam("logMessage", comment);
+
+        if (checksumType != null) {
+            resource = resource.queryParam("checksumType", checksumType.toString());
+
+        }
+        if (checksum != null) {
+            resource = resource.queryParam("checksum", checksum);
+
+        }
+        return resource;
+    }
+
     private void updateExistingDatastreamByValue(String pid,
                                                  String datastream,
-                                                 String checksumType,
+                                                 ChecksumType checksumType,
                                                  String checksum,
-                                                 String contents,
+                                                 InputStream contents,
                                                  String comment)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,
             BackendInvalidResourceException {
         try {
-            if (comment == null || comment.isEmpty()) {
-                comment = "No message supplied";
-            }
-
-            WebResource
-                    resource =
-                    restApi.path("/")
-                           .path(URLEncoder.encode(pid, "UTF-8"))
-                           .path("/datastreams/")
-                           .path(URLEncoder.encode(datastream, "UTF-8"))
-                           .queryParam("mimeType", "text/xml")
-                           .queryParam("logMessage", comment);
-
-            if (checksumType != null) {
-                resource = resource.queryParam("checksumType", checksumType);
-
-            }
-            if (checksum != null) {
-                resource = resource.queryParam("checksum", checksum);
-
-            }
+            WebResource resource = getModifyDatastreamWebResource(pid, datastream, checksumType, checksum, comment);
             resource.put(contents);
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
@@ -502,11 +521,12 @@ public class FedoraRest extends Connector implements Fedora {
 
     }
 
+    @Override
     public void modifyDatastreamByValue(String pid,
                                         String datastream,
-                                        String checksumType,
+                                        ChecksumType checksumType,
                                         String checksum,
-                                        String contents,
+                                        InputStream contents,
                                         String comment)
             throws
             BackendMethodFailedException,
@@ -520,6 +540,58 @@ public class FedoraRest extends Connector implements Fedora {
         }
     }
 
+    @Override
+    public void deleteObject(String pid,
+                             String comment)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException {
+        try {
+            restApi.path("/").path(URLEncoder.encode(pid, "UTF-8")).queryParam("logMessage", comment).delete();
+        } catch (UnsupportedEncodingException e) {
+            throw new BackendMethodFailedException("UTF-8 not known....", e);
+        } catch (UniformInterfaceException e) {
+            if (e.getResponse().getStatus() == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                throw new BackendInvalidCredsException("Invalid Credentials Supplied: pid '" + pid + "'", e);
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
+                throw new BackendInvalidResourceException("Resource '" + pid + "'not found", e);
+            } else {
+                throw new BackendMethodFailedException("Server error for '" + pid + "'", e);
+            }
+        }
+
+    }
+
+    @Override
+    public void deleteDatastream(String pid,
+                                 String datastream,
+                                 String comment)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException {
+        try {
+            restApi
+                    .path("/")
+                    .path(URLEncoder.encode(pid, "UTF-8"))
+                    .path("/datastreams/")
+                    .path(URLEncoder.encode(datastream, "UTF-8"))
+                    .queryParam("logMessage", comment).delete();
+        } catch (UnsupportedEncodingException e) {
+            throw new BackendMethodFailedException("UTF-8 not known....", e);
+        } catch (UniformInterfaceException e) {
+            if (e.getResponse().getStatus() == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
+                throw new BackendInvalidCredsException("Invalid Credentials Supplied: pid '" + pid + "'", e);
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
+                throw new BackendInvalidResourceException("Resource '" + pid + "'not found", e);
+            } else {
+                throw new BackendMethodFailedException("Server error for '" + pid + "'", e);
+            }
+        }
+    }
+
+    @Override
     public String getXMLDatastreamContents(String pid,
                                            String datastream,
                                            Long asOfTime)
@@ -552,6 +624,7 @@ public class FedoraRest extends Connector implements Fedora {
         }
     }
 
+    @Override
     public void addRelation(String pid,
                             String subject,
                             String predicate,
@@ -740,6 +813,7 @@ public class FedoraRest extends Connector implements Fedora {
         }
     }
 
+    @Override
     public void modifyObjectLabel(String pid,
                                   String name,
                                   String comment)
@@ -824,37 +898,6 @@ public class FedoraRest extends Connector implements Fedora {
         } catch (ParseException e) {
             throw new BackendMethodFailedException("Failed to parse date from search result", e);
         }
-    }
-
-    @Override
-    public void addExternalDatastream(String pid,
-                                      String datastream,
-                                      String label,
-                                      String url,
-                                      String formatURI,
-                                      String mimeType,
-                                      String comment)
-            throws
-            BackendMethodFailedException,
-            BackendInvalidCredsException,
-            BackendInvalidResourceException {
-        addExternalDatastream(pid, datastream, label, url, formatURI, mimeType, null, null, comment);
-    }
-
-    @Override
-    public void addExternalDatastream(String pid,
-                                      String datastream,
-                                      String label,
-                                      String url,
-                                      String formatURI,
-                                      String mimeType,
-                                      String md5sum,
-                                      String comment)
-            throws
-            BackendMethodFailedException,
-            BackendInvalidCredsException,
-            BackendInvalidResourceException {
-        addExternalDatastream(pid, datastream, label, url, formatURI, mimeType, "MD5", md5sum, comment);
     }
 
     @Override
@@ -959,7 +1002,12 @@ public class FedoraRest extends Connector implements Fedora {
                     identifierNode.appendChild(dcDoc.createTextNode(oldID));
                     existingIdentifier.getParentNode().appendChild(identifierNode);
                 }
-                modifyDatastreamByValue(pid, "DC", null, null, DOM.domToString(dcDoc), logMessage);
+                modifyDatastreamByValue(pid,
+                                        "DC",
+                                        null,
+                                        null,
+                                        new ByteArrayInputStream(DOM.domToString(dcDoc).getBytes("UTF-8")),
+                                        logMessage);
             }
             for (String collection : collections) {
                 addRelation(createdPid, createdPid, Constants.RELATION_COLLECTION, collection, false, logMessage);
