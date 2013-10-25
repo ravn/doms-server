@@ -1,0 +1,14 @@
+0.0.28
+
+Added changelog
+Add new functionality: alternative identifiers for datastream
+Add new functionality: deleteObject and deleteDatastream
+Use managed datastreams
+Newer Jersey library
+Add new functionality: md5check on updating/adding datastreams
+Add new method: newObject
+Use database queries, not triple store queries for identifier lookups
+Use newer update tracker with SPARQL support instead of iTQL and does not use ecm.sourceforge.net namespace
+Remove the old ecm.sourceforge.net namespace and use doms.statsbiblioteket.dk namespace instead
+Communicate with PID generator using REST
+Minor bugfixes and improvements
