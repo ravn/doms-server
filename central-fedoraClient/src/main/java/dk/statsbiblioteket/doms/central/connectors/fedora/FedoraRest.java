@@ -710,11 +710,14 @@ public class FedoraRest
             if (!predURI.isAbsolute()) {
                 predicate = "info:fedora/" + predicate;
             }
-
+            if (subject == null || subject.isEmpty()){
+                subject = "info:fedora/"+pid;
+            }
 
             restApi.path("/")
                    .path(pid)
                    .path("/relationships/new")
+                    .queryParam("subject",subject)
                    .queryParam("predicate", predicate)
                    .queryParam("object", object)
                    .queryParam("isLiteral", "" + literal)
