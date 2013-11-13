@@ -246,6 +246,14 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
     }
 
     @Override
+    public String getXMLDatastreamContents(String pid, String datastream) throws
+                                                                          BackendInvalidCredsException,
+                                                                          BackendMethodFailedException,
+                                                                          BackendInvalidResourceException {
+        return fedora.getXMLDatastreamContents(pid,datastream,null);
+    }
+
+    @Override
     public void addExternalDatastream(String pid,
                                       String datastream,
                                       String filename,

@@ -119,6 +119,14 @@ public interface EnhancedFedora {
             BackendMethodFailedException,
             BackendInvalidResourceException;
 
+    String getXMLDatastreamContents(String pid,
+                                    String datastream)
+            throws
+            BackendInvalidCredsException,
+            BackendMethodFailedException,
+            BackendInvalidResourceException;
+
+
     void addExternalDatastream(String pid,
                                String datastream,
                                String filename,
