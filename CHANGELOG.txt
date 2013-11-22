@@ -1,3 +1,9 @@
+1.0
+
+Added getXmlDatastreamContents without the asOfDateTime param
+Subject is now respected on the addRelationMethod
+
+
 0.0.28
 
 Added changelog
