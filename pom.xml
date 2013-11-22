@@ -40,7 +40,7 @@
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.authchecker</groupId>
                 <artifactId>authchecker-authutils</artifactId>
-                <version>0.0.11</version>
+                <version>1.0</version>
             </dependency>
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.bitstorage.highlevel</groupId>
@@ -99,12 +99,12 @@
             <dependency>
                 <groupId>com.sun.jersey</groupId>
                 <artifactId>jersey-servlet</artifactId>
-                <version>1.17</version>
+                <version>1.17.1</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.jersey</groupId>
                 <artifactId>jersey-json</artifactId>
-                <version>1.17</version>
+                <version>1.17.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
