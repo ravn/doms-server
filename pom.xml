@@ -47,12 +47,12 @@
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.updatetracker</groupId>
                 <artifactId>updatetracker-interface</artifactId>
-                <version>1.0.1</version>
+                <version>1.0</version>
             </dependency>
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.updatetracker</groupId>
                 <artifactId>updatetracker-lib</artifactId>
-                <version>1.0.1</version>
+                <version>1.0</version>
             </dependency>
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.domsutil</groupId>

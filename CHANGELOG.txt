@@ -1,6 +1,6 @@
 1.0.1
 Use 1.0 parent pom
-use 1.0.1 of authchecker, updatetracker and pidgenerator
+use 1.0.1 of authchecker and pidgenerator
 
 1.0
 
