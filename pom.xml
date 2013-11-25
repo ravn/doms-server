@@ -42,7 +42,7 @@
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.authchecker</groupId>
                 <artifactId>authchecker-authutils</artifactId>
-                <version>1.0</version>
+                <version>1.0.1</version>
             </dependency>
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.updatetracker</groupId>
@@ -64,7 +64,7 @@
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.pidgenerator</groupId>
                 <artifactId>pidgenerator-interface</artifactId>
-                <version>1.0</version>
+                <version>1.0.1</version>
             </dependency>
 
             <dependency>
