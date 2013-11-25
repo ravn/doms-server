@@ -94,7 +94,6 @@
         <dependency>
             <groupId>dk.statsbiblioteket.doms.pidgenerator</groupId>
             <artifactId>pidgenerator-interface</artifactId>
-            <version>0.0.8</version>
         </dependency>
 
     </dependencies>
