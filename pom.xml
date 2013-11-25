@@ -3,7 +3,7 @@
     <parent>
         <groupId>dk.statsbiblioteket.doms</groupId>
         <artifactId>doms</artifactId>
-        <version>0.1.6</version>
+        <version>1.0</version>
     </parent>
 
     <groupId>dk.statsbiblioteket.doms.central</groupId>
@@ -43,11 +43,6 @@
                 <version>1.0</version>
             </dependency>
             <dependency>
-                <groupId>dk.statsbiblioteket.doms.bitstorage.highlevel</groupId>
-                <artifactId>bitstorage-highlevel-interface</artifactId>
-                <version>0.0.18</version>
-            </dependency>
-            <dependency>
                 <groupId>dk.statsbiblioteket.doms.updatetracker</groupId>
                 <artifactId>updatetracker-interface</artifactId>
                 <version>0.0.18</version>
@@ -60,7 +55,7 @@
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.domsutil</groupId>
                 <artifactId>domsutil-bundle</artifactId>
-                <version>0.0.20</version>
+                <version>1.0</version>
                 <type>pom</type>
             </dependency>
             <dependency>
