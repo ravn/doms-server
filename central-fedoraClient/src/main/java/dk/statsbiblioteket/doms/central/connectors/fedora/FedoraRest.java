@@ -53,12 +53,12 @@ import dk.statsbiblioteket.util.xml.XPathSelector;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import javax.ws.rs.core.MediaType;
 import javax.xml.transform.TransformerException;
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -1071,33 +1071,57 @@ public class FedoraRest
 
         try {
 
+            InputStream emptyObjectStream = Thread.currentThread()
+                                                  .getContextClassLoader()
+                                                  .getResourceAsStream("EmptyObject.xml");
+            Document emptyObject = DOM.streamToDOM(emptyObjectStream, true);
+
+
+            XPathSelector xpath =
+                    DOM.createXPathSelector("foxml", Constants.NAMESPACE_FOXML,
+                            "rdf",Constants.NAMESPACE_RDF,
+                            "d",Constants.NAMESPACE_RELATIONS,
+                            "dc", Constants.NAMESPACE_DC,
+                            "oai_dc", Constants.NAMESPACE_OAIDC);
+            //Set pid
+            Node pidNode = xpath.selectNode(emptyObject, "/foxml:digitalObject/@PID");
+            pidNode.setNodeValue(pid);
+
+            Node rdfNode = xpath.selectNode(
+                    emptyObject,
+                    "/foxml:digitalObject/foxml:datastream/foxml:datastreamVersion/foxml:xmlContent/rdf:RDF/rdf:Description/@rdf:about");
+            rdfNode.setNodeValue("info:fedora/"+pid);
+
+            //add Old Identifiers to DC
+            Node dcIdentifierNode = xpath.selectNode(
+                    emptyObject,
+                    "/foxml:digitalObject/foxml:datastream/foxml:datastreamVersion/foxml:xmlContent/oai_dc:dc/dc:identifier");
+            dcIdentifierNode.setTextContent(pid);
+            Node parent = dcIdentifierNode.getParentNode();
+            for (String oldID : oldIDs) {
+                Node clone = dcIdentifierNode.cloneNode(true);
+                clone.setTextContent(oldID);
+                parent.appendChild(clone);
+            }
+
+            Node collectionRelationNode = xpath.selectNode(emptyObject, "/foxml:digitalObject/foxml:datastream/foxml:datastreamVersion/foxml:xmlContent/rdf:RDF/rdf:Description/d:isPartOfCollection");
+
+            parent = collectionRelationNode.getParentNode();
+            //remove the placeholder relationNode
+            parent.removeChild(collectionRelationNode);
+
+            for (String collection : collections) {
+                Node clone = collectionRelationNode.cloneNode(true);
+                clone.getAttributes().getNamedItem("rdf:resource").setNodeValue("info:fedora/"+collection);
+                parent.appendChild(clone);
+            }
+
             String createdPid = restApi.path("/")
                                        .path(URLEncoder.encode(pid, "UTF-8"))
                                        .queryParam("state", "I")
                                        .type(MediaType.TEXT_XML_TYPE)
-                                       .post(String.class);
-            //Because fedora ignores the state param in the new object.....
-            modifyObjectState(createdPid, "I", logMessage);
-            if (!oldIDs.isEmpty()) {
-                String dublinCore = getXMLDatastreamContents(createdPid, "DC", null);
-                Document dcDoc = DOM.stringToDOM(dublinCore, true);
-                XPathSelector xpath =
-                        DOM.createXPathSelector("dc", Constants.NAMESPACE_DC, "oai_dc", Constants.NAMESPACE_OAIDC);
-                Node existingIdentifier = xpath.selectNode(dcDoc, "/oai_dc:dc/dc:identifier");
-                for (String oldID : oldIDs) {
-                    Element identifierNode = dcDoc.createElementNS(existingIdentifier.getNamespaceURI(),
-                                                                   existingIdentifier.getNodeName());
-                    identifierNode.appendChild(dcDoc.createTextNode(oldID));
-                    existingIdentifier.getParentNode()
-                                      .appendChild(identifierNode);
-                }
-                modifyDatastreamByValue(pid, "DC", null, null, DOM.domToString(dcDoc)
-                                                                  .getBytes("UTF-8"), null, logMessage);
-            }
-            for (String collection : collections) {
-                addRelation(createdPid, createdPid, Constants.RELATION_COLLECTION, collection, false, logMessage);
-            }
-            return pid;
+                                       .post(String.class,DOM.domToString(emptyObject));
+            return createdPid;
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
         } catch (UniformInterfaceException e) {
@@ -1111,9 +1135,6 @@ public class FedoraRest
             }
         } catch (TransformerException e) {
             throw new BackendMethodFailedException("Failed to convert DC back to string", e);
-        } catch (BackendInvalidResourceException e) {
-            throw new BackendMethodFailedException("Failed to retrieve from the just created object", e);
         }
-
     }
 }
