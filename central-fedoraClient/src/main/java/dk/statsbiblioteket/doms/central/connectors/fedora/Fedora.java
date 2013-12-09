@@ -142,6 +142,18 @@ public interface Fedora {
             BackendInvalidCredsException,
             BackendInvalidResourceException;
 
+    void addRelations(String pid,
+                     String subject,
+                     String property,
+                     List<String> objects,
+                     boolean literal,
+                     String comment)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException;
+
+
     List<FedoraRelation> getNamedRelations(String pid,
                                            String name,
                                            Long asOfTime)
