@@ -329,6 +329,15 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
     }
 
     @Override
+    public void addRelations(String pid, String subject, String predicate, List<String> objects, boolean literal,
+                             String comment) throws
+                                             BackendInvalidCredsException,
+                                             BackendMethodFailedException,
+                                             BackendInvalidResourceException {
+        fedora.addRelations(pid, subject, predicate, objects, literal, comment);
+    }
+
+    @Override
     public List<FedoraRelation> getNamedRelations(String pid,
                                                   String predicate,
                                                   Long asOfTime)

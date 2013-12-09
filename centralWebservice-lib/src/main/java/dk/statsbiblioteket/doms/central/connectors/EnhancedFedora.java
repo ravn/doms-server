@@ -185,6 +185,18 @@ public interface EnhancedFedora {
             BackendMethodFailedException,
             BackendInvalidResourceException;
 
+    void addRelations(String pid,
+                     String subject,
+                     String predicate,
+                     List<String> objects,
+                     boolean literal,
+                     String comment)
+            throws
+            BackendInvalidCredsException,
+            BackendMethodFailedException,
+            BackendInvalidResourceException;
+
+
     List<FedoraRelation> getNamedRelations(String pid,
                                            String predicate,
                                            Long asOfTime)
