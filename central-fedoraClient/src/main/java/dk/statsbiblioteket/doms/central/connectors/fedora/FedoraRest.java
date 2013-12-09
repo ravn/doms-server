@@ -640,6 +640,9 @@ public class FedoraRest extends Connector implements Fedora {
                 addRelation(pid, subject, predicate, object, literal, comment);
             }
         }
+        if (objects.size()==1){//more efficient if only adding one relation
+            addRelation(pid,subject,predicate,objects.get(0),literal,comment);
+        }
 
 
         try {
