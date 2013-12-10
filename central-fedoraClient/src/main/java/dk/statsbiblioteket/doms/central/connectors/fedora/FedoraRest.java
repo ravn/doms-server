@@ -69,6 +69,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.List;
 
@@ -400,7 +401,24 @@ public class FedoraRest extends Connector implements Fedora {
                                                                                                               BackendInvalidResourceException {
         try {
             updateExistingDatastreamByValue(
-                    pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, comment);
+                    pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, comment, null);
+        } catch (BackendInvalidResourceException e) {
+            //perhaps the datastream did not exist
+            createDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, comment);
+        }
+    }
+
+    @Override
+    public void modifyDatastreamByValue(String pid, String datastream, ChecksumType checksumType, String checksum,
+                                        byte[] contents, List<String> alternativeIdentifiers, String comment,
+                                        Long lastModifiedDate) throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException,
+            ConcurrentModificationException {
+        try {
+            updateExistingDatastreamByValue(
+                    pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, comment, lastModifiedDate);
         } catch (BackendInvalidResourceException e) {
             //perhaps the datastream did not exist
             createDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, comment);
@@ -414,7 +432,7 @@ public class FedoraRest extends Connector implements Fedora {
                                                                                                                BackendInvalidResourceException {
         try {
             WebResource resource = getModifyDatastreamWebResource(
-                    pid, datastream, checksumType, checksum, alternativeIdentifiers, comment);
+                    pid, datastream, checksumType, checksum, alternativeIdentifiers, comment, null);
 
             resource.queryParam("controlGroup", "M").post(new ByteArrayInputStream(contents));
         } catch (UnsupportedEncodingException e) {
@@ -435,7 +453,7 @@ public class FedoraRest extends Connector implements Fedora {
 
     private WebResource getModifyDatastreamWebResource(String pid, String datastream, ChecksumType checksumType,
                                                        String checksum, List<String> alternativeIdentifiers,
-                                                       String comment) throws UnsupportedEncodingException {
+                                                       String comment, Long lastModifiedDate) throws UnsupportedEncodingException {
         if (comment == null || comment.isEmpty()) {
             comment = "No message supplied";
         }
@@ -460,18 +478,22 @@ public class FedoraRest extends Connector implements Fedora {
             resource = resource.queryParam("checksum", checksum);
 
         }
+        if (lastModifiedDate != null) {
+            resource = resource.queryParam("lastModifiedDate", StringOrNull(lastModifiedDate));
+        }
         return resource;
     }
 
     private void updateExistingDatastreamByValue(String pid, String datastream, ChecksumType checksumType,
                                                  String checksum, byte[] contents, List<String> alternativeIdentifiers,
-                                                 String comment) throws
-                                                                 BackendMethodFailedException,
-                                                                 BackendInvalidCredsException,
-                                                                 BackendInvalidResourceException {
+                                                 String comment, Long lastModifiedDate) throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException,
+            ConcurrentModificationException {
         try {
             WebResource resource = getModifyDatastreamWebResource(
-                    pid, datastream, checksumType, checksum, alternativeIdentifiers, comment);
+                    pid, datastream, checksumType, checksum, alternativeIdentifiers, comment, lastModifiedDate);
             resource.put(new ByteArrayInputStream(contents));
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
@@ -480,6 +502,8 @@ public class FedoraRest extends Connector implements Fedora {
                 throw new BackendInvalidCredsException("Invalid Credentials Supplied: pid '" + pid + "'", e);
             } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
                 throw new BackendInvalidResourceException("Resource '" + pid + "'not found", e);
+            } else if (e.getResponse().getStatus() == ClientResponse.Status.CONFLICT.getStatusCode()) {
+                throw new ConcurrentModificationException("Datastream has changed between reading and writing.");
             } else {
                 throw new BackendMethodFailedException("Server error for '" + pid + "'", e);
             }
