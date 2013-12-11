@@ -30,6 +30,7 @@ import org.w3c.dom.Document;
 import javax.xml.bind.JAXBException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Map;
 
@@ -220,7 +221,10 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
                                        comment);
     }
 
-
+    @Override
+    public void modifyDatastreamByValue(String pid, String datastream, ChecksumType checksumType, String checksum, byte[] contents, List<String> alternativeIdentifiers, String comment, Long lastModifiedDate) throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException, ConcurrentModificationException {
+        fedora.modifyDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, comment, lastModifiedDate);
+    }
 
 
     @Override
