@@ -48,7 +48,8 @@ public class FedoraRestTest {
         fedora.addRelations(pid,null, Constants.RELATION_COLLECTION,Arrays.asList("uuid:test2","uuid:test3"),false,"comment");
 
     }
-
+    
+    @Ignore
     @org.junit.Test
     public void testModifyDatastream() throws
             MalformedURLException,
