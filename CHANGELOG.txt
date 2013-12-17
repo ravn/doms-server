@@ -1,3 +1,8 @@
+1.0.2
+Added an overloaded method to modify datastreams which checks if the datastream has been recently modified and throws an exception if it has.
+Added the addRelations method to speed up the adding of many relations
+Optimized the newEmptyObject Method to not do 5 calls to Fedora
+
 1.0.1
 Use 1.0 parent pom
 use 1.0.1 of authchecker and pidgenerator
