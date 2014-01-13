@@ -4,18 +4,24 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.DatastreamProfile;
-import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectProfile;
 import dk.statsbiblioteket.doms.central.connectors.fedora.utils.Constants;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
+import dk.statsbiblioteket.util.Strings;
 import org.junit.Ignore;
+import org.junit.Test;
+import org.mockito.Mockito;
 
+import javax.xml.transform.TransformerException;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
-import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
 
 public class FedoraRestTest {
 
@@ -73,6 +79,34 @@ public class FedoraRestTest {
         } catch (ConcurrentModificationException e) {
             //expected
         }
+    }
+    @Test
+    public void testInlineDatastreams() throws
+                                        IOException,
+                                        TransformerException,
+                                        BackendInvalidResourceException,
+                                        BackendMethodFailedException,
+                                        BackendInvalidCredsException {
+        String xml = Strings.flush(
+                Thread.currentThread().getContextClassLoader().getResourceAsStream("sampleExport.xml"));
+        FedoraRest fedoraRest = Mockito.mock(FedoraRest.class);
+        Mockito.when(fedoraRest.getXMLDatastreamContents(anyString(),anyString(),anyLong())).thenReturn("<testContent/>");
+        Mockito.when(fedoraRest.modifyForDate(anyString(),anyLong())).thenCallRealMethod();
+        Mockito.when(fedoraRest.stripHiddenDatastreams(anyString())).thenCallRealMethod();
+        Mockito.when(fedoraRest.stripOldVersions(anyString())).thenCallRealMethod();
+        Mockito.when(fedoraRest.getManagedXmlDatastreams(anyString())).thenCallRealMethod();
+        Mockito.when(fedoraRest.inlineDatastream(anyString(),anyString(),anyString(),anyLong())).thenCallRealMethod();
+        xml = fedoraRest.modifyForDate(xml, null);
+
+        xml = fedoraRest.stripHiddenDatastreams(xml);
+
+        xml = fedoraRest.stripOldVersions(xml);
+
+        List<String> datastreamIDs = fedoraRest.getManagedXmlDatastreams(xml);
+        for (String datastreamID : datastreamIDs) {
+            xml = fedoraRest.inlineDatastream(xml, datastreamID, null, null);
+        }
+        System.out.println(xml);
     }
 
 }
