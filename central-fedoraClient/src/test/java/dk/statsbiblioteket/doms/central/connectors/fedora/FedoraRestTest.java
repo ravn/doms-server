@@ -15,6 +15,8 @@ import org.mockito.Mockito;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 
@@ -87,21 +89,23 @@ public class FedoraRestTest {
                                         TransformerException,
                                         BackendInvalidResourceException,
                                         BackendMethodFailedException,
-                                        BackendInvalidCredsException {
+                                        BackendInvalidCredsException, ParseException {
         String xml = Strings.flush(
                 Thread.currentThread().getContextClassLoader().getResourceAsStream("sampleExport.xml"));
         FedoraRest fedoraRest = Mockito.mock(FedoraRest.class);
         String value = "<testContent/>";
         when(fedoraRest.getXMLDatastreamContents(anyString(), anyString(), anyLong())).thenReturn(value);
-
-        ObjectXml objectXml = new ObjectXml("test", xml, fedoraRest, null);
+        long timestamp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse("2014-01-12T05:04:59.583Z")
+                                                                             .getTime();
+        ObjectXml objectXml = new ObjectXml("test", xml, fedoraRest, timestamp);
 
 
         xml = objectXml.getCleaned();
         Assert.assertFalse(xml.contains("<foxml:contentLocation TYPE=\"INTERNAL_ID\""));
         Assert.assertTrue(xml.contains(value));
         Assert.assertFalse(xml.contains("<foxml:datastream ID=\"AUDIT\""));
-
+        Assert.assertTrue(xml.contains("ID=\"BATCHSTRUCTURE.43\""));
+        Assert.assertFalse(xml.contains("ID=\"BATCHSTRUCTURE.44\""));
     }
 
 }

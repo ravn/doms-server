@@ -11,7 +11,9 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ObjectXml {
@@ -108,8 +110,19 @@ public class ObjectXml {
         return result.toString();
     }
 
-    protected String modifyForDate(String xml, Long asOfTime) {
-        //TODO filter out all versions newer than asOfTime
+    protected String modifyForDate(String xml, Long asOfTime) throws TransformerException {
+        if (asOfTime != null){
+            Date date = new Date(asOfTime);
+            String dateForXslt = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(date);
+            Transformer transformer = XSLT.getLocalTransformer(
+                    Thread.currentThread().getContextClassLoader().getResource("xslt/removeNewerDatastreams.xslt"));
+            StringWriter result = new StringWriter();
+            transformer.setParameter("highestCreated",dateForXslt);
+            transformer.transform(new StreamSource(new StringReader(xml)), new StreamResult(result));
+            return result.toString();
+
+        }
+
         return xml;
     }
 
