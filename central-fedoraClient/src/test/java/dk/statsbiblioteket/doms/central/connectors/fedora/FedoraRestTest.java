@@ -7,6 +7,7 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.structures.DatastreamP
 import dk.statsbiblioteket.doms.central.connectors.fedora.utils.Constants;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
 import dk.statsbiblioteket.util.Strings;
+import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -16,12 +17,12 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 
 public class FedoraRestTest {
 
@@ -90,23 +91,17 @@ public class FedoraRestTest {
         String xml = Strings.flush(
                 Thread.currentThread().getContextClassLoader().getResourceAsStream("sampleExport.xml"));
         FedoraRest fedoraRest = Mockito.mock(FedoraRest.class);
-        Mockito.when(fedoraRest.getXMLDatastreamContents(anyString(),anyString(),anyLong())).thenReturn("<testContent/>");
-        Mockito.when(fedoraRest.modifyForDate(anyString(),anyLong())).thenCallRealMethod();
-        Mockito.when(fedoraRest.stripHiddenDatastreams(anyString())).thenCallRealMethod();
-        Mockito.when(fedoraRest.stripOldVersions(anyString())).thenCallRealMethod();
-        Mockito.when(fedoraRest.getManagedXmlDatastreams(anyString())).thenCallRealMethod();
-        Mockito.when(fedoraRest.inlineDatastream(anyString(),anyString(),anyString(),anyLong())).thenCallRealMethod();
-        xml = fedoraRest.modifyForDate(xml, null);
+        String value = "<testContent/>";
+        when(fedoraRest.getXMLDatastreamContents(anyString(), anyString(), anyLong())).thenReturn(value);
 
-        xml = fedoraRest.stripHiddenDatastreams(xml);
+        ObjectXml objectXml = new ObjectXml("test", xml, fedoraRest, null);
 
-        xml = fedoraRest.stripOldVersions(xml);
 
-        List<String> datastreamIDs = fedoraRest.getManagedXmlDatastreams(xml);
-        for (String datastreamID : datastreamIDs) {
-            xml = fedoraRest.inlineDatastream(xml, datastreamID, null, null);
-        }
-        System.out.println(xml);
+        xml = objectXml.getCleaned();
+        Assert.assertFalse(xml.contains("<foxml:contentLocation TYPE=\"INTERNAL_ID\""));
+        Assert.assertTrue(xml.contains(value));
+        Assert.assertFalse(xml.contains("<foxml:datastream ID=\"AUDIT\""));
+
     }
 
 }

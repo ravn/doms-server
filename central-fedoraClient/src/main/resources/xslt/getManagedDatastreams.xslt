@@ -4,11 +4,11 @@
                 xmlns:foxml="info:fedora/fedora-system:def/foxml#"
         >
 
-    <xsl:output omit-xml-declaration="yes" indent="yes"/>
+    <xsl:output omit-xml-declaration="yes" indent="yes" method="text"/>
     <xsl:strip-space elements="*" />
 
-    <xsl:template match="foxml:datastream[@CONTROL_GROUP='M']">
-        <xsl:value-of select="@ID"/>
+    <xsl:template match="foxml:datastream[@CONTROL_GROUP='M']/foxml:datastreamVersion[@MIMETYPE='text/xml']">
+        <xsl:value-of select="../@ID"/>
         <xsl:text>&#xA;</xsl:text>
     </xsl:template>
 

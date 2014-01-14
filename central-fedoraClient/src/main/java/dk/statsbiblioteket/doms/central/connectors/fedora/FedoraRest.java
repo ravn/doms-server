@@ -50,7 +50,6 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.utils.DateUtils;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
 import dk.statsbiblioteket.util.xml.DOM;
 import dk.statsbiblioteket.util.xml.XPathSelector;
-import dk.statsbiblioteket.util.xml.XSLT;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
@@ -58,14 +57,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import javax.ws.rs.core.MediaType;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -173,24 +167,10 @@ public class FedoraRest extends Connector implements Fedora {
 
             //retrieve and insert the content
 
-            String xml = restApi.path("/")
-                                .path(URLEncoder.encode(pid, "UTF-8"))
-                                .path("/objectXML")
-                                .type(MediaType.TEXT_XML_TYPE)
-                                .get(String.class);
-            xml = modifyForDate(xml, asOfTime);
+            String xml = getRaxXml(pid);
+            ObjectXml objectXml = new ObjectXml(pid,xml, this,asOfTime);
 
-            xml = stripHiddenDatastreams(xml);
-
-            xml = stripOldVersions(xml);
-
-            List<String> datastreamIDs = getManagedXmlDatastreams(xml);
-            for (String datastreamID : datastreamIDs) {
-                xml = inlineDatastream(xml,datastreamID, pid, asOfTime);
-            }
-
-
-            return xml;
+            return objectXml.getCleaned();
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
         } catch (UniformInterfaceException e) {
@@ -206,58 +186,13 @@ public class FedoraRest extends Connector implements Fedora {
         }
     }
 
-    protected String stripHiddenDatastreams(String xml) throws TransformerException {
-        Transformer transformer = XSLT.getLocalTransformer(
-                Thread.currentThread().getContextClassLoader().getResource("xslt/stripHiddenDatastreams.xslt"));
-        StringWriter result = new StringWriter();
-        transformer.transform(new StreamSource(new StringReader(xml)),new StreamResult(result));
-        return result.toString();
+    protected String getRaxXml(String pid) throws UnsupportedEncodingException {
+        return restApi.path("/")
+                                    .path(URLEncoder.encode(pid, "UTF-8"))
+                                    .path("/objectXML")
+                                    .type(MediaType.TEXT_XML_TYPE)
+                                    .get(String.class);
     }
-
-
-    protected String inlineDatastream(String xml, String dsid, String pid, Long asOfTime) throws
-                                                                                        BackendInvalidResourceException,
-                                                                                        BackendInvalidCredsException,
-                                                                                        BackendMethodFailedException {
-        int datastreamDecl = xml.indexOf("ID=\"" + dsid + "");
-        int startIndex = xml.indexOf("<foxml:contentLocation", datastreamDecl);
-        String realContent = getXMLDatastreamContents(pid, dsid, asOfTime);
-
-        int endIndex = xml.indexOf("</foxml:datastreamVersion>", startIndex);
-        return xml.substring(0,startIndex)+"<foxml:xmlContent>"+realContent+"</foxml:xmlContent>"+xml.substring(endIndex);
-    }
-
-    protected List<String> getManagedXmlDatastreams(String xml) throws TransformerException {
-        Transformer transformer = XSLT.getLocalTransformer(
-                Thread.currentThread().getContextClassLoader().getResource("xslt/getManagedDatastreams.xslt"));
-        StringWriter result = new StringWriter();
-        transformer.transform(new StreamSource(new StringReader(xml)),new StreamResult(result));
-        String[] lines = result.toString().split("\n");
-        ArrayList<String> realResult = new ArrayList<String>();
-        for (String line : lines) {
-            if (!line.isEmpty()){
-                realResult.add(line);
-            }
-        }
-        return realResult;
-    }
-
-    protected String stripOldVersions(String xml) throws TransformerException {
-        Transformer transformer = XSLT.getLocalTransformer(
-                Thread.currentThread().getContextClassLoader().getResource("xslt/stripOldVersions.xslt"));
-        StringWriter result = new StringWriter();
-        transformer.transform(new StreamSource(new StringReader(xml)),new StreamResult(result));
-        return result.toString();
-    }
-
-    protected String modifyForDate(String xml, Long asOfTime) {
-        //TODO filter out all versions newer than asOfTime
-        return xml;
-    }
-
-
-
-
 
     private String StringOrNull(Long time) {
         if (time != null && time > 0) {
@@ -488,13 +423,20 @@ public class FedoraRest extends Connector implements Fedora {
     public void modifyDatastreamByValue(String pid, String datastream, ChecksumType checksumType, String checksum,
                                         byte[] contents, List<String> alternativeIdentifiers, String comment,
                                         Long lastModifiedDate) throws
-            BackendMethodFailedException,
-            BackendInvalidCredsException,
-            BackendInvalidResourceException,
-            ConcurrentModificationException {
+                                                               BackendMethodFailedException,
+                                                               BackendInvalidCredsException,
+                                                               BackendInvalidResourceException,
+                                                               ConcurrentModificationException {
         try {
             updateExistingDatastreamByValue(
-                    pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, comment, lastModifiedDate);
+                    pid,
+                    datastream,
+                    checksumType,
+                    checksum,
+                    contents,
+                    alternativeIdentifiers,
+                    comment,
+                    lastModifiedDate);
         } catch (BackendInvalidResourceException e) {
             //perhaps the datastream did not exist
             createDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, comment);
@@ -529,7 +471,8 @@ public class FedoraRest extends Connector implements Fedora {
 
     private WebResource getModifyDatastreamWebResource(String pid, String datastream, ChecksumType checksumType,
                                                        String checksum, List<String> alternativeIdentifiers,
-                                                       String comment, Long lastModifiedDate) throws UnsupportedEncodingException {
+                                                       String comment, Long lastModifiedDate) throws
+                                                                                              UnsupportedEncodingException {
         if (comment == null || comment.isEmpty()) {
             comment = "No message supplied";
         }
@@ -563,10 +506,10 @@ public class FedoraRest extends Connector implements Fedora {
     private void updateExistingDatastreamByValue(String pid, String datastream, ChecksumType checksumType,
                                                  String checksum, byte[] contents, List<String> alternativeIdentifiers,
                                                  String comment, Long lastModifiedDate) throws
-            BackendMethodFailedException,
-            BackendInvalidCredsException,
-            BackendInvalidResourceException,
-            ConcurrentModificationException {
+                                                                                        BackendMethodFailedException,
+                                                                                        BackendInvalidCredsException,
+                                                                                        BackendInvalidResourceException,
+                                                                                        ConcurrentModificationException {
         try {
             WebResource resource = getModifyDatastreamWebResource(
                     pid, datastream, checksumType, checksum, alternativeIdentifiers, comment, lastModifiedDate);
@@ -740,8 +683,8 @@ public class FedoraRest extends Connector implements Fedora {
                 addRelation(pid, subject, predicate, object, literal, comment);
             }
         }
-        if (objects.size()==1){//more efficient if only adding one relation
-            addRelation(pid,subject,predicate,objects.get(0),literal,comment);
+        if (objects.size() == 1) {//more efficient if only adding one relation
+            addRelation(pid, subject, predicate, objects.get(0), literal, comment);
         }
 
 
@@ -778,7 +721,7 @@ public class FedoraRest extends Connector implements Fedora {
                     object = "info:fedora/" + object;
                 }
 
-                Element relationsShipElement = relsDoc.createElementNS(splits[0]+"#", splits[1]);
+                Element relationsShipElement = relsDoc.createElementNS(splits[0] + "#", splits[1]);
                 relationsShipElement.setAttributeNS(Constants.NAMESPACE_RDF, "rdf:resource", object);
                 rdfDescriptionNode.appendChild(relationsShipElement);
             }
