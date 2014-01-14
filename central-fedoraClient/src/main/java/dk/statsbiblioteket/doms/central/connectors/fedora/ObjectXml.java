@@ -82,7 +82,7 @@ public class ObjectXml {
         String realContent = fedora.getXMLDatastreamContents(pid, dsid, asOfTime);
         String cleanedContent = realContent.replaceAll("\\<\\?xml(.+?)\\?\\>", "").trim();
 
-        String str = "$" + dsid + "$";
+        String str = "PLACEHOLDER_PREFIX" + dsid + "PLACEHOLDER_POSTFIX";
         int placeholderIndex = xml.indexOf(str);
         return xml.replace(placeholderIndex, placeholderIndex + str.length(), cleanedContent);
     }

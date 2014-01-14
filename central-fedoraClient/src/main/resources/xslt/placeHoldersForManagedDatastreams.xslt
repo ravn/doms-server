@@ -11,7 +11,7 @@
         <xsl:copy>
             <xsl:apply-templates select="@*"/>
             <xsl:element name="foxml:xmlContent" namespace="info:fedora/fedora-system:def/foxml#">
-                $<xsl:value-of select="../@ID"/>$
+                PLACEHOLDER_PREFIX<xsl:value-of select="../@ID"/>PLACEHOLDER_POSTFIX
             </xsl:element>
 
         </xsl:copy>
