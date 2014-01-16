@@ -1,3 +1,6 @@
+1.0.3
+The getObjectXml method now inlines managed xml datastreams and correctly respects the asOfTime parameter.
+
 1.0.2
 Added an overloaded method to modify datastreams which checks if the datastream has been recently modified and throws an exception if it has.
 Added the addRelations method to speed up the adding of many relations
