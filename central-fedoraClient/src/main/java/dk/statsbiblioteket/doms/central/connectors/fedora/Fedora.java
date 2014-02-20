@@ -30,6 +30,7 @@ package dk.statsbiblioteket.doms.central.connectors.fedora;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
+import dk.statsbiblioteket.doms.central.connectors.fedora.generated.Validation;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.FedoraRelation;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectProfile;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.SearchResult;
@@ -233,6 +234,12 @@ public interface Fedora {
                                String checksumType,
                                String checksum,
                                String comment)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException;
+
+    Validation validate(String pid)
             throws
             BackendMethodFailedException,
             BackendInvalidCredsException,

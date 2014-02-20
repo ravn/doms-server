@@ -36,10 +36,7 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.Connector;
-import dk.statsbiblioteket.doms.central.connectors.fedora.generated.DatastreamType;
-import dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectDatastreams;
-import dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectFieldsType;
-import dk.statsbiblioteket.doms.central.connectors.fedora.generated.ResultType;
+import dk.statsbiblioteket.doms.central.connectors.fedora.generated.*;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.DatastreamProfile;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.FedoraRelation;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectProfile;
@@ -985,6 +982,26 @@ public class FedoraRest extends Connector implements Fedora {
             }
         }
 
+    }
+
+    @Override
+    public Validation validate(String pid) throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
+        try {
+            WebResource format = restApi.path("/")
+                    .path(
+                            URLEncoder
+                                    .encode(
+                                            pid,
+                                            "UTF-8"))
+                    .path("/validate")
+                    .queryParam(
+                            "format",
+                            "text/xml");
+            return format
+                    .get(Validation.class);
+        } catch (UnsupportedEncodingException e) {
+            throw new BackendMethodFailedException("UTF-8 not known....", e);
+        }
     }
 
     @Override

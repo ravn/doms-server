@@ -3,6 +3,7 @@ package dk.statsbiblioteket.doms.central.connectors.fedora;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
+import dk.statsbiblioteket.doms.central.connectors.fedora.generated.Validation;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.DatastreamProfile;
 import dk.statsbiblioteket.doms.central.connectors.fedora.utils.Constants;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
@@ -21,6 +22,7 @@ import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
@@ -36,6 +38,18 @@ public class FedoraRestTest {
         String pid = fedora.newEmptyObject(
                 "uuid:testPid", Arrays.asList("oldIdentfier1"), Arrays.asList("uuid:Batch"), "message");
         assertEquals(pid,"uuid:testPid");
+    }
+
+    @org.junit.Test
+    @Ignore
+    public void testValidate() throws Exception {
+        FedoraRest fedora = new FedoraRest(
+                new Credentials("fedoraAdmin", "fedoraAdminPass"), "http://achernar:7880/fedora");
+        String pid = fedora.newEmptyObject(
+                "uuid:testPid", Arrays.asList("oldIdentfier1"), Arrays.asList("uuid:Batch"), "message");
+        assertEquals(pid,"uuid:testPid");
+        Validation validation = fedora.validate(pid);
+        assertTrue(validation.isValid());
     }
 
     @org.junit.Test
@@ -102,9 +116,9 @@ public class FedoraRestTest {
 
         xml = objectXml.getCleaned();
         Assert.assertFalse(xml.contains("<foxml:contentLocation TYPE=\"INTERNAL_ID\""));
-        Assert.assertTrue(xml.contains(value));
+        assertTrue(xml.contains(value));
         Assert.assertFalse(xml.contains("<foxml:datastream ID=\"AUDIT\""));
-        Assert.assertTrue(xml.contains("ID=\"BATCHSTRUCTURE.43\""));
+        assertTrue(xml.contains("ID=\"BATCHSTRUCTURE.43\""));
         Assert.assertFalse(xml.contains("ID=\"BATCHSTRUCTURE.44\""));
     }
 

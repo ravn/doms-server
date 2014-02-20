@@ -4,6 +4,7 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.ChecksumType;
 import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
 import dk.statsbiblioteket.doms.central.connectors.fedora.FedoraRest;
 import dk.statsbiblioteket.doms.central.connectors.fedora.fedoraDBsearch.DBSearchRest;
+import dk.statsbiblioteket.doms.central.connectors.fedora.generated.Validation;
 import dk.statsbiblioteket.doms.central.connectors.fedora.inheritance.ContentModelInheritance;
 import dk.statsbiblioteket.doms.central.connectors.fedora.inheritance.ContentModelInheritanceImpl;
 import dk.statsbiblioteket.doms.central.connectors.fedora.linkpatterns.LinkPattern;
@@ -441,6 +442,11 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
             BackendInvalidResourceException {
         return linkPatterns.getLinkPatterns(pid, asOfTime);
 
+    }
+
+    @Override
+    public Validation validate(String pid) throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException {
+        return fedora.validate(pid);
     }
 
     @Override
