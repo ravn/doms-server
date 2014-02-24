@@ -449,7 +449,7 @@ public class FedoraRest extends Connector implements Fedora {
             WebResource resource = getModifyDatastreamWebResource(
                     pid, datastream, checksumType, checksum, alternativeIdentifiers, comment, null);
 
-            resource.queryParam("controlGroup", "M").post(new ByteArrayInputStream(contents));
+            resource.queryParam("mimeType", "text/xml").queryParam("controlGroup", "M").post(new ByteArrayInputStream(contents));
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
         } catch (UniformInterfaceException e) {
@@ -478,7 +478,6 @@ public class FedoraRest extends Connector implements Fedora {
                                       .path(URLEncoder.encode(pid, "UTF-8"))
                                       .path("/datastreams/")
                                       .path(URLEncoder.encode(datastream, "UTF-8"))
-                                      .queryParam("mimeType", "text/xml")
                                       .queryParam("logMessage", comment);
 
         if (alternativeIdentifiers != null) {
