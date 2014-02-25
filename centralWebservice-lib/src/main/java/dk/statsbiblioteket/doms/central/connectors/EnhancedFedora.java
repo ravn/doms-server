@@ -136,6 +136,20 @@ public interface EnhancedFedora {
               BackendInvalidResourceException,
               ConcurrentModificationException;
 
+    void modifyDatastreamByValue(String pid,
+                                 String datastream,
+                                 ChecksumType checksumType,
+                                 String checksum,
+                                 byte[] contents,
+                                 List<String> alternativeIdentifiers,
+                                 String mimeType,
+                                 String comment,
+                                 Long lastModifiedDate)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException,
+            ConcurrentModificationException;
 
     void deleteDatastream(String pid,
                           String datastream,

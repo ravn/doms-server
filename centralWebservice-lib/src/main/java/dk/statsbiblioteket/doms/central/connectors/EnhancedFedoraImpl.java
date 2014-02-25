@@ -223,10 +223,38 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
     }
 
     @Override
-    public void modifyDatastreamByValue(String pid, String datastream, ChecksumType checksumType, String checksum, byte[] contents, List<String> alternativeIdentifiers, String comment, Long lastModifiedDate) throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException, ConcurrentModificationException {
+    public void modifyDatastreamByValue(String pid,
+                                        String datastream,
+                                        ChecksumType checksumType,
+                                        String checksum,
+                                        byte[] contents,
+                                        List<String> alternativeIdentifiers,
+                                        String comment, Long lastModifiedDate)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException,
+            ConcurrentModificationException {
         fedora.modifyDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, comment, lastModifiedDate);
     }
 
+    @Override
+    public void modifyDatastreamByValue(String pid,
+                                        String datastream,
+                                        ChecksumType checksumType,
+                                        String checksum,
+                                        byte[] contents,
+                                        List<String> alternativeIdentifiers,
+                                        String mimeType,
+                                        String comment,
+                                        Long lastModifiedDate)
+            throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException,
+            ConcurrentModificationException {
+        fedora.modifyDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, mimeType, comment, lastModifiedDate);
+    }
 
     @Override
     public void deleteDatastream(String pid,

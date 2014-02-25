@@ -409,7 +409,7 @@ public class FedoraRest extends Connector implements Fedora {
                                                                                                               BackendInvalidResourceException {
         try {
             updateExistingDatastreamByValue(
-                    pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, comment, null);
+                    pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, comment, null, null);
         } catch (BackendInvalidResourceException e) {
             //perhaps the datastream did not exist
             createDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, comment);
@@ -433,7 +433,31 @@ public class FedoraRest extends Connector implements Fedora {
                     contents,
                     alternativeIdentifiers,
                     comment,
-                    lastModifiedDate);
+                    lastModifiedDate, null);
+        } catch (BackendInvalidResourceException e) {
+            //perhaps the datastream did not exist
+            createDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, comment);
+        }
+    }
+
+    @Override
+    public void modifyDatastreamByValue(String pid, String datastream, ChecksumType checksumType, String checksum,
+                                        byte[] contents, List<String> alternativeIdentifiers, String mimeType, String comment,
+                                        Long lastModifiedDate) throws
+            BackendMethodFailedException,
+            BackendInvalidCredsException,
+            BackendInvalidResourceException,
+            ConcurrentModificationException {
+        try {
+            updateExistingDatastreamByValue(
+                    pid,
+                    datastream,
+                    checksumType,
+                    checksum,
+                    contents,
+                    alternativeIdentifiers,
+                    comment,
+                    lastModifiedDate, mimeType);
         } catch (BackendInvalidResourceException e) {
             //perhaps the datastream did not exist
             createDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, comment);
@@ -447,7 +471,7 @@ public class FedoraRest extends Connector implements Fedora {
                                                                                                                BackendInvalidResourceException {
         try {
             WebResource resource = getModifyDatastreamWebResource(
-                    pid, datastream, checksumType, checksum, alternativeIdentifiers, comment, null);
+                    pid, datastream, checksumType, checksum, alternativeIdentifiers, comment, null, null);
 
             resource.queryParam("mimeType", "text/xml").queryParam("controlGroup", "M").post(new ByteArrayInputStream(contents));
         } catch (UnsupportedEncodingException e) {
@@ -468,7 +492,7 @@ public class FedoraRest extends Connector implements Fedora {
 
     private WebResource getModifyDatastreamWebResource(String pid, String datastream, ChecksumType checksumType,
                                                        String checksum, List<String> alternativeIdentifiers,
-                                                       String comment, Long lastModifiedDate) throws
+                                                       String comment, Long lastModifiedDate, String mimeType) throws
                                                                                               UnsupportedEncodingException {
         if (comment == null || comment.isEmpty()) {
             comment = "No message supplied";
@@ -496,19 +520,24 @@ public class FedoraRest extends Connector implements Fedora {
         if (lastModifiedDate != null) {
             resource = resource.queryParam("lastModifiedDate", StringOrNull(lastModifiedDate));
         }
+        if (mimeType != null) {
+            resource = resource.queryParam("mimeType", mimeType);
+        } else {
+            resource = resource.queryParam("mimeType", "text/xml");
+        }
         return resource;
     }
 
     private void updateExistingDatastreamByValue(String pid, String datastream, ChecksumType checksumType,
                                                  String checksum, byte[] contents, List<String> alternativeIdentifiers,
-                                                 String comment, Long lastModifiedDate) throws
+                                                 String comment, Long lastModifiedDate, String mimeType) throws
                                                                                         BackendMethodFailedException,
                                                                                         BackendInvalidCredsException,
                                                                                         BackendInvalidResourceException,
                                                                                         ConcurrentModificationException {
         try {
             WebResource resource = getModifyDatastreamWebResource(
-                    pid, datastream, checksumType, checksum, alternativeIdentifiers, comment, lastModifiedDate);
+                    pid, datastream, checksumType, checksum, alternativeIdentifiers, comment, lastModifiedDate, mimeType);
             resource.put(new ByteArrayInputStream(contents));
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
@@ -723,7 +752,7 @@ public class FedoraRest extends Connector implements Fedora {
             }
 
             modifyDatastreamByValue(
-                    pid, datastream, ChecksumType.MD5, null, DOM.domToString(relsDoc).getBytes("UTF-8"), null, comment);
+                    pid, datastream, ChecksumType.MD5, null, DOM.domToString(relsDoc).getBytes("UTF-8"), null, "application/rdf+xml", comment, null);
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("Failed to transform RELS-EXT", e);
         } catch (TransformerException e) {
