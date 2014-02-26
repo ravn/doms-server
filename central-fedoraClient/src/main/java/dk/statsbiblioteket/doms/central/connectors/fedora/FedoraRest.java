@@ -36,7 +36,11 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.Connector;
-import dk.statsbiblioteket.doms.central.connectors.fedora.generated.*;
+import dk.statsbiblioteket.doms.central.connectors.fedora.generated.DatastreamType;
+import dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectDatastreams;
+import dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectFieldsType;
+import dk.statsbiblioteket.doms.central.connectors.fedora.generated.ResultType;
+import dk.statsbiblioteket.doms.central.connectors.fedora.generated.Validation;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.DatastreamProfile;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.FedoraRelation;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectProfile;
@@ -53,6 +57,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.xml.transform.TransformerException;
 import java.io.ByteArrayInputStream;
@@ -412,7 +417,7 @@ public class FedoraRest extends Connector implements Fedora {
                     pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, comment, null, null);
         } catch (BackendInvalidResourceException e) {
             //perhaps the datastream did not exist
-            createDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, comment);
+            createDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers,null, comment);
         }
     }
 
@@ -436,7 +441,7 @@ public class FedoraRest extends Connector implements Fedora {
                     lastModifiedDate, null);
         } catch (BackendInvalidResourceException e) {
             //perhaps the datastream did not exist
-            createDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, comment);
+            createDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, null,comment);
         }
     }
 
@@ -460,20 +465,23 @@ public class FedoraRest extends Connector implements Fedora {
                     lastModifiedDate, mimeType);
         } catch (BackendInvalidResourceException e) {
             //perhaps the datastream did not exist
-            createDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, comment);
+            createDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers,mimeType, comment);
         }
     }
 
     private void createDatastreamByValue(String pid, String datastream, ChecksumType checksumType, String checksum,
-                                         byte[] contents, List<String> alternativeIdentifiers, String comment) throws
+                                         byte[] contents, List<String> alternativeIdentifiers,String mimeType, String comment) throws
                                                                                                                BackendMethodFailedException,
                                                                                                                BackendInvalidCredsException,
                                                                                                                BackendInvalidResourceException {
         try {
+            if (mimeType == null){
+                mimeType = "text/xml";
+            }
             WebResource resource = getModifyDatastreamWebResource(
-                    pid, datastream, checksumType, checksum, alternativeIdentifiers, comment, null, null);
+                    pid, datastream, checksumType, checksum, alternativeIdentifiers, comment, null, mimeType);
 
-            resource.queryParam("mimeType", "text/xml").queryParam("controlGroup", "M").post(new ByteArrayInputStream(contents));
+            resource.queryParam("controlGroup", "M").post(new ByteArrayInputStream(contents));
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
         } catch (UniformInterfaceException e) {
@@ -504,6 +512,7 @@ public class FedoraRest extends Connector implements Fedora {
                                       .path(URLEncoder.encode(datastream, "UTF-8"))
                                       .queryParam("logMessage", comment);
 
+
         if (alternativeIdentifiers != null) {
             for (String alternativeIdentifier : alternativeIdentifiers) {
                 resource = resource.queryParam("altIDs", alternativeIdentifier);
@@ -522,9 +531,9 @@ public class FedoraRest extends Connector implements Fedora {
         }
         if (mimeType != null) {
             resource = resource.queryParam("mimeType", mimeType);
-        } else {
+        } /*else {
             resource = resource.queryParam("mimeType", "text/xml");
-        }
+        }*/
         return resource;
     }
 
@@ -538,7 +547,7 @@ public class FedoraRest extends Connector implements Fedora {
         try {
             WebResource resource = getModifyDatastreamWebResource(
                     pid, datastream, checksumType, checksum, alternativeIdentifiers, comment, lastModifiedDate, mimeType);
-            resource.put(new ByteArrayInputStream(contents));
+            resource.header(HttpHeaders.CONTENT_TYPE, null).put(new ByteArrayInputStream(contents));
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
         } catch (UniformInterfaceException e) {
