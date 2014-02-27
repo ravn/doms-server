@@ -1,3 +1,10 @@
+1.1
+From this version we use only major.minor numbering, unless we need to create branches.
+Added validate() method to EnhancedFedora interface.
+Added overloaded methods to allow the mime-type to be specified when creating or updating a datastream.
+Made a change so that updating a datastream without specifying the mimetype will leave the mimetype unchanged.
+
+
 1.0.3
 The getObjectXml method now inlines managed xml datastreams and correctly respects the asOfTime parameter.
 
