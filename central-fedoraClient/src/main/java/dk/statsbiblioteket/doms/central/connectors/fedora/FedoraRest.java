@@ -74,6 +74,7 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by IntelliJ IDEA. User: abr Date: Aug 25, 2010 Time: 1:50:31 PM To change this template use File | Settings
@@ -199,6 +200,7 @@ public class FedoraRest extends Connector implements Fedora {
     private String StringOrNull(Long time) {
         if (time != null && time > 0) {
             DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
             return formatter.format(new Date(time));
         }
         return "";
