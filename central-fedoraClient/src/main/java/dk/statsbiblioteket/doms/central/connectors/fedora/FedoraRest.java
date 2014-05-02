@@ -36,6 +36,7 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.Connector;
+import dk.statsbiblioteket.doms.central.connectors.fedora.generated.DatastreamProfileType;
 import dk.statsbiblioteket.doms.central.connectors.fedora.generated.DatastreamType;
 import dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectDatastreams;
 import dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectFieldsType;
@@ -171,7 +172,7 @@ public class FedoraRest extends Connector implements Fedora {
             //retrieve and insert the content
 
             String xml = getRaxXml(pid);
-            ObjectXml objectXml = new ObjectXml(pid,xml, this,asOfTime);
+            ObjectXml objectXml = new ObjectXml(pid, xml, this, asOfTime);
 
             return objectXml.getCleaned();
         } catch (UnsupportedEncodingException e) {
@@ -191,10 +192,10 @@ public class FedoraRest extends Connector implements Fedora {
 
     protected String getRaxXml(String pid) throws UnsupportedEncodingException {
         return restApi.path("/")
-                                    .path(URLEncoder.encode(pid, "UTF-8"))
-                                    .path("/objectXML")
-                                    .type(MediaType.TEXT_XML_TYPE)
-                                    .get(String.class);
+                      .path(URLEncoder.encode(pid, "UTF-8"))
+                      .path("/objectXML")
+                      .type(MediaType.TEXT_XML_TYPE)
+                      .get(String.class);
     }
 
     private String StringOrNull(Long time) {
@@ -243,16 +244,16 @@ public class FedoraRest extends Connector implements Fedora {
                                                                      BackendInvalidResourceException {
         try {
             //Get basic fedora profile
-            dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectProfile profile = restApi.path("/")
-                                                                                                        .path(
-                                                                                                                URLEncoder
-                                                                                                                        .encode(
-                                                                                                                                pid,
-                                                                                                                                "UTF-8"))
-                                                                                                        .queryParam(
-                                                                                                                "format",
-                                                                                                                "text/xml")
-                                                                                                        .get(dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectProfile.class);
+            dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectProfile profile;
+            profile = restApi.path("/")
+                             .path(
+                                     URLEncoder.encode(
+                                             pid,
+                                             "UTF-8")
+                                  )
+                             .queryParam(
+                                     "format", "text/xml")
+                             .get(dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectProfile.class);
             ObjectProfile prof = new ObjectProfile();
             prof.setObjectCreatedDate(profile.getObjCreateDate().toGregorianCalendar().getTime());
             prof.setObjectLastModifiedDate(profile.getObjLastModDate().toGregorianCalendar().getTime());
@@ -329,23 +330,25 @@ public class FedoraRest extends Connector implements Fedora {
                                                                                           BackendInvalidResourceException {
         try {
 
-            dk.statsbiblioteket.doms.central.connectors.fedora.generated.DatastreamProfile fdatastream = restApi.path(
+            DatastreamProfileType fdatastream = restApi.path(
                     "/")
                                                                                                                 .path(
                                                                                                                         URLEncoder
                                                                                                                                 .encode(
                                                                                                                                         pid,
-                                                                                                                                        "UTF-8"))
+                                                                                                                                        "UTF-8")
+                                                                                                                     )
                                                                                                                 .path("/datastreams/")
                                                                                                                 .path(dsid)
                                                                                                                 .queryParam(
                                                                                                                         AS_OF_DATE_TIME,
                                                                                                                         StringOrNull(
-                                                                                                                                asOfTime))
+                                                                                                                                asOfTime)
+                                                                                                                           )
                                                                                                                 .queryParam(
                                                                                                                         "format",
                                                                                                                         "text/xml")
-                                                                                                                .get(dk.statsbiblioteket.doms.central.connectors.fedora.generated.DatastreamProfile.class);
+                                                                                                                .get(DatastreamProfileType.class);
             DatastreamProfile profile = new DatastreamProfile();
             profile.setID(fdatastream.getDsID());
             profile.setLabel(fdatastream.getDsLabel());
@@ -419,7 +422,8 @@ public class FedoraRest extends Connector implements Fedora {
                     pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, comment, null, null);
         } catch (BackendInvalidResourceException e) {
             //perhaps the datastream did not exist
-            createDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers,null, comment);
+            createDatastreamByValue(
+                    pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, null, comment);
         }
     }
 
@@ -440,21 +444,23 @@ public class FedoraRest extends Connector implements Fedora {
                     contents,
                     alternativeIdentifiers,
                     comment,
-                    lastModifiedDate, null);
+                    lastModifiedDate,
+                    null);
         } catch (BackendInvalidResourceException e) {
             //perhaps the datastream did not exist
-            createDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, null,comment);
+            createDatastreamByValue(
+                    pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, null, comment);
         }
     }
 
     @Override
     public void modifyDatastreamByValue(String pid, String datastream, ChecksumType checksumType, String checksum,
-                                        byte[] contents, List<String> alternativeIdentifiers, String mimeType, String comment,
-                                        Long lastModifiedDate) throws
-            BackendMethodFailedException,
-            BackendInvalidCredsException,
-            BackendInvalidResourceException,
-            ConcurrentModificationException {
+                                        byte[] contents, List<String> alternativeIdentifiers, String mimeType,
+                                        String comment, Long lastModifiedDate) throws
+                                                                               BackendMethodFailedException,
+                                                                               BackendInvalidCredsException,
+                                                                               BackendInvalidResourceException,
+                                                                               ConcurrentModificationException {
         try {
             updateExistingDatastreamByValue(
                     pid,
@@ -464,20 +470,23 @@ public class FedoraRest extends Connector implements Fedora {
                     contents,
                     alternativeIdentifiers,
                     comment,
-                    lastModifiedDate, mimeType);
+                    lastModifiedDate,
+                    mimeType);
         } catch (BackendInvalidResourceException e) {
             //perhaps the datastream did not exist
-            createDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers,mimeType, comment);
+            createDatastreamByValue(
+                    pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, mimeType, comment);
         }
     }
 
     private void createDatastreamByValue(String pid, String datastream, ChecksumType checksumType, String checksum,
-                                         byte[] contents, List<String> alternativeIdentifiers,String mimeType, String comment) throws
-                                                                                                               BackendMethodFailedException,
-                                                                                                               BackendInvalidCredsException,
-                                                                                                               BackendInvalidResourceException {
+                                         byte[] contents, List<String> alternativeIdentifiers, String mimeType,
+                                         String comment) throws
+                                                         BackendMethodFailedException,
+                                                         BackendInvalidCredsException,
+                                                         BackendInvalidResourceException {
         try {
-            if (mimeType == null){
+            if (mimeType == null) {
                 mimeType = "text/xml";
             }
             WebResource resource = getModifyDatastreamWebResource(
@@ -503,7 +512,7 @@ public class FedoraRest extends Connector implements Fedora {
     private WebResource getModifyDatastreamWebResource(String pid, String datastream, ChecksumType checksumType,
                                                        String checksum, List<String> alternativeIdentifiers,
                                                        String comment, Long lastModifiedDate, String mimeType) throws
-                                                                                              UnsupportedEncodingException {
+                                                                                                               UnsupportedEncodingException {
         if (comment == null || comment.isEmpty()) {
             comment = "No message supplied";
         }
@@ -542,13 +551,20 @@ public class FedoraRest extends Connector implements Fedora {
     private void updateExistingDatastreamByValue(String pid, String datastream, ChecksumType checksumType,
                                                  String checksum, byte[] contents, List<String> alternativeIdentifiers,
                                                  String comment, Long lastModifiedDate, String mimeType) throws
-                                                                                        BackendMethodFailedException,
-                                                                                        BackendInvalidCredsException,
-                                                                                        BackendInvalidResourceException,
-                                                                                        ConcurrentModificationException {
+                                                                                                         BackendMethodFailedException,
+                                                                                                         BackendInvalidCredsException,
+                                                                                                         BackendInvalidResourceException,
+                                                                                                         ConcurrentModificationException {
         try {
             WebResource resource = getModifyDatastreamWebResource(
-                    pid, datastream, checksumType, checksum, alternativeIdentifiers, comment, lastModifiedDate, mimeType);
+                    pid,
+                    datastream,
+                    checksumType,
+                    checksum,
+                    alternativeIdentifiers,
+                    comment,
+                    lastModifiedDate,
+                    mimeType);
             resource.header(HttpHeaders.CONTENT_TYPE, null).put(new ByteArrayInputStream(contents));
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
@@ -684,7 +700,8 @@ public class FedoraRest extends Connector implements Fedora {
                        .path("/datastreams/POLICY")
                        .queryParam(
                                "dsLocation", "http://localhost:" + port +
-                                             "/fedora/objects/" + object + "/datastreams/LICENSE/content")
+                                             "/fedora/objects/" + object + "/datastreams/LICENSE/content"
+                                  )
                        .queryParam("mimeType", "application/rdf+xml")
                        .queryParam("ignoreContent", "true")
                        .put();
@@ -763,7 +780,15 @@ public class FedoraRest extends Connector implements Fedora {
             }
 
             modifyDatastreamByValue(
-                    pid, datastream, ChecksumType.MD5, null, DOM.domToString(relsDoc).getBytes("UTF-8"), null, "application/rdf+xml", comment, null);
+                    pid,
+                    datastream,
+                    ChecksumType.MD5,
+                    null,
+                    DOM.domToString(relsDoc).getBytes("UTF-8"),
+                    null,
+                    "application/rdf+xml",
+                    comment,
+                    null);
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("Failed to transform RELS-EXT", e);
         } catch (TransformerException e) {
@@ -934,7 +959,7 @@ public class FedoraRest extends Connector implements Fedora {
             if (offset > 0) {
 
                 for (int i = 1; i <= offset; i++) {
-                    String token = searchResult.getListSession().getToken();
+                    String token = searchResult.getListSession().getValue().getToken();
                     searchResult = restApi.queryParam("query", query)
                                           .queryParam("sessionToken", token)
                                           .queryParam("resultFormat", "xml")
@@ -947,11 +972,12 @@ public class FedoraRest extends Connector implements Fedora {
 
                 outputResults.add(
                         new SearchResult(
-                                objectFieldsType.getPid(),
-                                objectFieldsType.getLabel(),
-                                objectFieldsType.getState(),
-                                DateUtils.parseDateStrict(objectFieldsType.getCDate()).getTime(),
-                                DateUtils.parseDateStrict(objectFieldsType.getMDate()).getTime()));
+                                objectFieldsType.getPid().getValue(),
+                                objectFieldsType.getLabel().getValue(),
+                                objectFieldsType.getState().getValue(),
+                                DateUtils.parseDateStrict(objectFieldsType.getCDate().getValue()).getTime(),
+                                DateUtils.parseDateStrict(objectFieldsType.getMDate().getValue()).getTime())
+                                 );
             }
             return outputResults;
 
@@ -1024,20 +1050,17 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     @Override
-    public Validation validate(String pid) throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
+    public Validation validate(String pid) throws
+                                           BackendMethodFailedException,
+                                           BackendInvalidCredsException,
+                                           BackendInvalidResourceException {
         try {
-            WebResource format = restApi.path("/")
-                    .path(
-                            URLEncoder
-                                    .encode(
-                                            pid,
-                                            "UTF-8"))
-                    .path("/validate")
-                    .queryParam(
-                            "format",
-                            "text/xml");
-            return format
-                    .get(Validation.class);
+            WebResource format = restApi.path("/").path(
+                    URLEncoder.encode(
+                            pid, "UTF-8")
+                                                       ).path("/validate").queryParam(
+                    "format", "text/xml");
+            return format.get(Validation.class);
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
         }
