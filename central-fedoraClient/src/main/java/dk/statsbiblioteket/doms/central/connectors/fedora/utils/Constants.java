@@ -6,22 +6,10 @@ package dk.statsbiblioteket.doms.central.connectors.fedora.utils;
 public class Constants {
 
     /**
-     * The major ecm version
-     */
-    public static final String MAJORVERSION = "default/0";
-
-    /**
-     * The minor ecm version
-     */
-    public static final String MINORVERSION = "1";//This is wrong for some of the namespaces
-
-    /**
      * The ECM version
      *
-     * @see #MAJORVERSION
-     * @see #MINORVERSION
      */
-    private static final String VERSION = MAJORVERSION + "/" + MINORVERSION;
+    private static final String VERSION = "default/0/1/#";
 
 
     // Our namespace
@@ -37,7 +25,7 @@ public class Constants {
      * @see #NAMESPACE_DOMS
      * @see #VERSION
      */
-    public static final String NAMESPACE_VIEW = NAMESPACE_DOMS + "types/view/" + VERSION + "/#";
+    public static final String NAMESPACE_VIEW = NAMESPACE_DOMS + "types/view/" + VERSION;
 
     /**
      * The schema DSCOMPOSITEMODEL extension namespace
@@ -45,7 +33,7 @@ public class Constants {
      * @see #NAMESPACE_DOMS
      * @see #VERSION
      */
-    public static final String NAMESPACE_SCHEMA = NAMESPACE_DOMS + "types/dscompositeschema/" + VERSION + "/#";
+    public static final String NAMESPACE_SCHEMA = NAMESPACE_DOMS + "types/dscompositeschema/" + VERSION;
 
     /**
      * The digital object bundle namespace
@@ -56,12 +44,12 @@ public class Constants {
     public static final
     String
             NAMESPACE_DIGITAL_OBJECT_BUNDLE =
-            NAMESPACE_DOMS + "types/digitalobjectbundle/" + VERSION + "/#";
+            NAMESPACE_DOMS + "types/digitalobjectbundle/" + VERSION;
 //Our relation namespace
 
 
     //our relations
-    public static final String NAMESPACE_RELATIONS = NAMESPACE_DOMS + "relations/" + VERSION + "/#";
+    public static final String NAMESPACE_RELATIONS = NAMESPACE_DOMS + "relations/" + VERSION;
 
     public static final String RELATION_COLLECTION = NAMESPACE_RELATIONS + "isPartOfCollection";
 
@@ -71,11 +59,9 @@ public class Constants {
 
     public static final String RELATION_EXTENDS_MODEL = NAMESPACE_RELATIONS + "extendsModel";
 
-    //Fedora
-    public static final String FEDORA_SYSTEM_DEF = "info:fedora/fedora-system:def/";
-    public static final String NAMESPACE_FOXML = FEDORA_SYSTEM_DEF + "foxml#";
-    public static final String NAMESPACE_DS_COMPOSITE = FEDORA_SYSTEM_DEF + "dsCompositeModel#";
-    public static final String NAMESPACE_FEDORA_MODEL = FEDORA_SYSTEM_DEF + "model#";
+    public static final String NAMESPACE_FOXML = "info:fedora/fedora-system:def/foxml#";
+    public static final String NAMESPACE_DS_COMPOSITE = "info:fedora/fedora-system:def/dsCompositeModel#";
+    public static final String NAMESPACE_FEDORA_MODEL = "info:fedora/fedora-system:def/model#";
     public static final String STATEREL = NAMESPACE_FEDORA_MODEL + "state";
     public static final String HAS_MODEL = NAMESPACE_FEDORA_MODEL + "hasModel";
 
