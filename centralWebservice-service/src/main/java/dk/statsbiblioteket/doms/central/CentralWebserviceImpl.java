@@ -404,7 +404,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                       + " and contents="
                       + contents);
 
-            fedora.modifyDatastreamByValue(pid, datastream, contents, null,comment);
+            fedora.modifyDatastreamByValue(pid, datastream, null,null,contents.getBytes(), null,"text/xml",comment,null);
         } catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute", "Method failed to execute", e);
