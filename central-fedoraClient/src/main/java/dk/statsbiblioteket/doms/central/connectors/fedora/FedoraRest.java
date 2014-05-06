@@ -393,21 +393,25 @@ public class FedoraRest extends Connector implements Fedora {
             if (comment == null || comment.isEmpty()) {
                 comment = "No message supplied";
             }
-            restApi.path("/")
-                   .path(URLEncoder.encode(pid, "UTF-8"))
-                   .queryParam("state", state)
-                   .queryParam("logMessage", comment)
-                   .put();
+            ClientResponse response = restApi.path("/")
+                                             .path(URLEncoder.encode(pid, "UTF-8"))
+                                             .queryParam("state", state)
+                                             .queryParam("logMessage", comment)
+                                             .put(ClientResponse.class);
+            switch (response.getClientResponseStatus()) {
+                case UNAUTHORIZED:
+                    throw new BackendInvalidCredsException("Invalid Credentials Supplied: pid '" + pid + "'");
+                case NOT_FOUND:
+                    throw new BackendInvalidResourceException("Resource '" + pid + "'not found");
+                case BAD_REQUEST:
+                    throw new BackendMethodFailedException(response.getEntity(String.class));
+                case OK:
+                    break;
+                default:
+                    throw new BackendMethodFailedException("Server error for '" + pid + "', " + response.toString());
+            }
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
-        } catch (UniformInterfaceException e) {
-            if (e.getResponse().getStatus() == ClientResponse.Status.UNAUTHORIZED.getStatusCode()) {
-                throw new BackendInvalidCredsException("Invalid Credentials Supplied: pid '" + pid + "'", e);
-            } else if (e.getResponse().getStatus() == ClientResponse.Status.NOT_FOUND.getStatusCode()) {
-                throw new BackendInvalidResourceException("Resource '" + pid + "'not found", e);
-            } else {
-                throw new BackendMethodFailedException("Server error for '" + pid + "'", e);
-            }
         }
     }
 
