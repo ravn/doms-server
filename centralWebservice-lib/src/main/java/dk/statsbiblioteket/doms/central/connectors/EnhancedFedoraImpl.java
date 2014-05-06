@@ -126,13 +126,13 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
 
     @Override
     public void modifyObjectState(String pid,
-                                  String stateDeleted,
+                                  String newState,
                                   String comment)
             throws
             BackendInvalidCredsException,
             BackendMethodFailedException,
             BackendInvalidResourceException {
-        fedora.modifyObjectState(pid, stateDeleted, comment);
+        fedora.modifyObjectState(pid, newState, comment);
     }
 
     @Override
