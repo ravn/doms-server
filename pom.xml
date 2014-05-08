@@ -33,7 +33,6 @@
         <module>ecmLinks</module>
         <!--<module>fedoraTrashPreventer</module>-->
         <module>summaSearch-interface</module>
-        <module>improvedFedora</module>
     </modules>
 
     <dependencyManagement>
