@@ -902,7 +902,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                                                   "SearchWSService")).getSearchWS();
 
             JSONObject jsonQuery = new JSONObject();
-            jsonQuery.put("search.document.resultfields", "domsshortrecord");
+            jsonQuery.put("search.document.resultfields", "recordID, domsshortrecord");
             jsonQuery.put("search.document.query", query);
             jsonQuery.put("search.document.startindex", offset);
             jsonQuery.put("search.document.maxrecords", pageSize);
@@ -915,7 +915,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
             NodeList
                     nodeList =
-                    (NodeList) xPath.evaluate("//responsecollection/response/documentresult/record/field/shortrecord",
+                    (NodeList) xPath.evaluate("//responsecollection/response/documentresult/record",
                                               searchResultDOM.getDocumentElement(),
                                               XPathConstants.NODESET);
 
@@ -932,32 +932,41 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
             for (int i = 0; i < nodeList.getLength(); ++i) {
                 Node node = nodeList.item(i);
-
                 SearchResult searchResult = new SearchResult();
 
-                String pid = xPath.evaluate("pid", node);
-                String title = xPath.evaluate("title", node);
-                searchResult.setPid(pid);
-                if (title != null && !title.equals("")) {
-                    searchResult.setTitle(title);
-                } else {
-                    searchResult.setTitle(pid);
-                }
-                searchResult.setType(xPath.evaluate("type", node));
-                searchResult.setSource(xPath.evaluate("source", node));
-                searchResult.setTime(xPath.evaluate("time", node));
-                searchResult.setDescription(xPath.evaluate("description", node));
-                searchResult.setState(xPath.evaluate("state", node));
+                Node shortRecord = (Node) xPath.evaluate("field/shortrecord", node, XPathConstants.NODE);
 
-                try {
-                    searchResult.setCreatedDate(
-                            DatatypeConverter.parseDateTime(xPath.evaluate("createdDate", node)).getTimeInMillis());
-                } catch (IllegalArgumentException ignored) {
-                }
-                try {
-                    searchResult.setModifiedDate(
-                            DatatypeConverter.parseDateTime(xPath.evaluate("modifiedDate", node)).getTimeInMillis());
-                } catch (IllegalArgumentException ignored) {
+                if (shortRecord != null) {
+                    String pid = xPath.evaluate("pid", shortRecord);
+                    String title = xPath.evaluate("title", shortRecord);
+                    searchResult.setPid(pid);
+                    if (title != null && !title.equals("")) {
+                        searchResult.setTitle(title);
+                    } else {
+                        searchResult.setTitle(pid);
+                    }
+                    searchResult.setType(xPath.evaluate("type", shortRecord));
+                    searchResult.setSource(xPath.evaluate("source", shortRecord));
+                    searchResult.setTime(xPath.evaluate("time", shortRecord));
+                    searchResult.setDescription(xPath.evaluate("description", shortRecord));
+                    searchResult.setState(xPath.evaluate("state", shortRecord));
+
+                    try {
+                        searchResult.setCreatedDate(
+                                DatatypeConverter.parseDateTime(xPath.evaluate("createdDate", shortRecord))
+                                        .getTimeInMillis());
+                    } catch (IllegalArgumentException ignored) {
+                    }
+                    try {
+                        searchResult.setModifiedDate(
+                                DatatypeConverter.parseDateTime(xPath.evaluate("modifiedDate", shortRecord))
+                                        .getTimeInMillis());
+                    } catch (IllegalArgumentException ignored) {
+                    }
+                } else {
+                    String pid = xPath.evaluate("field[@name='recordID']/text()", node);
+                    searchResult.setPid(pid);
+                    searchResult.setTitle(pid);
                 }
 
                 searchResultList.getSearchResult().add(searchResult);
