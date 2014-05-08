@@ -965,8 +965,14 @@ public class CentralWebserviceImpl implements CentralWebservice {
                     }
                 } else {
                     String pid = xPath.evaluate("field[@name='recordID']/text()", node);
+                    pid = pid.substring(pid.indexOf(':') + 1);
                     searchResult.setPid(pid);
                     searchResult.setTitle(pid);
+                    searchResult.setDescription("");
+                    searchResult.setSource("");
+                    searchResult.setState("");
+                    searchResult.setTime("");
+                    searchResult.setType("");
                 }
 
                 searchResultList.getSearchResult().add(searchResult);
