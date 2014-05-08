@@ -935,19 +935,30 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
                 SearchResult searchResult = new SearchResult();
 
-                searchResult.setPid(xPath.evaluate("pid", node));
+                String pid = xPath.evaluate("pid", node);
+                String title = xPath.evaluate("title", node);
+                searchResult.setPid(pid);
+                if (title != null && !title.equals("")) {
+                    searchResult.setTitle(title);
+                } else {
+                    searchResult.setTitle(pid);
+                }
                 searchResult.setType(xPath.evaluate("type", node));
                 searchResult.setSource(xPath.evaluate("source", node));
-                searchResult.setTitle(xPath.evaluate("title", node));
                 searchResult.setTime(xPath.evaluate("time", node));
                 searchResult.setDescription(xPath.evaluate("description", node));
                 searchResult.setState(xPath.evaluate("state", node));
 
-                Calendar createdDate = DatatypeConverter.parseDateTime(xPath.evaluate("createdDate", node));
-                Calendar modifiedDate = DatatypeConverter.parseDateTime(xPath.evaluate("modifiedDate", node));
-
-                searchResult.setCreatedDate(createdDate.getTimeInMillis());
-                searchResult.setModifiedDate(modifiedDate.getTimeInMillis());
+                try {
+                    searchResult.setCreatedDate(
+                            DatatypeConverter.parseDateTime(xPath.evaluate("createdDate", node)).getTimeInMillis());
+                } catch (IllegalArgumentException ignored) {
+                }
+                try {
+                    searchResult.setModifiedDate(
+                            DatatypeConverter.parseDateTime(xPath.evaluate("modifiedDate", node)).getTimeInMillis());
+                } catch (IllegalArgumentException ignored) {
+                }
 
                 searchResultList.getSearchResult().add(searchResult);
             }
