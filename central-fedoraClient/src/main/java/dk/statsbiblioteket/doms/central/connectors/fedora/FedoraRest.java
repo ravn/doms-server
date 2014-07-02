@@ -363,7 +363,7 @@ public class FedoraRest extends Connector implements Fedora {
             profile.setMimeType(fdatastream.getDsMIME());
 
             String type = fdatastream.getDsControlGroup();
-            if (type.equals("X")) {
+            if (type.equals("X") || type.equals("M")) {
                 profile.setInternal(true);
             } else if (type.equals("E") || type.equals("R")) {
                 profile.setInternal(false);
