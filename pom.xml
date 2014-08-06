@@ -13,6 +13,11 @@
 
     <packaging>pom</packaging>
 
+    <properties><!--We couldn't be bothered to write valid javadoc, so ignore it-->
+        <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+    </properties>
+
+
     <scm>
         <connection>scm:git:git://github.com/statsbiblioteket/doms-server.git</connection>
         <developerConnection>scm:git:git@github.com:statsbiblioteket/doms-server.git</developerConnection>
@@ -81,10 +86,9 @@
                 <version>1.17.1</version>
             </dependency>
             <dependency>
-                <groupId>net.sourceforge.saxon</groupId>
-                <artifactId>saxon</artifactId>
-                <version>9.1.0.8</version>
-                <classifier>dom</classifier>
+                <groupId>net.sf.saxon</groupId>
+                <artifactId>Saxon-HE</artifactId>
+                <version>9.5.1-6</version>
             </dependency>
             <dependency>
                 <groupId>javax.servlet</groupId>

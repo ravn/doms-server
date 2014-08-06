@@ -86,9 +86,8 @@
                 </dependency>
         -->
         <dependency>
-            <groupId>net.sourceforge.saxon</groupId>
-            <artifactId>saxon</artifactId>
-            <classifier>dom</classifier>
+            <groupId>net.sf.saxon</groupId>
+            <artifactId>Saxon-HE</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
