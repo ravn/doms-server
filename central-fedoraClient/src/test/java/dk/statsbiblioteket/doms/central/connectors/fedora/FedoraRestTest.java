@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
+import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -35,9 +36,9 @@ public class FedoraRestTest {
     public void testNewEmptyObject() throws Exception {
         FedoraRest fedora = new FedoraRest(
                 new Credentials("fedoraAdmin", "fedoraAdminPass"), "http://achernar:7880/fedora");
-        String pid = fedora.newEmptyObject(
-                "uuid:testPid", Arrays.asList("oldIdentfier1"), Arrays.asList("uuid:Batch"), "message");
-        assertEquals(pid,"uuid:testPid");
+        final String pid1 = "uuid:testPid" + new Date().getTime();
+        String pid = fedora.newEmptyObject(pid1, Arrays.asList("oldIdentfier1"), Arrays.asList("uuid:Batch"), "message");
+        assertEquals(pid,pid1);
     }
 
     @org.junit.Test
