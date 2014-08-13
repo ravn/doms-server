@@ -52,7 +52,7 @@ public class DBSearchRest extends Connector implements DBSearch {
         WebResource
                 query =
                 restApi.queryParam("pid", "true")
-                       .queryParam("query", "identifier~" + identifier)
+                       .queryParam("query", "identifier=" + identifier)
                        .queryParam("maxResults", "1")
                        .queryParam("resultFormat", "xml");
         return genericQuery(query);
