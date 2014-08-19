@@ -12,6 +12,7 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.templates.ObjectIsWron
 import org.w3c.dom.Document;
 
 import java.util.ConcurrentModificationException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -73,7 +74,7 @@ public interface EnhancedFedora {
             BackendMethodFailedException,
             BackendInvalidResourceException;
 
-    void modifyDatastreamByValue(String pid,
+    Date modifyDatastreamByValue(String pid,
                                  String datastream,
                                  String contents,
                                  List<String> alternativeIdentifiers,
@@ -83,7 +84,7 @@ public interface EnhancedFedora {
             BackendMethodFailedException,
             BackendInvalidResourceException;
 
-    void modifyDatastreamByValue(String pid,
+    Date modifyDatastreamByValue(String pid,
                                  String datastream,
                                  String contents,
                                  String md5sum,
@@ -94,7 +95,7 @@ public interface EnhancedFedora {
             BackendMethodFailedException,
             BackendInvalidResourceException;
 
-    void modifyDatastreamByValue(String pid,
+    Date modifyDatastreamByValue(String pid,
                                  String datastream,
                                  String contents,
                                  String checksumType,
@@ -122,7 +123,7 @@ public interface EnhancedFedora {
        * @throws BackendInvalidResourceException
        * @throws java.util.ConcurrentModificationException
        */
-      void modifyDatastreamByValue(String pid,
+      Date modifyDatastreamByValue(String pid,
                                    String datastream,
                                    ChecksumType checksumType,
                                    String checksum,
@@ -136,7 +137,7 @@ public interface EnhancedFedora {
               BackendInvalidResourceException,
               ConcurrentModificationException;
 
-    void modifyDatastreamByValue(String pid,
+    Date modifyDatastreamByValue(String pid,
                                  String datastream,
                                  ChecksumType checksumType,
                                  String checksum,
@@ -175,7 +176,7 @@ public interface EnhancedFedora {
             BackendInvalidResourceException;
 
 
-    void addExternalDatastream(String pid,
+    Date addExternalDatastream(String pid,
                                String datastream,
                                String filename,
                                String permanentURL,
@@ -188,7 +189,7 @@ public interface EnhancedFedora {
             BackendMethodFailedException,
             BackendInvalidResourceException;
 
-    void addExternalDatastream(String pid,
+    Date addExternalDatastream(String pid,
                                String datastream,
                                String filename,
                                String permanentURL,
@@ -203,7 +204,7 @@ public interface EnhancedFedora {
             BackendMethodFailedException,
             BackendInvalidResourceException;
 
-    void addExternalDatastream(String pid,
+    Date addExternalDatastream(String pid,
                                String datastream,
                                String filename,
                                String permanentURL,

@@ -416,23 +416,23 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     @Override
-    public void modifyDatastreamByValue(String pid, String datastream, ChecksumType checksumType, String checksum,
+    public Date modifyDatastreamByValue(String pid, String datastream, ChecksumType checksumType, String checksum,
                                         byte[] contents, List<String> alternativeIdentifiers, String comment) throws
                                                                                                               BackendMethodFailedException,
                                                                                                               BackendInvalidCredsException,
                                                                                                               BackendInvalidResourceException {
         try {
-            updateExistingDatastreamByValue(
+            return updateExistingDatastreamByValue(
                     pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, comment, null, null);
         } catch (BackendInvalidResourceException e) {
             //perhaps the datastream did not exist
-            createDatastreamByValue(
+            return createDatastreamByValue(
                     pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, null, comment);
         }
     }
 
     @Override
-    public void modifyDatastreamByValue(String pid, String datastream, ChecksumType checksumType, String checksum,
+    public Date modifyDatastreamByValue(String pid, String datastream, ChecksumType checksumType, String checksum,
                                         byte[] contents, List<String> alternativeIdentifiers, String comment,
                                         Long lastModifiedDate) throws
                                                                BackendMethodFailedException,
@@ -440,7 +440,7 @@ public class FedoraRest extends Connector implements Fedora {
                                                                BackendInvalidResourceException,
                                                                ConcurrentModificationException {
         try {
-            updateExistingDatastreamByValue(
+            return updateExistingDatastreamByValue(
                     pid,
                     datastream,
                     checksumType,
@@ -452,13 +452,13 @@ public class FedoraRest extends Connector implements Fedora {
                     null);
         } catch (BackendInvalidResourceException e) {
             //perhaps the datastream did not exist
-            createDatastreamByValue(
+            return createDatastreamByValue(
                     pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, null, comment);
         }
     }
 
     @Override
-    public void modifyDatastreamByValue(String pid, String datastream, ChecksumType checksumType, String checksum,
+    public Date modifyDatastreamByValue(String pid, String datastream, ChecksumType checksumType, String checksum,
                                         byte[] contents, List<String> alternativeIdentifiers, String mimeType,
                                         String comment, Long lastModifiedDate) throws
                                                                                BackendMethodFailedException,
@@ -466,7 +466,7 @@ public class FedoraRest extends Connector implements Fedora {
                                                                                BackendInvalidResourceException,
                                                                                ConcurrentModificationException {
         try {
-            updateExistingDatastreamByValue(
+            return updateExistingDatastreamByValue(
                     pid,
                     datastream,
                     checksumType,
@@ -478,12 +478,12 @@ public class FedoraRest extends Connector implements Fedora {
                     mimeType);
         } catch (BackendInvalidResourceException e) {
             //perhaps the datastream did not exist
-            createDatastreamByValue(
+            return createDatastreamByValue(
                     pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, mimeType, comment);
         }
     }
 
-    private void createDatastreamByValue(String pid, String datastream, ChecksumType checksumType, String checksum,
+    private Date createDatastreamByValue(String pid, String datastream, ChecksumType checksumType, String checksum,
                                          byte[] contents, List<String> alternativeIdentifiers, String mimeType,
                                          String comment) throws
                                                          BackendMethodFailedException,
@@ -494,9 +494,11 @@ public class FedoraRest extends Connector implements Fedora {
                 mimeType = "text/xml";
             }
             WebResource resource = getModifyDatastreamWebResource(
-                    pid, datastream, checksumType, checksum, alternativeIdentifiers, comment, null, mimeType);
-
-            resource.queryParam("controlGroup", "M").post(new ByteArrayInputStream(contents));
+                    pid, datastream, checksumType, checksum, alternativeIdentifiers, comment, null, mimeType).
+            queryParam("controlGroup", "M");
+            DatastreamProfileType profile = resource.entity(new ByteArrayInputStream(contents),mimeType)
+                                                    .post(DatastreamProfileType.class);
+            return profile.getDsCreateDate().toGregorianCalendar().getTime();
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
         } catch (UniformInterfaceException e) {
@@ -552,7 +554,7 @@ public class FedoraRest extends Connector implements Fedora {
         return resource;
     }
 
-    private void updateExistingDatastreamByValue(String pid, String datastream, ChecksumType checksumType,
+    private Date updateExistingDatastreamByValue(String pid, String datastream, ChecksumType checksumType,
                                                  String checksum, byte[] contents, List<String> alternativeIdentifiers,
                                                  String comment, Long lastModifiedDate, String mimeType) throws
                                                                                                          BackendMethodFailedException,
@@ -570,12 +572,14 @@ public class FedoraRest extends Connector implements Fedora {
                     lastModifiedDate,
                     mimeType);
             WebResource.Builder header = resource.header(HttpHeaders.CONTENT_TYPE, null);
+            WebResource.Builder builder;
             if (mimeType != null){
-                header.entity(new ByteArrayInputStream(contents), mimeType);
+                builder = header.entity(new ByteArrayInputStream(contents), mimeType);
             } else {
-                header.entity(new ByteArrayInputStream(contents));
+                builder = header.entity(new ByteArrayInputStream(contents));
             }
-            header.put();
+            DatastreamProfileType profile = builder.put(DatastreamProfileType.class);
+            return profile.getDsCreateDate().toGregorianCalendar().getTime();
 
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
@@ -1004,7 +1008,7 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     @Override
-    public void addExternalDatastream(String pid, String datastream, String label, String url, String formatURI,
+    public Date addExternalDatastream(String pid, String datastream, String label, String url, String formatURI,
                                       String mimeType, String checksumType, String checksum, String comment) throws
                                                                                                              BackendMethodFailedException,
                                                                                                              BackendInvalidCredsException,
@@ -1045,7 +1049,8 @@ public class FedoraRest extends Connector implements Fedora {
             if (checksum != null) {
                 resource = resource.queryParam("checksum", checksum);
             }
-            resource.post();
+            DatastreamProfileType profile = resource.post(DatastreamProfileType.class);
+            return profile.getDsCreateDate().toGregorianCalendar().getTime();
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
         } catch (UniformInterfaceException e) {

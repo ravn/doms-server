@@ -32,6 +32,7 @@ import javax.xml.bind.JAXBException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.util.ConcurrentModificationException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -146,7 +147,7 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
     }
 
     @Override
-    public void modifyDatastreamByValue(String pid,
+    public Date modifyDatastreamByValue(String pid,
                                         String datastream,
                                         String contents,
                                         List<String> alternativeIdentifiers,
@@ -155,7 +156,7 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
             BackendInvalidCredsException,
             BackendMethodFailedException,
             BackendInvalidResourceException {
-        fedora.modifyDatastreamByValue(pid,
+        return fedora.modifyDatastreamByValue(pid,
                                        datastream,
                                        null,
                                        null,
@@ -173,7 +174,7 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
     }
 
     @Override
-    public void modifyDatastreamByValue(String pid,
+    public Date modifyDatastreamByValue(String pid,
                                         String datastream,
                                         String contents,
                                         String md5sum,
@@ -183,7 +184,7 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
             BackendInvalidCredsException,
             BackendMethodFailedException,
             BackendInvalidResourceException {
-        fedora.modifyDatastreamByValue(pid,
+        return fedora.modifyDatastreamByValue(pid,
                                        datastream,
                                        ChecksumType.MD5,
                                        md5sum,
@@ -193,7 +194,7 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
     }
 
     @Override
-    public void modifyDatastreamByValue(String pid,
+    public Date modifyDatastreamByValue(String pid,
                                         String datastream,
                                         String contents,
                                         String checksumType,
@@ -213,7 +214,7 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
             }
         }
 
-        fedora.modifyDatastreamByValue(pid,
+        return fedora.modifyDatastreamByValue(pid,
                                        datastream,
                                        properChecksumType,
                                        checksum,
@@ -223,7 +224,7 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
     }
 
     @Override
-    public void modifyDatastreamByValue(String pid,
+    public Date modifyDatastreamByValue(String pid,
                                         String datastream,
                                         ChecksumType checksumType,
                                         String checksum,
@@ -235,11 +236,11 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
             BackendInvalidCredsException,
             BackendInvalidResourceException,
             ConcurrentModificationException {
-        fedora.modifyDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, comment, lastModifiedDate);
+        return fedora.modifyDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, comment, lastModifiedDate);
     }
 
     @Override
-    public void modifyDatastreamByValue(String pid,
+    public Date modifyDatastreamByValue(String pid,
                                         String datastream,
                                         ChecksumType checksumType,
                                         String checksum,
@@ -253,7 +254,7 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
             BackendInvalidCredsException,
             BackendInvalidResourceException,
             ConcurrentModificationException {
-        fedora.modifyDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, mimeType, comment, lastModifiedDate);
+        return fedora.modifyDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, mimeType, comment, lastModifiedDate);
     }
 
     @Override
@@ -287,7 +288,7 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
     }
 
     @Override
-    public void addExternalDatastream(String pid,
+    public Date addExternalDatastream(String pid,
                                       String datastream,
                                       String filename,
                                       String permanentURL,
@@ -299,11 +300,11 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
             BackendInvalidCredsException,
             BackendMethodFailedException,
             BackendInvalidResourceException {
-        fedora.addExternalDatastream(pid,datastream,filename,permanentURL,formatURI,mimetype,null,null,comment);
+        return fedora.addExternalDatastream(pid,datastream,filename,permanentURL,formatURI,mimetype,null,null,comment);
     }
 
     @Override
-    public void addExternalDatastream(String pid,
+    public Date addExternalDatastream(String pid,
                                       String datastream,
                                       String filename,
                                       String permanentURL,
@@ -317,11 +318,11 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
             BackendInvalidCredsException,
             BackendMethodFailedException,
             BackendInvalidResourceException {
-        fedora.addExternalDatastream(pid,datastream,filename,permanentURL,formatURI,mimetype,checksumType,checksum,comment);
+        return fedora.addExternalDatastream(pid,datastream,filename,permanentURL,formatURI,mimetype,checksumType,checksum,comment);
     }
 
     @Override
-    public void addExternalDatastream(String pid,
+    public Date addExternalDatastream(String pid,
                                       String datastream,
                                       String filename,
                                       String permanentURL,
@@ -334,7 +335,7 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
             BackendInvalidCredsException,
             BackendMethodFailedException,
             BackendInvalidResourceException {
-        fedora.addExternalDatastream(pid, datastream, filename, permanentURL, formatURI, mimetype, ChecksumType.MD5.name(), md5sum, comment);
+        return fedora.addExternalDatastream(pid, datastream, filename, permanentURL, formatURI, mimetype, ChecksumType.MD5.name(), md5sum, comment);
     }
 
 

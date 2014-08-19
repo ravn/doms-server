@@ -36,6 +36,7 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectProfi
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.SearchResult;
 
 import java.util.ConcurrentModificationException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -100,7 +101,7 @@ public interface Fedora {
             BackendInvalidResourceException;
 
 
-    void modifyDatastreamByValue(String pid,
+    Date modifyDatastreamByValue(String pid,
                                  String datastream,
                                  ChecksumType checksumType,
                                  String checksum,
@@ -128,7 +129,7 @@ public interface Fedora {
      * @throws BackendInvalidResourceException
      * @throws ConcurrentModificationException
      */
-    void modifyDatastreamByValue(String pid,
+    Date modifyDatastreamByValue(String pid,
                                  String datastream,
                                  ChecksumType checksumType,
                                  String checksum,
@@ -142,7 +143,7 @@ public interface Fedora {
             BackendInvalidResourceException,
             ConcurrentModificationException;
 
-    void modifyDatastreamByValue(String pid,
+    Date modifyDatastreamByValue(String pid,
                                  String datastream,
                                  ChecksumType checksumType,
                                  String checksum,
@@ -239,7 +240,7 @@ public interface Fedora {
 
 
 
-    void addExternalDatastream(String pid,
+    Date addExternalDatastream(String pid,
                                String datastream,
                                String label,
                                String url,
