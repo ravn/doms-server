@@ -569,7 +569,13 @@ public class FedoraRest extends Connector implements Fedora {
                     comment,
                     lastModifiedDate,
                     mimeType);
-            resource.header(HttpHeaders.CONTENT_TYPE, null).entity(new ByteArrayInputStream(contents),mimeType).put();
+            WebResource.Builder header = resource.header(HttpHeaders.CONTENT_TYPE, null);
+            if (mimeType != null){
+                header.entity(new ByteArrayInputStream(contents), mimeType);
+            } else {
+                header.entity(new ByteArrayInputStream(contents));
+            }
+            header.put();
 
         } catch (UnsupportedEncodingException e) {
             throw new BackendMethodFailedException("UTF-8 not known....", e);
