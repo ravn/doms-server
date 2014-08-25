@@ -8,7 +8,7 @@
 
     <groupId>dk.statsbiblioteket.doms.central</groupId>
     <artifactId>central</artifactId>
-    <version>1.5-SNAPSHOT</version>
+    <version>1.5</version>
 
 
     <packaging>pom</packaging>
@@ -22,7 +22,7 @@
         <connection>scm:git:git://github.com/statsbiblioteket/doms-server.git</connection>
         <developerConnection>scm:git:git@github.com:statsbiblioteket/doms-server.git</developerConnection>
         <url>https://github.com/statsbiblioteket/doms-server</url>
-        <tag>HEAD</tag>
+        <tag>central-1.5</tag>
     </scm>
 
 
