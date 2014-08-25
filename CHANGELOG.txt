@@ -1,3 +1,7 @@
+1.5
+ModifyDatastream returns date, not void to ensure you know the date of the server change for optimistic locking
+Fixed the stupid mediatype bug.
+
 1.4
 Use the new DC identifier index to speed up lookups.
 Use saxon HE, not the old saxon from fedora
