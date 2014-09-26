@@ -87,6 +87,12 @@
         <dependency>
             <groupId>dk.statsbiblioteket.doms.updatetracker</groupId>
             <artifactId>updatetracker-lib</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>saxon</artifactId>
+                    <groupId>net.sourceforge.saxon</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
