@@ -62,6 +62,7 @@ public class TemplatesImpl implements Templates {
             + "foxml:datastreamVersion[position()=last()]/"
             + "foxml:xmlContent/rdf:RDF/"
             + "rdf:Description/doms:isTemplateFor";
+    private static final String DATASTREAM_EVENTS = "/foxml:digitalObject/foxml:datastream[@ID='EVENTS']";
     private static final String DATASTREAM_AUDIT = "/foxml:digitalObject/foxml:datastream[@ID='AUDIT']";
     private static final String DATASTREAM_NODES = "/foxml:digitalObject/foxml:datastream";
 
@@ -162,6 +163,8 @@ public class TemplatesImpl implements Templates {
         LOG.debug("Generated new pid '" + newPid + "'");
 
         try {
+            removeEvents(document);
+            LOG.trace("Events removed");
             removeAudit(document);
             LOG.trace("Audit removed");
             removeDatastreamVersions(document);
@@ -199,6 +202,17 @@ public class TemplatesImpl implements Templates {
         //reingest the object
         return fedora.ingestDocument(document, logMessage + "; " + "Cloned from template '" + templatepid);
 
+    }
+
+    /**
+     * Removes the EVENTS datastream
+     *
+     * @param document the object
+     *
+     * @throws XPathExpressionException if a xpath expression did not evaluate
+     */
+    private void removeEvents(Document document) throws XPathExpressionException {
+        removeExpathList(document, DATASTREAM_EVENTS);
     }
 
 
