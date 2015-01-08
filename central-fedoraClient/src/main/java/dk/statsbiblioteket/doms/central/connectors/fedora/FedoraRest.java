@@ -25,13 +25,18 @@
  * under the License.
  */
 
-
 package dk.statsbiblioteket.doms.central.connectors.fedora;
 
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
@@ -52,11 +57,6 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.utils.DateUtils;
 import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
 import dk.statsbiblioteket.util.xml.DOM;
 import dk.statsbiblioteket.util.xml.XPathSelector;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -94,7 +94,7 @@ public class FedoraRest extends Connector implements Fedora {
     /**
      * Initialise connector.
      *
-     * @param creds Credentials for communicating with Fedora.
+     * @param creds    Credentials for communicating with Fedora.
      * @param location URL to Fedora
      * @throws MalformedURLException On illegal URLs in location parameter.
      */
@@ -109,15 +109,16 @@ public class FedoraRest extends Connector implements Fedora {
      * We delay between retries, and the delay is done with exponential backoff, first waiting {@link #retryDelay}, and
      * 2*{@link #retryDelay}, then 4*{@link #retryDelay} and so forth.
      *
-     * @param creds Credentials for communicating with Fedora.
-     * @param location URL to Fedora
-     * @param maxTriesPut The number of tries to retry on 409 on PUT requests
-     * @param maxTriesPost The number of tries to retry on 409 on POST requests
+     * @param creds          Credentials for communicating with Fedora.
+     * @param location       URL to Fedora
+     * @param maxTriesPut    The number of tries to retry on 409 on PUT requests
+     * @param maxTriesPost   The number of tries to retry on 409 on POST requests
      * @param maxTriesDelete The number of tries to retry on 409 on DELETE requests
-     * @param retryDelay  The delay to wait between tries (with exponential backoff)
+     * @param retryDelay     The delay to wait between tries (with exponential backoff)
      * @throws MalformedURLException On illegal URLs in location parameter.
      */
-    public FedoraRest(Credentials creds, String location, int maxTriesPut, int maxTriesPost, int maxTriesDelete, int retryDelay) throws MalformedURLException {
+    public FedoraRest(Credentials creds, String location, int maxTriesPut, int maxTriesPost, int maxTriesDelete,
+                      int retryDelay) throws MalformedURLException {
         super(creds, location);
         this.maxTriesPut = maxTriesPut;
         this.maxTriesPost = maxTriesPost;
@@ -136,9 +137,8 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     @Override
-    public boolean exists(String pid, Long asOfDateTime) throws
-                                                         BackendInvalidCredsException,
-                                                         BackendMethodFailedException {
+    public boolean exists(String pid, Long asOfDateTime)
+            throws BackendInvalidCredsException, BackendMethodFailedException {
         try {
             ObjectProfile profile = getObjectProfile(pid, asOfDateTime);
         } catch (BackendInvalidResourceException e) {
@@ -148,9 +148,8 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     @Override
-    public boolean isDataObject(String pid, Long asOfDateTime) throws
-                                                               BackendInvalidCredsException,
-                                                               BackendMethodFailedException {
+    public boolean isDataObject(String pid, Long asOfDateTime)
+            throws BackendInvalidCredsException, BackendMethodFailedException {
         try {
             ObjectProfile profile = getObjectProfile(pid, asOfDateTime);
             return profile.getType().equals(ObjectType.DATA_OBJECT);
@@ -160,9 +159,8 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     @Override
-    public boolean isTemplate(String pid, Long asOfDateTime) throws
-                                                             BackendInvalidCredsException,
-                                                             BackendMethodFailedException {
+    public boolean isTemplate(String pid, Long asOfDateTime)
+            throws BackendInvalidCredsException, BackendMethodFailedException {
         try {
             ObjectProfile profile = getObjectProfile(pid, asOfDateTime);
             return profile.getType().equals(ObjectType.TEMPLATE);
@@ -173,9 +171,8 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     @Override
-    public boolean isContentModel(String pid, Long asOfDateTime) throws
-                                                                 BackendInvalidCredsException,
-                                                                 BackendMethodFailedException {
+    public boolean isContentModel(String pid, Long asOfDateTime)
+            throws BackendInvalidCredsException, BackendMethodFailedException {
         try {
             ObjectProfile profile = getObjectProfile(pid, asOfDateTime);
             return profile.getType().equals(ObjectType.CONTENT_MODEL);
@@ -186,10 +183,8 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     @Override
-    public String getObjectXml(String pid, Long asOfTime) throws
-                                                          BackendMethodFailedException,
-                                                          BackendInvalidCredsException,
-                                                          BackendInvalidResourceException {
+    public String getObjectXml(String pid, Long asOfTime)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
 
         try {
             //Get basic fedora profile
@@ -216,11 +211,8 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     protected String getRawXml(String pid) {
-        return restApi.path("/")
-                      .path(urlEncode(pid))
-                      .path("/objectXML")
-                      .type(MediaType.TEXT_XML_TYPE)
-                      .get(String.class);
+        return restApi.path("/").path(urlEncode(pid)).path("/objectXML").type(MediaType.TEXT_XML_TYPE)
+                .get(String.class);
     }
 
     private String StringOrNull(Long time) {
@@ -233,9 +225,8 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     @Override
-    public String ingestDocument(Document document, String logmessage) throws
-                                                                       BackendMethodFailedException,
-                                                                       BackendInvalidCredsException {
+    public String ingestDocument(Document document, String logmessage)
+            throws BackendMethodFailedException, BackendInvalidCredsException {
         String payload;
         try {
             payload = DOM.domToString(document);
@@ -261,16 +252,13 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     @Override
-    public ObjectProfile getObjectProfile(String pid, Long asOfTime) throws
-                                                                     BackendMethodFailedException,
-                                                                     BackendInvalidCredsException,
-                                                                     BackendInvalidResourceException {
+    public ObjectProfile getObjectProfile(String pid, Long asOfTime)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
         try {
             //Get basic fedora profile
             dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectProfile profile;
-            profile = restApi.path("/").path(urlEncode(pid)).queryParam(
-                                     "format", "text/xml")
-                             .get(dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectProfile.class);
+            profile = restApi.path("/").path(urlEncode(pid)).queryParam("format", "text/xml")
+                    .get(dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectProfile.class);
             ObjectProfile prof = new ObjectProfile();
             prof.setObjectCreatedDate(profile.getObjCreateDate().toGregorianCalendar().getTime());
             prof.setObjectLastModifiedDate(profile.getObjLastModDate().toGregorianCalendar().getTime());
@@ -292,11 +280,8 @@ public class FedoraRest extends Connector implements Fedora {
             prof.setRelations(relations);
 
             //get Datastream list
-            ObjectDatastreams datastreams = restApi.path("/")
-                                                   .path(urlEncode(pid))
-                                                   .path("/datastreams")
-                                                   .queryParam("format", "text/xml")
-                                                   .get(ObjectDatastreams.class);
+            ObjectDatastreams datastreams = restApi.path("/").path(urlEncode(pid)).path("/datastreams")
+                    .queryParam("format", "text/xml").get(ObjectDatastreams.class);
             List<DatastreamProfile> pdatastreams = new ArrayList<DatastreamProfile>();
             for (DatastreamType datastreamType : datastreams.getDatastream()) {
                 pdatastreams.add(getDatastreamProfile(pid, datastreamType.getDsid(), asOfTime));
@@ -323,7 +308,6 @@ public class FedoraRest extends Connector implements Fedora {
                 }
             }
 
-
             return prof;
 
 
@@ -334,28 +318,13 @@ public class FedoraRest extends Connector implements Fedora {
 
     }
 
-    public DatastreamProfile getDatastreamProfile(String pid, String dsid, Long asOfTime) throws
-                                                                                          BackendMethodFailedException,
-                                                                                          BackendInvalidCredsException,
-                                                                                          BackendInvalidResourceException {
+    public DatastreamProfile getDatastreamProfile(String pid, String dsid, Long asOfTime)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
         try {
 
-            DatastreamProfileType fdatastream = restApi.path(
-                    "/")
-                                                                                                                .path(urlEncode(
-                                                                                                                        pid)
-                                                                                                                     )
-                                                                                                                .path("/datastreams/")
-                                                                                                                .path(dsid)
-                                                                                                                .queryParam(
-                                                                                                                        AS_OF_DATE_TIME,
-                                                                                                                        StringOrNull(
-                                                                                                                                asOfTime)
-                                                                                                                           )
-                                                                                                                .queryParam(
-                                                                                                                        "format",
-                                                                                                                        "text/xml")
-                                                                                                                .get(DatastreamProfileType.class);
+            DatastreamProfileType fdatastream = restApi.path("/").path(urlEncode(pid)).path("/datastreams/").path(dsid)
+                    .queryParam(AS_OF_DATE_TIME, StringOrNull(asOfTime)).queryParam("format", "text/xml")
+                    .get(DatastreamProfileType.class);
             DatastreamProfile profile = new DatastreamProfile();
             profile.setID(fdatastream.getDsID());
             profile.setLabel(fdatastream.getDsLabel());
@@ -363,7 +332,6 @@ public class FedoraRest extends Connector implements Fedora {
 
             profile.setChecksum(fdatastream.getDsChecksum());
             profile.setChecksumType(fdatastream.getDsChecksumType());
-
 
             profile.setCreated(fdatastream.getDsCreateDate().toGregorianCalendar().getTime().getTime());
             profile.setFormatURI(fdatastream.getDsFormatURI());
@@ -385,10 +353,8 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     @Override
-    public void modifyObjectState(String pid, String state, String comment) throws
-                                                                            BackendMethodFailedException,
-                                                                            BackendInvalidCredsException,
-                                                                            BackendInvalidResourceException {
+    public void modifyObjectState(String pid, String state, String comment)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
         if (comment == null || comment.isEmpty()) {
             comment = "No message supplied";
         }
@@ -408,84 +374,60 @@ public class FedoraRest extends Connector implements Fedora {
 
     @Override
     public Date modifyDatastreamByValue(String pid, String datastream, ChecksumType checksumType, String checksum,
-                                        byte[] contents, List<String> alternativeIdentifiers, String comment) throws
-                                                                                                              BackendMethodFailedException,
-                                                                                                              BackendInvalidCredsException,
-                                                                                                              BackendInvalidResourceException {
+                                        byte[] contents, List<String> alternativeIdentifiers, String comment)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
         try {
-            return updateExistingDatastreamByValue(
-                    pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, comment, null, null);
+            return updateExistingDatastreamByValue(pid, datastream, checksumType, checksum, contents,
+                                                   alternativeIdentifiers, comment, null, null);
         } catch (BackendInvalidResourceException e) {
             //perhaps the datastream did not exist
-            return createDatastreamByValue(
-                    pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, null, comment);
+            return createDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers,
+                                           null, comment);
         }
     }
 
     @Override
     public Date modifyDatastreamByValue(String pid, String datastream, ChecksumType checksumType, String checksum,
                                         byte[] contents, List<String> alternativeIdentifiers, String comment,
-                                        Long lastModifiedDate) throws
-                                                               BackendMethodFailedException,
-                                                               BackendInvalidCredsException,
-                                                               BackendInvalidResourceException,
-                                                               ConcurrentModificationException {
+                                        Long lastModifiedDate)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException,
+            ConcurrentModificationException {
         try {
-            return updateExistingDatastreamByValue(
-                    pid,
-                    datastream,
-                    checksumType,
-                    checksum,
-                    contents,
-                    alternativeIdentifiers,
-                    comment,
-                    lastModifiedDate,
-                    null);
+            return updateExistingDatastreamByValue(pid, datastream, checksumType, checksum, contents,
+                                                   alternativeIdentifiers, comment, lastModifiedDate, null);
         } catch (BackendInvalidResourceException e) {
             //perhaps the datastream did not exist
-            return createDatastreamByValue(
-                    pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, null, comment);
+            return createDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers,
+                                           null, comment);
         }
     }
 
     @Override
     public Date modifyDatastreamByValue(String pid, String datastream, ChecksumType checksumType, String checksum,
                                         byte[] contents, List<String> alternativeIdentifiers, String mimeType,
-                                        String comment, Long lastModifiedDate) throws
-                                                                               BackendMethodFailedException,
-                                                                               BackendInvalidCredsException,
-                                                                               BackendInvalidResourceException,
-                                                                               ConcurrentModificationException {
+                                        String comment, Long lastModifiedDate)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException,
+            ConcurrentModificationException {
         try {
-            return updateExistingDatastreamByValue(
-                    pid,
-                    datastream,
-                    checksumType,
-                    checksum,
-                    contents,
-                    alternativeIdentifiers,
-                    comment,
-                    lastModifiedDate,
-                    mimeType);
+            return updateExistingDatastreamByValue(pid, datastream, checksumType, checksum, contents,
+                                                   alternativeIdentifiers, comment, lastModifiedDate, mimeType);
         } catch (BackendInvalidResourceException e) {
             //perhaps the datastream did not exist
-            return createDatastreamByValue(
-                    pid, datastream, checksumType, checksum, contents, alternativeIdentifiers, mimeType, comment);
+            return createDatastreamByValue(pid, datastream, checksumType, checksum, contents, alternativeIdentifiers,
+                                           mimeType, comment);
         }
     }
 
     private Date createDatastreamByValue(String pid, String datastream, ChecksumType checksumType, String checksum,
                                          byte[] contents, List<String> alternativeIdentifiers, String mimeType,
-                                         String comment) throws
-                                                         BackendMethodFailedException,
-                                                         BackendInvalidCredsException,
-                                                         BackendInvalidResourceException {
+                                         String comment)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
         if (mimeType == null) {
             mimeType = "text/xml";
         }
-        WebResource resource = getModifyDatastreamWebResource(
-                pid, datastream, checksumType, checksum, alternativeIdentifiers, comment, null, mimeType).
-        queryParam("controlGroup", "M");
+        WebResource resource = getModifyDatastreamWebResource(pid, datastream, checksumType, checksum,
+                                                              alternativeIdentifiers, comment, null, mimeType).
+                queryParam("controlGroup", "M");
         WebResource.Builder request = resource.entity(new ByteArrayInputStream(contents), mimeType);
         int tries = 0;
         while (true) {
@@ -506,12 +448,8 @@ public class FedoraRest extends Connector implements Fedora {
             comment = "No message supplied";
         }
 
-        WebResource resource = restApi.path("/")
-                                      .path(urlEncode(pid))
-                                      .path("/datastreams/")
-                                      .path(urlEncode(datastream))
-                                      .queryParam("logMessage", comment);
-
+        WebResource resource = restApi.path("/").path(urlEncode(pid)).path("/datastreams/").path(urlEncode(datastream))
+                .queryParam("logMessage", comment);
 
         if (alternativeIdentifiers != null) {
             for (String alternativeIdentifier : alternativeIdentifiers) {
@@ -539,13 +477,12 @@ public class FedoraRest extends Connector implements Fedora {
 
     private Date updateExistingDatastreamByValue(String pid, String datastream, ChecksumType checksumType,
                                                  String checksum, byte[] contents, List<String> alternativeIdentifiers,
-                                                 String comment, Long lastModifiedDate, String mimeType) throws
-                                                                                                         BackendMethodFailedException,
-                                                                                                         BackendInvalidCredsException,
-                                                                                                         BackendInvalidResourceException,
-                                                                                                         ConcurrentModificationException {
-        WebResource resource = getModifyDatastreamWebResource(pid, datastream, checksumType, checksum, alternativeIdentifiers,
-                                                  comment, lastModifiedDate, mimeType);
+                                                 String comment, Long lastModifiedDate, String mimeType)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException,
+            ConcurrentModificationException {
+        WebResource resource = getModifyDatastreamWebResource(pid, datastream, checksumType, checksum,
+                                                              alternativeIdentifiers, comment, lastModifiedDate,
+                                                              mimeType);
         WebResource.Builder header = resource.header(HttpHeaders.CONTENT_TYPE, null);
         WebResource.Builder builder;
         if (mimeType != null) {
@@ -567,10 +504,8 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     @Override
-    public void deleteObject(String pid, String comment) throws
-                                                         BackendMethodFailedException,
-                                                         BackendInvalidCredsException,
-                                                         BackendInvalidResourceException {
+    public void deleteObject(String pid, String comment)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
         WebResource request = restApi.path("/").path(urlEncode(pid)).queryParam("logMessage", comment);
         int tries = 0;
         while (true) {
@@ -585,12 +520,10 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     @Override
-    public void deleteDatastream(String pid, String datastream, String comment) throws
-                                                                                BackendMethodFailedException,
-                                                                                BackendInvalidCredsException,
-                                                                                BackendInvalidResourceException {
-        WebResource request = restApi.path("/").path(urlEncode(pid)).path("/datastreams/")
-                .path(urlEncode(datastream)).queryParam("logMessage", comment);
+    public void deleteDatastream(String pid, String datastream, String comment)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
+        WebResource request = restApi.path("/").path(urlEncode(pid)).path("/datastreams/").path(urlEncode(datastream))
+                .queryParam("logMessage", comment);
         int tries = 0;
         while (true) {
             tries++;
@@ -604,19 +537,12 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     @Override
-    public String getXMLDatastreamContents(String pid, String datastream, Long asOfTime) throws
-                                                                                         BackendMethodFailedException,
-                                                                                         BackendInvalidCredsException,
-                                                                                         BackendInvalidResourceException {
+    public String getXMLDatastreamContents(String pid, String datastream, Long asOfTime)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
         try {
 
-            String contents = restApi.path("/")
-                                     .path(urlEncode(pid))
-                                     .path("/datastreams/")
-                                     .path(urlEncode(datastream))
-                                     .path("/content")
-                                     .queryParam(AS_OF_DATE_TIME, StringOrNull(asOfTime))
-                                     .get(String.class);
+            String contents = restApi.path("/").path(urlEncode(pid)).path("/datastreams/").path(urlEncode(datastream))
+                    .path("/content").queryParam(AS_OF_DATE_TIME, StringOrNull(asOfTime)).get(String.class);
             return contents;
         } catch (UniformInterfaceException e) {
             handleResponseException(pid, 1, 1, e);
@@ -626,10 +552,8 @@ public class FedoraRest extends Connector implements Fedora {
 
     @Override
     public void addRelation(String pid, String subject, String predicate, String object, boolean literal,
-                            String comment) throws
-                                            BackendMethodFailedException,
-                                            BackendInvalidCredsException,
-                                            BackendInvalidResourceException {
+                            String comment)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
         if (comment == null || comment.isEmpty()) {
             comment = "No message supplied";
         }  //TODO fedora should take this logmessage
@@ -654,10 +578,9 @@ public class FedoraRest extends Connector implements Fedora {
             subject = "info:fedora/" + pid;
         }
 
-        WebResource request = restApi.path("/").path(pid).path("/relationships/new")
-                .queryParam("subject", subject).queryParam("predicate", predicate).queryParam("object", object)
-                .queryParam("isLiteral", "" + literal);
-        int tries=0;
+        WebResource request = restApi.path("/").path(pid).path("/relationships/new").queryParam("subject", subject)
+                .queryParam("predicate", predicate).queryParam("object", object).queryParam("isLiteral", "" + literal);
+        int tries = 0;
         while (true) {
             tries++;
             try {
@@ -681,10 +604,8 @@ public class FedoraRest extends Connector implements Fedora {
 
     @Override
     public void addRelations(String pid, String subject, String predicate, List<String> objects, boolean literal,
-                             String comment) throws
-                                             BackendMethodFailedException,
-                                             BackendInvalidCredsException,
-                                             BackendInvalidResourceException {
+                             String comment)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
         if (comment == null || comment.isEmpty()) {
             comment = "No message supplied";
         }
@@ -697,10 +618,7 @@ public class FedoraRest extends Connector implements Fedora {
             addRelation(pid, subject, predicate, objects.get(0), literal, comment);
         }
 
-
-        XPathSelector xpath = DOM.createXPathSelector(
-                "rdf", Constants.NAMESPACE_RDF);
-
+        XPathSelector xpath = DOM.createXPathSelector("rdf", Constants.NAMESPACE_RDF);
 
         String datastream;
         if (subject == null || subject.isEmpty() || subject.equals(pid) || subject.equals("info:fedora/" + pid)) {
@@ -713,9 +631,7 @@ public class FedoraRest extends Connector implements Fedora {
         String rels = getXMLDatastreamContents(pid, datastream, null);
         Document relsDoc = DOM.stringToDOM(rels, true);
 
-
-        Node rdfDescriptionNode = xpath.selectNode(
-                relsDoc, "/rdf:RDF/rdf:Description[@rdf:about='" + subject + "']");
+        Node rdfDescriptionNode = xpath.selectNode(relsDoc, "/rdf:RDF/rdf:Description[@rdf:about='" + subject + "']");
 
         URI predURI;
         try {
@@ -729,7 +645,6 @@ public class FedoraRest extends Connector implements Fedora {
         }
 
         String[] splits = predicate.split("#");
-
 
         for (String object : objects) {
             if (!object.startsWith("info:fedora/")) {
@@ -751,22 +666,13 @@ public class FedoraRest extends Connector implements Fedora {
             //TODO Not really a backend exception
             throw new BackendMethodFailedException("Failed to transform RELS-EXT", e);
         }
-        modifyDatastreamByValue(
-                pid,
-                datastream,
-                ChecksumType.MD5,
-                null, bytes,
-                null,
-                "application/rdf+xml",
-                comment,
-                null);
+        modifyDatastreamByValue(pid, datastream, ChecksumType.MD5, null, bytes, null, "application/rdf+xml", comment,
+                                null);
     }
 
     @Override
-    public List<FedoraRelation> getNamedRelations(String pid, String name, Long asOfTime) throws
-                                                                                          BackendMethodFailedException,
-                                                                                          BackendInvalidCredsException,
-                                                                                          BackendInvalidResourceException {
+    public List<FedoraRelation> getNamedRelations(String pid, String name, Long asOfTime)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
         try {
             //TODO use asOfTime here, when fedora supports it
 
@@ -774,24 +680,20 @@ public class FedoraRest extends Connector implements Fedora {
             if (!subject.startsWith("info:fedora/")) {
                 subject = "info:fedora/" + subject;
             }
-            WebResource temp = restApi.path("/")
-                                      .path(pid)
-                                      .path("/relationships/")
-                                      .queryParam("subject", subject)
-                                      .queryParam("format", "n-triples");
+            WebResource temp = restApi.path("/").path(pid).path("/relationships/").queryParam("subject", subject)
+                    .queryParam("format", "n-triples");
             if (name != null) {
                 temp = temp.queryParam("predicate", name);
             }
             String relationString = temp.get(String.class);
-
 
             String[] lines = relationString.split("\n");
             List<FedoraRelation> relations = new ArrayList<FedoraRelation>();
             for (String line : lines) {
                 String[] elements = line.split(" ");
                 if (elements.length > 2) {
-                    FedoraRelation rel = new FedoraRelation(
-                            cleanInfo(elements[0]), clean(elements[1]), cleanInfo(elements[2]));
+                    FedoraRelation rel = new FedoraRelation(cleanInfo(elements[0]), clean(elements[1]),
+                                                            cleanInfo(elements[2]));
                     if (elements[2].startsWith("<info:fedora/")) {
                         rel.setLiteral(false);
                     } else {
@@ -828,10 +730,8 @@ public class FedoraRest extends Connector implements Fedora {
 
     @Override
     public void deleteRelation(String pid, String subject, String predicate, String object, boolean literal,
-                               String comment) throws
-                                               BackendMethodFailedException,
-                                               BackendInvalidCredsException,
-                                               BackendInvalidResourceException {
+                               String comment)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
         if (comment == null || comment.isEmpty()) {
             comment = "No message supplied";
         } //TODO, fedora should take this logmessage
@@ -852,9 +752,8 @@ public class FedoraRest extends Connector implements Fedora {
             predicate = "info:fedora/" + predicate;
         }
 
-        WebResource request = restApi.path("/").path(pid).path("/relationships/")
-                .queryParam("predicate", predicate).queryParam("object", object)
-                .queryParam("isLiteral", "" + literal);
+        WebResource request = restApi.path("/").path(pid).path("/relationships/").queryParam("predicate", predicate)
+                .queryParam("object", object).queryParam("isLiteral", "" + literal);
         int tries = 0;
         while (true) {
             tries++;
@@ -889,29 +788,21 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     @Override
-    public List<SearchResult> fieldsearch(String query, int offset, int pageLength) throws
-                                                                                    BackendMethodFailedException,
-                                                                                    BackendInvalidCredsException {
+    public List<SearchResult> fieldsearch(String query, int offset, int pageLength)
+            throws BackendMethodFailedException, BackendInvalidCredsException {
         try {
 
-            ResultType searchResult = restApi.queryParam("terms", query)
-                                             .queryParam("maxResults", pageLength + "")
-                                             .queryParam("resultFormat", "xml")
-                                             .queryParam("pid", "true")
-                                             .queryParam("label", "true")
-                                             .queryParam("state", "true")
-                                             .queryParam("cDate", "true")
-                                             .queryParam("mDate", "true")
-                                             .get(ResultType.class);
+            ResultType searchResult = restApi.queryParam("terms", query).queryParam("maxResults", pageLength + "")
+                    .queryParam("resultFormat", "xml").queryParam("pid", "true").queryParam("label", "true")
+                    .queryParam("state", "true").queryParam("cDate", "true").queryParam("mDate", "true")
+                    .get(ResultType.class);
 
             if (offset > 0) {
 
                 for (int i = 1; i <= offset; i++) {
                     String token = searchResult.getListSession().getValue().getToken();
-                    searchResult = restApi.queryParam("query", query)
-                                          .queryParam("sessionToken", token)
-                                          .queryParam("resultFormat", "xml")
-                                          .get(ResultType.class);
+                    searchResult = restApi.queryParam("query", query).queryParam("sessionToken", token)
+                            .queryParam("resultFormat", "xml").get(ResultType.class);
                 }
             }
             List<SearchResult> outputResults = new ArrayList<SearchResult>(
@@ -921,8 +812,11 @@ public class FedoraRest extends Connector implements Fedora {
                 try {
                     outputResults.add(new SearchResult(objectFieldsType.getPid().getValue(),
                                                        objectFieldsType.getLabel().getValue(),
-                                                       objectFieldsType.getState().getValue(), DateUtils.parseDateStrict(objectFieldsType.getCDate().getValue())
-                            .getTime(), DateUtils.parseDateStrict(objectFieldsType.getMDate().getValue()).getTime()));
+                                                       objectFieldsType.getState().getValue(),
+                                                       DateUtils.parseDateStrict(objectFieldsType.getCDate().getValue())
+                                                               .getTime(),
+                                                       DateUtils.parseDateStrict(objectFieldsType.getMDate().getValue())
+                                                               .getTime()));
                 } catch (ParseException e) {
                     //TODO Not really a backend exception
                     throw new BackendMethodFailedException("Failed to parse date from search result", e);
@@ -943,10 +837,8 @@ public class FedoraRest extends Connector implements Fedora {
 
     @Override
     public Date addExternalDatastream(String pid, String datastream, String label, String url, String formatURI,
-                                      String mimeType, String checksumType, String checksum, String comment) throws
-                                                                                                             BackendMethodFailedException,
-                                                                                                             BackendInvalidCredsException,
-                                                                                                             BackendInvalidResourceException {
+                                      String mimeType, String checksumType, String checksum, String comment)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
         if (comment == null || comment.isEmpty()) {
             comment = "No message supplied";
         }
@@ -966,10 +858,9 @@ public class FedoraRest extends Connector implements Fedora {
                              @QueryParam(RestParam.MIME_TYPE) String mimeType,
                              @QueryParam(RestParam.LOG_MESSAGE) String logMessage
         */
-        WebResource resource = restApi.path("/").path(urlEncode(pid)).path("/datastreams/")
-                .path(urlEncode(datastream)).queryParam("controlGroup", "R").queryParam("dsLocation", url)
-                .queryParam("dsLabel", label).queryParam("formatURI", formatURI)
-                .queryParam("mimeType", mimeType).queryParam("logMessage", comment);
+        WebResource resource = restApi.path("/").path(urlEncode(pid)).path("/datastreams/").path(urlEncode(datastream))
+                .queryParam("controlGroup", "R").queryParam("dsLocation", url).queryParam("dsLabel", label)
+                .queryParam("formatURI", formatURI).queryParam("mimeType", mimeType).queryParam("logMessage", comment);
         if (checksumType != null) {
             resource = resource.queryParam("checksumType", checksumType);
         }
@@ -989,50 +880,34 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     @Override
-    public Validation validate(String pid) throws
-                                           BackendMethodFailedException,
-                                           BackendInvalidCredsException,
-                                           BackendInvalidResourceException {
-        WebResource format = restApi.path("/").path(urlEncode(pid)
-                                                   ).path("/validate").queryParam(
-                "format", "text/xml");
+    public Validation validate(String pid)
+            throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
+        WebResource format = restApi.path("/").path(urlEncode(pid)).path("/validate").queryParam("format", "text/xml");
         return format.get(Validation.class);
     }
 
     @Override
-    public String newEmptyObject(String pid, List<String> oldIDs, List<String> collections, String logMessage) throws
-                                                                                                               BackendMethodFailedException,
-                                                                                                               BackendInvalidCredsException {
-        InputStream emptyObjectStream = Thread.currentThread()
-                                              .getContextClassLoader()
-                                              .getResourceAsStream("EmptyObject.xml");
+    public String newEmptyObject(String pid, List<String> oldIDs, List<String> collections, String logMessage)
+            throws BackendMethodFailedException, BackendInvalidCredsException {
+        InputStream emptyObjectStream = Thread.currentThread().getContextClassLoader()
+                .getResourceAsStream("EmptyObject.xml");
         Document emptyObject = DOM.streamToDOM(emptyObjectStream, true);
 
-
-        XPathSelector xpath = DOM.createXPathSelector(
-                "foxml",
-                Constants.NAMESPACE_FOXML,
-                "rdf",
-                Constants.NAMESPACE_RDF,
-                "d",
-                Constants.NAMESPACE_RELATIONS,
-                "dc",
-                Constants.NAMESPACE_DC,
-                "oai_dc",
-                Constants.NAMESPACE_OAIDC);
+        XPathSelector xpath = DOM
+                .createXPathSelector("foxml", Constants.NAMESPACE_FOXML, "rdf", Constants.NAMESPACE_RDF, "d",
+                                     Constants.NAMESPACE_RELATIONS, "dc", Constants.NAMESPACE_DC, "oai_dc",
+                                     Constants.NAMESPACE_OAIDC);
         //Set pid
         Node pidNode = xpath.selectNode(emptyObject, "/foxml:digitalObject/@PID");
         pidNode.setNodeValue(pid);
 
-        Node rdfNode = xpath.selectNode(
-                emptyObject,
-                "/foxml:digitalObject/foxml:datastream/foxml:datastreamVersion/foxml:xmlContent/rdf:RDF/rdf:Description/@rdf:about");
+        Node rdfNode = xpath.selectNode(emptyObject,
+                                        "/foxml:digitalObject/foxml:datastream/foxml:datastreamVersion/foxml:xmlContent/rdf:RDF/rdf:Description/@rdf:about");
         rdfNode.setNodeValue("info:fedora/" + pid);
 
         //add Old Identifiers to DC
-        Node dcIdentifierNode = xpath.selectNode(
-                emptyObject,
-                "/foxml:digitalObject/foxml:datastream/foxml:datastreamVersion/foxml:xmlContent/oai_dc:dc/dc:identifier");
+        Node dcIdentifierNode = xpath.selectNode(emptyObject,
+                                                 "/foxml:digitalObject/foxml:datastream/foxml:datastreamVersion/foxml:xmlContent/oai_dc:dc/dc:identifier");
         dcIdentifierNode.setTextContent(pid);
         Node parent = dcIdentifierNode.getParentNode();
         for (String oldID : oldIDs) {
@@ -1041,9 +916,8 @@ public class FedoraRest extends Connector implements Fedora {
             parent.appendChild(clone);
         }
 
-        Node collectionRelationNode = xpath.selectNode(
-                emptyObject,
-                "/foxml:digitalObject/foxml:datastream/foxml:datastreamVersion/foxml:xmlContent/rdf:RDF/rdf:Description/d:isPartOfCollection");
+        Node collectionRelationNode = xpath.selectNode(emptyObject,
+                                                       "/foxml:digitalObject/foxml:datastream/foxml:datastreamVersion/foxml:xmlContent/rdf:RDF/rdf:Description/d:isPartOfCollection");
 
         parent = collectionRelationNode.getParentNode();
         //remove the placeholder relationNode
@@ -1098,14 +972,14 @@ public class FedoraRest extends Connector implements Fedora {
      * parameter. The delay is done with exponential backoff, first waiting {@link #retryDelay}, and
      * 2*{@link #retryDelay}, then 4*{@link #retryDelay} and so forth.
      *
-     * @param pid The PID of the object worked on. Used for giving context to the exception error messages.
-     * @param tries The number of times this call has been tried already.
+     * @param pid      The PID of the object worked on. Used for giving context to the exception error messages.
+     * @param tries    The number of times this call has been tried already.
      * @param maxTries The maximum number of times this call should be retried
-     * @param e The exception that happened.
-     * @throws BackendInvalidCredsException If the exception represents a 401 error.
+     * @param e        The exception that happened.
+     * @throws BackendInvalidCredsException    If the exception represents a 401 error.
      * @throws BackendInvalidResourceException If the exception represents a 404 error.
      * @throws ConcurrentModificationException If the exception represents a 409 error and should not be retried.
-     * @throws BackendMethodFailedException On any other error
+     * @throws BackendMethodFailedException    On any other error
      */
     private void handleResponseException(String pid, int tries, int maxTries, UniformInterfaceException e)
             throws BackendInvalidCredsException, BackendInvalidResourceException, BackendMethodFailedException {
