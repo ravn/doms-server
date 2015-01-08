@@ -245,7 +245,7 @@ public class FedoraRest extends Connector implements Fedora {
                     handleResponseException("new", tries, maxTriesPost, e);
                 } catch (BackendInvalidResourceException e1) {
                     //Ignore, never happens
-                    throw new RuntimeException(e);
+                    throw new RuntimeException(e1);
                 }
             }
         }
@@ -428,11 +428,11 @@ public class FedoraRest extends Connector implements Fedora {
         WebResource resource = getModifyDatastreamWebResource(pid, datastream, checksumType, checksum,
                                                               alternativeIdentifiers, comment, null, mimeType).
                 queryParam("controlGroup", "M");
-        WebResource.Builder request = resource.entity(new ByteArrayInputStream(contents), mimeType);
         int tries = 0;
         while (true) {
             tries++;
             try {
+                WebResource.Builder request = resource.entity(new ByteArrayInputStream(contents), mimeType);
                 DatastreamProfileType profile = request.post(DatastreamProfileType.class);
                 return profile.getDsCreateDate().toGregorianCalendar().getTime();
             } catch (UniformInterfaceException e) {
@@ -480,21 +480,21 @@ public class FedoraRest extends Connector implements Fedora {
                                                  String comment, Long lastModifiedDate, String mimeType)
             throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException,
             ConcurrentModificationException {
-        WebResource resource = getModifyDatastreamWebResource(pid, datastream, checksumType, checksum,
-                                                              alternativeIdentifiers, comment, lastModifiedDate,
-                                                              mimeType);
-        WebResource.Builder header = resource.header(HttpHeaders.CONTENT_TYPE, null);
-        WebResource.Builder builder;
-        if (mimeType != null) {
-            builder = header.entity(new ByteArrayInputStream(contents), mimeType);
-        } else {
-            builder = header.entity(new ByteArrayInputStream(contents));
-        }
 
         int tries = 0;
         while (true) {
             tries++;
             try {
+                WebResource resource = getModifyDatastreamWebResource(pid, datastream, checksumType, checksum,
+                                                                      alternativeIdentifiers, comment, lastModifiedDate,
+                                                                      mimeType);
+                WebResource.Builder header = resource.header(HttpHeaders.CONTENT_TYPE, null);
+                WebResource.Builder builder;
+                if (mimeType != null) {
+                    builder = header.entity(new ByteArrayInputStream(contents), mimeType);
+                } else {
+                    builder = header.entity(new ByteArrayInputStream(contents));
+                }
                 DatastreamProfileType profile = builder.put(DatastreamProfileType.class);
                 return profile.getDsCreateDate().toGregorianCalendar().getTime();
             } catch (UniformInterfaceException e) {
@@ -541,9 +541,8 @@ public class FedoraRest extends Connector implements Fedora {
             throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
         try {
 
-            String contents = restApi.path("/").path(urlEncode(pid)).path("/datastreams/").path(urlEncode(datastream))
+            return restApi.path("/").path(urlEncode(pid)).path("/datastreams/").path(urlEncode(datastream))
                     .path("/content").queryParam(AS_OF_DATE_TIME, StringOrNull(asOfTime)).get(String.class);
-            return contents;
         } catch (UniformInterfaceException e) {
             handleResponseException(pid, 1, 1, e);
             throw e;
@@ -564,16 +563,7 @@ public class FedoraRest extends Connector implements Fedora {
             }
         }
 
-        URI predURI;
-        try {
-            predURI = new URI(predicate);
-        } catch (URISyntaxException e) {
-            //TODO This is not a backend exception
-            throw new BackendMethodFailedException("Failed to parse predicate as an URI", e);
-        }
-        if (!predURI.isAbsolute()) {
-            predicate = "info:fedora/" + predicate;
-        }
+        predicate = getAbsoluteURIAsString(predicate);
         if (subject == null || subject.isEmpty()) {
             subject = "info:fedora/" + pid;
         }
@@ -633,16 +623,7 @@ public class FedoraRest extends Connector implements Fedora {
 
         Node rdfDescriptionNode = xpath.selectNode(relsDoc, "/rdf:RDF/rdf:Description[@rdf:about='" + subject + "']");
 
-        URI predURI;
-        try {
-            predURI = new URI(predicate);
-        } catch (URISyntaxException e) {
-            //TODO Not really a backend exception
-            throw new BackendMethodFailedException("Failed to parse predicate as an URI", e);
-        }
-        if (!predURI.isAbsolute()) {
-            predicate = "info:fedora/" + predicate;
-        }
+        predicate = getAbsoluteURIAsString(predicate);
 
         String[] splits = predicate.split("#");
 
@@ -741,16 +722,7 @@ public class FedoraRest extends Connector implements Fedora {
                 object = "info:fedora/" + object;
             }
         }
-        URI predURI;
-        try {
-            predURI = new URI(predicate);
-        } catch (URISyntaxException e) {
-            //TODO This is not really a backend exception
-            throw new BackendMethodFailedException("Failed to parse predicate as an URI", e);
-        }
-        if (!predURI.isAbsolute()) {
-            predicate = "info:fedora/" + predicate;
-        }
+        predicate = getAbsoluteURIAsString(predicate);
 
         WebResource request = restApi.path("/").path(pid).path("/relationships/").queryParam("predicate", predicate)
                 .queryParam("object", object).queryParam("isLiteral", "" + literal);
@@ -948,20 +920,32 @@ public class FedoraRest extends Connector implements Fedora {
                     handleResponseException(pid, tries, maxTriesPost, e);
                 } catch (BackendInvalidResourceException e1) {
                     //Ignore, never happens
-                    throw new RuntimeException(e);
+                    throw new RuntimeException(e1);
                 }
             }
         }
     }
 
     private String urlEncode(String pid) {
-        String encodedPid;
         try {
-            encodedPid = URLEncoder.encode(pid, "UTF-8");
+            return URLEncoder.encode(pid, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("UTF-8 not known....", e);
         }
-        return encodedPid;
+    }
+
+    private String getAbsoluteURIAsString(String uriAsString) throws BackendMethodFailedException {
+        URI predURI;
+        try {
+            predURI = new URI(uriAsString);
+        } catch (URISyntaxException e) {
+            //TODO This is not a backend exception
+            throw new BackendMethodFailedException("Failed to parse uriAsString as an URI", e);
+        }
+        if (!predURI.isAbsolute()) {
+            uriAsString = "info:fedora/" + uriAsString;
+        }
+        return uriAsString;
     }
 
     /**
