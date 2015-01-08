@@ -118,6 +118,25 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
         linkPatterns = new LinkPatternsImpl(fedora, fedoraLocation);
     }
 
+    /**
+     * Helper overloaded constructor, that uses the same value for maxTriesPut, maxTriesPost and maxTriesDelete.
+     *
+     * @param creds          Credentials for communicating with Fedora.
+     * @param fedoraLocation Location of Fedora.
+     * @param pidGenLocation Location of PID Generator.
+     * @param thisLocation   Not actually used.
+     * @param maxTries    Number of times to try a PUT, POST or DELETE request.
+     * @param retryDelay     Delay between retries (with exponential backoff).
+     * @throws JAXBException
+     * @throws PIDGeneratorException
+     * @throws MalformedURLException
+     */
+    public EnhancedFedoraImpl(Credentials creds, String fedoraLocation, String pidGenLocation, String thisLocation,
+                              int maxTries, int retryDelay)
+            throws JAXBException, PIDGeneratorException, MalformedURLException {
+        this(creds, fedoraLocation, pidGenLocation, thisLocation, maxTries, maxTries, maxTries, retryDelay);
+    }
+
     public String cloneTemplate(String templatepid, List<String> oldIDs, String logMessage)
             throws BackendInvalidCredsException, BackendMethodFailedException, ObjectIsWrongTypeException,
             BackendInvalidResourceException, PIDGeneratorException {
