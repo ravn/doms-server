@@ -37,8 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by IntelliJ IDEA. User: abr Date: 3/29/12 Time: 2:34 PM To change this template use File | Settings | File
- * Templates.
+ * Implementation of EnhancedFedora using REST.
  */
 public class EnhancedFedoraImpl implements EnhancedFedora {
 
@@ -65,6 +64,54 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
 
         //1.st level
         fedora = new FedoraRest(creds, fedoraLocation);
+        ts = new TripleStoreRest(creds, fedoraLocation);
+        db = new DBSearchRest(creds, fedoraLocation);
+        pidGenerator = new PidGeneratorImpl(pidGenLocation);
+
+        //2. level
+        cmInher = new ContentModelInheritanceImpl(fedora, ts);
+
+        //3. level
+        templates = new TemplatesImpl(fedora, pidGenerator, ts, cmInher);
+        views = new ViewsImpl(ts, cmInher, fedora);
+
+        methods = new MethodsImpl(fedora, thisLocation);
+
+        linkPatterns = new LinkPatternsImpl(fedora, fedoraLocation);
+    }
+
+    /**
+     * Initialise a version of EnhancedFedora where we retry a number of times on 409 results. This is used because
+     * URLConnection may
+     * retry PUT or POST requests on timeout or connection errors, and this may result in spurious locks where the
+     * original request still has the object locked.
+     * We delay between retries, and the delay is done with exponential backoff, first waiting retryDelay, and
+     * 2*retryDelay, then 4*retryDelay and so forth.
+     *
+     * @param creds Credentials for communicating with Fedora.
+     * @param fedoraLocation Location of Fedora.
+     * @param pidGenLocation Location of PID Generator.
+     * @param thisLocation Not actually used.
+     * @param maxTriesPut Number of times to try a PUT request.
+     * @param maxTriesPost Number of times to try a POST request.
+     * @param maxTriesDelete Number of times to try a DELETE request.
+     * @param retryDelay Delay between retries (with exponential backoff).
+     * @throws JAXBException
+     * @throws PIDGeneratorException
+     * @throws MalformedURLException
+     */
+    public EnhancedFedoraImpl(Credentials creds,
+                              String fedoraLocation,
+                              String pidGenLocation,
+                              String thisLocation,
+                              int maxTriesPut,
+                              int maxTriesPost,
+                              int maxTriesDelete,
+                              int retryDelay) throws JAXBException, PIDGeneratorException, MalformedURLException {
+        this.thisLocation = thisLocation;
+
+        //1.st level
+        fedora = new FedoraRest(creds, fedoraLocation, maxTriesPut, maxTriesPost, maxTriesDelete, retryDelay);
         ts = new TripleStoreRest(creds, fedoraLocation);
         db = new DBSearchRest(creds, fedoraLocation);
         pidGenerator = new PidGeneratorImpl(pidGenLocation);
