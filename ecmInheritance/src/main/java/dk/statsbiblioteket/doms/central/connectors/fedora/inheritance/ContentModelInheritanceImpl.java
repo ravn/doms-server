@@ -7,10 +7,8 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.FedoraRelation;
 import dk.statsbiblioteket.doms.central.connectors.fedora.tripleStore.TripleStore;
 import dk.statsbiblioteket.doms.central.connectors.fedora.utils.Constants;
-import dk.statsbiblioteket.doms.central.connectors.fedora.utils.FedoraUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -114,47 +112,4 @@ public class ContentModelInheritanceImpl implements ContentModelInheritance {
         }
         return temp;
     }
-
-
-    @Override
-    public List<String> getInheritedContentModels(String cmpid,
-                                                  Long asOfDateTime)
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException {
-        cmpid = FedoraUtil.ensurePID(cmpid);
-        return getInheritedContentModelsBreadthFirst(Arrays.asList(new String[]{cmpid}), asOfDateTime);
-    }
-
-    /**
-     * @param cmpid the content model pid
-     *
-     * @return an empty list
-     */
-    public List<String> getInheritingContentModels(String cmpid)
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException {
-        cmpid = FedoraUtil.ensureURI(cmpid);
-        //TODO sanitize label
-
-        String
-                query =
-                "select $object \n"
-                + "from <#ri>\n"
-                + "where \n"
-                + "walk(\n"
-                + "$object <"
-                + Constants.RELATION_EXTENDS_MODEL
-                + "> <"
-                + cmpid
-                + ">\n"
-                + "and\n"
-                + "$object <"
-                + Constants.RELATION_EXTENDS_MODEL
-                + "> $temp\n"
-                + ");";
-        return ts.genericQuery(query);
-    }
-
 }

@@ -18,9 +18,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA. User: abr Date: 3/29/12 Time: 3:14 PM To change this template use File | Settings | File
@@ -42,31 +40,6 @@ public class ViewsImpl implements Views {
         this.ts = ts;
         this.inheritance = inheritance;
         this.fedora = fedora;
-    }
-
-    /**
-     * Get the data objects which are marked (in their content models) as entries for the given angle
-     *
-     * @param viewAngle The given view angle
-     *
-     * @return a lists of the data objects pids
-     */
-    public List<String> getEntryCMsForAngle(String viewAngle)
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException {
-        viewAngle = sanitizeLiteral(viewAngle);
-
-        //TODO Inheritance?
-        String query = "select $object\n" +
-                       "from <#ri> \n" +
-                       "where\n" +
-                       "$object <" + Constants.HAS_MODEL + "> <" +
-                       Constants.CONTENT_MODEL_3_0 + "> \n" +
-                       "and $object <" + Constants.ENTRY_RELATION + "> '" +
-                       viewAngle + "' \n";
-
-        return ts.genericQuery(query);
     }
 
     /**
@@ -94,95 +67,6 @@ public class ViewsImpl implements Views {
         return pid;
     }
 
-    /**
-     * Get all data objects subscribing to a given content model, and with the given status
-     *
-     * @param cmpid  the content model
-     * @param status the given status, A, I or D
-     *
-     * @return a list of data objects
-     * @throws dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException
-     *
-     * @throws dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException
-     *
-     */
-    public List<String> getObjectsForContentModel(String cmpid,
-                                                  String status)
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException {
-        LOG.trace("Entering getObjectsForContentModel with params '" +
-                  cmpid + "' and '" + status + "'");
-        status = sanitizeLiteral(status);
-
-        cmpid = sanitizePid(cmpid);
-        //TODO why do we sanitize?
-
-
-        String contentModel = "<" + FedoraUtil.ensureURI(cmpid) + ">";
-
-        List<String> childcms = inheritance.getInheritingContentModels(cmpid);
-
-        String query = "select $object\n" +
-                       "from <#ri>\n" +
-                       "where\n" +
-                       " $object <" + Constants.STATEREL + "> <" +
-                       Constants.NAMESPACE_FEDORA_MODEL + status + ">\n" +
-                       " and (\n";
-
-        query = query +
-                "$object <" + Constants.HAS_MODEL + "> " + contentModel + "\n ";
-        for (String childCm : childcms) {
-            query = query +
-                    " or $object <" + Constants.HAS_MODEL + "> <" +
-                    FedoraUtil.ensureURI(childCm) + ">\n ";
-        }
-        query = query + ")";
-
-        LOG.debug("Using query \n'" + query + "'\n");
-        return ts.genericQuery(query);
-
-    }
-
-
-    /**
-     * Get all entry data objects for the given angle, but only entry objects with the given state
-     *
-     * @param viewAngle the viewangle
-     * @param state     the required state
-     *
-     * @return a list of dataobjects
-     */
-    public List<String> getEntriesForAngle(String viewAngle,
-                                           String state)
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException,
-            BackendInvalidResourceException {
-
-        Set<String> collector = new HashSet<String>();
-        List<String> list = getEntryCMsForAngle(viewAngle);
-        for (String pid : list) {
-
-            if (!fedora.exists(pid, null)) {
-
-                throw new BackendInvalidResourceException("Content model '" +
-                                                          pid + "' which was just" +
-                                                          "found is not found any more");
-            }
-
-            if (!fedora.isContentModel(pid, null)) {
-                throw new BackendInvalidResourceException("Content model '" +
-                                                          pid + "' which was just" +
-                                                          "found is not a content model any more");
-            }
-            collector.addAll(getObjectsForContentModel(pid, state));
-
-        }
-
-        return list;
-
-    }
 
     /**
      * Get a list of the objects in the view of a given object
@@ -341,40 +225,5 @@ public class ViewsImpl implements Views {
 
 
         }
-    }
-
-    public List<String> getEntryContentModelsForObjectForViewAngle(String pid,
-                                                                   String angle)
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException {
-        LOG.trace("Entering getEntryContentModelsForObjectForViewAngle with params '" +
-                  pid + "' and '" + angle + "'");
-
-
-        pid = sanitizePid(pid);
-        angle = sanitizeLiteral(angle);
-
-        String
-                query =
-                "select $object\n"
-                + "from <#ri>\n"
-                + "where\n"
-                + "$object2 <fedora-model:hasModel> $object\n"
-                + "and\n"
-                + "$object2 <mulgara:is> <info:fedora/"
-                + pid
-                + ">\n"
-                + "and\n"
-                + "$object <"
-                + Constants.ENTRY_RELATION
-                + "> '"
-                + angle
-                + "'";
-
-
-        LOG.debug("Using query \n'" + query + "'\n");
-        return ts.genericQuery(query);
-
     }
 }

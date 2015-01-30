@@ -13,48 +13,6 @@ import java.util.List;
  */
 public interface Views {
 
-    /**
-     * Get the data objects which are marked (in their content models) as entries for the given angle
-     *
-     * @param viewAngle The given view angle
-     *
-     * @return a lists of the data objects pids
-     */
-    public List<String> getEntryCMsForAngle(String viewAngle)
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException;
-
-    /**
-     * Get all data objects subscribing to a given content model, and with the given status
-     *
-     * @param cmpid  the content model
-     * @param status the given status, A, I or D
-     *
-     * @return a list of data objects
-     * @throws dk.statsbiblioteket.doms.central.connectors.fedora.templates.ObjectIsWrongTypeException
-     *          if cmpid is not a content model
-     */
-    public List<String> getObjectsForContentModel(String cmpid,
-                                                  String status)
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException;
-
-    /**
-     * Get all entry data objects for the given angle, but only entry objects with the given state
-     *
-     * @param viewAngle the viewangle
-     * @param state     the required state
-     *
-     * @return a list of dataobjects
-     */
-    public List<String> getEntriesForAngle(String viewAngle,
-                                           String state)
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException,
-            BackendInvalidResourceException;
 
     /**
      * Get a list of the objects in the view of a given object
@@ -93,9 +51,5 @@ public interface Views {
             BackendInvalidResourceException;
 
 
-    public List<String> getEntryContentModelsForObjectForViewAngle(String pid,
-                                                                   String angle)
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException;
+
 }

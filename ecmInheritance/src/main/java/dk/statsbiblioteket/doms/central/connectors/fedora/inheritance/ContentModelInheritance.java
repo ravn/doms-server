@@ -10,19 +10,4 @@ import java.util.List;
  * Templates.
  */
 public interface ContentModelInheritance {
-    List<String> getInheritedContentModels(String cmpid,
-                                           Long asOfDateTime)
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException;
-
-    /**
-     * @param cmpid the content model pid
-     *
-     * @return an empty list
-     */
-    public List<String> getInheritingContentModels(String cmpid)
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException;
 }

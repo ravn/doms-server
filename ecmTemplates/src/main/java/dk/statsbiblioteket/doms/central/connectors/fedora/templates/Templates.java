@@ -14,14 +14,6 @@ import java.util.List;
 public interface Templates {
 
 
-    public void markObjectAsTemplate(String objpid,
-                                     String cmpid,
-                                     String logMessage)
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException,
-            ObjectIsWrongTypeException;
-
     public String cloneTemplate(String templatepid,
                                 List<String> oldIDs,
                                 String logMessage)
@@ -31,9 +23,4 @@ public interface Templates {
             ObjectIsWrongTypeException,
             BackendInvalidResourceException,
             PIDGeneratorException;
-
-    public List<String> findTemplatesFor(String cmpid)
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException;
 }

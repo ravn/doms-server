@@ -8,7 +8,6 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.inheritance.ContentMod
 import dk.statsbiblioteket.doms.central.connectors.fedora.pidGenerator.PIDGeneratorException;
 import dk.statsbiblioteket.doms.central.connectors.fedora.pidGenerator.PidGenerator;
 import dk.statsbiblioteket.doms.central.connectors.fedora.tripleStore.TripleStore;
-import dk.statsbiblioteket.doms.central.connectors.fedora.utils.Constants;
 import dk.statsbiblioteket.doms.central.connectors.fedora.utils.FedoraUtil;
 import dk.statsbiblioteket.doms.central.connectors.fedora.utils.XpathUtils;
 import dk.statsbiblioteket.util.xml.DOM;
@@ -85,51 +84,6 @@ public class TemplatesImpl implements Templates {
         this.pidGenerator = pidGenerator;
         this.ts = ts;
         this.inheritance = inheritance;
-    }
-
-    /**
-     * Mark the objpid object as a template for the cmpid object
-     *
-     * @param objpid     the object to mark
-     * @param cmpid      the content model to make objpid a template for
-     * @param logMessage
-     *
-     * @throws ObjectIsWrongTypeException if the object is not a data object or the content model is not a content
-     *                                    model
-     */
-    public void markObjectAsTemplate(String objpid,
-                                     String cmpid,
-                                     String logMessage)
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException,
-            ObjectIsWrongTypeException
-
-
-    {
-        LOG.trace("Entering markObjectAsTemplate with params: " + objpid + " and " + cmpid);
-        //Working
-
-
-        if (!fedora.isContentModel(cmpid, null)) {
-            throw new ObjectIsWrongTypeException("The content model '" + cmpid +
-                                                 "' is not a content model");
-        }
-        if (!fedora.isDataObject(objpid, null)) {
-            throw new ObjectIsWrongTypeException("The data object '" + objpid +
-                                                 "' is not a data object");
-        }
-
-
-        try {
-            fedora.addRelation(objpid, objpid, Constants.TEMPLATE_REL, cmpid, false, logMessage);
-        } catch (BackendInvalidResourceException e) {
-            throw new BackendMethodFailedException("This should not be possible, the object '"
-                                                   + objpid
-                                                   + "' was just tested to exist", e);
-        }
-        LOG.info("Marked object '" + objpid + "' as template for '" + cmpid + "'");
-
     }
 
 
@@ -213,41 +167,6 @@ public class TemplatesImpl implements Templates {
      */
     private void removeEvents(Document document) throws XPathExpressionException {
         removeExpathList(document, DATASTREAM_EVENTS);
-    }
-
-
-    public List<String> findTemplatesFor(String cmpid)
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException {
-        //Working
-        LOG.trace("Entering findTemplatesFor with param '" + cmpid + "'");
-
-        List<String> childcms = inheritance.getInheritingContentModels(cmpid);
-
-        String contentModel = "<" +
-                              FedoraUtil.ensureURI(cmpid) +
-                              ">\n";
-
-        String query = "select $object\n" +
-                       "from <#ri>\n" +
-                       "where\n" +
-                       " $object <" + Constants.TEMPLATE_REL + "> " +
-                       contentModel;
-
-        for (String childcm : childcms) {
-            String cm = "<" +
-                        FedoraUtil.ensureURI(childcm) +
-                        ">\n";
-
-            query = query +
-                    "or $object <" +
-                    Constants.TEMPLATE_REL +
-                    "> " + cm;
-        }
-
-        return ts.genericQuery(query);
-
     }
 
 
