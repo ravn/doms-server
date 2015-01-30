@@ -34,9 +34,7 @@ public class ViewsImpl implements Views {
     private Fedora fedora;
 
 
-    public ViewsImpl(TripleStore ts,
-                     ContentModelInheritance inheritance,
-                     Fedora fedora) {
+    public ViewsImpl(TripleStore ts, ContentModelInheritance inheritance, Fedora fedora) {
         this.ts = ts;
         this.inheritance = inheritance;
         this.fedora = fedora;
@@ -77,13 +75,10 @@ public class ViewsImpl implements Views {
      *
      * @return the list of the pids in the view of objpid
      */
-    public List<String> getViewObjectsListForObject(String objpid,
-                                                    String viewAngle,
-                                                    Long asOfTime)
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException,
-            BackendInvalidResourceException {
+    public List<String> getViewObjectsListForObject(String objpid, String viewAngle, Long asOfTime) throws
+                                                                                                    BackendInvalidCredsException,
+                                                                                                    BackendMethodFailedException,
+                                                                                                    BackendInvalidResourceException {
 
         LOG.trace("Entering getViewObjectsListForObject with params '" +
                   objpid + "' and '" + viewAngle + "'" + " and timestamp='" + asOfTime + "'");
@@ -117,13 +112,10 @@ public class ViewsImpl implements Views {
      * @return The objects bundled under the supertag
      * @see Constants#NAMESPACE_DIGITAL_OBJECT_BUNDLE
      */
-    public Document getViewObjectBundleForObject(String objpid,
-                                                 String viewAngle,
-                                                 Long asOfTime)
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException,
-            BackendInvalidResourceException {
+    public Document getViewObjectBundleForObject(String objpid, String viewAngle, Long asOfTime) throws
+                                                                                                 BackendInvalidCredsException,
+                                                                                                 BackendMethodFailedException,
+                                                                                                 BackendInvalidResourceException {
 
 
         List<String> pidlist = getViewObjectsListForObject(objpid, viewAngle, asOfTime);
@@ -151,14 +143,10 @@ public class ViewsImpl implements Views {
     }
 
 
-    private void appendPids(String viewname,
-                            List<String> includedPids,
-                            String pid,
-                            Long asOfTime)
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException,
-            BackendInvalidResourceException {
+    private void appendPids(String viewname, List<String> includedPids, String pid, Long asOfTime) throws
+                                                                                                   BackendInvalidCredsException,
+                                                                                                   BackendMethodFailedException,
+                                                                                                   BackendInvalidResourceException {
 
         LOG.trace("Entering appendPids with params " + viewname + " and " + pid + " and timestamp " + asOfTime);
         pid = sanitizePid(pid);
@@ -205,15 +193,7 @@ public class ViewsImpl implements Views {
         // Incoming relations
         List<String> inverseProperties = view.getInverseProperties();
         for (String inverseProperty : inverseProperties) {
-            String
-                    query =
-                    "select $object\n"
-                    + "from <#ri>\n"
-                    + "where $object <"
-                    + inverseProperty
-                    + "> <"
-                    + FedoraUtil.ensureURI(pid)
-                    + ">";
+            String query = "* <" + inverseProperty + "> <" + FedoraUtil.ensureURI(pid) + ">";
             // Find relations
 
 
