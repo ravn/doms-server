@@ -30,28 +30,22 @@ public class TripleStoreRest extends Connector implements TripleStore {
     private static Log log = LogFactory.getLog(TripleStoreRest.class);
 
 
-    public TripleStoreRest(Credentials creds,
-                           String location)
-            throws
-            MalformedURLException {
+    public TripleStoreRest(Credentials creds, String location) throws MalformedURLException {
         super(creds, location);
-        restApi =
-                client.resource(location + "/risearch")
-                      .queryParam("type", "tuples")
-                      .queryParam("lang", "iTQL")
-                      .queryParam("format", "CSV")
-                      .queryParam("stream", "on");
+        restApi = client.resource(location + "/risearch")
+                        .queryParam("type", "triples")
+                        .queryParam("lang", "spo")
+                        .queryParam("format", "CSV")
+                        .queryParam("stream", "on");
         restApi.addFilter(new HTTPBasicAuthFilter(creds.getUsername(), creds.getPassword()));
     }
 
 
     @Override
-    public List<FedoraRelation> getInverseRelations(String pid,
-                                                    String predicate)
-            throws
-            BackendMethodFailedException,
-            BackendInvalidCredsException,
-            BackendInvalidResourceException {
+    public List<FedoraRelation> getInverseRelations(String pid, String predicate) throws
+                                                                                  BackendMethodFailedException,
+                                                                                  BackendInvalidCredsException,
+                                                                                  BackendInvalidResourceException {
         try {
 
 
@@ -59,29 +53,17 @@ public class TripleStoreRest extends Connector implements TripleStore {
             if (!subject.startsWith("info:fedora/")) {
                 subject = "info:fedora/" + subject;
             }
-            String predicateOrig = predicate;
-            String queryStart = "select $object";
+
+            String queryStart = "* ";
+
+            String predicateQuery;
             if (predicate == null || predicate.isEmpty()) {
-                queryStart += " $predicate";
-                predicate = "$predicate";
-                predicateOrig = null;
+                predicateQuery = " * ";
             } else {
-                predicate = "<" + predicate + ">";
+                predicateQuery = "<" + predicate + ">";
             }
 
-            String
-                    query =
-                    queryStart
-                    + "\n"
-                    + "from <#ri>\n"
-                    + "where $object "
-                    + predicate
-                    + " <"
-                    + subject
-                    + ">\n"
-                    + "and ($object <fedora-model:state> <fedora-model:Active>\n"
-                    +
-                    "or $object <fedora-model:state> <fedora-model:Inactive>)";
+            String query = queryStart + predicateQuery + "<" + subject + ">";
             String objects = restApi.queryParam("query", query).post(String.class);
             String[] lines = objects.split("\n");
             List<FedoraRelation> relations = new ArrayList<FedoraRelation>();
@@ -95,13 +77,11 @@ public class TripleStoreRest extends Connector implements TripleStore {
                 }
                 String[] components = line.split(",");
 
-                if (predicate.equals("$predicate")) {
+                if (predicateQuery.equals(" * ")) {
                     relations.add(new FedoraRelation(components[0], components[1], pid));
                 } else {
-                    relations.add(new FedoraRelation(components[0], predicateOrig, pid));
+                    relations.add(new FedoraRelation(components[0], predicate, pid));
                 }
-
-
             }
             return relations;
         } catch (UniformInterfaceException e) {
@@ -117,19 +97,16 @@ public class TripleStoreRest extends Connector implements TripleStore {
 
 
     @Override
-    public void flushTriples()
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException {
+    public void flushTriples() throws BackendInvalidCredsException, BackendMethodFailedException {
     }
 
 
     @Override
-    public List<String> getObjectsInCollection(String collectionPid,
-                                               String contentModel)
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException {
+    public List<String> getObjectsInCollection(String collectionPid, String contentModel) throws
+                                                                                          BackendInvalidCredsException,
+                                                                                          BackendMethodFailedException {
+
+        //TODO
 
         if (!collectionPid.startsWith("info:fedora/")) {
             collectionPid = "info:fedora/" + collectionPid.trim();
@@ -137,23 +114,10 @@ public class TripleStoreRest extends Connector implements TripleStore {
         if (!contentModel.startsWith("info:fedora/")) {
             contentModel = "info:fedora/" + contentModel.trim();
         }
-        String
-                query =
-                "select $object\n"
-                + "from <#ri>\n"
-                + "where $object <"
-                + Constants.RELATION_COLLECTION
-                + "> <"
-                + collectionPid
-                + ">\n"
-                + "and $object <fedora-model:hasModel> <"
-                + contentModel
-                + ">\n"
-                + "and ($object <fedora-model:state> <fedora-model:Active>\n"
-                +
-                "or $object <fedora-model:state> <fedora-model:Inactive>)";
+        String query
+                = "select $object\n" + "from <#ri>\n" + "where $object <" + Constants.RELATION_COLLECTION + "> <" + collectionPid + ">\n" + "and $object <fedora-model:hasModel> <" + contentModel + ">\n" + "and ($object <fedora-model:state> <fedora-model:Active>\n" +
+                  "or $object <fedora-model:state> <fedora-model:Inactive>)";
         return genericQuery(query);
-
     }
 
 
@@ -164,10 +128,7 @@ public class TripleStoreRest extends Connector implements TripleStore {
      *
      * @return an empty list
      */
-    public List<String> genericQuery(String query)
-            throws
-            BackendInvalidCredsException,
-            BackendMethodFailedException {
+    public List<String> genericQuery(String query) throws BackendInvalidCredsException, BackendMethodFailedException {
         try {
             String objects = restApi.queryParam("query", query).post(String.class);
             String[] lines = objects.split("\n");
@@ -189,8 +150,5 @@ public class TripleStoreRest extends Connector implements TripleStore {
                 throw new BackendMethodFailedException("Server error", e);
             }
         }
-
-
     }
-
 }
