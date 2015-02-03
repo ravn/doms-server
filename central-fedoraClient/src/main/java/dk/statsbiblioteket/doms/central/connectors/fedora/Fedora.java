@@ -85,6 +85,12 @@ public interface Fedora {
             BackendInvalidCredsException;
 
 
+    public ObjectProfile getLimitedObjectProfile(String pid, Long asOfTime) throws
+                                                                     BackendMethodFailedException,
+                                                                     BackendInvalidCredsException,
+                                                                     BackendInvalidResourceException;
+
+
     public ObjectProfile getObjectProfile(String pid,
                                           Long asOfTime)
             throws

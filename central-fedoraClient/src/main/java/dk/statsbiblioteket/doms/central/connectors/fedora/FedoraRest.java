@@ -252,6 +252,52 @@ public class FedoraRest extends Connector implements Fedora {
     }
 
     @Override
+    public ObjectProfile getLimitedObjectProfile(String pid, Long asOfTime) throws
+                                                                             BackendInvalidResourceException,
+                                                                             BackendMethodFailedException,
+                                                                             BackendInvalidCredsException {
+        try {
+            //Get basic fedora profile
+            dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectProfile profile;
+            profile = restApi.path("/")
+                             .path(urlEncode(pid))
+                             .queryParam("format", "text/xml")
+                             .get(dk.statsbiblioteket.doms.central.connectors.fedora.generated.ObjectProfile.class);
+            ObjectProfile prof = new ObjectProfile();
+            prof.setObjectCreatedDate(profile.getObjCreateDate().toGregorianCalendar().getTime());
+            prof.setObjectLastModifiedDate(profile.getObjLastModDate().toGregorianCalendar().getTime());
+            prof.setLabel(profile.getObjLabel());
+            prof.setOwnerID(profile.getObjOwnerId());
+            prof.setState(profile.getObjState());
+            prof.setPid(profile.getPid());
+            List<String> contentmodels = new ArrayList<String>();
+            for (String s : profile.getObjModels().getModel()) {
+                if (s.startsWith("info:fedora/")) {
+                    s = s.substring("info:fedora/".length());
+                }
+                contentmodels.add(s);
+            }
+            prof.setContentModels(contentmodels);
+
+            //decode type
+            prof.setType(ObjectType.DATA_OBJECT);
+            if (prof.getContentModels().contains("fedora-system:ContentModel-3.0")) {
+                prof.setType(ObjectType.CONTENT_MODEL);
+            }
+            if (prof.getContentModels().contains("doms:ContentModel_File")) {
+                prof.setType(ObjectType.FILE);
+            }
+            if (prof.getContentModels().contains("doms:ContentModel_Collection")) {
+                prof.setType(ObjectType.COLLECTION);
+            }
+            return prof;
+        } catch (UniformInterfaceException e)  {
+            handleResponseException(pid, 1, 1, e);
+            throw e;
+        }
+    }
+
+    @Override
     public ObjectProfile getObjectProfile(String pid, Long asOfTime)
             throws BackendMethodFailedException, BackendInvalidCredsException, BackendInvalidResourceException {
         try {
