@@ -690,13 +690,6 @@ public class FedoraRest extends Connector implements Fedora {
         }
     }
 
-    private String clean(String element) {
-        if (element.startsWith("<") && element.endsWith(">")) {
-            element = element.substring(1, element.length() - 1);
-        }
-        return element;
-        //To change body of created methods use File | Settings | File Templates.
-    }
 
     private String cleanInfo(String element) {
         element = clean(element);

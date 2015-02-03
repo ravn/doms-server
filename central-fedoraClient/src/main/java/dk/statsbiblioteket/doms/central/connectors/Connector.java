@@ -60,4 +60,30 @@ public abstract class Connector {
     public String getPassword() {
         return creds.getPassword();
     }
+
+    public static String toUri(String pid){
+        if (!pid.startsWith("info:fedora/")) {
+            return "info:fedora/" + pid;
+        } else {
+            return pid;
+        }
+    }
+
+    public static String toPid(String uri){
+        uri = clean(uri);
+        if (uri.startsWith("info:fedora/")) {
+            return uri.substring("info:fedora/".length());
+        }
+        return uri;
+    }
+
+    public static String clean(String uri) {
+        if (uri.startsWith("<")) {
+            uri = uri.substring(1);
+        }
+        if (uri.endsWith(">")) {
+            uri = uri.substring(0, uri.length() - 1);
+        }
+        return uri;
+    }
 }
