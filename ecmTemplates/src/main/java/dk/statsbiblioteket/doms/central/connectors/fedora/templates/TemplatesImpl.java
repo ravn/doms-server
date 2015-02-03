@@ -76,14 +76,10 @@ public class TemplatesImpl implements Templates {
             "/foxml:digitalObject/foxml:objectProperties/foxml:property[@NAME='info:fedora/fedora-system:def/view#lastModifiedDate']";
     private PidGenerator pidGenerator;
 
-    public TemplatesImpl(Fedora fedora,
-                         PidGenerator pidGenerator,
-                         TripleStore ts,
-                         ContentModelInheritance inheritance) {
+    public TemplatesImpl(Fedora fedora, PidGenerator pidGenerator, TripleStore ts) {
         this.fedora = fedora;
         this.pidGenerator = pidGenerator;
         this.ts = ts;
-        this.inheritance = inheritance;
     }
 
 

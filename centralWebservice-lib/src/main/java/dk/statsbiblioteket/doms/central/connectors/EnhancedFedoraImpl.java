@@ -8,7 +8,6 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.FedoraRest;
 import dk.statsbiblioteket.doms.central.connectors.fedora.fedoraDBsearch.DBSearchRest;
 import dk.statsbiblioteket.doms.central.connectors.fedora.generated.Validation;
 import dk.statsbiblioteket.doms.central.connectors.fedora.inheritance.ContentModelInheritance;
-import dk.statsbiblioteket.doms.central.connectors.fedora.inheritance.ContentModelInheritanceImpl;
 import dk.statsbiblioteket.doms.central.connectors.fedora.linkpatterns.LinkPattern;
 import dk.statsbiblioteket.doms.central.connectors.fedora.linkpatterns.LinkPatternsImpl;
 import dk.statsbiblioteket.doms.central.connectors.fedora.methods.Methods;
@@ -63,11 +62,9 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
         db = new DBSearchRest(creds, fedoraLocation);
         pidGenerator = new PidGeneratorImpl(pidGenLocation);
 
-        //2. level
-        cmInher = new ContentModelInheritanceImpl(fedora, ts);
 
         //3. level
-        templates = new TemplatesImpl(fedora, pidGenerator, ts, cmInher);
+        templates = new TemplatesImpl(fedora, pidGenerator, ts);
         views = new ViewsImpl(ts, cmInher, fedora);
 
         methods = new MethodsImpl(fedora, thisLocation);
@@ -106,11 +103,9 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
         db = new DBSearchRest(creds, fedoraLocation);
         pidGenerator = new PidGeneratorImpl(pidGenLocation);
 
-        //2. level
-        cmInher = new ContentModelInheritanceImpl(fedora, ts);
 
         //3. level
-        templates = new TemplatesImpl(fedora, pidGenerator, ts, cmInher);
+        templates = new TemplatesImpl(fedora, pidGenerator, ts);
         views = new ViewsImpl(ts, cmInher, fedora);
 
         methods = new MethodsImpl(fedora, thisLocation);
