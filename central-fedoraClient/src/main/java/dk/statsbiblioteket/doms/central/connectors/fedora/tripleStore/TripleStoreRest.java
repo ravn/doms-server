@@ -106,9 +106,6 @@ public class TripleStoreRest extends Connector implements TripleStore {
     public List<String> getContentModelsInCollection(String collectionPid) throws
                                                                                           BackendInvalidCredsException,
                                                                                           BackendMethodFailedException {
-
-        //TODO
-
         List<FedoraRelation> allContentModels = genericQuery("* <info:fedora/fedora-system:def/model#hasModel> <info:fedora/fedora-system:ContentModel-3.0>");
         List<String> selectedContentModels = new ArrayList<String>();
         for (FedoraRelation relation : allContentModels) {
