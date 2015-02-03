@@ -6,6 +6,7 @@ import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import org.w3c.dom.Document;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA. User: abr Date: 3/29/12 Time: 2:33 PM To change this template use File | Settings | File
@@ -50,6 +51,13 @@ public interface Views {
             BackendMethodFailedException,
             BackendInvalidResourceException;
 
-
-
+    /**
+     * Given an object, find view angles this object is an entry object for
+     * @param pid the object to find entry views for
+     * @return Entry views
+     * @throws BackendInvalidCredsException
+     * @throws BackendMethodFailedException
+     */
+    Set<String> determineEntryAngles(String pid)
+            throws BackendInvalidCredsException, BackendMethodFailedException;
 }

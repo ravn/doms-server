@@ -212,6 +212,7 @@ public class ViewsImpl implements Views {
         }
     }
 
+    @Override
     public Set<String> determineEntryAngles(String pid)
             throws BackendInvalidCredsException, BackendMethodFailedException {
         String query = "$cm <http://doms.statsbiblioteket.dk/types/view/default/0/1/#isEntryForViewAngle> $angle\n" +
