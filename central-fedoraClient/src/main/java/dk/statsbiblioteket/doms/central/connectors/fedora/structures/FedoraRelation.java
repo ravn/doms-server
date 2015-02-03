@@ -6,9 +6,8 @@ package dk.statsbiblioteket.doms.central.connectors.fedora.structures;
  */
 public class FedoraRelation {
     private String subject;
-
-    private String object;
     private String predicate;
+    private String object;
 
     private boolean literal;
 
@@ -25,12 +24,12 @@ public class FedoraRelation {
         return subject;
     }
 
-    public String getObject() {
-        return object;
-    }
-
     public String getPredicate() {
         return predicate;
+    }
+
+    public String getObject() {
+        return object;
     }
 
     public boolean isLiteral() {
