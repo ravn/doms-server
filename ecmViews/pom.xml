@@ -10,13 +10,11 @@
 
 
     <artifactId>ecmViews</artifactId>
-
     <dependencies>
         <dependency>
             <groupId>dk.statsbiblioteket.doms.central</groupId>
-            <artifactId>ecmInheritance</artifactId>
+            <artifactId>central-fedoraClient</artifactId>
             <version>1.8-SNAPSHOT</version>
         </dependency>
     </dependencies>
-
 </project>

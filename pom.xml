@@ -31,7 +31,6 @@
         <module>centralWebservice-service</module>
         <module>centralWebservice-lib</module>
         <module>central-fedoraClient</module>
-        <module>ecmInheritance</module>
         <module>ecmTemplates</module>
         <module>ecmViews</module>
         <module>ecmMethods</module>

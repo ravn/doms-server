@@ -4,7 +4,6 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
-import dk.statsbiblioteket.doms.central.connectors.fedora.inheritance.ContentModelInheritance;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.FedoraRelation;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectProfile;
 import dk.statsbiblioteket.doms.central.connectors.fedora.tripleStore.TripleStore;
@@ -12,8 +11,6 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.utils.Constants;
 import dk.statsbiblioteket.doms.central.connectors.fedora.utils.FedoraUtil;
 import dk.statsbiblioteket.util.DocumentUtils;
 import dk.statsbiblioteket.util.xml.DOM;
-
-import com.sun.jersey.api.client.UniformInterfaceException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
@@ -35,13 +32,11 @@ public class ViewsImpl implements Views {
     private static final Log LOG = LogFactory.getLog(ViewsImpl.class);
 
     TripleStore ts;
-    private ContentModelInheritance inheritance;
     private Fedora fedora;
 
 
-    public ViewsImpl(TripleStore ts, ContentModelInheritance inheritance, Fedora fedora) {
+    public ViewsImpl(TripleStore ts, Fedora fedora) {
         this.ts = ts;
-        this.inheritance = inheritance;
         this.fedora = fedora;
     }
 

@@ -4,7 +4,6 @@ import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidResourceException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
-import dk.statsbiblioteket.doms.central.connectors.fedora.inheritance.ContentModelInheritance;
 import dk.statsbiblioteket.doms.central.connectors.fedora.pidGenerator.PIDGeneratorException;
 import dk.statsbiblioteket.doms.central.connectors.fedora.pidGenerator.PidGenerator;
 import dk.statsbiblioteket.doms.central.connectors.fedora.tripleStore.TripleStore;
@@ -30,7 +29,6 @@ public class TemplatesImpl implements Templates {
 
     Fedora fedora;
     TripleStore ts;
-    ContentModelInheritance inheritance;
 
     private static final Log LOG = LogFactory.getLog(TemplatesImpl.class);
 
