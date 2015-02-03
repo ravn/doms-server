@@ -6,6 +6,7 @@ import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.fedora.Fedora;
 import dk.statsbiblioteket.doms.central.connectors.fedora.inheritance.ContentModelInheritance;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.FedoraRelation;
+import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectProfile;
 import dk.statsbiblioteket.doms.central.connectors.fedora.tripleStore.TripleStore;
 import dk.statsbiblioteket.doms.central.connectors.fedora.utils.Constants;
 import dk.statsbiblioteket.doms.central.connectors.fedora.utils.FedoraUtil;
@@ -213,19 +214,20 @@ public class ViewsImpl implements Views {
     }
 
     @Override
-    public Set<String> determineEntryAngles(String pid)
-            throws BackendInvalidCredsException, BackendMethodFailedException {
-        String query = "$cm <http://doms.statsbiblioteket.dk/types/view/default/0/1/#isEntryForViewAngle> $angle\n" +
-                "from <#ri>\n" +
-                "where \n" +
-                "<info:fedora/" + pid + "> <fedora-model:hasModel> $cm\n" +
-                "and\n" +
-                "$cm <http://doms.statsbiblioteket.dk/types/view/default/0/1/#isEntryForViewAngle> $angle";
+    public Set<String> determineEntryAngles(String pid, Long asOfDateTime) throws
+                                                        BackendInvalidCredsException,
+                                                        BackendMethodFailedException,
+                                                        BackendInvalidResourceException {
 
-        List<FedoraRelation> relations = ts.genericQuery(query);
         Set<String> angles = new HashSet<String>();
-        for (FedoraRelation relation : relations) {
-            angles.add(relation.getObject());
+        ObjectProfile profile = fedora.getLimitedObjectProfile(pid, asOfDateTime);
+        for (String contentModel : profile.getContentModels()) {
+            List<FedoraRelation> entryRelations = fedora.getNamedRelations(contentModel,
+                                                                                  "http://doms.statsbiblioteket.dk/types/view/default/0/1/#isEntryForViewAngle",
+                                                                                  asOfDateTime);
+            for (FedoraRelation entryRelation : entryRelations) {
+                angles.add(entryRelation.getObject());
+            }
         }
         return angles;
     }

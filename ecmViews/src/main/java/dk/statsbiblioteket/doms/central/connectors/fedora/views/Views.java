@@ -54,10 +54,12 @@ public interface Views {
     /**
      * Given an object, find view angles this object is an entry object for
      * @param pid the object to find entry views for
+     * @param asOfTime
      * @return Entry views
      * @throws BackendInvalidCredsException
      * @throws BackendMethodFailedException
+     * @throws BackendInvalidResourceException
      */
-    Set<String> determineEntryAngles(String pid)
-            throws BackendInvalidCredsException, BackendMethodFailedException;
+    Set<String> determineEntryAngles(String pid, Long asOfTime)
+            throws BackendInvalidCredsException, BackendMethodFailedException, BackendInvalidResourceException;
 }
