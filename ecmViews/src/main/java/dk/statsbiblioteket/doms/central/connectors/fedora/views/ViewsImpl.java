@@ -11,6 +11,8 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.utils.Constants;
 import dk.statsbiblioteket.doms.central.connectors.fedora.utils.FedoraUtil;
 import dk.statsbiblioteket.util.DocumentUtils;
 import dk.statsbiblioteket.util.xml.DOM;
+
+import com.sun.jersey.api.client.UniformInterfaceException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
@@ -18,7 +20,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA. User: abr Date: 3/29/12 Time: 3:14 PM To change this template use File | Settings | File
@@ -206,5 +210,22 @@ public class ViewsImpl implements Views {
 
 
         }
+    }
+
+    public Set<String> determineEntryAngles(String pid)
+            throws BackendInvalidCredsException, BackendMethodFailedException {
+        String query = "$cm <http://doms.statsbiblioteket.dk/types/view/default/0/1/#isEntryForViewAngle> $angle\n" +
+                "from <#ri>\n" +
+                "where \n" +
+                "<info:fedora/" + pid + "> <fedora-model:hasModel> $cm\n" +
+                "and\n" +
+                "$cm <http://doms.statsbiblioteket.dk/types/view/default/0/1/#isEntryForViewAngle> $angle";
+
+        List<FedoraRelation> relations = ts.genericQuery(query);
+        Set<String> angles = new HashSet<String>();
+        for (FedoraRelation relation : relations) {
+            angles.add(relation.getObject());
+        }
+        return angles;
     }
 }
