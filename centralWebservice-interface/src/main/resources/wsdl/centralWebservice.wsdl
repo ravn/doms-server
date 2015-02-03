@@ -323,11 +323,11 @@
         <part name="parameters" element="tns:createTempAdminUserResponse"/>
     </message>
 
-    <message name="getObjectsInCollection">
-        <part name="parameters" element="tns:getObjectsInCollection"/>
+    <message name="getContentModelsInCollection">
+        <part name="parameters" element="tns:getContentModelsInCollection"/>
     </message>
-    <message name="getObjectsInCollectionResponse">
-        <part name="parameters" element="tns:getObjectsInCollectionResponse"/>
+    <message name="getContentModelsInCollectionResponse">
+        <part name="parameters" element="tns:getContentModelsInCollectionResponse"/>
     </message>
 
     <message name="getMethods">
@@ -905,12 +905,11 @@
                    message="tns:MethodFailedException"/>
         </operation>
 
-        <operation name="getObjectsInCollection">
-            <documentation>Get a subset of a collection, with a given content model. Used for getting the content models
-                in a collection
+        <operation name="getContentModelsInCollection">
+            <documentation>Get a subset of a collection, with a given content model. Used for getting the content models in a collection
             </documentation>
-            <input message="tns:getObjectsInCollection"/>
-            <output message="tns:getObjectsInCollectionResponse"/>
+            <input message="tns:getContentModelsInCollection"/>
+            <output message="tns:getContentModelsInCollectionResponse"/>
             <fault name="InvalidCredentialsException"
                    message="tns:InvalidCredentialsException"/>
             <fault name="MethodFailedException"
@@ -1570,7 +1569,7 @@
                 <soap:fault name="InvalidCredentialsException" use="literal"/>
             </fault>
         </operation>
-        <operation name="getObjectsInCollection">
+        <operation name="getContentModelsInCollection">
             <soap:operation soapAction=""/>
             <input>
                 <soap:body use="literal"/>

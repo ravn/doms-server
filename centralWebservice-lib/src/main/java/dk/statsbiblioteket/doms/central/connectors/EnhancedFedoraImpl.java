@@ -59,7 +59,7 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
 
         //1.st level
         fedora = new FedoraRest(creds, fedoraLocation);
-        ts = new TripleStoreRest(creds, fedoraLocation);
+        ts = new TripleStoreRest(creds, fedoraLocation, fedora);
         db = new DBSearchRest(creds, fedoraLocation);
         pidGenerator = new PidGeneratorImpl(pidGenLocation);
 
@@ -102,7 +102,7 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
 
         //1.st level
         fedora = new FedoraRest(creds, fedoraLocation, maxTriesPut, maxTriesPost, maxTriesDelete, retryDelay);
-        ts = new TripleStoreRest(creds, fedoraLocation);
+        ts = new TripleStoreRest(creds, fedoraLocation, fedora);
         db = new DBSearchRest(creds, fedoraLocation);
         pidGenerator = new PidGeneratorImpl(pidGenLocation);
 
@@ -343,9 +343,9 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
     }
 
     @Override
-    public List<String> getObjectsInCollection(String collectionPid, String contentModelPid)
+    public List<String> getContentModelsInCollection(String collectionPid)
             throws BackendInvalidCredsException, BackendMethodFailedException {
-        return ts.getObjectsInCollection(collectionPid, contentModelPid);
+        return ts.getContentModelsInCollection(collectionPid);
     }
 
     @Override

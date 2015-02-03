@@ -1055,19 +1055,14 @@ public class CentralWebserviceImpl implements CentralWebservice {
     }
 
     @Override
-    public List<String> getObjectsInCollection(
-            @WebParam(name = "collectionPid", targetNamespace = "") String collectionPid,
-            @WebParam(name = "contentModelPid", targetNamespace = "") String contentModelPid)
-            throws
-            InvalidCredentialsException,
-            InvalidResourceException,
-            MethodFailedException {
+    public List<String> getContentModelsInCollection(String collectionPid) throws
+                                                                           InvalidCredentialsException,
+                                                                           InvalidResourceException,
+                                                                           MethodFailedException {
         try {
-            log.trace("Entering getObjectsInCollection with param collectionPid="
-                      + collectionPid
-                      + " and contentModelPid="
-                      + contentModelPid);
-            List<String> objects = fedora.getObjectsInCollection(collectionPid, contentModelPid);
+            log.trace("Entering getContentModelsInCollection with param collectionPid="
+                      + collectionPid);
+            List<String> objects = fedora.getContentModelsInCollection(collectionPid);
             return objects;
         } catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);

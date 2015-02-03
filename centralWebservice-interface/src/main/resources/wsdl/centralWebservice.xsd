@@ -160,8 +160,8 @@
     <xs:element name="createTempAdminUser" type="tns:newUser"/>
     <xs:element name="createTempAdminUserResponse" type="tns:UserWrapper"/>
 
-    <xs:element name="getObjectsInCollection" type="tns:getObjectsInCollection"/>
-    <xs:element name="getObjectsInCollectionResponse" type="tns:Pidlist"/>
+    <xs:element name="getContentModelsInCollection" type="tns:getContentModelsInCollection"/>
+    <xs:element name="getContentModelsInCollectionResponse" type="tns:Pidlist"/>
 
     <xs:element name="getMethods" type="tns:singlePid"/>
     <xs:element name="getMethodsResponse" type="tns:MethodList"/>
@@ -475,10 +475,9 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="getObjectsInCollection">
+    <xs:complexType name="getContentModelsInCollection">
         <xs:sequence>
             <xs:element name="collectionPid" type="xs:string"/>
-            <xs:element name="contentModelPid" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="MethodList">

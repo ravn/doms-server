@@ -297,8 +297,7 @@ public interface EnhancedFedora {
             BackendInvalidCredsException,
             BackendMethodFailedException;
 
-    List<String> getObjectsInCollection(String collectionPid,
-                                        String contentModelPid)
+    List<String> getContentModelsInCollection(String collectionPid)
             throws
             BackendInvalidCredsException,
             BackendMethodFailedException;

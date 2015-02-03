@@ -14,8 +14,7 @@ import java.util.List;
 public interface TripleStore {
 
 
-    List<String> getObjectsInCollection(String collectionPid,
-                                        String contentModel)
+    List<String> getContentModelsInCollection(String collectionPid)
             throws
             BackendInvalidCredsException,
             BackendMethodFailedException;
@@ -42,7 +41,7 @@ public interface TripleStore {
      *
      * @return an empty list
      */
-    public List<String> genericQuery(String query)
+    public List<FedoraRelation> genericQuery(String query)
             throws
             BackendInvalidCredsException,
             BackendMethodFailedException;
