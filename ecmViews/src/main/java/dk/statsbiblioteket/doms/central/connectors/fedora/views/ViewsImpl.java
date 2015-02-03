@@ -197,9 +197,10 @@ public class ViewsImpl implements Views {
             // Find relations
 
 
-            List<String> objects = ts.genericQuery(query);
+            List<FedoraRelation> objects = ts.genericQuery(query);
             // Recursively add
-            for (String newpid : objects) {
+            for (FedoraRelation relation : objects) {
+                String newpid = relation.getSubject();
                 appendPids(viewname, includedPids, newpid, asOfTime);
             }
 
