@@ -81,11 +81,6 @@
 
         <dependency>
             <groupId>dk.statsbiblioteket.doms.updatetracker</groupId>
-            <artifactId>updatetracker-interface</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>dk.statsbiblioteket.doms.updatetracker</groupId>
             <artifactId>updatetracker-lib</artifactId>
             <exclusions>
                 <exclusion>
