@@ -35,7 +35,7 @@ import dk.statsbiblioteket.doms.updatetracker.webservice.InvalidCredentialsExcep
 import dk.statsbiblioteket.doms.updatetracker.webservice.MethodFailedException;
 import dk.statsbiblioteket.doms.updatetracker.webservice.PidDatePidPid;
 import dk.statsbiblioteket.doms.updatetracker.webservice.UpdateTrackerWebservice;
-import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
+import dk.statsbiblioteket.sbutil.webservices.authentication.Credentials;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
@@ -53,7 +53,7 @@ import java.util.List;
  * File Templates.
  */
 public class UpdateTracker extends Connector {
-    private UpdateTrackerWebservice service;
+    private UpdateTrackerWebserviceLib service;
 
     public UpdateTracker(Credentials creds,
                          String location)

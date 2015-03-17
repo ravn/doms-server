@@ -1,5 +1,6 @@
 package dk.statsbiblioteket.doms.central.connectors;
 
+import dk.statsbiblioteket.sbutil.webservices.authentication.Credentials;
 import org.w3c.dom.Document;
 
 import dk.statsbiblioteket.doms.central.connectors.fedora.ChecksumType;
@@ -25,7 +26,6 @@ import dk.statsbiblioteket.doms.central.connectors.fedora.tripleStore.TripleStor
 import dk.statsbiblioteket.doms.central.connectors.fedora.tripleStore.TripleStoreRest;
 import dk.statsbiblioteket.doms.central.connectors.fedora.views.Views;
 import dk.statsbiblioteket.doms.central.connectors.fedora.views.ViewsImpl;
-import dk.statsbiblioteket.doms.webservices.authentication.Credentials;
 
 import javax.xml.bind.JAXBException;
 import java.io.UnsupportedEncodingException;

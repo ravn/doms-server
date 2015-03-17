@@ -33,8 +33,7 @@ public interface EnhancedFedora {
             BackendInvalidCredsException,
             BackendMethodFailedException,
             ObjectIsWrongTypeException,
-            BackendInvalidResourceException,
-            PIDGeneratorException;
+            BackendInvalidResourceException, PIDGeneratorException;
 
     public String newEmptyObject(List<String> oldIDs,
                                  List<String> collections,
