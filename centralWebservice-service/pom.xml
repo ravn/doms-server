@@ -96,11 +96,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>dk.statsbiblioteket.doms.domsutil</groupId>
-            <artifactId>domsutil-bundle</artifactId>
-            <type>pom</type>
-        </dependency>
-        <dependency>
             <groupId>com.sun.xml.ws</groupId>
             <artifactId>jaxws-rt</artifactId>
         </dependency>

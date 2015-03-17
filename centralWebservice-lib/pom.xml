@@ -70,11 +70,7 @@
             <artifactId>authchecker-authutils</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>dk.statsbiblioteket.doms.domsutil</groupId>
-            <artifactId>domsutil-bundle</artifactId>
-            <type>pom</type>
-        </dependency>
+
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
