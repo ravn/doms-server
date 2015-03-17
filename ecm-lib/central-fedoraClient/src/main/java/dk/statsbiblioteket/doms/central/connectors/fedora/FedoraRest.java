@@ -140,7 +140,7 @@ public class FedoraRest extends Connector implements Fedora {
     public boolean exists(String pid, Long asOfDateTime)
             throws BackendInvalidCredsException, BackendMethodFailedException {
         try {
-            ObjectProfile profile = getObjectProfile(pid, asOfDateTime);
+            ObjectProfile profile = getLimitedObjectProfile(pid, asOfDateTime);
         } catch (BackendInvalidResourceException e) {
             return false;
         }
@@ -151,7 +151,7 @@ public class FedoraRest extends Connector implements Fedora {
     public boolean isDataObject(String pid, Long asOfDateTime)
             throws BackendInvalidCredsException, BackendMethodFailedException {
         try {
-            ObjectProfile profile = getObjectProfile(pid, asOfDateTime);
+            ObjectProfile profile = getLimitedObjectProfile(pid, asOfDateTime);
             return profile.getType().equals(ObjectType.DATA_OBJECT);
         } catch (BackendInvalidResourceException e) {
             return false;
@@ -174,7 +174,7 @@ public class FedoraRest extends Connector implements Fedora {
     public boolean isContentModel(String pid, Long asOfDateTime)
             throws BackendInvalidCredsException, BackendMethodFailedException {
         try {
-            ObjectProfile profile = getObjectProfile(pid, asOfDateTime);
+            ObjectProfile profile = getLimitedObjectProfile(pid, asOfDateTime);
             return profile.getType().equals(ObjectType.CONTENT_MODEL);
         } catch (BackendInvalidResourceException e) {
             return false;
