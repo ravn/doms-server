@@ -30,17 +30,38 @@
         <module>centralWebservice-interface</module>
         <module>centralWebservice-service</module>
         <module>centralWebservice-lib</module>
-        <module>central-fedoraClient</module>
-        <module>ecmTemplates</module>
-        <module>ecmViews</module>
-        <module>ecmMethods</module>
-        <module>ecmLinks</module>
-        <!--<module>fedoraTrashPreventer</module>-->
         <module>summaSearch-interface</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>dk.statsbiblioteket.doms.central</groupId>
+                <artifactId>central-fedoraClient</artifactId>
+                <version>1.8-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>dk.statsbiblioteket.doms.central</groupId>
+                <artifactId>ecmTemplates</artifactId>
+                <version>1.8-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>dk.statsbiblioteket.doms.central</groupId>
+                <artifactId>ecmViews</artifactId>
+                <version>1.8-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>dk.statsbiblioteket.doms.central</groupId>
+                <artifactId>ecmMethods</artifactId>
+                <version>1.8-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>dk.statsbiblioteket.doms.central</groupId>
+                <artifactId>ecmLinks</artifactId>
+                <version>1.8-SNAPSHOT</version>
+            </dependency>
+
+
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.authchecker</groupId>
                 <artifactId>authchecker-authutils</artifactId>
@@ -63,11 +84,6 @@
                 <type>pom</type>
             </dependency>
 
-            <dependency>
-                <groupId>dk.statsbiblioteket.doms.pidgenerator</groupId>
-                <artifactId>pidgenerator-interface</artifactId>
-                <version>1.0.1</version>
-            </dependency>
 
             <dependency>
                 <groupId>com.sun.xml.ws</groupId>
@@ -141,8 +157,8 @@
                 <version>3.1</version>
                 <configuration>
                     <debug>true</debug>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>1.6</source>
+                    <target>1.6</target>
                 </configuration>
             </plugin>
             <plugin>

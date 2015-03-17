@@ -43,23 +43,25 @@
 
         <dependency>
             <groupId>dk.statsbiblioteket.doms.central</groupId>
+            <artifactId>central-fedoraClient</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>dk.statsbiblioteket.doms.central</groupId>
             <artifactId>ecmTemplates</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>dk.statsbiblioteket.doms.central</groupId>
             <artifactId>ecmViews</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>dk.statsbiblioteket.doms.central</groupId>
             <artifactId>ecmMethods</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>dk.statsbiblioteket.doms.central</groupId>
             <artifactId>ecmLinks</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
 
