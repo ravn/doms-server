@@ -202,16 +202,16 @@
 
     <context-param>
         <param-name>fedora.updatetracer.web.url</param-name>
-        <param-value>http://achernar:7880/fedora</param-value>
+        <param-value>http://localhost:7880/fedora</param-value>
     </context-param>
 
     <context-param>
-        <param-name>fedora.updatetracer.web.Username</param-name>
+        <param-name>fedora.updatetracer.web.username</param-name>
         <param-value>fedoraAdmin</param-value>
     </context-param>
 
     <context-param>
-        <param-name>fedora.updatetracer.web.Password</param-name>
+        <param-name>fedora.updatetracer.web.password</param-name>
         <param-value>fedoraAdminPass</param-value>
     </context-param>
 
@@ -232,7 +232,7 @@
 
     <context-param>
         <param-name>fedora.updatetracker.hibernateConfigFile</param-name>
-        <param-value>CONFIGURE_THIS</param-value>
+        <param-value>WEB-INF/defaultHibernate.cfg.xml</param-value>
     </context-param>
 
 
