@@ -30,19 +30,17 @@ package dk.statsbiblioteket.doms.central.connectors.updatetracker;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.Connector;
-import dk.statsbiblioteket.doms.updatetracker.improved.UpdateTrackerWebserviceLib;
+import dk.statsbiblioteket.doms.updatetracker.improved.UpdateTrackerLib;
+import dk.statsbiblioteket.doms.updatetracker.improved.webservice.UpdateTrackerTimerServlet;
 import dk.statsbiblioteket.doms.updatetracker.webservice.InvalidCredentialsException;
 import dk.statsbiblioteket.doms.updatetracker.webservice.MethodFailedException;
 import dk.statsbiblioteket.doms.updatetracker.webservice.PidDatePidPid;
-import dk.statsbiblioteket.doms.updatetracker.webservice.UpdateTrackerWebservice;
 import dk.statsbiblioteket.sbutil.webservices.authentication.Credentials;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.namespace.QName;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -53,14 +51,14 @@ import java.util.List;
  * File Templates.
  */
 public class UpdateTracker extends Connector {
-    private UpdateTrackerWebserviceLib service;
+    private UpdateTrackerLib service;
 
     public UpdateTracker(Credentials creds,
                          String location)
             throws
             MalformedURLException {
         super(creds, location);
-        service = new UpdateTrackerWebserviceLib();
+        service = new UpdateTrackerLib(UpdateTrackerTimerServlet.updateTracker);
     }
 
     public List<UpdateTrackerRecord> listObjectsChangedSince(String collectionPid,
@@ -76,7 +74,7 @@ public class UpdateTracker extends Connector {
         List<UpdateTrackerRecord> list = new ArrayList<UpdateTrackerRecord>();
 
 
-        try {//TODO require new version of updateTracker
+        try {
             List<PidDatePidPid>
                     changed =
                     service.listObjectsChangedSince(collectionPid, viewAngle, date, state, offset, limit);
@@ -107,27 +105,11 @@ public class UpdateTracker extends Connector {
             BackendInvalidCredsException {
 
         try {
-            long changed = service.getLatestModificationTime(collectionPid, viewAngle, state);
-            return changed;
+            return service.getLatestModificationTime(collectionPid, viewAngle, state);
         } catch (InvalidCredentialsException e) {
             throw new BackendInvalidCredsException("Invalid credentials for update tracker", e);
         } catch (MethodFailedException e) {
             throw new BackendMethodFailedException("Update tracker failed", e);
         }
     }
-
-    public static XMLGregorianCalendar long2Gregorian(long date)
-            throws
-            BackendMethodFailedException {
-        DatatypeFactory dataTypeFactory;
-        try {
-            dataTypeFactory = DatatypeFactory.newInstance();
-        } catch (DatatypeConfigurationException e) {
-            throw new BackendMethodFailedException("Failed to convert dates...", e);
-        }
-        GregorianCalendar gc = new GregorianCalendar();
-        gc.setTimeInMillis(date);
-        return dataTypeFactory.newXMLGregorianCalendar(gc);
-    }
-
 }

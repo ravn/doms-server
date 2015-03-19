@@ -179,6 +179,69 @@
     </context-param>
 
 
+    <context-param>
+        <param-name>fedora.worklog.database.driver</param-name>
+        <param-value>org.postgresql.Driver</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>fedora.worklog.database.URL</param-name>
+        <param-value>CONFIGURE_THIS</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>fedora.worklog.database.username</param-name>
+        <param-value>CONFIGURE_THIS</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>fedora.worklog.database.password</param-name>
+        <param-value>CONFIGURE_THIS</param-value>
+    </context-param>
+
+
+    <context-param>
+        <param-name>fedora.updatetracer.web.url</param-name>
+        <param-value>http://achernar:7880/fedora</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>fedora.updatetracer.web.Username</param-name>
+        <param-value>fedoraAdmin</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>fedora.updatetracer.web.Password</param-name>
+        <param-value>fedoraAdminPass</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>fedora.updatetracker.delay</param-name>
+        <param-value>1000</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>fedora.updatetracker.period</param-name>
+        <param-value>1000</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>fedora.updatetracker.limit</param-name>
+        <param-value>1000</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>fedora.updatetracker.hibernateConfigFile</param-name>
+        <param-value>CONFIGURE_THIS</param-value>
+    </context-param>
+
+
+    <servlet>
+        <servlet-name>UpdateTrackerPumper</servlet-name>
+        <servlet-class>dk.statsbiblioteket.doms.updatetracker.improved.webservice.UpdateTrackerTimerServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
     <!--This servlet is used only to load on startup, and configure the logging framework.-->
     <servlet>
         <description>The servlet that is loaded on startup, and initializes the logging system</description>
