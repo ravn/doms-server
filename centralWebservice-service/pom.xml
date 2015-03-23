@@ -96,6 +96,19 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>dk.statsbiblioteket.sbutil</groupId>
+            <artifactId>sbutil-webservices-log4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dk.statsbiblioteket.doms.domsutil.surveyable</groupId>
+            <artifactId>domsutil-surveyable-impl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>dk.statsbiblioteket.doms.domsutil.surveyable</groupId>
+            <artifactId>domsutil-logappender</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
             <groupId>com.sun.xml.ws</groupId>
             <artifactId>jaxws-rt</artifactId>
         </dependency>
