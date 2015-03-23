@@ -30,20 +30,16 @@ package dk.statsbiblioteket.doms.central.connectors.updatetracker;
 import dk.statsbiblioteket.doms.central.connectors.BackendInvalidCredsException;
 import dk.statsbiblioteket.doms.central.connectors.BackendMethodFailedException;
 import dk.statsbiblioteket.doms.central.connectors.Connector;
-import dk.statsbiblioteket.doms.updatetracker.improved.UpdateTrackerLib;
+import dk.statsbiblioteket.doms.updatetracker.improved.UpdateTrackerClient;
 import dk.statsbiblioteket.doms.updatetracker.improved.webservice.UpdateTrackerTimerServlet;
 import dk.statsbiblioteket.doms.updatetracker.webservice.InvalidCredentialsException;
 import dk.statsbiblioteket.doms.updatetracker.webservice.MethodFailedException;
 import dk.statsbiblioteket.doms.updatetracker.webservice.PidDatePidPid;
 import dk.statsbiblioteket.sbutil.webservices.authentication.Credentials;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 /**
@@ -51,14 +47,14 @@ import java.util.List;
  * File Templates.
  */
 public class UpdateTracker extends Connector {
-    private UpdateTrackerLib service;
+    private UpdateTrackerClient service;
 
     public UpdateTracker(Credentials creds,
                          String location)
             throws
             MalformedURLException {
         super(creds, location);
-        service = new UpdateTrackerLib(UpdateTrackerTimerServlet.updateTracker);
+        service = new UpdateTrackerClient(UpdateTrackerTimerServlet.updateTracker);
     }
 
     public List<UpdateTrackerRecord> listObjectsChangedSince(String collectionPid,
