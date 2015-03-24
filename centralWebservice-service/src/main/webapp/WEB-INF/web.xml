@@ -186,17 +186,17 @@
 
     <context-param>
         <param-name>fedora.worklog.database.URL</param-name>
-        <param-value>CONFIGURE_THIS</param-value>
+        <param-value>jdbc:postgresql://localhost/domsFieldSearch</param-value>
     </context-param>
 
     <context-param>
         <param-name>fedora.worklog.database.username</param-name>
-        <param-value>CONFIGURE_THIS</param-value>
+        <param-value>domsFieldSearch</param-value>
     </context-param>
 
     <context-param>
         <param-name>fedora.worklog.database.password</param-name>
-        <param-value>CONFIGURE_THIS</param-value>
+        <param-value>domsFieldSearchPass</param-value>
     </context-param>
 
 
@@ -233,6 +233,10 @@
     <context-param>
         <param-name>fedora.updatetracker.hibernateConfigFile</param-name>
         <param-value>WEB-INF/defaultHibernate.cfg.xml</param-value>
+    </context-param>
+    <context-param>
+        <param-name>fedora.updatetracker.progressFile</param-name>
+        <param-value>/tmp/updateTracker.progress</param-value>
     </context-param>
 
 
