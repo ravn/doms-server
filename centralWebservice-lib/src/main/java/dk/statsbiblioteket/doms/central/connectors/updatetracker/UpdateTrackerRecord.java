@@ -45,6 +45,8 @@ public class UpdateTrackerRecord {
 
     Date date;
 
+    String state;
+
     public Date getDate() {
         return date;
     }
@@ -83,5 +85,13 @@ public class UpdateTrackerRecord {
 
     public void setViewAngle(String viewAngle) {
         this.viewAngle = viewAngle;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

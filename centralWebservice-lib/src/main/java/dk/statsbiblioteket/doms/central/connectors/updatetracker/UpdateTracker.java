@@ -34,7 +34,7 @@ import dk.statsbiblioteket.doms.updatetracker.improved.UpdateTrackerClient;
 import dk.statsbiblioteket.doms.updatetracker.improved.webservice.UpdateTrackerTimerServlet;
 import dk.statsbiblioteket.doms.updatetracker.webservice.InvalidCredentialsException;
 import dk.statsbiblioteket.doms.updatetracker.webservice.MethodFailedException;
-import dk.statsbiblioteket.doms.updatetracker.webservice.PidDatePidPid;
+import dk.statsbiblioteket.doms.updatetracker.webservice.RecordDescription;
 import dk.statsbiblioteket.sbutil.webservices.authentication.Credentials;
 
 import java.net.MalformedURLException;
@@ -71,15 +71,16 @@ public class UpdateTracker extends Connector {
 
 
         try {
-            List<PidDatePidPid>
+            List<RecordDescription>
                     changed =
                     service.listObjectsChangedSince(collectionPid, viewAngle, date, state, offset, limit);
-            for (PidDatePidPid pidDatePidPid : changed) {
+            for (RecordDescription recordDescription : changed) {
                 UpdateTrackerRecord rec = new UpdateTrackerRecord();
-                rec.setCollectionPid(pidDatePidPid.getCollectionPid());
-                rec.setEntryContentModelPid(pidDatePidPid.getEntryCMPid());
-                rec.setDate(new Date(pidDatePidPid.getLastChangedTime()));
-                rec.setPid(pidDatePidPid.getPid());
+                rec.setCollectionPid(recordDescription.getCollectionPid());
+                rec.setEntryContentModelPid(recordDescription.getEntryCMPid());
+                rec.setDate(new Date(recordDescription.getLastChangedTime()));
+                rec.setPid(recordDescription.getPid());
+                rec.setState(recordDescription.getState());
                 rec.setViewAngle(viewAngle);
                 list.add(rec);
             }
