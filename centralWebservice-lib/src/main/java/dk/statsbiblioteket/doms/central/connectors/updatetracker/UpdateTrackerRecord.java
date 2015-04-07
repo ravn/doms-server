@@ -30,13 +30,17 @@ package dk.statsbiblioteket.doms.central.connectors.updatetracker;
 import java.util.Date;
 
 /**
- * Created by IntelliJ IDEA. User: abr Date: Sep 21, 2010 Time: 5:04:46 PM To change this template use File | Settings |
- * File Templates.
+ * A record from the update tracker.
  */
 public class UpdateTrackerRecord {
 
     String collectionPid;
 
+    /**
+     * Do not use this field
+     * @deprecated
+     */
+    @Deprecated()
     String entryContentModelPid;
 
     String pid;
@@ -63,10 +67,22 @@ public class UpdateTrackerRecord {
         this.collectionPid = collectionPid;
     }
 
+    /**
+     * Do not use this field
+     *
+     * @deprecated
+     */
+    @Deprecated()
     public String getEntryContentModelPid() {
         return entryContentModelPid;
     }
 
+    /**
+     * Do not use this field
+     *
+     * @deprecated
+     */
+    @Deprecated()
     public void setEntryContentModelPid(String entryContentModelPid) {
         this.entryContentModelPid = entryContentModelPid;
     }
