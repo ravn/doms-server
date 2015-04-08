@@ -234,10 +234,6 @@
         <param-name>fedora.updatetracker.hibernateConfigFile</param-name>
         <param-value>WEB-INF/defaultHibernate.cfg.xml</param-value>
     </context-param>
-    <context-param>
-        <param-name>fedora.updatetracker.progressFile</param-name>
-        <param-value>/home/doms/updateTracker.progress</param-value>
-    </context-param>
 
 
     <servlet>
