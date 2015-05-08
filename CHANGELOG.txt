@@ -1,3 +1,9 @@
+1.8
+Branch off ecm and fedora client libraries to separate project
+Do not require Sparql queries
+Integrate new update tracker
+Send emails on serious errors from logging framework
+
 1.7
 Add possibility to retry on 409 errors
 
