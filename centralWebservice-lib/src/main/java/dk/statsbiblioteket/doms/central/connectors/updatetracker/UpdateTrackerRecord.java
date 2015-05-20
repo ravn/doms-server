@@ -49,6 +49,8 @@ public class UpdateTrackerRecord {
 
     Date date;
 
+    Date recordDate;
+
     String state;
 
     public Date getDate() {
@@ -57,6 +59,14 @@ public class UpdateTrackerRecord {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public Date getRecordDate() {
+        return recordDate;
+    }
+
+    public void setRecordDate(Date recordDate) {
+        this.recordDate = recordDate;
     }
 
     public String getCollectionPid() {

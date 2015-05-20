@@ -79,6 +79,7 @@ public class UpdateTracker extends Connector {
                 rec.setCollectionPid(recordDescription.getCollectionPid());
                 rec.setEntryContentModelPid(recordDescription.getEntryCMPid());
                 rec.setDate(new Date(recordDescription.getLastChangedTime()));
+                rec.setRecordDate(new Date(recordDescription.getRecordTime()));
                 rec.setPid(recordDescription.getPid());
                 rec.setState(recordDescription.getState());
                 rec.setViewAngle(viewAngle);
