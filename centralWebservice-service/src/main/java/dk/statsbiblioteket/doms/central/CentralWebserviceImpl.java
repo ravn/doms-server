@@ -1206,6 +1206,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
         a.setPid(updateTrackerRecord.getPid());
         a.setState(updateTrackerRecord.getState());
         a.setDate(updateTrackerRecord.getDate().getTime());
+        a.setRecordDate(updateTrackerRecord.getRecordDate().getTime());
         return a;
     }
 
