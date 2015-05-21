@@ -1,3 +1,7 @@
+1.9
+Use correct lastModifiedDate for records when listing changed objects
+Use correct date for getting records when iterating
+
 1.8
 Branch off ecm and fedora client libraries to separate project
 Do not require Sparql queries
