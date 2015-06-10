@@ -934,9 +934,10 @@ public class CentralWebserviceImpl implements CentralWebservice {
                 Node node = nodeList.item(i);
                 SearchResult searchResult = new SearchResult();
 
-                Node shortRecord = (Node) xPath.evaluate("field/shortrecord", node, XPathConstants.NODE);
+                Node shortRecordNode = (Node) xPath.evaluate("field[@name='domsshortrecord']", node, XPathConstants.NODE);
 
-                if (shortRecord != null) {
+                if (shortRecordNode != null) {
+                    Node shortRecord = DOM.stringToDOM(shortRecordNode.getTextContent()).getDocumentElement();
                     String pid = xPath.evaluate("pid", shortRecord);
                     String title = xPath.evaluate("title", shortRecord);
                     searchResult.setPid(pid);
