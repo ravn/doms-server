@@ -1,3 +1,6 @@
+1.10
+Use newest update tracker. Do not recalculate view on updates of 'versionable' and 'state' of VIEW/RELS-EXT datastreams
+
 1.9
 Use correct lastModifiedDate for records when listing changed objects
 Use correct date for getting records when iterating
