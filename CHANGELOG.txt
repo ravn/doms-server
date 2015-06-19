@@ -1,3 +1,6 @@
+1.11
+Use update tracker 1.4, which do viewbundle caching correctly
+
 1.10
 Use newest update tracker. Do not recalculate view on updates of 'versionable' and 'state' of VIEW/RELS-EXT datastreams
 
