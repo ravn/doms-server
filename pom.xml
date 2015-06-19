@@ -8,7 +8,7 @@
 
     <groupId>dk.statsbiblioteket.doms.central</groupId>
     <artifactId>central</artifactId>
-    <version>1.12</version>
+    <version>1.13-SNAPSHOT</version>
 
 
     <packaging>pom</packaging>
@@ -22,7 +22,7 @@
         <connection>scm:git:git://github.com/statsbiblioteket/doms-server.git</connection>
         <developerConnection>scm:git:git@github.com:statsbiblioteket/doms-server.git</developerConnection>
         <url>https://github.com/statsbiblioteket/doms-server</url>
-        <tag>central-1.12</tag>
+        <tag>HEAD</tag>
     </scm>
 
 
@@ -71,39 +71,39 @@
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.central</groupId>
                 <artifactId>central-fedoraClient</artifactId>
-                <version>1.10</version>
+                <version>1.11-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.central</groupId>
                 <artifactId>ecmTemplates</artifactId>
-                <version>1.10</version>
+                <version>1.11-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.central</groupId>
                 <artifactId>ecmViews</artifactId>
-                <version>1.10</version>
+                <version>1.11-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.central</groupId>
                 <artifactId>ecmMethods</artifactId>
-                <version>1.10</version>
+                <version>1.11-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.central</groupId>
                 <artifactId>ecmLinks</artifactId>
-                <version>1.10</version>
+                <version>1.11-SNAPSHOT</version>
             </dependency>
 
 
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.authchecker</groupId>
                 <artifactId>authchecker-authutils</artifactId>
-                <version>1.1</version>
+                <version>1.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.updatetracker</groupId>
                 <artifactId>updatetracker-lib</artifactId>
-                <version>1.5</version>
+                <version>1.6-SNAPSHOT</version>
             </dependency>
 
             <dependency>
@@ -114,12 +114,12 @@
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.domsutil.surveyable</groupId>
                 <artifactId>domsutil-surveyable-impl</artifactId>
-                <version>1.1</version>
+                <version>1.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.domsutil.surveyable</groupId>
                 <artifactId>domsutil-logappender</artifactId>
-                <version>1.1</version>
+                <version>1.2-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.xml.ws</groupId>
