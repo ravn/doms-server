@@ -32,7 +32,7 @@
     <parent>
         <groupId>dk.statsbiblioteket.doms.central</groupId>
         <artifactId>central</artifactId>
-        <version>1.13</version>
+        <version>1.14-SNAPSHOT</version>
     </parent>
 
     <artifactId>centralWebservice-service</artifactId>
