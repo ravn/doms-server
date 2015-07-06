@@ -1,3 +1,8 @@
+1.16
+Updates to avoid duplicate class inclusion
+Use update tracker version 1.9 - fixes a logging issue, and avoid duplicate class inclusion
+Use ecmLibs 1.11 - avoid duplicate class inclusion
+
 1.15
 Updated to update tracker 1.8 which is basically version 1.7 but works
 
