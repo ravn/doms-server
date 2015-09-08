@@ -101,7 +101,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
     private final String authCheckerLocation;
     private final String pidgeneratorLocation;
     private final String summaLocation;
-    public String thisLocation;
+
 
 
     public CentralWebserviceImpl() {
@@ -120,18 +120,30 @@ public class CentralWebserviceImpl implements CentralWebservice {
     }
 
     private EnhancedFedora fedora;
+    private SearchWS summaSearch;
 
     @PostConstruct
-    private void initialise()
+    protected void initialise()
             throws
             MalformedURLException,
             PIDGeneratorException,
             JAXBException {
         Credentials creds = getCredentials();
+        fedora = getEnhancedFedora(creds);
+        summaSearch =
+                getSearchWSService();
 
-        HttpServletRequest request = getServletRequest();
-        thisLocation = request.getRequestURL().toString();
-        fedora = new EnhancedFedoraImpl(creds, fedoraLocation, pidgeneratorLocation, thisLocation);
+    }
+
+    protected SearchWS getSearchWSService() throws MalformedURLException {
+        return new SearchWSService(new java.net.URL(summaLocation),
+                new QName("http://statsbiblioteket.dk/summa/search",
+                        "SearchWSService")).getSearchWS();
+    }
+
+    protected EnhancedFedora getEnhancedFedora(Credentials creds) throws MalformedURLException, PIDGeneratorException, JAXBException {
+        String thisLocation = getServletRequest().getRequestURL().toString();
+        return new EnhancedFedoraImpl(creds, fedoraLocation, pidgeneratorLocation, thisLocation);
     }
 
     // TODO: rename pid to templatePid
@@ -895,11 +907,6 @@ public class CentralWebserviceImpl implements CentralWebservice {
                       + offset
                       + ", pageSize="
                       + pageSize);
-            SearchWS
-                    summaSearch =
-                    new SearchWSService(new java.net.URL(summaLocation),
-                                        new QName("http://statsbiblioteket.dk/summa/search",
-                                                  "SearchWSService")).getSearchWS();
 
             JSONObject jsonQuery = new JSONObject();
             jsonQuery.put("search.document.resultfields", "recordID, domsshortrecord");
@@ -982,9 +989,6 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
             return searchResultList;
 
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            throw new MethodFailedException("Webservice Config invalid", "Webservice Config invalid", e);
         } catch (XPathExpressionException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute", "Method failed to execute", e);
@@ -1211,7 +1215,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
         return a;
     }
 
-    private Credentials getCredentials() {
+    protected Credentials getCredentials() {
         HttpServletRequest request = getServletRequest();
         Credentials creds = (Credentials) request.getAttribute("Credentials");
         if (creds == null) {
