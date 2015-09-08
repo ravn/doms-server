@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--Generated from view-source:http://achernar:58608/newspapr/search/services/SearchWS?method=directJSON&json={%22search.document.resultfields%22:%22recordID,%20domsshortrecord%22,%22search.document.query%22:%22*%22,%22search.document.startindex%22:0,%22search.document.maxrecords%22:10}-->
+<responsecollection timing="newspapr.connect:0|newspapr.rawcall:63|newspapr.search.buildresponses:7|newspapr.search.total:71|interactionadjuster.adjust.documents:0|interactionadjuster.adjust.facets:0|interactionadjuster.adjust.total:0|adjustingsearchnode.total:75|solr.buildquery:0|newspapr.reportedtime:60|newspapr.buildresponses.total:7|newspapr.buildresponses.facets:6|newspapr.tagadjuster.adjusts.total:0" machine="achernar">
+    <response name="DocumentResponse">
+        <documentresult query="*" startIndex="0" maxRecords="10" reverseSort="false" fields="" searchTime="60" timing="solr.buildquery:0|newspapr.reportedtime:60|newspapr.buildresponses.total:7" hitCount="6276">
+            <record score="0.0" sortValue="0.0" id="doms_sboiCollection:uuid:510e1f30-6023-4f6f-bef5-c86c2fea3a45" source="newspapr">
+                <field name="recordID">doms_sboiCollection:uuid:510e1f30-6023-4f6f-bef5-c86c2fea3a45</field>
+            </record>
+            <record score="0.0" sortValue="0.0" id="doms_sboiCollection:uuid:4ea97ddd-d14c-441c-a70b-765399ee0989" source="newspapr">
+                <field name="recordID">doms_sboiCollection:uuid:4ea97ddd-d14c-441c-a70b-765399ee0989</field>
+            </record>
+            <record score="0.0" sortValue="0.0" id="doms_sboiCollection:uuid:a2ac9e6e-04fc-450b-b444-619568d3fe87" source="newspapr">
+                <field name="recordID">doms_sboiCollection:uuid:a2ac9e6e-04fc-450b-b444-619568d3fe87</field>
+            </record>
+            <record score="0.0" sortValue="0.0" id="doms_sboiCollection:uuid:fc8be747-05d3-4514-be0e-344436b224ce" source="newspapr">
+                <field name="recordID">doms_sboiCollection:uuid:fc8be747-05d3-4514-be0e-344436b224ce</field>
+            </record>
+            <record score="0.0" sortValue="0.0" id="doms_sboiCollection:uuid:364917eb-c9a2-46c9-9a14-75e6eaa88b0d" source="newspapr">
+                <field name="recordID">doms_sboiCollection:uuid:364917eb-c9a2-46c9-9a14-75e6eaa88b0d</field>
+            </record>
+            <record score="0.0" sortValue="0.0" id="doms_sboiCollection:uuid:d47b4813-6709-435c-8ce7-3b2ce814873f" source="newspapr">
+                <field name="recordID">doms_sboiCollection:uuid:d47b4813-6709-435c-8ce7-3b2ce814873f</field>
+            </record>
+            <record score="0.0" sortValue="0.0" id="doms_sboiCollection:uuid:355482af-8b0f-464f-aae8-988dba98cf6d" source="newspapr">
+                <field name="recordID">doms_sboiCollection:uuid:355482af-8b0f-464f-aae8-988dba98cf6d</field>
+            </record>
+            <record score="0.0" sortValue="0.0" id="doms_sboiCollection:uuid:75125d8e-c8ff-491f-91ca-feb31cc614cd" source="newspapr">
+                <field name="recordID">doms_sboiCollection:uuid:75125d8e-c8ff-491f-91ca-feb31cc614cd</field>
+            </record>
+            <record score="0.0" sortValue="0.0" id="doms_sboiCollection:uuid:5548363a-32d7-461d-9af1-1ec5740350df" source="newspapr">
+                <field name="recordID">doms_sboiCollection:uuid:5548363a-32d7-461d-9af1-1ec5740350df</field>
+            </record>
+            <record score="0.0" sortValue="0.0" id="doms_sboiCollection:uuid:68a1b669-47ce-4586-bbe4-7facd5a06c1f" source="newspapr">
+                <field name="recordID">doms_sboiCollection:uuid:68a1b669-47ce-4586-bbe4-7facd5a06c1f</field>
+            </record>
+        </documentresult>
+    </response>
+    <response name="FacetResult">
+        <facetmodel timing="newspapr.buildresponses.facets:6|newspapr.tagadjuster.adjusts.total:0">
+            <facet name="recordBase">
+                <tag name="doms_sboiCollection" addedobjects="6276" reliability="PRECISE">
+                    <query>recordBase:"doms_sboiCollection"</query>
+                </tag>
+            </facet>
+        </facetmodel>
+    </response>
+</responsecollection>
+
