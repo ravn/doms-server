@@ -1,6 +1,7 @@
 package dk.statsbiblioteket.doms.central;
 
 import dk.statsbiblioteket.doms.central.connectors.EnhancedFedora;
+import dk.statsbiblioteket.doms.central.connectors.authchecker.AuthChecker;
 import dk.statsbiblioteket.doms.central.connectors.fedora.pidGenerator.PIDGeneratorException;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.FedoraRelation;
 import dk.statsbiblioteket.doms.central.connectors.fedora.structures.ObjectType;
@@ -49,6 +50,11 @@ public class CentralWebserviceImplIMockIT {
             @Override
             protected SearchWS getSearchWSService() throws MalformedURLException {
                 return searchWS;
+            }
+
+            @Override
+            protected AuthChecker getAuthChecker() throws MalformedURLException {
+                return null;
             }
         };
         centralWebservice.initialise();
