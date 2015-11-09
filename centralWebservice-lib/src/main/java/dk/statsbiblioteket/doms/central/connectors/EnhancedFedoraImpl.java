@@ -48,11 +48,9 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
     Views views;
     PidGenerator pidGenerator;
     private Methods methods;
-    private String thisLocation;
 
     public EnhancedFedoraImpl(Credentials creds, String fedoraLocation, String pidGenLocation, String thisLocation)
             throws MalformedURLException, PIDGeneratorException, JAXBException {
-        this.thisLocation = thisLocation;
 
         //1.st level
         fedora = new FedoraRest(creds, fedoraLocation);
@@ -93,7 +91,6 @@ public class EnhancedFedoraImpl implements EnhancedFedora {
     public EnhancedFedoraImpl(Credentials creds, String fedoraLocation, String pidGenLocation, String thisLocation,
                               int maxTriesPut, int maxTriesPost, int maxTriesDelete, int retryDelay)
             throws JAXBException, PIDGeneratorException, MalformedURLException {
-        this.thisLocation = thisLocation;
 
         //1.st level
         fedora = new FedoraRest(creds, fedoraLocation, maxTriesPut, maxTriesPost, maxTriesDelete, retryDelay);

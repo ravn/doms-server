@@ -1,3 +1,7 @@
+1.18
+Fixed the bug that made doms gui search fail
+Made the webservice testable and added two tests
+
 1.17
 Included update tracker 1.10 which do not skip events.
 

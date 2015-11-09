@@ -96,42 +96,87 @@ public class CentralWebserviceImpl implements CentralWebservice {
     private static Log log = LogFactory.getLog(CentralWebserviceImpl.class);
     private static Lock lock = new Lock();
 
-    private final String fedoraLocation;
-    private final String updateTrackerLocation;
-    private final String authCheckerLocation;
-    private final String pidgeneratorLocation;
-    private final String summaLocation;
-    public String thisLocation;
-
-
-    public CentralWebserviceImpl() {
-        pidgeneratorLocation =
-                ConfigCollection.getProperties()
-                                .getProperty("dk.statsbiblioteket.doms.ecm.pidgenerator.client.wsdllocation");
-        fedoraLocation =
-                ConfigCollection.getProperties().getProperty("dk.statsbiblioteket.doms.central.fedoraLocation");
-        updateTrackerLocation =
-                ConfigCollection.getProperties().getProperty("dk.statsbiblioteket.doms.central.updateTrackerLocation");
-        authCheckerLocation =
-                ConfigCollection.getProperties().getProperty("dk.statsbiblioteket.doms.central.authCheckerLocation");
-        summaLocation = ConfigCollection.getProperties().getProperty("dk.statsbiblioteket.doms.central.summaWSDL");
-
-
-    }
-
+    private UpdateTracker updateTracker;
     private EnhancedFedora fedora;
+    private SearchWS summaSearch;
+    private AuthChecker authChecker;
 
+    /**
+     * Initialise the context. This retrieves the credentials from the request object. It then creates the fedora and
+     * summaSearch object.
+     * This method is annotated with @PostConstruct, so it will automatically be run by the SOAP framework before any of
+     * the methods have been called.This is nessesary,as the request object have not been populated at the constructor time, and
+     * we can thus not read the credentials.
+     * @throws MalformedURLException If one of the config urls could not be parsed
+     * @throws PIDGeneratorException If the pidgenerator client could not be instantiaed
+     * @throws JAXBException If some jaxb classes could not be parsed
+     */
     @PostConstruct
-    private void initialise()
+    protected void initialise()
             throws
             MalformedURLException,
             PIDGeneratorException,
             JAXBException {
         Credentials creds = getCredentials();
+        fedora = getEnhancedFedora(creds);
+        summaSearch = getSearchWSService();
+        updateTracker = getUpdateTracker(creds);
+        authChecker = getAuthChecker();
+    }
 
-        HttpServletRequest request = getServletRequest();
-        thisLocation = request.getRequestURL().toString();
-        fedora = new EnhancedFedoraImpl(creds, fedoraLocation, pidgeneratorLocation, thisLocation);
+
+    /**
+     * Initialise the AuthChecker connector. Reads the property dk.statsbiblioteket.doms.central.authCheckerLocation to get the location
+     * @return
+     * @throws MalformedURLException
+     */
+    protected AuthChecker getAuthChecker() throws MalformedURLException {
+        String authCheckerLocation = ConfigCollection.getProperties().getProperty("dk.statsbiblioteket.doms.central.authCheckerLocation");
+        return new AuthChecker(authCheckerLocation);
+    }
+
+    /**
+     * Create a new updatetracker client. Reads the property dk.statsbiblioteket.doms.central.updateTrackerLocation to get the location
+     * @param creds the user creds
+     * @return
+     * @throws MalformedURLException
+     */
+    protected UpdateTracker getUpdateTracker(Credentials creds) throws MalformedURLException {
+        String updateTrackerLocation = ConfigCollection.getProperties().getProperty("dk.statsbiblioteket.doms.central.updateTrackerLocation");
+        return new UpdateTracker(creds, updateTrackerLocation);
+    }
+
+
+    /**
+     * Create a new summa search client. Reads the property dk.statsbiblioteket.doms.central.summaWSDL to get the location
+     * @return
+     * @throws MalformedURLException
+     */
+    protected SearchWS getSearchWSService() throws MalformedURLException {
+        String summaLocation = ConfigCollection.getProperties().getProperty("dk.statsbiblioteket.doms.central.summaWSDL");
+
+        return new SearchWSService(new java.net.URL(summaLocation),
+                new QName("http://statsbiblioteket.dk/summa/search",
+                        "SearchWSService")).getSearchWS();
+    }
+
+    /**
+     * Create a new instance of enhancedFedora from the creds. Reads the properties
+     * dk.statsbiblioteket.doms.central.fedoraLocation and
+     * dk.statsbiblioteket.doms.ecm.pidgenerator.client.wsdllocation
+     * @param creds the user credentials
+     * @return
+     * @throws MalformedURLException
+     * @throws PIDGeneratorException
+     * @throws JAXBException
+     */
+    protected EnhancedFedora getEnhancedFedora(Credentials creds) throws MalformedURLException, PIDGeneratorException, JAXBException {
+        String fedoraLocation = ConfigCollection.getProperties().getProperty("dk.statsbiblioteket.doms.central.fedoraLocation");
+        String thisLocation = getServletRequest().getRequestURL().toString();
+        String pidgeneratorLocation = ConfigCollection.getProperties()
+                .getProperty("dk.statsbiblioteket.doms.ecm.pidgenerator.client.wsdllocation");
+
+        return new EnhancedFedoraImpl(creds, fedoraLocation, pidgeneratorLocation, thisLocation);
     }
 
     // TODO: rename pid to templatePid
@@ -404,7 +449,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
                       + " and contents="
                       + contents);
 
-            fedora.modifyDatastreamByValue(pid, datastream, null,null,contents.getBytes(), null,"text/xml",comment,null);
+            fedora.modifyDatastreamByValue(pid, datastream, null, null, contents.getBytes(), null, "text/xml", comment, null);
         } catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute", "Method failed to execute", e);
@@ -796,18 +841,13 @@ public class CentralWebserviceImpl implements CentralWebservice {
             MethodFailedException {
         try {
             logEntering("getIDsModified", since + "", collectionPid, viewAngle, state, offset + "", limit + "");
-            Credentials creds = getCredentials();
-            UpdateTracker tracker = new UpdateTracker(creds, updateTrackerLocation);
             if (state == null || state.isEmpty()) {
                 state = "Published";
             }
             List<UpdateTrackerRecord>
                     modifieds =
-                    tracker.listObjectsChangedSince(collectionPid, viewAngle, since, state, offset, limit);
+                    updateTracker.listObjectsChangedSince(collectionPid, viewAngle, since, state, offset, limit);
             return transform(modifieds);
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            throw new MethodFailedException("Webservice Config invalid", "Webservice Config invalid", e);
         } catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute", "Method failed to execute", e);
@@ -823,6 +863,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
     }
 
 
+
     public long getLatestModified(@WebParam(name = "collectionPid", targetNamespace = "") String collectionPid,
                                   @WebParam(name = "viewAngle", targetNamespace = "") String viewAngle,
                                   @WebParam(name = "state", targetNamespace = "") String state)
@@ -831,12 +872,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             MethodFailedException {
         try {
             logEntering("getLatestModified", collectionPid, viewAngle, state);
-            Credentials creds = getCredentials();
-            UpdateTracker tracker = new UpdateTracker(creds, updateTrackerLocation);
-            return tracker.getLatestModification(collectionPid, viewAngle, state);
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            throw new MethodFailedException("Webservice Config invalid", "Webservice Config invalid", e);
+            return updateTracker.getLatestModification(collectionPid, viewAngle, state);
         } catch (BackendMethodFailedException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute", "Method failed to execute", e);
@@ -895,11 +931,6 @@ public class CentralWebserviceImpl implements CentralWebservice {
                       + offset
                       + ", pageSize="
                       + pageSize);
-            SearchWS
-                    summaSearch =
-                    new SearchWSService(new java.net.URL(summaLocation),
-                                        new QName("http://statsbiblioteket.dk/summa/search",
-                                                  "SearchWSService")).getSearchWS();
 
             JSONObject jsonQuery = new JSONObject();
             jsonQuery.put("search.document.resultfields", "recordID, domsshortrecord");
@@ -982,9 +1013,6 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
             return searchResultList;
 
-        } catch (MalformedURLException e) {
-            log.error("caught problemException", e);
-            throw new MethodFailedException("Webservice Config invalid", "Webservice Config invalid", e);
         } catch (XPathExpressionException e) {
             log.warn("Failed to execute method", e);
             throw new MethodFailedException("Method failed to execute", "Method failed to execute", e);
@@ -1036,9 +1064,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             InvalidCredentialsException,
             MethodFailedException {
         try {
-            Credentials creds = getCredentials();//TODO perhaps we should check something here, against context.xml?
-            AuthChecker auth = new AuthChecker(authCheckerLocation);
-            dk.statsbiblioteket.doms.authchecker.user.User auser = auth.createTempAdminUser(username, roles);
+            dk.statsbiblioteket.doms.authchecker.user.User auser = authChecker.createTempAdminUser(username, roles);
             User user = new User();
             user.setUsername(auser.getUsername());
             user.setPassword(auser.getPassword());
@@ -1054,6 +1080,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             throw new MethodFailedException("Server error", "Server error", e);
         }
     }
+
 
     @Override
     public List<String> getContentModelsInCollection(String collectionPid) throws
@@ -1211,7 +1238,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
         return a;
     }
 
-    private Credentials getCredentials() {
+    protected Credentials getCredentials() {
         HttpServletRequest request = getServletRequest();
         Credentials creds = (Credentials) request.getAttribute("Credentials");
         if (creds == null) {
