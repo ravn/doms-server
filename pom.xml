@@ -119,7 +119,7 @@
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.updatetracker</groupId>
                 <artifactId>updatetracker-lib</artifactId>
-                <version>1.11-SNAPSHOT</version>
+                <version>1.12-SNAPSHOT</version>
             </dependency>
 
             <dependency>
