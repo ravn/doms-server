@@ -1,3 +1,10 @@
+1.20
+Fix from version 1.12 of doms-ecm-libs. Can now correctly list content models in a collection
+
+1.19
+Fixed the bean utils error
+Added the failsafe plugin so the tests are actually run
+
 1.18
 Fixed the bug that made doms gui search fail
 Made the webservice testable and added two tests

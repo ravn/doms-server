@@ -87,27 +87,27 @@
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.central</groupId>
                 <artifactId>central-fedoraClient</artifactId>
-                <version>1.12-SNAPSHOT</version>
+                <version>1.13-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.central</groupId>
                 <artifactId>ecmTemplates</artifactId>
-                <version>1.12-SNAPSHOT</version>
+                <version>1.13-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.central</groupId>
                 <artifactId>ecmViews</artifactId>
-                <version>1.12-SNAPSHOT</version>
+                <version>1.13-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.central</groupId>
                 <artifactId>ecmMethods</artifactId>
-                <version>1.12-SNAPSHOT</version>
+                <version>1.13-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>dk.statsbiblioteket.doms.central</groupId>
                 <artifactId>ecmLinks</artifactId>
-                <version>1.12-SNAPSHOT</version>
+                <version>1.13-SNAPSHOT</version>
             </dependency>
 
 
