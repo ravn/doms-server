@@ -98,7 +98,6 @@ public class CentralWebserviceImpl implements CentralWebservice {
 
     private UpdateTracker updateTracker;
     private EnhancedFedora fedora;
-    private SearchWS summaSearch;
     private AuthChecker authChecker;
 
     /**
@@ -119,7 +118,6 @@ public class CentralWebserviceImpl implements CentralWebservice {
             JAXBException {
         Credentials creds = getCredentials();
         fedora = getEnhancedFedora(creds);
-        summaSearch = getSearchWSService();
         updateTracker = getUpdateTracker(creds);
         authChecker = getAuthChecker();
     }
@@ -938,6 +936,7 @@ public class CentralWebserviceImpl implements CentralWebservice {
             jsonQuery.put("search.document.startindex", offset);
             jsonQuery.put("search.document.maxrecords", pageSize);
 
+            SearchWS summaSearch = getSearchWSService();
             String searchResultString = summaSearch.directJSON(jsonQuery.toString());
 
             Document searchResultDOM = DOM.stringToDOM(searchResultString);
