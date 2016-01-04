@@ -1,3 +1,6 @@
+1.21
+Do not initialise the summa connection before it is needed. This fixes the "summa dead cause doms" dead bug
+
 1.20
 Fix from version 1.12 of doms-ecm-libs. Can now correctly list content models in a collection
 
