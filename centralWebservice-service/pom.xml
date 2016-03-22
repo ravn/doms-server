@@ -109,11 +109,11 @@
             <artifactId>sbutil-webservices-log4j</artifactId>
         </dependency>
         <dependency>
-            <groupId>dk.statsbiblioteket.doms.domsutil.surveyable</groupId>
+            <groupId>dk.statsbiblioteket.doms.domsutil.surveyable.repo.https_3A_2F_2Fgithub_2Ecom_2Fravn_2Fdoms_2Dutil_2Egit</groupId>
             <artifactId>domsutil-surveyable-impl</artifactId>
         </dependency>
         <dependency>
-            <groupId>dk.statsbiblioteket.doms.domsutil.surveyable</groupId>
+            <groupId>dk.statsbiblioteket.doms.domsutil.surveyable.repo.https_3A_2F_2Fgithub_2Ecom_2Fravn_2Fdoms_2Dutil_2Egit</groupId>
             <artifactId>domsutil-logappender</artifactId>
             <scope>runtime</scope>
         </dependency>

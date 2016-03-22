@@ -68,27 +68,27 @@
             </dependency>
 
             <dependency>
-                <groupId>dk.statsbiblioteket.doms.central</groupId>
+                <groupId>dk.statsbiblioteket.doms.central.repo.https_3A_2F_2Fgithub_2Ecom_2Fravn_2Fdoms_2Dserver_2Egit</groupId>
                 <artifactId>central-fedoraClient</artifactId>
                 <version>1.11</version>
             </dependency>
             <dependency>
-                <groupId>dk.statsbiblioteket.doms.central</groupId>
+                <groupId>dk.statsbiblioteket.doms.central.repo.https_3A_2F_2Fgithub_2Ecom_2Fravn_2Fdoms_2Dserver_2Egit</groupId>
                 <artifactId>ecmTemplates</artifactId>
                 <version>1.11</version>
             </dependency>
             <dependency>
-                <groupId>dk.statsbiblioteket.doms.central</groupId>
+                <groupId>dk.statsbiblioteket.doms.central.repo.https_3A_2F_2Fgithub_2Ecom_2Fravn_2Fdoms_2Dserver_2Egit</groupId>
                 <artifactId>ecmViews</artifactId>
                 <version>1.11</version>
             </dependency>
             <dependency>
-                <groupId>dk.statsbiblioteket.doms.central</groupId>
+                <groupId>dk.statsbiblioteket.doms.central.repo.https_3A_2F_2Fgithub_2Ecom_2Fravn_2Fdoms_2Dserver_2Egit</groupId>
                 <artifactId>ecmMethods</artifactId>
                 <version>1.11</version>
             </dependency>
             <dependency>
-                <groupId>dk.statsbiblioteket.doms.central</groupId>
+                <groupId>dk.statsbiblioteket.doms.central.repo.https_3A_2F_2Fgithub_2Ecom_2Fravn_2Fdoms_2Dserver_2Egit</groupId>
                 <artifactId>ecmLinks</artifactId>
                 <version>1.11</version>
             </dependency>
@@ -111,12 +111,12 @@
                 <version>0.5.29</version>
             </dependency>
             <dependency>
-                <groupId>dk.statsbiblioteket.doms.domsutil.surveyable</groupId>
+                <groupId>dk.statsbiblioteket.doms.domsutil.surveyable.repo.https_3A_2F_2Fgithub_2Ecom_2Fravn_2Fdoms_2Dutil_2Egit</groupId>
                 <artifactId>domsutil-surveyable-impl</artifactId>
                 <version>1.1</version>
             </dependency>
             <dependency>
-                <groupId>dk.statsbiblioteket.doms.domsutil.surveyable</groupId>
+                <groupId>dk.statsbiblioteket.doms.domsutil.surveyable.repo.https_3A_2F_2Fgithub_2Ecom_2Fravn_2Fdoms_2Dutil_2Egit</groupId>
                 <artifactId>domsutil-logappender</artifactId>
                 <version>1.1</version>
             </dependency>

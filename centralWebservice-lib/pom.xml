@@ -42,25 +42,25 @@
     <dependencies>
 
         <dependency>
-            <groupId>dk.statsbiblioteket.doms.central</groupId>
+            <groupId>dk.statsbiblioteket.doms.central.repo.https_3A_2F_2Fgithub_2Ecom_2Fravn_2Fdoms_2Dserver_2Egit</groupId>
             <artifactId>central-fedoraClient</artifactId>
         </dependency>
 
 
         <dependency>
-            <groupId>dk.statsbiblioteket.doms.central</groupId>
+            <groupId>dk.statsbiblioteket.doms.central.repo.https_3A_2F_2Fgithub_2Ecom_2Fravn_2Fdoms_2Dserver_2Egit</groupId>
             <artifactId>ecmTemplates</artifactId>
         </dependency>
         <dependency>
-            <groupId>dk.statsbiblioteket.doms.central</groupId>
+            <groupId>dk.statsbiblioteket.doms.central.repo.https_3A_2F_2Fgithub_2Ecom_2Fravn_2Fdoms_2Dserver_2Egit</groupId>
             <artifactId>ecmViews</artifactId>
         </dependency>
         <dependency>
-            <groupId>dk.statsbiblioteket.doms.central</groupId>
+            <groupId>dk.statsbiblioteket.doms.central.repo.https_3A_2F_2Fgithub_2Ecom_2Fravn_2Fdoms_2Dserver_2Egit</groupId>
             <artifactId>ecmMethods</artifactId>
         </dependency>
         <dependency>
-            <groupId>dk.statsbiblioteket.doms.central</groupId>
+            <groupId>dk.statsbiblioteket.doms.central.repo.https_3A_2F_2Fgithub_2Ecom_2Fravn_2Fdoms_2Dserver_2Egit</groupId>
             <artifactId>ecmLinks</artifactId>
         </dependency>
 
